@@ -14,9 +14,9 @@ def main():
     #WORKS NOW
     
     stock = Stock('AMZN', API_KEY)
-    stock.get_company_overview()
     print(stock)
-    
+    stock.get_stock_info()
+    print(stock)
     
 if __name__=="__main__":
     main()
