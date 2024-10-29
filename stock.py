@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from urllib.request import urlopen
 import json
 import certifi
+import tickers_file_module as tfm
 
 @dataclass
 class Stock:
@@ -46,12 +47,14 @@ class Stock:
         #misc info
         self.currency = data[0]['currency']
         
-    # def check_ticker(self):
-    #     #checks local file if the ticker exists
-    #     # if self.ticker_symbol in valid_tickers:
-    #     #     print(f"{self.ticker_symbol} is a valid ticker.")
-    #     # else:
-    #     #     #uses api search to see if the ticker exists 
-    #     #     url = (f"https://financialmodelingprep.com/api/v3/search-ticker?query={self.ticker_symbol}&limit=10&exchange=NASDAQ&apikey={self.API_KEY}")
-    #     #     data = Stock.get_jsonparsed_data(url)
-    #     # print(data)
+    def check_ticker(self):
+        #checks local file if the ticker exists
+        valid_tickers_list = []
+        
+        if self.ticker_symbol in valid_tickers:
+            print(f"{self.ticker_symbol} is a valid ticker.")
+        else:
+            #uses api search to see if the ticker exists 
+            url = (f"https://financialmodelingprep.com/api/v3/search-ticker?query={self.ticker_symbol}&limit=10&exchange=NASDAQ&apikey={self.API_KEY}")
+            data = Stock.get_jsonparsed_data(url)
+        print(data)
