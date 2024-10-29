@@ -48,13 +48,27 @@ class Stock:
         self.currency = data[0]['currency']
         
     def check_ticker(self):
-        #checks local file if the ticker exists
         valid_tickers_list = []
+        tfm.read_file(valid_tickers_list)#store valid tickers into a list variable
+        print(valid_tickers_list)
         
-        if self.ticker_symbol in valid_tickers:
-            print(f"{self.ticker_symbol} is a valid ticker.")
-        else:
+        if self.ticker_symbol not in valid_tickers_list:
+            print('ticker not on file')
+            
             #uses api search to see if the ticker exists 
             url = (f"https://financialmodelingprep.com/api/v3/search-ticker?query={self.ticker_symbol}&limit=10&exchange=NASDAQ&apikey={self.API_KEY}")
             data = Stock.get_jsonparsed_data(url)
-        print(data)
+            
+            print(data)
+            
+            if data == [ ]:#returns [ ] list if cant find a ticker
+                print('data is empty')
+                return False
+            else:#ONLY RECORDS THE LAST TICKER THAT WAS CALLED FIx THIS
+                tfm.write_file(self.ticker_symbol)
+                return True
+        #if ticker exists on local file then its valid        
+        else:
+            return True
+            
+        
