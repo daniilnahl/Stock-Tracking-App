@@ -46,3 +46,12 @@ class Stock:
         #misc info
         self.currency = data[0]['currency']
         
+    # def check_ticker(self):
+    #     #checks local file if the ticker exists
+    #     # if self.ticker_symbol in valid_tickers:
+    #     #     print(f"{self.ticker_symbol} is a valid ticker.")
+    #     # else:
+    #     #     #uses api search to see if the ticker exists 
+    #     #     url = (f"https://financialmodelingprep.com/api/v3/search-ticker?query={self.ticker_symbol}&limit=10&exchange=NASDAQ&apikey={self.API_KEY}")
+    #     #     data = Stock.get_jsonparsed_data(url)
+    #     # print(data)

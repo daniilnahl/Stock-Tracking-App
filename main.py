@@ -13,10 +13,10 @@ def main():
     print(API_KEY)
     #WORKS NOW
     
-    stock = Stock('AMZN', API_KEY)
+    stock = Stock('ZCZA', API_KEY)
     print(stock)
-    stock.get_stock_info()
-    print(stock)
+    stock.check_ticker()
+   
     
 if __name__=="__main__":
     main()
