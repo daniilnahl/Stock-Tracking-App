@@ -17,6 +17,8 @@ def main():
     stock2 = Stock('AAPL', API_KEY)
     stock3 = Stock('AMD', API_KEY)
     
+    stock1.get_stock_info()
+    print(stock1)
     stock1.check_ticker()
     stock2.check_ticker()
     stock3.check_ticker()

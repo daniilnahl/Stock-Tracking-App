@@ -34,7 +34,7 @@ class Stock:
         """Assigns data to an instance of a stock class"""
         url = (f"https://financialmodelingprep.com/api/v3/profile/{self.ticker_symbol}?apikey={self.API_KEY}")
         data = Stock.get_jsonparsed_data(url)
-        
+       
         #gets numerical data
         self.market_cap = data[0]['mktCap']
         self.price = data[0]['price']
@@ -50,25 +50,31 @@ class Stock:
         
     def check_ticker(self):
         valid_tickers_list = []
-        tfm.read_file(valid_tickers_list)#store valid tickers into a list variable
+        tfm.read_file(valid_tickers_list)
+        print(valid_tickers_list)
         
-        #loops through the nested list to search for ticker
-        for valid_ticker in valid_tickers_list:
-            if self.ticker_symbol == valid_ticker[0]:
-                print('Found ticker on file.')
-                break
-            else:
-                #uses api search to see if the ticker exists 
+        # Check if valid_tickers_list has been populated correctly
+        if not valid_tickers_list:
+            print("No valid tickers found in file. Exiting the search loop.")
+        else:
+            # Loop through the list to search for the ticker symbol
+            for valid_ticker in valid_tickers_list:
+                if self.ticker_symbol == valid_ticker[0]: #checks if ticker matches
+                    print("Found ticker on file.")
+                    break  # Exit the loop since we found the ticker
+
+            #If ticker was not found in the list perform API search
+            else:  
+                print("Ticker not found on file. Searching via API...")
+                #API call
                 url = (f"https://financialmodelingprep.com/api/v3/search-ticker?query={self.ticker_symbol}&limit=10&exchange=NASDAQ&apikey={self.API_KEY}")
                 data = Stock.get_jsonparsed_data(url)
-                print(data)
-                #returns [ ] list if cant find a ticker
-                if data == [ ]:
-                    print('Didn''t find ticker on API.')  
-                    break
+
+                # Check the API response
+                if data == []:  #empty list means ticker wasn't found
+                    print("Ticker not found via API.")
                 else:
                     tfm.write_file(self.ticker_symbol)
-                    print('Found ticker on API. Recording ticker to file.')
-                    break
+                    print("Found ticker via API. Recording ticker to file.")
             
         
