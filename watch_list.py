@@ -29,7 +29,7 @@ class Watch_list:
         table = Table(title=f"{self.name}")
         
         #creates columns
-        table.add_column("Exchange", justify="right", style="magenta", no_wrap=True)
+        table.add_column("Exchange", style="magenta", no_wrap=True)
         table.add_column("Ticker", style="magenta")
         table.add_column("Company name", style="magenta")
         table.add_column("Price", style="magenta")

@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv #needed to change python interperter to the virtual one
 from stock import Stock
 from watch_list import Watch_list
-
+import rich
 load_dotenv()
 API_KEY = os.getenv("MY_API_KEY")
 
@@ -18,7 +18,6 @@ def main():
     stock2 = Stock('AAPL', API_KEY)
     stock3 = Stock('AMD', API_KEY)
     stock1.get_stock_info()
-    print(stock1)
     stock2.get_stock_info()
     stock3.get_stock_info()
     
@@ -27,6 +26,7 @@ def main():
     watch1.add_stock(stock2)
     watch1.add_stock(stock3)
     
+    print(watch1)
     watch1.show_stocks()
     
     # stock1.check_ticker()
