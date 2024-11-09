@@ -53,28 +53,22 @@ class Stock:
         tfm.read_file(valid_tickers_list)
         print(valid_tickers_list)
         
-        # Check if valid_tickers_list has been populated correctly
-        if not valid_tickers_list:
-            print("No valid tickers found in file. Exiting the search loop.")
-        else:
-            # Loop through the list to search for the ticker symbol
-            for valid_ticker in valid_tickers_list:
-                if self.ticker_symbol == valid_ticker[0]: #checks if ticker matches
-                    print("Found ticker on file.")
-                    break  # Exit the loop since we found the ticker
+        #checks if the ticker symbol is found on file(valid_tickers_list)
+        found_ticker = any(self.ticker_symbol == valid_ticker[0] for valid_ticker in valid_tickers_list)
+        
+        #if ticker found return true
+        if found_ticker:
+            return True
+        else: #checks if provided ticker is valid using API
+            url = (f"https://financialmodelingprep.com/api/v3/search-ticker?query={self.ticker_symbol}&limit=10&exchange=NASDAQ&apikey={self.API_KEY}")
+            data = Stock.get_jsonparsed_data(url)
 
-            #If ticker was not found in the list perform API search
-            else:  
-                print("Ticker not found on file. Searching via API...")
-                #API call
-                url = (f"https://financialmodelingprep.com/api/v3/search-ticker?query={self.ticker_symbol}&limit=10&exchange=NASDAQ&apikey={self.API_KEY}")
-                data = Stock.get_jsonparsed_data(url)
-
-                # Check the API response
-                if data == []:  #empty list means ticker wasn't found
-                    print("Ticker not found via API.")
-                else:
-                    tfm.write_file(self.ticker_symbol)
-                    print("Found ticker via API. Recording ticker to file.")
+            # Check the API response
+            if data == []:  #empty list means ticker wasn't found
+                return False
+            else:
+                tfm.write_file(self.ticker_symbol)
+                return True    
+                    
             
         
