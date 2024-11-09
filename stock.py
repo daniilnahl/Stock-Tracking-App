@@ -18,8 +18,8 @@ class Stock:
     exchange: str = None
     
     #numerical info
-    price: float = None
-    market_cap: float = None
+    price: str = None
+    market_cap: str = None
     
     #misc info
     currency: str = None
@@ -36,8 +36,8 @@ class Stock:
         data = Stock.get_jsonparsed_data(url)
        
         #gets numerical data
-        self.market_cap = data[0]['mktCap']
-        self.price = data[0]['price']
+        self.market_cap = Stock.format_mcap(data[0]['mktCap'])
+        self.price = str(data[0]['price'])
         
         #text info
         self.name = data[0]['companyName']
@@ -51,7 +51,6 @@ class Stock:
     def check_ticker(self):
         valid_tickers_list = []
         tfm.read_file(valid_tickers_list)
-        print(valid_tickers_list)
         
         #checks if the ticker symbol is found on file(valid_tickers_list)
         found_ticker = any(self.ticker_symbol == valid_ticker[0] for valid_ticker in valid_tickers_list)
@@ -69,6 +68,11 @@ class Stock:
             else:
                 tfm.write_file(self.ticker_symbol)
                 return True    
-                    
+                
+    @staticmethod               
+    def format_mcap(mcap: float):    
+        if abs(mcap) >= 1_000_000_000_000:
+            return f"{mcap / 1_000_000_000_000:.2f}T" #trillions
+        else:
+            return f"{mcap / 1_000_000_000:.3f}B"  #billions
             
-        
