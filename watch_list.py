@@ -15,13 +15,8 @@ class Watch_list:
     def remove_stock(self, stock: object):
         self.stocks.remove(stock)
     
-    @property
-    def get_name(self):
-        return self.name
-    
-    @get_name.setter
-    def change_name(self):
-        new_name = input('Enter the new name of this watch list: ')  
+    def change_name(self, new_name=""):
+        new_name = input('Enter  new name for this watch list: ')  
         self.name = new_name
              
     def show_stocks(self):

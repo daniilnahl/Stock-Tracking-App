@@ -3,6 +3,7 @@ from dotenv import load_dotenv #needed to change python interperter to the virtu
 from stock import Stock
 from watch_list import Watch_list
 import rich
+
 load_dotenv()
 API_KEY = os.getenv("MY_API_KEY")
 
@@ -11,7 +12,7 @@ API_KEY = os.getenv("MY_API_KEY")
 def main():
     print("Loading environment variables...")
     print("Environment variables loaded.")
-    print(API_KEY)
+    #print(API_KEY)
     #WORKS NOW
     
     stock1 = Stock('AMZN', API_KEY)
@@ -26,8 +27,12 @@ def main():
     watch1.add_stock(stock2)
     watch1.add_stock(stock3)
     
-    print(watch1)
-    watch1.show_stocks()
+    print(watch1.name)
+    watch1.change_name()
+    print(watch1.name)
+    
+    # print(watch1)
+    # watch1.show_stocks()
     
     # stock1.check_ticker()
     # stock2.check_ticker()

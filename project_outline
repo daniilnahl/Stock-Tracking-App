@@ -1,0 +1,39 @@
+Project Title: 
+Stock Tracking Application
+
+Project Description: 
+This applications allows the user to track stock information. The app allows user to find stocks by their ticker then automatically creates the base watch list in which the stock is stored. The user can view basic info on the stocks. Additionally, the user can creates and 
+delete(besides the original one) watch lists with unique names to track specific stocks. The user has full control over what stocks they put into a watch list. The user can add or delete stocks from watch lists. 
+
+Project Objectives:
+1: Create a functional stock object which has functions to get basic info on itself. (Create a function to update its price according to the local time of the machince the app is ran on? Potential error if the user's machine time is not configured)
+2: Create a watch list object which has functions to add, remove stocks. Class function to modify a name of an instance. Functions which would show the stocks stored in a list in a formatted form(showing price, market cap, sector, etc)
+3: Create a command line interface which would allow full application usability.
+(Optional): create a graphical user interface.
+
+Scope of Work:
+Stock Class:
+b.1. Function to get basic info. [COMPLETE]
+b.2. Function to check if ticker is valid. [COMPLETE]
+b.3. Function to get up to date price.
+
+Watch List Class:
+a.1. Function to add a stock. [COMPLETE]
+a.2. Function to delete a stock. [COMPLETE]
+a.3. Function to show all stocks in formatted form in the watch list. [COMPLETE]
+a.4. Function to modify watch list name. [COMPLETE]
+
+Interface:
+1d. Basic CLI menu.
+
+Utils:
+1c. Module which would with csv files: [COMPLETE]
+    Storing valid stock tickers in a local file to reduce api requests. [COMPLETE]
+
+6. Timeline:
+Start Date: 10/21/2024
+End Date: 11/21/2024
+
+7. Milestones:
+    November 1st - finished b.1, b.2 and 1c.
+    November 8th - finished watch list class.
