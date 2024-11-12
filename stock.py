@@ -1,6 +1,6 @@
-#CLASS FOR A STOCK 
 from dataclasses import dataclass
 from urllib.request import urlopen
+from urllib.error import HTTPError, URLError 
 import json
 import certifi
 import utils.tickers_file_module as tfm
@@ -26,9 +26,29 @@ class Stock:
     
     @staticmethod
     def get_jsonparsed_data(url):
-        response = urlopen(url, cafile=certifi.where())
-        data = response.read().decode("utf-8")
-        return json.loads(data)
+        try:
+            response = urlopen(url, cafile=certifi.where())
+            data = response.read().decode("utf-8")
+            return json.loads(data)
+        #.reason provides reason for an error, .code provides http status code (400, 401, 403, etc).
+        except HTTPError as error:
+            print(f"HTTP Error: {error.code} - {error.reason}") 
+            return None
+        
+        except URLError as error:
+            print(f"URL Error: {error.reason}")
+            return None
+    
+        except json.JSONDecodeError:
+            print("Error decoding JSON. The response may not be valid JSON.")
+            return None
+        
+        except Exception as error:
+            print(f"An unexpected error occurred: {error}")
+            return None
+        
+        
+         
     
     def get_stock_info(self):
         """Assigns data to an instance of a stock class"""
