@@ -54,19 +54,31 @@ class Stock:
         """Assigns data to an instance of a stock class"""
         url = (f"https://financialmodelingprep.com/api/v3/profile/{self.ticker_symbol}?apikey={self.API_KEY}")
         data = Stock.get_jsonparsed_data(url)
-       
-        #gets numerical data
-        self.market_cap = Stock.format_mcap(data[0]['mktCap'])
-        self.price = str(data[0]['price'])
+
+        if data == [] or data is None: #handles a situation when API request encounter an error and return empty data or []
+            print("API request failed. Please try again.")
+            self.price ='N/A'
+            self.market_cap ='N/A'
+            self.name ='N/A'
+            self.sector = 'N/A'
+            self.country ='N/A'
+            self.exchange ='N/A'
+            self.currency ='N/A'
+            return None
         
-        #text info
-        self.name = data[0]['companyName']
-        self.sector = data[0]['sector']
-        self.country = data[0]['country']
-        self.exchange = data[0]['exchange']
-        
-        #misc info
-        self.currency = data[0]['currency']
+        else:
+            #gets numerical data
+            self.market_cap = Stock.format_mcap(data[0]['mktCap'])
+            self.price = str(data[0]['price'])
+            
+            #text info
+            self.name = data[0]['companyName']
+            self.sector = data[0]['sector']
+            self.country = data[0]['country']
+            self.exchange = data[0]['exchange']
+            
+            #misc info
+            self.currency = data[0]['currency']
         
     def check_ticker(self):
         valid_tickers_list = []
@@ -100,8 +112,16 @@ class Stock:
         url = (f"https://financialmodelingprep.com/api/v3/quote-short/{self.ticker_symbol}?apikey={self.API_KEY}")
         data = Stock.get_jsonparsed_data(url)
         
-        self.price = str(data[0]['price']) 
+        if data == [] or data is None: #handles a situation when API request encounter an error and return empty data or []
+            print("API request failed. Please try again.")
+            self.price = 'N/A'
+            return None
+        
+        else:
+            self.price = str(data[0]['price']) 
+            
     
+            
     #def get price change over time in numbers. NOT PERCENT. https://financialmodelingprep.com/api/v3/stock-price-change/AAPL
    
    
