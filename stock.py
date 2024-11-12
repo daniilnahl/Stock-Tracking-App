@@ -75,4 +75,17 @@ class Stock:
             return f"{mcap / 1_000_000_000_000:.2f}T" #trillions
         else:
             return f"{mcap / 1_000_000_000:.3f}B"  #billions
-            
+        
+    def get_realtime_price(self): #gets real time price of the stock
+        url = (f"https://financialmodelingprep.com/api/v3/quote-short/{self.ticker_symbol}?apikey={self.API_KEY}")
+        data = Stock.get_jsonparsed_data(url)
+        
+        self.price = str(data[0]['price']) 
+    
+    #def get price change over time in numbers. NOT PERCENT. https://financialmodelingprep.com/api/v3/stock-price-change/AAPL
+   
+   
+    
+# when you will get to updating already created watch list when user launches the app there is a bulk API request which lets you get data for multiple stocks through one requests:Multiple Company Prices API
+# Get multiple company prices at once
+# https://financialmodelingprep.com/api/v3/quote/AAPL,MSFT

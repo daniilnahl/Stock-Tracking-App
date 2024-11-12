@@ -16,27 +16,11 @@ def main():
     #WORKS NOW
     
     stock1 = Stock('AMZN', API_KEY)
-    stock2 = Stock('AAPL', API_KEY)
-    stock3 = Stock('AMD', API_KEY)
     stock1.get_stock_info()
-    stock2.get_stock_info()
-    stock3.get_stock_info()
-    
-    watch1 = Watch_list('Test')
-    watch1.add_stock(stock1)
-    watch1.add_stock(stock2)
-    watch1.add_stock(stock3)
-    
-    print(watch1.name)
-    watch1.change_name()
-    print(watch1.name)
-    
-    # print(watch1)
-    # watch1.show_stocks()
-    
-    # stock1.check_ticker()
-    # stock2.check_ticker()
-    # stock3.check_ticker()
+    print(stock1)
+    stock1.get_realtime_price()
+    print(stock1)    
+   
     
 if __name__=="__main__":
     main()
