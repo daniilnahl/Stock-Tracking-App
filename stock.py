@@ -17,6 +17,15 @@ class Stock:
     price: str = None
     market_cap: str = None
     
+    #price over time
+    price_1d: str = None
+    price_5d: str = None
+    price_30d: str = None
+    price_3m: str = None
+    price_6m: str = None
+    price_1y: str = None
+    price_5y: str = None
+    
     #misc info
     currency: str = None
     
@@ -61,7 +70,21 @@ class Stock:
         
         else:
             self.price = str(data[0]['price']) 
-            
+     
+    def get_price_over_time(self):
+        url = (f"https://financialmodelingprep.com/api/v3/stock-price-change/{self.ticker_symbol}?apikey={self.API_KEY}")
+        data = um.get_jsonparsed_data(url)
+        #assigns data
+        self.price_1d  =  str(round(data[0]['1D'], 2)) + "%"
+        self.price_5d  =  str(round(data[0]['5D'], 2)) + "%"
+        self.price_30d =  str(round(data[0]['1M'], 2)) + "%"
+        self.price_3m  =  str(round(data[0]['3M'], 2)) + "%"
+        self.price_6m  =  str(round(data[0]['6M'], 2)) + "%"
+        self.price_1y  =  str(round(data[0]['1Y'], 2)) + "%"
+        self.price_5y  =  str(round(data[0]['5Y'], 2)) + "%"
+        
+        
+
     @staticmethod               
     def format_mcap(mcap: float):    
         if abs(mcap) >= 1_000_000_000_000:
@@ -71,7 +94,7 @@ class Stock:
             
     #def get price change over time in numbers. NOT PERCENT. https://financialmodelingprep.com/api/v3/stock-price-change/AAPL
    
-   
+    
     
 # when you will get to updating already created watch list when user launches the app there is a bulk API request which lets you get data for multiple stocks through one requests:Multiple Company Prices API
 # Get multiple company prices at once

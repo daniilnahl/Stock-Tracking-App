@@ -19,7 +19,8 @@ def main():
     stock1.get_stock_info()
     print(stock1)
     stock1.get_realtime_price()
-    print(stock1)    
+    stock1.get_price_over_time()
+    print(stock1) 
    
     
 if __name__=="__main__":
