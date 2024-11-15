@@ -16,7 +16,7 @@ Stock Class:
 b.1. Function to get basic info. [COMPLETE]
 b.2. Function to check if ticker is valid. [COMPLETE]
 b.3. Function to get up to date price. [COMPLETE]
-b.4. Function to get price change over time.
+b.4. Function to get price change over time. [COMPLETE]
 
 Watch List Class:
 a.1. Function to add a stock. [COMPLETE]
@@ -30,7 +30,7 @@ Interface:
 Utils:
 1c. Module which would with csv files: [COMPLETE]
     Storing valid stock tickers in a local file to reduce api requests. [COMPLETE]
-    URL REQUEST AND Ticker check functions. 
+    URL REQUEST AND Ticker check functions. [COMPLETE]
 
 6. Timeline:
 Start Date: 10/21/2024
@@ -40,3 +40,4 @@ End Date: 11/21/2024
     November 1st - finished b.1, b.2 and 1c.
     November 8th - finished watch list class.
     November 11th - Create function to get real time price and created error handlings for all stock class functions.
+    November 15th - Created a function to get price over time. Adjusted watch list object functioncs accordingly. Improved object cohesion by moving some utility functions from stock class to utility module.

@@ -83,8 +83,6 @@ class Stock:
         self.price_1y  =  str(round(data[0]['1Y'], 2)) + "%"
         self.price_5y  =  str(round(data[0]['5Y'], 2)) + "%"
         
-        
-
     @staticmethod               
     def format_mcap(mcap: float):    
         if abs(mcap) >= 1_000_000_000_000:
@@ -92,7 +90,6 @@ class Stock:
         else:
             return f"{mcap / 1_000_000_000:.3f}B"  #billions
             
-    #def get price change over time in numbers. NOT PERCENT. https://financialmodelingprep.com/api/v3/stock-price-change/AAPL
    
     
     

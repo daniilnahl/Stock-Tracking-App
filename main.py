@@ -17,11 +17,10 @@ def main():
     
     stock1 = Stock('AMZN', API_KEY)
     stock1.get_stock_info()
-    print(stock1)
-    stock1.get_realtime_price()
     stock1.get_price_over_time()
-    print(stock1) 
-   
+    watch_list1 = Watch_list("Test")
+    watch_list1.add_stock(stock1)
+    watch_list1.show_stocks()
     
 if __name__=="__main__":
     main()

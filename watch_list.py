@@ -27,14 +27,22 @@ class Watch_list:
         table.add_column("Exchange", style="magenta", no_wrap=True)
         table.add_column("Ticker", style="magenta")
         table.add_column("Company name", style="magenta")
-        table.add_column("Price", style="magenta")
         table.add_column("Market Cap", style="magenta")
+        table.add_column("Price", style="magenta")
+        table.add_column("1D", style="magenta")
+        table.add_column("5D", style="magenta")
+        table.add_column("1M", style="magenta")
+        table.add_column("3M", style="magenta")
+        table.add_column("6M", style="magenta")
+        table.add_column("1Y", style="magenta")
+        table.add_column("5Y", style="magenta")
         table.add_column("Sector", style="magenta")
         table.add_column("Country", style="magenta")
         
         for stock in self.stocks: #calls stock attributes 
-           table.add_row(stock.exchange, stock.ticker_symbol, stock.name, stock.price, stock.market_cap, stock.sector,  stock.country) 
-           
+           table.add_row(stock.exchange, stock.ticker_symbol, stock.name, stock.market_cap, stock.price, stock.price_1d, stock.price_5d, 
+                         stock.price_30d, stock.price_3m, stock.price_6m, stock.price_1y, stock.price_5y, stock.sector,  stock.country,) 
+        
         #creates console and prints table
         console = Console()
         console.print(table)
