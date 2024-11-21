@@ -26,6 +26,7 @@ a.4. Function to modify watch list name. [COMPLETE]
 
 Interface:
 1d. Basic CLI menu.
+    Watchlist CLI [COMPLETE]
 
 Utils:
 1c. Module which would with csv files: [COMPLETE]
@@ -41,3 +42,4 @@ End Date: 11/21/2024
     November 8th - finished watch list class.
     November 11th - Create function to get real time price and created error handlings for all stock class functions.
     November 15th - Created a function to get price over time. Adjusted watch list object functioncs accordingly. Improved object cohesion by moving some utility functions from stock class to utility module.
+    November 20th - Created a CLI menu using Typer API to control a watchlist.

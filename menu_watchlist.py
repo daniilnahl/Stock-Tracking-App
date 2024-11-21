@@ -1,4 +1,9 @@
-import main #api key
+import os
+from dotenv import load_dotenv
+#gets API_KEY from the virtual environment
+load_dotenv()
+API_KEY = os.getenv("MY_API_KEY")
+
 import typer #CLI
 
 #OBJECTS 
@@ -29,17 +34,18 @@ app = typer.Typer()
 @app.command()
 def add_stock():
     stock_ticker = (typer.prompt("Enter stock ticker")).upper()
-    stock_valid = utility_module.check_ticker(stock_ticker, main.API_KEY)
+    stock_valid = utility_module.check_ticker(stock_ticker, API_KEY)
     
     if stock_valid == False: #if stock ticker is invalid
         typer.echo("Invalid ticker. Try again.")
     else:#if stock ticker is valid we create an instance of the object and fill it up with data
-        stock = Stock(stock_ticker, main.API_KEY)   
+        stock = Stock(stock_ticker, API_KEY)   
         stock.get_stock_info()
         stock.get_price_over_time()
         #record the stock instance into the watchlist
         current_watchlist.add_stock(stock)
         save_watchlist(current_watchlist)#updates the external file
+        typer.echo("Succesfully added stock to watchlist.")
  
 @app.command()  
 def delete_stock():
@@ -53,6 +59,5 @@ def delete_stock():
 def show_stocks():
     current_watchlist.show_stocks()
     
-
 if __name__ == "__main__":
     app()
