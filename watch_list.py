@@ -12,13 +12,26 @@ class Watch_list:
     def add_stock(self, stock: object):
         self.stocks.append(stock)
         
-    def remove_stock(self, stock: object):
-        self.stocks.remove(stock)
-    
+    def remove_stock(self, stock_ticker: str):
+        for stock in self.stocks:
+            if stock_ticker == stock.ticker_symbol:
+                self.stocks.remove(stock)
+  
     def change_name(self, new_name=""):
         new_name = input('Enter  new name for this watch list: ')  
         self.name = new_name
-             
+    
+    def show_just_tickers(self):
+        table = Table(title="All Stocks")
+        table.add_column("Tickers")
+        
+        for stock in self.stocks:
+            table.add_row(stock.ticker_symbol)
+            
+        #creates console and prints table
+        console = Console()
+        console.print(table)
+          
     def show_stocks(self):
         #creates the table object
         table = Table(title=f"{self.name}")
