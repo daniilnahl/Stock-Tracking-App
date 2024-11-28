@@ -89,10 +89,3 @@ class Stock:
             return f"{mcap / 1_000_000_000_000:.2f}T" #trillions
         else:
             return f"{mcap / 1_000_000_000:.3f}B"  #billions
-            
-   
-    
-    
-# when you will get to updating already created watch list when user launches the app there is a bulk API request which lets you get data for multiple stocks through one requests:Multiple Company Prices API
-# Get multiple company prices at once
-# https://financialmodelingprep.com/api/v3/quote/AAPL,MSFT
