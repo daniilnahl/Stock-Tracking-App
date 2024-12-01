@@ -24,6 +24,26 @@ The **Stock Tracking App** was created as a passion project driven by my interes
 - Copy everything that's after the equals sign (=). Save this API key for later use.
   > ?apikey=[API_KEY]
 
+## How to download or clone the Project?
+### Option 1: Download the ZIP File
+- Visit the project repository on GitHub.
+- Click the green Code button at the top-right corner of the repository page.
+- Select **Download ZIP**.
+- Extract the downloaded ZIP file to your desired location.
+
+### Option 2: Clone the Repository
+To clone the project using Git, follow these steps:
+- Copy the repository URL from the Code button (e.g., https://github.com/username/repository.git).
+- Open your terminal or command prompt and navigate to the directory where you want to store the project.
+- Run the following command (put the link you copied instead):
+```bash
+git clone https://github.com/username/repository.git
+```
+- Navigate into the project directory:
+```bash
+cd repository
+```
+
 ## How to start the Application?
 ### 1. Create a Virtual Environment
 To ensure your project dependencies are isolated, create a virtual environment:
