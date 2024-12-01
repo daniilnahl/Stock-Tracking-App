@@ -1,9 +1,8 @@
 Project Title: 
-Stock Tracking Application
+Stock Tracking Application 1.0.0
 
 Project Description: 
-This applications allows the user to track stock information. The app allows user to find stocks by their ticker then automatically creates the base watch list in which the stock is stored. The user can view basic info on the stocks. Additionally, the user can creates and 
-delete(besides the original one) watch lists with unique names to track specific stocks. The user has full control over what stocks they put into a watch list. The user can add or delete stocks from watch lists. 
+This applications allows the user to track stock information. The app allows user to find stocks by their ticker then automatically creates the base watch list in which the stock is stored. The user can view basic info on the stocks. The user has full control over what stocks they put into a watch list. The user can add or delete stocks from watch lists. 
 
 Project Objectives:
 1: Create a functional stock object which has functions to get basic info on itself. (Create a function to update its price according to the local time of the machince the app is ran on? Potential error if the user's machine time is not configured)

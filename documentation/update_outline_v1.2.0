@@ -1,0 +1,44 @@
+Project Title: 
+    Stock Tracking Application 1.2.0
+
+Project Description: 
+    1.2.0 additions builds on 1.0.0 release version of this project and brings key features. 
+    1. Enables users to record the number of stocks owned for a specific ticker, along with the purchase price, to track price changes since acquisition. 
+    2. Provides a graph comparing the performance of the watchlist against the S&P 500 over time.
+
+
+Update Objectives:
+    1. Add an attribute to the Stock class to record the number of shares owned.
+    2. Update the Stock class to allow users to assign a purchase price to a specific instance.
+    3. Implement a method in the Stock class to calculate the price change since a specific acquisition.
+    4. Develop a function to generate a graph comparing the current watchlist performance against the S&P 500.
+    5. Create an S&P 500 object to include in the graph for comparison.
+
+Scope of Work:
+    Stock Class:
+        b.1. Add attribute to record the number of shares owned
+        b.2. Add functionality to assign a purchase price to a specific stock instance
+        b.3. Implement method to calculate price change since acquisition
+
+    Watch List Class:
+        a.1. Function to generate a performance graph comparing the watchlist to the S&P 500
+
+    Interface:
+        c.1. Stock ownership and price-tracking functionality
+        c.2. Performance graph visualization command
+
+    Utils:
+        d.1. Helper functions for graph generation and performance comparison?  
+
+    Performance Comparison:
+        e.1. Create S&P 500 object for graph visualization
+
+    Documentation:
+        f.1. Refine project documentation on github.
+
+6. Timeline:
+    Start Date: 12/01/2024
+    End Date: 12/21/2024
+
+7. Milestones:
+    
