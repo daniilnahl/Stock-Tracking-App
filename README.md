@@ -48,7 +48,7 @@ cd repository
 ### 1. Create a Virtual Environment
 To ensure your project dependencies are isolated, create a virtual environment:
 ```bash
-python -m venv venv
+python -m venv .venv
 ```
 
 ### 2. Activate the Virtual Environment
