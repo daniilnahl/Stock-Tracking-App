@@ -14,7 +14,7 @@ class Stock:
     exchange: str = None
     
     #numerical info
-    price: str = None
+    current_price: str = None
     market_cap: str = None
     
     #price over time
@@ -29,6 +29,22 @@ class Stock:
     #misc info
     currency: str = None
     
+    #user info
+    amount_owned: str = None
+    price_at_purchase: str = None
+           
+    def set_owned_amount(self, amount_owned: float, price_at_purchase: float): #setter can only take in one argument
+        """
+        Sets the amount of stocks owned at a specific price.
+        Args:
+        amount_owned (float): amount of stocks owned
+        price_at_purchase (float): price at which the stocks got owned at 
+        """
+        self.amount_owned = str(amount_owned)
+        self.price_at_purchase = str(price_at_purchase)
+        
+        
+        
     def get_stock_info(self):
         """Assigns data to an instance of a stock class"""
         url = (f"https://financialmodelingprep.com/api/v3/profile/{self.ticker_symbol}?apikey={self.API_KEY}")

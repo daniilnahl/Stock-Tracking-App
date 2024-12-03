@@ -40,11 +40,15 @@ def add_stock():
         typer.echo("Invalid ticker. Try again.")
     else:#if stock ticker is valid we create an instance of the object and fill it up with data
         stock = Stock(stock_ticker, API_KEY)   
+        #gets stock info
         stock.get_stock_info()
         stock.get_price_over_time()
+        
         #record the stock instance into the watchlist
         current_watchlist.add_stock(stock)
+        
         save_watchlist(current_watchlist)#updates the external file
+        
         typer.echo("Succesfully added stock to watchlist.")
  
 @app.command()  
