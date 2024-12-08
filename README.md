@@ -78,16 +78,17 @@ In the terminal type the following line to open the app menu:
 py .\menu_watchlist.py --help
 ```
 
-## Acknowledgments
+## Acknowledgments 
 - ### Financial Modeling Prep API
   #### This app utilizes the Financial Modeling Prep API for retrieving stock data.
   #### You can learn more about the API at https://financialmodelingprep.com/developer/docs/.
-- ### RICH API
+- ### RICH Library
   #### The app uses the RICH API for creating beautiful tables and enhancing the CLI interface.
   #### More information can be found at https://rich.readthedocs.io/.
-- ### Typer API
+- ### Typer Library
   #### The app is built using the Typer API to handle CLI commands.
   #### You can check out Typer at https://typer.tiangolo.com/.
+  #### Citation: Ramírez, S. Typer [Computer software]. https://github.com/fastapi/typer.
   
 ## Contributing
 Feel free to contribute by creating issues or submitting pull requests to enhance the app.
