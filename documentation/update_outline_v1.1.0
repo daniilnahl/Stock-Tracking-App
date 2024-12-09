@@ -1,5 +1,5 @@
 Project Title: 
-    Stock Tracking Application 1.2.0
+    Stock Tracking Application 1.1.0
 
 Project Description: 
     1.2.0 additions builds on 1.0.0 release version of this project and brings key features. 
@@ -15,10 +15,15 @@ Update Objectives:
     5. Create an S&P 500 object to include in the graph for comparison.
 
 Scope of Work:
+    Additionals:
+        v.1 Add check for stocks to not get repeated in a list. 
+        v.2 Add command to refresh watchlist with new data.
+        v.2 Add option for negative and postive return to be red or green accordingly.
+
     Stock Class:
-        b.1. Add attribute to record the number of shares owned
-        b.2. Add functionality to assign a purchase price to a specific stock instance
-        b.3. Implement method to calculate price change since acquisition
+        b.1. Add attribute to record the number of shares owned [DONE]
+        b.2. Add functionality to assign a purchase price to a specific stock instance [DONE]
+        b.3. Implement method to calculate price change since acquisition [DONE]
 
     Watch List Class:
         a.1. Function to generate a performance graph comparing the watchlist to the S&P 500
