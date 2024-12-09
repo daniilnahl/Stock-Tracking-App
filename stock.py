@@ -24,26 +24,32 @@ class Stock:
     price_3m: str = None
     price_6m: str = None
     price_1y: str = None
+    price_3y: str = None
     price_5y: str = None
     
     #misc info
     currency: str = None
     
     #user info
-    amount_owned: str = None
-    price_at_purchase: str = None
+    amount_owned: str = "0"
+    cost_basis: str = "-"
+    total_return: str = "-"
            
-    def set_owned_amount(self, amount_owned: float, price_at_purchase: float): #setter can only take in one argument
+    def set_owned_data(self, amount_owned: float, cost_basis: float): #setter can only take in one argument
         """
-        Sets the amount of stocks owned at a specific price.
+        Sets the amount of stocks bought at a specific price and calculates the return.
         Args:
         amount_owned (float): amount of stocks owned
-        price_at_purchase (float): price at which the stocks got owned at 
+        cost_basis (float): price at which the stocks got bought at 
         """
         self.amount_owned = str(amount_owned)
-        self.price_at_purchase = str(price_at_purchase)
+        self.cost_basis = str(cost_basis)
         
         
+        #cacluates percent return
+        if cost_basis > 0 and amount_owned > 0:
+            self.total_return = str(round(((float(self.current_price) / cost_basis) * 100), 3)) + "%"
+    
         
     def get_stock_info(self):
         """Assigns data to an instance of a stock class"""
@@ -52,7 +58,7 @@ class Stock:
 
         if data == [] or data is None: #handles a situation when API request encounter an error and return empty data or []
             print("API request failed. Please try again.")
-            self.price ='N/A'
+            self.current_price ='N/A'
             self.market_cap ='N/A'
             self.name ='N/A'
             self.sector = 'N/A'
@@ -64,7 +70,7 @@ class Stock:
         else:
             #gets numerical data
             self.market_cap = Stock.format_mcap(data[0]['mktCap'])
-            self.price = str(data[0]['price'])
+            self.current_price = str(data[0]['price'])
             
             #text info
             self.name = data[0]['companyName']
@@ -81,11 +87,11 @@ class Stock:
         
         if data == [] or data is None: #handles a situation when API request encounter an error and return empty data or []
             print("API request failed. Please try again.")
-            self.price = 'N/A'
+            self.current_price = 'N/A'
             return None
         
         else:
-            self.price = str(data[0]['price']) 
+            self.current_price = str(data[0]['price']) 
      
     def get_price_over_time(self):
         url = (f"https://financialmodelingprep.com/api/v3/stock-price-change/{self.ticker_symbol}?apikey={self.API_KEY}")
@@ -97,6 +103,7 @@ class Stock:
         self.price_3m  =  str(round(data[0]['3M'], 2)) + "%"
         self.price_6m  =  str(round(data[0]['6M'], 2)) + "%"
         self.price_1y  =  str(round(data[0]['1Y'], 2)) + "%"
+        self.price_3y  =  str(round(data[0]['3Y'], 2)) + "%"
         self.price_5y  =  str(round(data[0]['5Y'], 2)) + "%"
         
     @staticmethod               
