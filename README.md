@@ -23,6 +23,7 @@ The **Stock Tracking App** was created as a passion project driven by my interes
 - Once logged in, navigate to the [API Documentation](https://site.financialmodelingprep.com/developer/docs).
 - Copy everything that's after the equals sign (=). Save this API key for later use.
   > ?apikey=[API_KEY]
+  > | Example: ?apiKey=3fsdFSDffsjf32fsdfs42fdsf
 
 ## How to download or clone the Project?
 ### Option 1: Download the ZIP File
