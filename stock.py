@@ -48,7 +48,8 @@ class Stock:
         
         #cacluates percent return
         if cost_basis > 0 and amount_owned > 0:
-            self.total_return = str(round(((float(self.current_price) / cost_basis) * 100), 3)) + "%"
+            total_return_float = round(((float(self.current_price) - cost_basis) / cost_basis) * 100, 2)
+            self.total_return = str(total_return_float) + "%"
     
         
     def get_stock_info(self):

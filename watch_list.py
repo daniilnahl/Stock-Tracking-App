@@ -44,7 +44,7 @@ class Watch_list:
         table.add_column("Amount Owned", style="magenta")
         table.add_column("Cost Basis", style="magenta")
         table.add_column("Price", style="magenta")
-        table.add_column("Total Return", style="magenta")
+        table.add_column("Your Total Return", style="magenta")
         table.add_column("1D", style="magenta")
         table.add_column("5D", style="magenta")
         table.add_column("1M", style="magenta")

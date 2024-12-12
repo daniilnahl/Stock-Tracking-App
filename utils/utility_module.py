@@ -6,6 +6,11 @@ import certifi
 
 #write to file
 def write_file(valid_ticker: str):
+    """_summary_
+
+    Args:
+        valid_ticker (str): _description_
+    """
     with open('list_of_valid_tickers.csv', 'a', newline='', encoding='utf-8') as valid_tickers_file: #'a' appends the data being written into the file. 'w' was overwriting.
         writer = csv.writer(valid_tickers_file)
         #print(valid_ticker) records the ticker as single string 
@@ -13,6 +18,11 @@ def write_file(valid_ticker: str):
 
 #read from file
 def read_file(valid_tickers_list: list):
+    """_summary_
+
+    Args:
+        valid_tickers_list (list): _description_
+    """
     with open('list_of_valid_tickers.csv', 'r', newline='', encoding='utf-8') as valid_tickers_file:
         reader = csv.reader(valid_tickers_file)
         for valid_ticker in reader:
@@ -22,10 +32,12 @@ def read_file(valid_tickers_list: list):
 def get_jsonparsed_data(url):
     """
     Processes the .json file that gets returned from an API request.
+    
     Args:
-    url: url address for a specific API request.
+        url: url address for a specific API request.
+    
     Returns:
-    API request in a format of a dictionary inside a list.
+        API request in a format of a dictionary inside a list.
     """
     try:
         response = urlopen(url, cafile=certifi.where())
@@ -52,9 +64,10 @@ def check_ticker(ticker_symbol: str, API_KEY):
     """
     Checks if a stock ticker is real. If real and wasn't on local file stores to local file to preserve limited amount of API requests and returns true. 
     If not on file and can't be found through API returns false.
+    
     Args:
-    ticker_symbol: stock ticker thats getting checked.
-    API_KEY: API key to get a succseful response from the FTM server.
+        ticker_symbol: stock ticker thats getting checked.
+        API_KEY: API key to get a succseful response from the FTM server.
     """
     valid_tickers_list = []
     read_file(valid_tickers_list)
