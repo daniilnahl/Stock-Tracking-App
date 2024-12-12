@@ -33,6 +33,9 @@ app = typer.Typer()
 
 @app.command()
 def add_stock():
+    """
+    add a stock to the watchlist.
+    """
     stock_ticker = (typer.prompt("Enter stock ticker")).upper()
     stock_valid = utility_module.check_ticker(stock_ticker, API_KEY)
     
@@ -42,7 +45,6 @@ def add_stock():
         stock = Stock(stock_ticker, API_KEY)   
         #gets stock info
         stock.get_stock_info()
-        stock.get_realtime_price()
         stock.get_price_over_time()
         
         #loop to get user info on owned stocks
@@ -68,7 +70,10 @@ def add_stock():
         typer.echo("Succesfully added stock to watchlist.")
  
 @app.command()  
-def delete_stock():
+def remove_stock():
+    """
+    remove a stock from the watchlist.
+    """
     current_watchlist.show_just_tickers()
     stock_ticker = (typer.prompt("Enter stock ticker")).upper()
     current_watchlist.remove_stock(stock_ticker)#removes the stock
@@ -77,7 +82,19 @@ def delete_stock():
 
 @app.command()
 def show_stocks():
+    """
+    display a comprehensive table of the stocks, including relevant financial data.
+    """
     current_watchlist.show_stocks()
-    
+
+@app.command()
+def refresh():
+    """
+    update stocks data to ensure accuracy and reflect the most current market information.
+    """
+    current_watchlist.refresh_stocks()
+    typer.echo("Succesfully updated stocks data.")
+    save_watchlist(current_watchlist)
+       
 if __name__ == "__main__":
     app()

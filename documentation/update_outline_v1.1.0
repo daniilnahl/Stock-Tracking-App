@@ -29,7 +29,7 @@ Scope of Work:
         a.1. Function to generate a performance graph comparing the watchlist to the S&P 500
 
     Interface:
-        c.1. Stock ownership and price-tracking functionality 
+        c.1. Stock ownership and price-tracking functionality [DONE]
         c.2. Performance graph visualization command
 
     Utils:

@@ -63,4 +63,8 @@ class Watch_list:
         #creates console and prints table
         console = Console()
         console.print(table)
-        
+    
+    def refresh_stocks(self):
+        for stock in self.stocks:
+            stock.get_stock_info()
+            stock.get_price_over_time()   
