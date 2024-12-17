@@ -41,33 +41,39 @@ def add_stock():
     
     if stock_valid == False: #if stock ticker is invalid
         typer.echo("Invalid ticker. Try again.")
-    else:#if stock ticker is valid we create an instance of the object and fill it up with data
-        stock = Stock(stock_ticker, API_KEY)   
-        #gets stock info
-        stock.get_stock_info()
-        stock.get_price_over_time()
+    else:#if stock ticker is valid pass
         
-        #loop to get user info on owned stocks
-        while True:
-            try:
-                stock_amount = typer.prompt("Enter amount of stocks owned", type=(float))
-                stock_cb = typer.prompt("Enter cost basis of owned stocks", type=(float))
-
-                if stock_amount < 0 or stock_cb < 0: #if values are negative dont add them
-                    typer.echo('Invalid input. Please enter numeric values that are greater or equal to 0.')
-                else:
-                    stock.set_owned_data(stock_amount, stock_cb)
-                    break   
-            except ValueError:
-                typer.echo("Invalid input. Please enter numeric values, such as 10.1 or 123.")
+        #check if this stock already exists if not create an instance of the object and fill it up with data
+        if current_watchlist.check_stock_existance(stock_ticker):
+            typer.echo("Stock already exists in the watchlist.")
+        
+        else:
+            stock = Stock(stock_ticker, API_KEY)   
+            #gets stock info
+            stock.get_stock_info()
+            stock.get_price_over_time()
             
-                 
-        #record the stock instance into the watchlist
-        current_watchlist.add_stock(stock) 
-        
-        save_watchlist(current_watchlist)#updates the external file
-        
-        typer.echo("Succesfully added stock to watchlist.")
+            #loop to get user info on owned stocks
+            while True:
+                try:
+                    stock_amount = typer.prompt("Enter amount of stocks owned", type=(float))
+                    stock_cb = typer.prompt("Enter cost basis of owned stocks", type=(float))
+
+                    if stock_amount < 0 or stock_cb < 0: #if values are negative dont add them
+                        typer.echo('Invalid input. Please enter numeric values that are greater or equal to 0.')
+                    else:
+                        stock.set_owned_data(stock_amount, stock_cb)
+                        break   
+                except ValueError:
+                    typer.echo("Invalid input. Please enter numeric values, such as 10.1 or 123.")
+                
+                    
+            #record the stock instance into the watchlist
+            current_watchlist.add_stock(stock) 
+            
+            save_watchlist(current_watchlist)#updates the external file
+            
+            typer.echo("Succesfully added stock to watchlist.")
  
 @app.command()  
 def remove_stock():

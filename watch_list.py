@@ -16,7 +16,14 @@ class Watch_list:
         for stock in self.stocks:
             if stock_ticker == stock.ticker_symbol:
                 self.stocks.remove(stock)
-  
+    
+    def check_stock_existance(self, stock_ticker:str):
+        for stock in self.stocks:
+            if stock_ticker == stock.ticker_symbol:
+                return True
+        
+        return False
+    
     def change_name(self, new_name=""):
         new_name = input('Enter  new name for this watch list: ')  
         self.name = new_name
