@@ -88,4 +88,3 @@ def check_ticker(ticker_symbol: str, API_KEY):
         else:
             write_file(ticker_symbol)
             return True    
-                

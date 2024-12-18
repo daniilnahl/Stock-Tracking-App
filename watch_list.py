@@ -23,7 +23,7 @@ class Watch_list:
                 return True
         
         return False
-    
+        
     def change_name(self, new_name=""):
         new_name = input('Enter  new name for this watch list: ')  
         self.name = new_name
@@ -64,8 +64,8 @@ class Watch_list:
         table.add_column("Country", style="magenta")
         
         for stock in self.stocks: #calls stock attributes 
-           table.add_row(stock.exchange, stock.ticker_symbol, stock.name, stock.market_cap, stock.amount_owned, stock.cost_basis, stock.current_price, stock.total_return, stock.price_1d, stock.price_5d, 
-                         stock.price_30d, stock.price_3m, stock.price_6m, stock.price_1y,stock.price_3y, stock.price_5y, stock.sector,  stock.country,) 
+           table.add_row(stock.exchange, stock.ticker_symbol, stock.name, stock.market_cap, stock.amount_owned, stock.cost_basis, stock.current_price, stock.total_return, stock.price_1d + "%" , stock.price_5d + "%", 
+                         stock.price_30d+ "%", stock.price_3m+ "%", stock.price_6m+ "%", stock.price_1y+ "%", stock.price_3y+ "%", stock.price_5y+ "%", stock.sector,  stock.country,) 
         
         #creates console and prints table
         console = Console()

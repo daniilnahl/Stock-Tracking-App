@@ -16,8 +16,8 @@ Update Objectives:
 
 Scope of Work:
     Additionals:
-        v.1 Add check for stocks to not get repeated in a list. 
-        v.2 Add command to refresh watchlist with new data.
+        v.1 Add check for stocks to not get repeated in a list. [DONE]
+        v.2 Add command to refresh watchlist with new data.[DONE]
         v.2 Add option for negative and postive return to be red or green accordingly.
 
     Stock Class:
