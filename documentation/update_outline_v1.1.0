@@ -18,7 +18,8 @@ Scope of Work:
     Additionals:
         v.1 Add check for stocks to not get repeated in a list. [DONE]
         v.2 Add command to refresh watchlist with new data.[DONE]
-        v.2 Add option for negative and postive return to be red or green accordingly.
+        v.3 Add option for negative and postive return to be red or green accordingly. [DONE]
+        v.4 Test all edge cases and create checks. Ex: if something in a stock is N/A or none don't let it go through, etc.
 
     Stock Class:
         b.1. Add attribute to record the number of shares owned [DONE]
@@ -26,17 +27,17 @@ Scope of Work:
         b.3. Implement method to calculate price change since acquisition [DONE]
 
     Watch List Class:
-        a.1. Function to generate a performance graph comparing the watchlist to the S&P 500
+        a.1. Function to generate a performance graph comparing the watchlist to the S&P 500 [NO LONGER PART OF PROJECT]
 
     Interface:
         c.1. Stock ownership and price-tracking functionality [DONE]
-        c.2. Performance graph visualization command
+        c.2. Performance graph visualization command 
 
     Utils:
-        d.1. Helper functions for graph generation and performance comparison?  
+        d.1. Helper functions for graph generation and performance comparison? [WASN'T NEEDED]
 
     Performance Comparison:
-        e.1. Create S&P 500 object for graph visualization
+        e.1. Create S&P 500 object for graph visualization [NO LONGER PART OF PROJECT]
 
     Documentation:
         f.1. Refine project documentation on github.

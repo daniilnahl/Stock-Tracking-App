@@ -37,7 +37,7 @@ class Stock:
     cost_basis: str = "-"
     total_return: str = "-"
            
-    def set_owned_data(self, amount_owned: float, cost_basis: float): #setter can only take in one argument
+    def set_owned_data(self, amount_owned: float, cost_basis: float): 
         """
         Sets the amount of stocks bought at a specific price and calculates the return.
         Args:
@@ -46,12 +46,16 @@ class Stock:
         """
         self.amount_owned = str(amount_owned)
         self.cost_basis = str(cost_basis)
+        Stock.calculate_return(self)
         
-        
+    
+    def calculate_return(self):
         #cacluates percent return
-        if cost_basis > 0 and amount_owned > 0:
-            total_return_float = round(((float(self.current_price) - cost_basis) / cost_basis) * 100, 2)
-            self.total_return = str(total_return_float) + "%"
+        float_val_cb = float(self.cost_basis)
+    
+        if float_val_cb > 0 and float(self.amount_owned) > 0:
+            total_return_float = round(((float(self.current_price) - float_val_cb) / float_val_cb) * 100, 2)
+            self.total_return = str(total_return_float)
     
         
     def get_stock_info(self):
@@ -116,15 +120,16 @@ class Stock:
         time_intervals = {"1D": 1, "5D": 5, "1M": 30, "3M": 90, "6M": 180, "1Y": 365, "3Y": 1095, "5Y": 1825}  
         
         
-        historical_values = {0: self.current_price} #most recent price manually added 
+        historical_values = {0: float(self.current_price)} #most recent price manually added 
         for period, days_num in time_intervals.items():
-            historical_value = float(self.current_price) / (1 + percent_changes[period] / 100) #formula to calculate historical price based on the price change
+            historical_value = round(float(self.current_price) / (1 + percent_changes[period] / 100), 2) #formula to calculate historical price based on the price change
             historical_values[days_num] = historical_value
             
         #sort data by days
         
         days_ago, prices = zip(*sorted(historical_values.items())) #sorts  historical_values by days in ascending order into pairs and then separates them into two lists
-
+        
+        
         #time stuff
         today = datetime.today() #today's time 
         dates =  [today - timedelta(days=days) for days in days_ago]
