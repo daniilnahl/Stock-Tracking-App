@@ -53,7 +53,6 @@ def add_stock():
             stock.get_stock_info()
             stock.get_price_over_time()
             
-            stock.graph_performance()
             #loop to get user info on owned stocks
             while True:
                 try:
@@ -93,7 +92,8 @@ def graph_stock():
     shows an approximate graph of a stock's performance.
     """
     current_watchlist.show_just_tickers()
-    
+    stock_ticker = (typer.prompt("Enter stock ticker")).upper()
+    current_watchlist.graph_stock(stock_ticker)
     
 @app.command()
 def show_stocks():

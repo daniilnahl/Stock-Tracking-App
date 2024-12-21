@@ -11,7 +11,12 @@ class Watch_list:
     
     def add_stock(self, stock: object):
         self.stocks.append(stock)
-        
+    
+    def graph_stock(self, stock_ticker: str):
+        for stock in self.stocks:
+            if stock_ticker == stock.ticker_symbol:
+                stock.graph_performance()
+                
     def remove_stock(self, stock_ticker: str):
         for stock in self.stocks:
             if stock_ticker == stock.ticker_symbol:
