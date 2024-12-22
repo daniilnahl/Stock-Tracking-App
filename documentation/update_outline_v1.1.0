@@ -19,7 +19,7 @@ Scope of Work:
         v.1 Add check for stocks to not get repeated in a list. [DONE]
         v.2 Add command to refresh watchlist with new data.[DONE]
         v.3 Add option for negative and postive return to be red or green accordingly. [DONE]
-        v.4 Test all edge cases and create checks. Ex: if something in a stock is N/A or none don't let it go through, etc.
+        v.4 Test all edge cases and create checks. Ex: if something in a stock is N/A or none don't let it go through, etc. [DONE]
 
     Stock Class:
         b.1. Add attribute to record the number of shares owned [DONE]
@@ -31,7 +31,7 @@ Scope of Work:
 
     Interface:
         c.1. Stock ownership and price-tracking functionality [DONE]
-        c.2. Performance graph visualization command 
+        c.2. Performance graph visualization command [DONE]
 
     Utils:
         d.1. Helper functions for graph generation and performance comparison? [WASN'T NEEDED]
