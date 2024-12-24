@@ -7,6 +7,8 @@ The **Stock Tracking App** was created as a passion project driven by my interes
 - Add stocks.
 - Remove stocks.
 - Show stocks.
+- Refresh stocks' data to be up-to-date.
+- Graph a stock's performance.
 
 # Setup Instructions
 ## Prerequisites
