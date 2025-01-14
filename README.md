@@ -57,18 +57,18 @@ python -m venv .venv
 ### 2. Activate the Virtual Environment
 On Windows:
 ```bash
-venv\Scripts\activate
+.venv\Scripts\activate
 ```
 On macOS/Linux:
 ```bash
-source venv/bin/activate
+source .venv/bin/activate
 ```
 Once activated, your terminal prompt should show (venv) indicating the virtual environment is active.
 
 ### 3. Install Dependencies
 Install the required Python packages by running:
 ```bash
-pip install -r requirements.txt
+pip install -r reqs.txt
 ```
 
 ### 4. Copy the API key into the .env
