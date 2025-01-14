@@ -80,6 +80,10 @@ In the terminal type the following line to open the app menu:
 ```bash
 py .\menu_watchlist.py --help
 ```
+or 
+```bash
+py menu_watchlist.py --help
+```
 
 ## Acknowledgments 
 - ### Financial Modeling Prep API
