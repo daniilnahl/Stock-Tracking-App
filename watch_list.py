@@ -127,7 +127,7 @@ class Watch_list:
         Returns:
             str: A string with colored text and percent sign at the end.
         """
-        return f"[{ Watch_list.get_color(float(percent))}]{percent + "%"}[/]"
+        return f"[{ Watch_list.get_color(float(percent))}]{percent}%[/]"
     
     @staticmethod       
     def get_color(value: float):
