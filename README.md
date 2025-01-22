@@ -1,7 +1,7 @@
 # Stock Tracking App
 
 ## Introduction
-The **Stock Tracking App** was created as a passion project driven by my interest in stocks and Python. In its current stage, the app allows the user to add, remove, and display stocks.
+The **Stock Tracking App** was created as a passion project driven by my interest in stocks and Python. Currently, the app allows the user to add, remove, graph, and display stocks.
 
 ## Features
 - Add stocks.
