@@ -104,7 +104,8 @@ class Watch_list:
         #creates console and prints table
         console = Console()
         console.print(table)
-    
+    def show_stocks_daniil_method(self):
+        
     def refresh_stocks(self):
         """
         Goes through all stock instances inside this instance and uses stock class functions to updates the attributes inside the stock instances.
