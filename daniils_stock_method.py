@@ -7,11 +7,11 @@ API_KEY = os.getenv("MY_API_KEY")
 import typer 
 
 #OBJECTS 
-from stock import Stock
-from watch_list import Watch_list
+from Legacy.stock import Stock
+from Legacy.watch_list import Watch_list
 
 #helper functions
-from utils import utility_module
+from Legacy.utils import utility_module
 import pickle
 import os
 

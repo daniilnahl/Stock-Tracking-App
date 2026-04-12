@@ -1,4 +1,4 @@
-from stock import Stock 
+from Legacy.stock import Stock 
 
 def main():
     test = Stock("AMD", "PIfzeXPMBKiGExOA9JdZSCfwu8264HK9")
