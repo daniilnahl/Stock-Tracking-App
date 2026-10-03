@@ -2,13 +2,15 @@
 
 ## Status
 
-**Proposed.** Prepared for [issue #25](https://github.com/daniilnahl/Stock-Tracking-App/issues/25)
-in [M1](https://github.com/daniilnahl/Stock-Tracking-App/milestone/2).
-Human acceptance is pending. This document proposes contracts; it does not
-approve runtime work, mark #25 complete, change the SRS, or authorize migration.
-Record the owner's decision, date and review link here before changing status
-or beginning dependent implementation. Rejected or changed contracts must be
-reconciled with downstream issues first.
+**Accepted.** The repository owner accepted the complete proposal at commit
+`f4693ab` on **2026-10-03**, recorded in the
+[PR #37 acceptance comment](https://github.com/daniilnahl/Stock-Tracking-App/pull/37#issuecomment-5973462602).
+This records the contract decision for
+[issue #25](https://github.com/daniilnahl/Stock-Tracking-App/issues/25) in
+[M1](https://github.com/daniilnahl/Stock-Tracking-App/milestone/2).
+The contract-acceptance gate is satisfied; runtime implementation remains pending
+and must follow the issue dependency plan. Acceptance does not authorize agent
+merges, user-data migration, unrelated public-contract changes or a new SRS.
 
 ## Context
 
@@ -19,12 +21,12 @@ combines credentials, string values, ownership, HTTP and charting. Root
 refresh orchestration. It is not a portfolio. Existing pickle state names both
 root classes. The CLIs load cwd-relative state at import time.
 
-This proposal implements the planning boundary for ARCH-001/002/005/006,
+This ADR implements the planning boundary for ARCH-001/002/005/006,
 DOM-001–004, FIN-001–005 and ERR-001–003. Financial meaning comes only from
 [FC-001–004, FC-020/030/040/041, FC-110 and §17](../FINANCIAL_CALCULATIONS.md).
 The [M1 issue map](../milestones/m1-plan.md) owns implementation and verification.
 
-## Proposed decision
+## Decision
 
 ### Package and dependency direction
 
@@ -58,10 +60,10 @@ remain unchanged; CLI V2 and a shared public service API remain M6/M7 work.
 
 [ADR-0005](0005-canonical-python-dependencies.md) remains canonical for Python
 3.11/3.12, pip, setuptools, dependency pins and root-module contracts. The only
-proposed extension is explicit package discovery for this source tree alongside
+accepted extension is explicit package discovery for this source tree alongside
 installed root modules/`utils`, and adding `src` to checkout test imports. No
-whole-repository relocation, dependency or Python change is proposed. Acceptance
-of this ADR would authorize that narrow extension to ADR-0005's flat packaging
+whole-repository relocation, dependency or Python change is authorized. Acceptance
+of this ADR authorizes that narrow extension to ADR-0005's flat packaging
 choice, without superseding its environment decision. #26 owns those edits and
 installed-wheel tests; this PR changes no toolchain configuration.
 
@@ -117,7 +119,7 @@ symbol; an instance still equals itself and uses object identity for hashing.
 Unknown exchange does not create a global ticker identity. No provider-stable
 identifier is invented: future support needs a reviewed contract extension.
 Portfolio construction never deduplicates either known or unresolved identities.
-This conservative equality choice is specifically subject to owner acceptance.
+This conservative equality choice is included in the recorded owner acceptance.
 
 ### Position — #27
 
@@ -257,7 +259,7 @@ orchestrating facade calls/rendering outside domain. Both CLI filenames, file
 paths (including `daniils_stock_methodd.pkl`) and commands remain unchanged.
 No new pickle loader, import utility, bulk rewrite or real user-state access is
 authorized. Only trusted synthetic dictionaries and pickles generated in isolated
-tests verify this proposal. Existing unsafe pickle loading remains a documented
+tests verify this contract. Existing unsafe pickle loading remains a documented
 M3 limitation, not an endorsement of arbitrary deserialization or a migration.
 
 ### Caller and field contract matrix
@@ -286,8 +288,8 @@ precision. Financial displays retain external rounding behavior without mutating
 Decimal values; no new formatting convention is approved here. A missing or
 zero-basis result is `-` rather than a crash, stale percentage or fabricated zero.
 These corrections, immutable Stock/Position models, conservative unknown-identity equality,
-owned copied lists and exclusion of saved credentials require explicit acceptance of
-this proposal before runtime implementation. No unrelated public-contract change
+owned copied lists and exclusion of saved credentials are covered by the recorded
+acceptance. Runtime implementation must follow the issue plan; no unrelated public-contract change
 is authorized.
 
 ## Alternatives and consequences
@@ -297,17 +299,19 @@ and pickle globals. Moving every module to src adds unnecessary M1 churn.
 Retaining arithmetic/credentials in a purported domain class violates isolation.
 The facade preserves the transition surface with one numeric implementation and
 known legacy limitations. It is deliberate transition code, not a second domain
-model. Owner acceptance resolves the proposed API/equality/collection choices;
+model. Recorded owner acceptance resolves the API/equality/collection choices;
 financial formulas remain those already approved.
 
 ## Review and acceptance gate
 
-The owner must accept the package extension, field/signature/error contracts,
+The owner accepted the package extension, field/signature/error contracts,
 identity/list semantics, pure result and facade/state corrections as one coherent
-proposal or identify revisions. Until a dated acceptance link is recorded here,
-#25's acceptance criterion remains unmet and #26–31/#33 runtime work stays blocked.
+proposal at `f4693ab`, with dated evidence recorded above. The #25 human acceptance
+criterion is satisfied. Runtime work for #26–31/#33 remains pending and must still
+resolve its upstream implementation dependencies. No agent merge is authorized;
+acceptance does not itself complete an implementation issue or M1.
 M0 is complete on the current baseline; old issue text describing open #13 or
 unconfigured mypy is historical. Strict mypy currently checks config.py with
 `python -m mypy`; extending its coverage needs maintained typed implementation,
 not an assumed whole-application type migration. No tests or behavior are changed
-by publishing this Proposed ADR.
+by recording this Accepted ADR.
