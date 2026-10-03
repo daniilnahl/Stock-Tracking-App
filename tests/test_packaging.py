@@ -41,6 +41,8 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
     assert payload == {
         "stock.py", "watch_list.py", "menu_watchlist.py", "daniils_stock_method.py",
         "utils/utility_module.py", "config.py",
+        "stock_tracker/__init__.py", "stock_tracker/domain/__init__.py",
+        "stock_tracker/domain/errors.py", "stock_tracker/domain/stock.py",
     }
 
     installed = tmp_path / "installed"
@@ -55,6 +57,7 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
     code = """
 import socket
 import sys
+from pathlib import Path
 from unittest.mock import patch
 
 sys.path.insert(0, sys.argv[1])
@@ -64,6 +67,26 @@ with patch.object(socket.socket, 'connect', side_effect=AssertionError('Network 
         import stock
 assert stock.__file__.startswith(sys.argv[1])
 assert utility.__file__.startswith(sys.argv[1])
+
+# Installed domain must work even when legacy/provider/UI modules are unavailable.
+blocked = {name: None for name in (
+    'stock', 'config', 'watch_list', 'menu_watchlist', 'daniils_stock_method',
+    'utils', 'utils.utility_module', 'dotenv', 'rich', 'typer', 'matplotlib',
+    'urllib', 'socket', 'sqlite3',
+)}
+with patch.dict(sys.modules, blocked):
+    import stock_tracker
+    import stock_tracker.domain
+    from stock_tracker.domain import Stock, DomainValidationError
+    first = Stock('AAPL', exchange='NASDAQ')
+    assert first == Stock('AAPL', 'Apple', 'NASDAQ')
+    assert first != Stock('AAPL', exchange='NYSE')
+    assert Stock('AAPL') != Stock('AAPL')
+    assert issubclass(DomainValidationError, ValueError)
+    for name in ('stock_tracker', 'stock_tracker.domain', Stock.__module__,
+                 DomainValidationError.__module__):
+        assert Path(sys.modules[name].__file__).resolve().is_relative_to(
+            Path(sys.argv[1]).resolve())
 """
     subprocess.run(
         [sys.executable, "-I", "-c", code, str(installed)], cwd=tmp_path,
