@@ -43,6 +43,7 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
         "utils/utility_module.py", "config.py",
         "stock_tracker/__init__.py", "stock_tracker/domain/__init__.py",
         "stock_tracker/domain/errors.py", "stock_tracker/domain/stock.py",
+        "stock_tracker/domain/position.py",
     }
 
     installed = tmp_path / "installed"
@@ -57,6 +58,7 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
     code = """
 import socket
 import sys
+from decimal import Decimal
 from pathlib import Path
 from unittest.mock import patch
 
@@ -77,14 +79,17 @@ blocked = {name: None for name in (
 with patch.dict(sys.modules, blocked):
     import stock_tracker
     import stock_tracker.domain
-    from stock_tracker.domain import Stock, DomainValidationError
+    from stock_tracker.domain import Stock, Position, DomainValidationError
     first = Stock('AAPL', exchange='NASDAQ')
     assert first == Stock('AAPL', 'Apple', 'NASDAQ')
     assert first != Stock('AAPL', exchange='NYSE')
     assert Stock('AAPL') != Stock('AAPL')
+    position = Position(first, Decimal('0.25'), Decimal('100.123456'))
+    assert position.with_owned_data(Decimal('1'), Decimal('2')).stock is first
+    assert position.quantity == Decimal('0.25')
     assert issubclass(DomainValidationError, ValueError)
     for name in ('stock_tracker', 'stock_tracker.domain', Stock.__module__,
-                 DomainValidationError.__module__):
+                 Position.__module__, DomainValidationError.__module__):
         assert Path(sys.modules[name].__file__).resolve().is_relative_to(
             Path(sys.argv[1]).resolve())
 """
