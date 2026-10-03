@@ -122,6 +122,36 @@ python -m unittest discover -s tests -v
 These checks verify credential patterns with redacted diagnostics and Git ignore
 rules. They do not certify that arbitrary secrets or historical commits are clean.
 
+### Development installation and packaging checks
+
+Use a fresh virtual environment as described above with Python 3.11 or 3.12.
+Install the application and development tools together:
+
+```bash
+python -m pip install ".[dev]"
+python -m pip check
+python -m pytest tests/test_packaging.py -v
+python -m pytest
+python -m ruff check .
+python -m pip wheel . --no-deps --no-build-isolation --wheel-dir dist
+```
+
+Repeat this workflow on each supported Python version. A second
+`python -m pip install ".[dev]"` must preserve the installed dependency versions.
+Runtime, development, transitive and build-backend versions are pinned in
+`pyproject.toml`; update those pins together. This provides version-pinned
+resolution, not byte-identical or hash-verified artifacts across platforms.
+Installation and packaging checks need package-index access but no API key,
+`.env`, user database or market-data request.
+
+The wheel contains the four existing application modules and `utils`; scratch
+scripts, tests, CSV data and local state are excluded. Existing CLI scripts must
+still run from the checkout. Packaging smoke checks import only `stock` and
+`utils.utility_module` with transport blocked, without instantiating a stock.
+The known unfinished watchlist method and canonical testing policy are tracked
+in issue #6; lint configuration and legacy lint cleanup remain separate M0 work.
+No mypy configuration exists yet.
+
 ## License
 This project is licensed under the MIT License.
 
