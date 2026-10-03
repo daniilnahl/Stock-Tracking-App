@@ -728,6 +728,13 @@ A feature is complete only when:
 
 ## Milestone 0 — Security and Development Foundation
 
+**Review status (2026-10-03):** The implementation and three exit criteria have
+supporting evidence at `e0bbeb1`. Formal milestone completion remains pending
+closure of CI issue #12 under `AGENTS.md` §10.7. See the
+[M0 verification record](docs/milestones/m0-verification.md) for the complete
+deliverable checklist, CI runs, security evidence and remaining boundaries.
+This status note does not change the approved requirements or exit criteria.
+
 - Rotate exposed credentials.
 - Remove secrets from source.
 - Add `.env.example`.

@@ -102,8 +102,8 @@ loader and credential validator have explicit annotations, including nullable
 keys and the validator's non-null return. Enable strict mypy for this real
 runtime module through `[tool.mypy]` in `pyproject.toml`. Run `python -m mypy`
 from the checkout after the canonical development installation, locally and in
-future CI. The pinned dev extra includes mypy and its additional dependency;
-existing runtime pins supply typing_extensions. No separate tooling workflow
+the Foundation CI workflow. The pinned dev extra includes mypy and its additional
+dependency; existing runtime pins supply typing_extensions. No separate tooling workflow
 or stubs are introduced. Mypy follows the typed dotenv dependency normally;
 there are no missing-import ignores, error suppressions or skipped imports.
 Tests and fixtures are not substituted for the checked runtime source.
@@ -479,8 +479,23 @@ these checks have appeared on a PR, the owner can select all five exact names
 above as required checks for `main` in repository Settings, using GitHub Actions
 as the source where available. This workflow creates checks; it does not change
 protections or bypass them. Record the PR Actions run URL and results in review
-evidence. Issue #12 and M0 must remain open until a passing `main` run is also
-recorded after an owner-authorized merge; agents must not merge to obtain it.
+evidence. A passing `main` run after an owner-authorized merge is required
+before issue #12 can close; agents must not merge to obtain it.
+
+### Recorded main CI evidence — 2026-10-03
+
+The [Foundation run after PR #34](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/37147831762)
+passed all five checks on `main` at
+`40ebf656f2017b59b31845696efc19e0e2b139bd`. The
+[Foundation run after PR #35](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/37149517565)
+also passed all five checks at
+`e0bbeb1b743405a5019e11d55eaea7577aa03977`, including the canonical setup docs.
+Both are completed push runs on `main`, rather than PR-only verification.
+This satisfies issue #12's main-run evidence requirement. Issue #12 was still
+open at review; M0 remains pending its closure under `AGENTS.md` §10.7.
+See the [M0 verification record](milestones/m0-verification.md) for local
+verification, requirement coverage and the limits of this foundation baseline.
+Branch-protection enforcement has not been verified or changed by this review.
 
 ---
 

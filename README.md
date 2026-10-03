@@ -161,12 +161,16 @@ on PRs and pushes to `main`, using the same pinned installation without provider
 secrets. The [CI contract](docs/TESTING.md#foundation-actions-workflow--issue-12)
 lists exact check names, scanner limitations and owner-only protection setup.
 
-[Issue #13](https://github.com/daniilnahl/Stock-Tracking-App/issues/13) and its PR
-record the SRS §23 requirement/issue checklist and sanitized exit evidence.
-[M0](https://github.com/daniilnahl/Stock-Tracking-App/milestone/1) stays open while
-required issues remain open. Passing setup checks alone do not close the
-milestone: all required issues, successful CI on `main` after an authorized
-merge, source security evidence and canonical documentation must be accounted for.
+The [M0 verification record](docs/milestones/m0-verification.md) consolidates
+the SRS §23 deliverable checklist, code review and sanitized exit evidence.
+At the 2026-10-03 review of `e0bbeb1`, all three technical exit criteria have
+supporting evidence, including a successful Foundation run on `main` after
+PR #35 merged. Twelve of the thirteen foundation issues are closed; CI
+[issue #12](https://github.com/daniilnahl/Stock-Tracking-App/issues/12) remains
+open despite passing CI. [M0](https://github.com/daniilnahl/Stock-Tracking-App/milestone/1)
+therefore remains pending formal completion under `AGENTS.md` §10.7.
+The foundation does not complete the later domain, provider, persistence or
+financial milestones.
 
 ## Acknowledgments 
 - ### Financial Modeling Prep API
