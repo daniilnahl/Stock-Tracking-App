@@ -155,12 +155,17 @@ Mock transports explicitly when testing provider responses. Subprocess tests
 must install their own network guard; parent-process patches do not propagate.
 The packaging subprocess uses offline pip flags and its own socket guard.
 
-Every test runs in its own `tmp_path` working directory, removes `MY_API_KEY`
+Every test runs in its own `tmp_path` working directory, removes `FMP_API_KEY`
+and the legacy `MY_API_KEY`
 from its test environment, disables dotenv discovery at the loading boundary,
 and redirects Matplotlib configuration to temporary storage with the Agg
 backend. Import CLI modules only after isolation is active. This prevents
 cwd-relative pickle/CSV access and source-relative dotenv discovery from
 touching user state. Never import application modules at collection time.
+Credential-loading regression tests opt into real dotenv parsing only for
+explicit temporary files. They exercise all three runtime scripts and mock
+only scratch-script transport work, using the actual Stock and Watch_list
+classes. CLI tests also verify that the canonical key reaches ticker validation.
 The CSV harness test writes only fictional ticker data in its temporary cwd.
 
 Test cases should cover:

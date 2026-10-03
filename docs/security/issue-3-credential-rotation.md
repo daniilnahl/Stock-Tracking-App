@@ -61,6 +61,20 @@ all exposed values, including previously committed credentials.
 
 ## Verification
 
+### Configuration integration update — issue #17
+
+The issue #17 change makes both legacy CLI scripts and explicit scratch-script
+execution read `FMP_API_KEY`. Current setup instructions and `.env.example` use
+that canonical name. `MY_API_KEY` remains a compatibility fallback only when
+`FMP_API_KEY` is absent after optional dotenv loading; an empty canonical value
+does not fall back. For the same variable, the process environment overrides
+dotenv. The inventory and remaining-work statements above describe the state
+at the time of the original attestation and are preserved as historical facts.
+This naming correction does not complete the shared configuration loader in #7
+or remove credential propagation into legacy domain/persistence objects.
+
+### Original attestation verification
+
 Manual owner attestation is the verification required by issue #3.
 Documentation was reviewed for scope, accurate attribution, and absence of
 credential values. `git diff --check` validates patch whitespace.

@@ -23,7 +23,7 @@ The **Stock Tracking App** was created as a passion project driven by my interes
 
 ### 2. Access the API Key
 - Once logged in, navigate to the [API Documentation](https://site.financialmodelingprep.com/developer/docs).
-- Copy your API key and save it locally as `MY_API_KEY` using the setup below.
+- Copy your API key and save it locally as `FMP_API_KEY` using the setup below.
 
 ## How to download or clone the Project?
 ### Option 1: Download the ZIP File
@@ -76,11 +76,15 @@ transitive dependencies. The former `reqs.txt` is no longer needed. Run the
 CLI commands below from the repository checkout; its CSV and watchlist files
 currently use paths relative to the working directory.
 
-### 4. Configure MY_API_KEY locally
+### 4. Configure FMP_API_KEY locally
 - Copy `.env.example` to `.env` (do not overwrite an existing local `.env`).
-- Set `MY_API_KEY` to your own API key in `.env`, or set the environment variable.
+- Set `FMP_API_KEY` to your own API key in `.env`, or set the environment variable.
 - The template intentionally leaves the value empty. Keep `.env` and local
   overrides out of Git; never paste credentials into source or examples.
+- The process environment takes precedence over `.env` for the same variable.
+  The legacy name `MY_API_KEY` is supported only when `FMP_API_KEY` is absent
+  from both sources. An explicitly empty `FMP_API_KEY` does not use the fallback;
+  remove the empty variable if you still rely on the legacy name.
 
 ### 5. Run the App
 In the terminal type the following line to open the app menu:

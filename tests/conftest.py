@@ -11,6 +11,7 @@ def isolated_environment(tmp_path, monkeypatch):
     """Keep legacy cwd-relative state and import-time configuration temporary."""
     monkeypatch.chdir(tmp_path)
     monkeypatch.delenv("MY_API_KEY", raising=False)
+    monkeypatch.delenv("FMP_API_KEY", raising=False)
     monkeypatch.setenv("MPLCONFIGDIR", str(tmp_path / "matplotlib"))
     monkeypatch.setenv("MPLBACKEND", "Agg")
     # dotenv otherwise searches from the CLI source file into the real checkout.

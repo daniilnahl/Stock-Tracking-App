@@ -13,7 +13,8 @@ import pickle
 
 #gets API_KEY from the virtual environment
 load_dotenv()
-API_KEY = os.getenv("MY_API_KEY")
+# FMP_API_KEY is canonical; retain the old name for existing local setups.
+API_KEY = os.getenv("FMP_API_KEY", os.getenv("MY_API_KEY"))
 
 #functions to handle saving watchlist 
 def save_watchlist(watchlist):
