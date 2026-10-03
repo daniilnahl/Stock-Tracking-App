@@ -50,32 +50,29 @@ They require a separate execution profile and MUST NOT become a hidden dependenc
 
 # 2. Canonical Commands
 
-Use repository-configured commands.
-
-Expected baseline:
-
-```bash
-pytest
-ruff check .
-```
-
-Type checking (the configured M0 scope):
+Use Python 3.11 or 3.12 in a fresh virtual environment created and activated
+as described in the [canonical README setup](../README.md#canonical-setup).
+From the checkout, use the same installation and verification commands:
 
 ```bash
+python -m pip install ".[dev]"
+python -m pip check
+python -m pytest tests/test_baseline.py tests/test_packaging.py tests/test_repository_hygiene.py -v
+python -m pytest
+python -m ruff check .
 python -m mypy
 ```
 
-Targeted example:
-
-```bash
-pytest tests/test_baseline.py -v
-```
+The targeted checks cover both CLI help surfaces in empty temporary working
+directories, pinned dependencies/offline packaging and tracked-source hygiene.
+For a narrower task, select the relevant test path with `python -m pytest <path> -v`.
+Optional packaging verification uses
+`python -m pip wheel . --no-deps --no-build-isolation --wheel-dir dist`.
 
 Agents must not claim a command passed unless it was actually executed.
 
-Use Python 3.11 or 3.12 and install the pinned development environment with
-`python -m pip install ".[dev]"`. `python -m pytest` and
-`python -m ruff check .` are equivalent module-based invocations. Pytest is
+`pytest` and `ruff check .` are equivalent console-script invocations in the
+activated environment. Pytest is
 configured to collect `test_*.py` under `tests/`; root-level `test.py` is a
 sanitized manual live-provider scratch script and must only run explicitly.
 The checkout is placed on the test import path so both pytest invocations
