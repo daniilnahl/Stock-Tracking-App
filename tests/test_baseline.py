@@ -108,6 +108,31 @@ def test_cli_help_without_credentials_or_state(cli_module, tmp_path):
     assert not (tmp_path / "list_of_valid_tickers.csv").exists()
 
 
+@pytest.mark.parametrize(
+    "cli_module", ["menu_watchlist", "daniils_stock_method"], indirect=True,
+)
+@pytest.mark.parametrize(
+    "valid, message",
+    [(False, "Invalid ticker. Try again."),
+     (True, "Stock already exists in the watchlist.")],
+)
+def test_cli_add_stock_validation(cli_module, valid, message, monkeypatch, tmp_path):
+    cli_module.current_watchlist.add_stock(SimpleNamespace(ticker_symbol="AAPL"))
+    calls = []
+
+    def check_ticker(ticker, api_key):
+        calls.append((ticker, api_key))
+        return valid
+
+    monkeypatch.setattr(cli_module.utility_module, "check_ticker", check_ticker)
+    result = CliRunner().invoke(cli_module.app, ["add-stock"], input="aapl\n")
+    assert result.exit_code == 0, result.output
+    assert message in result.output
+    assert calls == [("AAPL", None)]
+    assert len(cli_module.current_watchlist.stocks) == 1
+    assert not (tmp_path / cli_module.WATCHLIST_FILE).exists()
+
+
 def test_csv_writes_are_isolated(tmp_path):
     from utils import utility_module
 

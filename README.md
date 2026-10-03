@@ -150,8 +150,13 @@ scripts, tests, CSV data and local state are excluded. Existing CLI scripts must
 still run from the checkout. Packaging smoke checks import only `stock` and
 `utils.utility_module` with transport blocked, without instantiating a stock.
 The unfinished watchlist evaluation method explicitly raises `NotImplementedError`.
-The offline baseline verifies both CLI help surfaces without keys or saved state;
-lint configuration and legacy lint cleanup remain separate M0 work.
+The offline baseline verifies both CLI help surfaces without keys or saved state.
+
+Ruff's baseline is configured in `pyproject.toml` for Python 3.11 with explicit
+`E4`, `E7`, `E9` and `F` rules (import/statement errors, syntax errors and
+Pyflakes). Run `python -m ruff check .` from the checkout to check application
+code, automated tests and the sanitized scratch script. See the
+[testing policy](docs/TESTING.md) for rule rationale and coverage.
 No mypy configuration exists yet.
 
 ## License

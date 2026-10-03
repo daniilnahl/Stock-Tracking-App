@@ -1,8 +1,5 @@
 import os
 from dotenv import load_dotenv
-#gets API_KEY from the virtual environment
-load_dotenv()
-API_KEY = os.getenv("MY_API_KEY")
 
 import typer #CLI
 
@@ -13,7 +10,10 @@ from watch_list import Watch_list
 #helper functions
 from utils import utility_module
 import pickle
-import os
+
+#gets API_KEY from the virtual environment
+load_dotenv()
+API_KEY = os.getenv("MY_API_KEY")
 
 #functions to handle saving watchlist 
 def save_watchlist(watchlist):
@@ -58,7 +58,7 @@ def add_stock():
     stock_ticker = (typer.prompt("Enter stock ticker")).upper()
     stock_valid = utility_module.check_ticker(stock_ticker, API_KEY)
     
-    if stock_valid == False: #if stock ticker is invalid
+    if not stock_valid: #if stock ticker is invalid
         typer.echo("Invalid ticker. Try again.")
     else:#if stock ticker is valid pass
         

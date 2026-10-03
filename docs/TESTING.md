@@ -80,10 +80,16 @@ configured to collect `test_*.py` under `tests/`; root-level `test.py` is a
 sanitized manual live-provider scratch script and must only run explicitly.
 The checkout is placed on the test import path so both pytest invocations
 verify current source instead of an older installed wheel.
-No mypy configuration or `src/` layout exists yet. Ruff currently uses its
-default rules; pre-existing lint failures must be reported rather than hidden
-through exclusions or broad suppressions.
-Baseline CLI lint cleanup is assigned to issue #8; issue #6 does not perform it.
+No mypy configuration or `src/` layout exists yet. Ruff's explicit baseline in
+`pyproject.toml` selects `E4`, `E7`, `E9` and `F`: import/statement errors,
+syntax errors and Pyflakes checks such as undefined names and unused imports.
+These are Ruff's default rule families, made explicit to keep the baseline
+focused without imposing a broad style rewrite. The target is `py311`, the
+oldest supported runtime in ADR-0005; Python 3.12 remains supported.
+`ruff check .` covers application modules, automated tests and the sanitized
+scratch script `test.py`. Standard Ruff artifact/virtual-environment exclusions
+and Git ignore rules apply; there are no source exclusions, rule ignores or
+per-file suppressions. No formatter is introduced by this lint baseline.
 
 The baseline covers compilation of every tracked Python module, independent
 watchlists, add/remove/presence, ticker listing, both CLI help surfaces, and
