@@ -433,6 +433,58 @@ Required CI checks should be enforced through branch protection when available.
 
 Agents must not bypass failed required checks.
 
+## Foundation Actions workflow — issue #12
+
+`.github/workflows/foundation.yml` runs on every pull request and every push
+to `main`, without path filters. The stable job/check names are:
+
+| Check name | Command | Runtime |
+| --- | --- | --- |
+| Tests (Python 3.11) | `python -m pytest` | Python 3.11 |
+| Tests (Python 3.12) | `python -m pytest` | Python 3.12 |
+| Ruff | `python -m ruff check .` | Python 3.11 |
+| Mypy (configuration) | `python -m mypy` | Python 3.11 |
+| Credential patterns | `python -m pytest tests/test_repository_hygiene.py --tb=short` | Python 3.11 |
+
+Each job uses an isolated Ubuntu 24.04 runner, the same exact-pinned
+`python -m pip install ".[dev]"` strategy and `python -m pip check`.
+Checkout/setup actions are pinned to commit SHAs. The token has only
+`contents: read`, checkout does not persist it, and no job references secrets
+or uses `pull_request_target`. Provider key variables are explicitly empty.
+Package installation and action setup need internet access; normal tests
+retain the default transport guard and temporary filesystem isolation in §4.
+The matrix does not cancel other checks when one fails, and no failure is
+ignored. Mypy enforces the readiness decision above on real `config.py`;
+Ruff retains the existing source coverage and artifact exclusions.
+
+The secret-scanning gate deliberately reuses the tested issue #4 scanner:
+it examines **every tracked file in the checked-out Git index**, including
+legacy Python, configuration, docs and CSV, without source exclusions.
+It rejects nonempty literal credential assignments and credential-bearing URL
+patterns, and reports file/line identifiers with redacted findings. Short
+tracebacks omit local variables. This bounded scanner is justified for the
+known repository exposures, requires no new dependency or scanning credential,
+and includes synthetic-positive and safe-dynamic-value regression cases.
+It does not certify arbitrary secret formats, binary artifacts, Git history,
+or credential rotation. Generated/untracked artifacts are outside the scan.
+
+Before changing this workflow, validate its syntax with `actionlint` and run
+the canonical checks in a fresh supported-Python environment. Verify enforcement
+using temporary probes: a failing pytest assertion, an undefined name for Ruff,
+a staged synthetic credential assignment for the index scanner, and an
+incompatible annotated assignment in `config.py` for mypy. Require nonzero
+exits, verify scanner output omits the synthetic value, and remove all probes
+(including the staged probe) before final checks or commits. Never use a real
+credential or weaken checks to demonstrate a passing run.
+
+Only the repository owner may configure branch protection/rulesets. After
+these checks have appeared on a PR, the owner can select all five exact names
+above as required checks for `main` in repository Settings, using GitHub Actions
+as the source where available. This workflow creates checks; it does not change
+protections or bypass them. Record the PR Actions run URL and results in review
+evidence. Issue #12 and M0 must remain open until a passing `main` run is also
+recorded after an owner-authorized merge; agents must not merge to obtain it.
+
 ---
 
 # 17. Manual Verification
