@@ -96,6 +96,7 @@ def test_domain_import_and_construction_without_infrastructure(tmp_path):
     code = """
 import builtins
 import dataclasses
+from decimal import Decimal
 import os
 from pathlib import Path
 import sys
@@ -122,10 +123,13 @@ with patch.object(builtins, '__import__', guarded_import), \
      patch.object(builtins, 'print', denied), \
      patch.object(os, 'getenv', denied), \
      patch.object(type(os.environ), '__getitem__', denied):
-    from stock_tracker.domain import Stock, DomainValidationError
+    from stock_tracker.domain import Stock, Position, DomainValidationError
     stock = Stock('AAPL', exchange='NASDAQ')
     assert stock == Stock('AAPL', 'Apple', 'NASDAQ')
     assert Stock('AAPL') != Stock('AAPL')
+    position = Position(stock, Decimal('0.25'), Decimal('100.123456'))
+    replacement = position.with_owned_data(Decimal('2'), Decimal('3'))
+    assert replacement.stock is stock and position.quantity == Decimal('0.25')
     assert issubclass(DomainValidationError, ValueError)
     assert Path(sys.modules[Stock.__module__].__file__).resolve().is_relative_to(
         Path(sys.argv[1]).resolve())
