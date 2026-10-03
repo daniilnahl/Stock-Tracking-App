@@ -218,7 +218,9 @@ For each metric:
 
 Do not obtain expected values from the implementation under test.
 
-Expected results should come from the normative calculation specification or independently computed fixtures.
+Expected results should come from the normative
+[Financial Calculations Specification](FINANCIAL_CALCULATIONS.md) or
+independently computed fixtures.
 
 ---
 

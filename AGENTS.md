@@ -65,7 +65,7 @@ Before editing code:
 2. Read relevant `SRS.md` sections and requirement IDs.
 3. Read relevant ADRs.
 4. Read `docs/TESTING.md`.
-5. Read `docs/FINANCIAL_CALCULATIONS.md` if financial behavior is involved.
+5. Read [docs/FINANCIAL_CALCULATIONS.md](docs/FINANCIAL_CALCULATIONS.md) if financial behavior is involved.
 6. Read the relevant implementation.
 7. Search for callers of anything being changed.
 8. Read associated tests.
@@ -215,7 +215,7 @@ Presentation code must not become the source of financial business logic.
 
 Before implementing or changing a financial metric:
 
-1. Find its definition in `docs/FINANCIAL_CALCULATIONS.md`.
+1. Find its definition in [docs/FINANCIAL_CALCULATIONS.md](docs/FINANCIAL_CALCULATIONS.md).
 2. Confirm the formula, units, rounding, missing-data behavior, and market-data inputs.
 3. Add known-value tests.
 4. Preserve numeric values internally.
