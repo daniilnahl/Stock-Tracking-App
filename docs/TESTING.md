@@ -491,8 +491,10 @@ passed all five checks on `main` at
 also passed all five checks at
 `e0bbeb1b743405a5019e11d55eaea7577aa03977`, including the canonical setup docs.
 Both are completed push runs on `main`, rather than PR-only verification.
-This satisfies issue #12's main-run evidence requirement. Issue #12 was still
-open at review; M0 remains pending its closure under `AGENTS.md` §10.7.
+This satisfies issue #12's main-run evidence requirement. Its implementation
+was merged in [PR #34](https://github.com/daniilnahl/Stock-Tracking-App/pull/34);
+the owner confirmed completion and its issue state was reconciled to completed.
+All thirteen required M0 issues are closed, with no open M0 blocker.
 See the [M0 verification record](milestones/m0-verification.md) for local
 verification, requirement coverage and the limits of this foundation baseline.
 Branch-protection enforcement has not been verified or changed by this review.

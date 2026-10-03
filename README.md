@@ -165,10 +165,12 @@ The [M0 verification record](docs/milestones/m0-verification.md) consolidates
 the SRS §23 deliverable checklist, code review and sanitized exit evidence.
 At the 2026-10-03 review of `e0bbeb1`, all three technical exit criteria have
 supporting evidence, including a successful Foundation run on `main` after
-PR #35 merged. Twelve of the thirteen foundation issues are closed; CI
-[issue #12](https://github.com/daniilnahl/Stock-Tracking-App/issues/12) remains
-open despite passing CI. [M0](https://github.com/daniilnahl/Stock-Tracking-App/milestone/1)
-therefore remains pending formal completion under `AGENTS.md` §10.7.
+PR #35 merged. All thirteen foundation issues are closed; CI
+[issue #12](https://github.com/daniilnahl/Stock-Tracking-App/issues/12) was
+implemented in [PR #34](https://github.com/daniilnahl/Stock-Tracking-App/pull/34)
+and its completed state was reconciled after owner confirmation.
+[M0](https://github.com/daniilnahl/Stock-Tracking-App/milestone/1)
+is complete under `AGENTS.md` §10.7.
 The foundation does not complete the later domain, provider, persistence or
 financial milestones.
 

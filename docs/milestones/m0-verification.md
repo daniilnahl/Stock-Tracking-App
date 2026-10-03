@@ -10,12 +10,13 @@ and [#13](https://github.com/daniilnahl/Stock-Tracking-App/issues/13).
 
 The foundation implementation is present and all three
 [SRS §23](../../SRS.md#milestone-0--security-and-development-foundation) exit
-criteria have supporting evidence. **M0 cannot yet be reported formally
-complete:** the GitHub snapshot has twelve closed foundation issues and one
-open issue, #12; the milestone is open. `AGENTS.md` §10.7 requires every
-required issue to be closed. The passing main runs below resolve #12's
-outstanding CI evidence requirement and support its closure after review.
-This documentation change does not itself close an issue or milestone.
+criteria have supporting evidence. **M0 is complete under `AGENTS.md` §10.7:**
+all thirteen required foundation issues are closed and no M0 blocker remains.
+CI issue #12 was implemented in merged
+[PR #34](https://github.com/daniilnahl/Stock-Tracking-App/pull/34), and subsequent
+main runs passed every configured check. After the owner confirmed completion,
+its stale open state was reconciled to completed; no additional CI implementation
+was required. The GitHub milestone was then closed with the verified evidence.
 
 The review preserves the approved SRS v1.1, accepted
 [ADR-0005](../adr/0005-canonical-python-dependencies.md),
@@ -39,10 +40,10 @@ Their states describe the audit snapshot, not a promise about future state.
 | Add pytest | TEST-001–TEST-004 | [Test harness](../../tests/conftest.py) isolates credentials, dotenv, cwd, Matplotlib and network; collection excludes manual scratch execution. | [#6](https://github.com/daniilnahl/Stock-Tracking-App/issues/6) closed |
 | Add Ruff | TEST-005 | Explicit `E4`, `E7`, `E9`, `F` baseline for Python 3.11; repository source remains in scope. | [#8](https://github.com/daniilnahl/Stock-Tracking-App/issues/8) closed |
 | Add type checking when ready | DEV-001, TEST-005; SRS §23 | Strict mypy checks real `config.py`; [readiness decision](../TESTING.md#type-check-readiness-decision--issue-11) records legacy gaps and ownership. | [#11](https://github.com/daniilnahl/Stock-Tracking-App/issues/11) closed |
-| Add CI | TEST-002, TEST-003, TEST-005; GH-005 checks | [Foundation workflow](../../.github/workflows/foundation.yml); all five jobs passed on main, as recorded below. | #12 open; implementation merged in [PR #34](https://github.com/daniilnahl/Stock-Tracking-App/pull/34) |
+| Add CI | TEST-002, TEST-003, TEST-005; GH-005 checks | [Foundation workflow](../../.github/workflows/foundation.yml); all five jobs passed on main, as recorded below. | #12 closed; implementation merged in [PR #34](https://github.com/daniilnahl/Stock-Tracking-App/pull/34) |
 | Add PR and issue templates | GH-003, GH-004 | [Engineering task](../../.github/ISSUE_TEMPLATE/engineering_task.md) and [PR template](../../.github/pull_request_template.md) require scope, requirements, dependencies and actual verification. | [#10](https://github.com/daniilnahl/Stock-Tracking-App/issues/10) closed |
 | Add `AGENTS.md` | SRS §21; GH-003, GH-004 | Tracked operating policy and approved SRS are available on main. | #2 closed |
-| Add `docs/TESTING.md` | TEST-001–TEST-005 | Canonical commands, isolation, actual type scope and CI contract published. | #6, #11, #13 closed; #12 open |
+| Add `docs/TESTING.md` | TEST-001–TEST-005 | Canonical commands, isolation, actual type scope and CI contract published. | #6, #11, #12, #13 closed |
 | Add `docs/FINANCIAL_CALCULATIONS.md` | FIN-003–FIN-005, AN-001 | Normative v0.1 formulas, units, known-value example, open decisions and legacy discrepancies published. | [#9](https://github.com/daniilnahl/Stock-Tracking-App/issues/9) closed |
 
 ## Exit criteria evidence
@@ -123,10 +124,18 @@ walkthrough on both. Owner-attested rotation is intentionally not replaced with
 a live production request. Whole-application typing and financial/provider
 correctness remain outside the documented M0 baseline.
 
-## Completion handoff
+## Completion verification
 
-Review the recorded passing main runs and close issue #12 once its acceptance
-criteria are accepted. Then recheck all foundation issue states, required CI
-and SRS exits before marking M0 complete. This branch does not merge itself,
-change protections, rotate credentials, rewrite history or start M1 work.
+Re-verification after owner confirmation of PR #34 inspected its merged state,
+both passing main runs and every foundation issue. Issues #2–#13 and #17 are
+all closed as completed; the milestone has zero open issues. PR #34 records
+workflow syntax validation and temporary failure probes for pytest, Ruff,
+the credential-pattern scan and configured mypy. Its acceptance evidence and
+passing main checks satisfy #12 without new runtime or CI changes.
+
+The GitHub milestone is closed, and the README, SRS status note and testing
+record reflect completion. This documentation PR remains subject to review;
+it does not merge itself, change protections, rotate credentials, rewrite
+history or start M1 work. Existing later-milestone requirements have the
+ownership documented above and are not unassigned deferred M0 work.
 `AGENTS.md`, the accepted ADR and normative financial definitions remain intact.
