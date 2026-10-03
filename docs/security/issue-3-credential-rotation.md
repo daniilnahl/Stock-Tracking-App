@@ -61,6 +61,30 @@ all exposed values, including previously committed credentials.
 
 ## Verification
 
+### Current source and configuration review — 2026-10-03
+
+At audited `main` commit `e0bbeb1`, issues #4, #7 and #17 are closed.
+`.env` is untracked; `.env.example` contains only an empty `FMP_API_KEY`
+assignment. Both CLI modules and the explicit scratch script use the shared
+`config.py` loader, with canonical-name precedence and absent-only legacy
+fallback. Configuration representations, missing-key messages and mapped
+request diagnostics are covered by offline synthetic-credential tests.
+
+The Credential patterns check passed on the
+[audited main Foundation run](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/37149517565).
+It scans tracked index files for the known issue #4 literal and URL patterns,
+with redacted findings. It does not certify arbitrary secret formats or
+historical commits. The original inventory, integration note and verification
+below retain their historical meaning; source sanitization and shared loading
+have since been implemented.
+
+The owner's rotation attestation remains the evidence for external revocation;
+no credential was retrieved or tested against the provider during this review.
+Legacy `Stock.API_KEY` and pickle persistence still carry credentials at runtime,
+as explicitly bounded by issue #7; removing that coupling belongs to M1/M3.
+See the [M0 verification record](../milestones/m0-verification.md) for the
+complete security exit assessment and formal milestone status.
+
 ### Configuration integration update — issue #17
 
 The issue #17 change makes both legacy CLI scripts and explicit scratch-script
