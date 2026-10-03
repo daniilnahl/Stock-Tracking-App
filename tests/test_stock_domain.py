@@ -123,13 +123,15 @@ with patch.object(builtins, '__import__', guarded_import), \
      patch.object(builtins, 'print', denied), \
      patch.object(os, 'getenv', denied), \
      patch.object(type(os.environ), '__getitem__', denied):
-    from stock_tracker.domain import Stock, Position, DomainValidationError
+    from stock_tracker.domain import Stock, Position, Portfolio, DomainValidationError
     stock = Stock('AAPL', exchange='NASDAQ')
     assert stock == Stock('AAPL', 'Apple', 'NASDAQ')
     assert Stock('AAPL') != Stock('AAPL')
     position = Position(stock, Decimal('0.25'), Decimal('100.123456'))
     replacement = position.with_owned_data(Decimal('2'), Decimal('3'))
     assert replacement.stock is stock and position.quantity == Decimal('0.25')
+    portfolio = Portfolio(None, 'Example', [position, replacement, position])
+    assert portfolio.positions == [position, replacement, position]
     assert issubclass(DomainValidationError, ValueError)
     assert Path(sys.modules[Stock.__module__].__file__).resolve().is_relative_to(
         Path(sys.argv[1]).resolve())
