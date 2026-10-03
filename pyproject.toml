@@ -49,7 +49,7 @@ dev = [
 ]
 
 [tool.setuptools]
-py-modules = ["stock", "watch_list", "menu_watchlist", "daniils_stock_method"]
+py-modules = ["stock", "watch_list", "menu_watchlist", "daniils_stock_method", "config"]
 packages = ["utils"]
 
 [tool.pytest.ini_options]

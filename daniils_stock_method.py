@@ -1,5 +1,5 @@
 import os
-from dotenv import load_dotenv
+from config import ConfigurationError, load_configuration, require_api_key
 
 import typer 
 
@@ -12,9 +12,7 @@ from utils import utility_module
 import pickle
 
 #gets API_KEY from the virtual environment
-load_dotenv()
-# FMP_API_KEY is canonical; retain the old name for existing local setups.
-API_KEY = os.getenv("FMP_API_KEY", os.getenv("MY_API_KEY"))
+API_KEY = load_configuration().api_key
 
 #functions to handle saving watchlist 
 def save_watchlist(watchlist):
@@ -31,6 +29,15 @@ WATCHLIST_FILE = "daniils_stock_methodd.pkl"
 current_watchlist = load_watchlist()#loads it from an external file
 
 app = typer.Typer()
+
+@app.callback()
+def validate_configuration(ctx: typer.Context):
+    if ctx.invoked_subcommand in {"add-stock", "refresh"}:
+        try:
+            require_api_key(API_KEY)
+        except ConfigurationError as error:
+            typer.echo(str(error), err=True)
+            raise typer.Exit(code=1) from None
 
 @app.command()
 def add_stock():

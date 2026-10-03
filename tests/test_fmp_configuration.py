@@ -82,8 +82,9 @@ def test_environment_loading_does_not_require_dotenv_file(load_key):
 
 @pytest.mark.parametrize("environment", [
     {}, {"FMP_API_KEY": "", "MY_API_KEY": "synthetic-legacy"},
-], ids=["missing", "empty-canonical"])
-def test_missing_and_empty_canonical_keep_existing_failure_behavior(load_key, request, environment):
+    {"FMP_API_KEY": " \t", "MY_API_KEY": "synthetic-legacy"},
+], ids=["missing", "empty-canonical", "blank-canonical"])
+def test_missing_and_blank_keys_allow_cli_import_but_reject_scratch_requests(load_key, request, environment):
     if request.node.callspec.params["load_key"] == "test.py":
         with pytest.raises(SystemExit, match="Set FMP_API_KEY"):
             load_key(environment)

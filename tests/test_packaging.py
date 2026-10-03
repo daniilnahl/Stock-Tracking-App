@@ -40,7 +40,7 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
         payload = {name for name in archive.namelist() if ".dist-info/" not in name}
     assert payload == {
         "stock.py", "watch_list.py", "menu_watchlist.py", "daniils_stock_method.py",
-        "utils/utility_module.py",
+        "utils/utility_module.py", "config.py",
     }
 
     installed = tmp_path / "installed"

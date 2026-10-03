@@ -2,7 +2,10 @@ import csv
 from urllib.request import urlopen
 from urllib.error import HTTPError, URLError 
 import json
+import logging
 import certifi
+
+logger = logging.getLogger(__name__)
 
 #write to file
 def write_file(valid_ticker: str):
@@ -47,20 +50,20 @@ def get_jsonparsed_data(url):
         return json.loads(data) #parses .json into python objects
     
     #note: .reason provides reason for an error, .code provides http status code (400, 401, 403, etc).
-    except HTTPError as error: #url is ok and server returns error. Server side issue.
-        print(f"HTTP Error: {error.code} - {error.reason}") 
+    except HTTPError: # Error fields may contain credentials; never log them.
+        logger.warning("Market-data request failed: HTTP error.")
         return None
         
-    except URLError as error: #url not ok or network issue. Client side issue.
-        print(f"URL Error: {error.reason}")
+    except URLError:
+        logger.warning("Market-data request failed: connection error.")
         return None
     
     except json.JSONDecodeError:#when api doesn't return json. 
-        print("Error decoding JSON. The response may not be valid JSON.")
+        logger.warning("Market-data response was not valid JSON.")
         return None
         
-    except Exception as error: #unexpected error
-        print(f"An unexpected error occurred: {error}")
+    except Exception: # Preserve the legacy None contract without unsafe details.
+        logger.error("Market-data request failed: unexpected error.")
         return None
     
 def check_ticker(ticker_symbol: str, API_KEY):
@@ -90,4 +93,4 @@ def check_ticker(ticker_symbol: str, API_KEY):
             return False
         else:
             write_file(ticker_symbol)
-            return True    
+            return True

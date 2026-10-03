@@ -6,15 +6,12 @@ This makes live market-data requests; automated tests must not run main().
 
 
 def main():
-    import os
+    from config import ConfigurationError, load_configuration, require_api_key
 
-    from dotenv import load_dotenv
-
-    load_dotenv()
-    # FMP_API_KEY is canonical; retain the old name for existing local setups.
-    api_key = os.getenv("FMP_API_KEY", os.getenv("MY_API_KEY"))
-    if not api_key:
-        raise SystemExit("Set FMP_API_KEY in your environment or local .env first.")
+    try:
+        api_key = require_api_key(load_configuration().api_key)
+    except ConfigurationError as error:
+        raise SystemExit(str(error)) from None
 
     from stock import Stock
 

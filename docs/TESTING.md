@@ -168,6 +168,13 @@ only scratch-script transport work, using the actual Stock and Watch_list
 classes. CLI tests also verify that the canonical key reaches ticker validation.
 The CSV harness test writes only fictional ticker data in its temporary cwd.
 
+Issue #7 coverage also rejects missing/blank keys before add/refresh work,
+checks the shared configuration representation and dotenv failure diagnostics,
+and captures HTTP/URL/JSON/unexpected request logs using synthetic credentials.
+Successful add coverage inspects only a pickle produced in its temporary path;
+the shared Configuration object is not persisted, while legacy Stock.API_KEY
+storage remains explicitly covered as a deferred limitation.
+
 Test cases should cover:
 
 - 200 success
