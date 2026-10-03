@@ -1,8 +1,29 @@
-__pycache__/
+# Local credentials; keep the documented template trackable.
 .env
-/test
+.env.*
+!.env.example
+
+# Existing CLI state (do not remove users' local files).
 watchlist.pkl
-.venv/
+daniils_stock_methodd.pkl
+
+# Python, testing, linting, packaging, and virtual environments.
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+.tox/
+.nox/
 build/
 dist/
 *.egg-info/
+.eggs/
+.venv/
+venv/
+env/
+/test

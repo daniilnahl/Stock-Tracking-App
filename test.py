@@ -1,33 +1,32 @@
-from stock import Stock 
+"""Developer scratch script, not an automated test.
+
+Run explicitly with ``python test.py`` after configuring MY_API_KEY locally.
+This makes live market-data requests; automated tests must not run main().
+"""
+
 
 def main():
-    test = Stock("AMD", "PIfzeXPMBKiGExOA9JdZSCfwu8264HK9")
-    # forward pe -
-    # industry pe - FOUND
-    # PEG - 
-    # Price/FCF -
-    # Net profit margin 5y avg -
-    # PS - 
-    # ROIC - FOUND
-    # 5y revenue cagr - FOUND
-    # 5y fcf cagr - NOT FOUND (api doesnt provide historic fcf values).
-    # 3y eps growth - FOUND
-    # debt/equity -
-    # economic moat - 
-    # management quality -
+    import os
 
+    from dotenv import load_dotenv
 
-    test.get_stock_info()   
-    # industry pe - https://financialmodelingprep.com/stable/industry-pe-snapshot?date=2024-02-01&apikey=PIfzeXPMBKiGExOA9JdZSCfwu8264HK9
+    load_dotenv()
+    api_key = os.getenv("MY_API_KEY")
+    if not api_key:
+        raise SystemExit("Set MY_API_KEY in your environment or local .env first.")
 
-    # ROIC (also gives mcap) - https://financialmodelingprep.com/stable/key-metrics?symbol=AAPL&apikey=PIfzeXPMBKiGExOA9JdZSCfwu8264HK9
-    # EPS 4 years growth 
-        # get estimate eps from 4 years in future - https://financialmodelingprep.com/stable/analyst-estimates?symbol=AAPL&period=annual&page=0&limit=10&apikey=PIfzeXPMBKiGExOA9JdZSCfwu8264HK9  
-        # get current eps - https://financialmodelingprep.com/stable/earnings-calendar?apikey=PIfzeXPMBKiGExOA9JdZSCfwu8264HK9
-        # calcuate cagr 
+    from stock import Stock
 
+    stock = Stock("AMD", api_key)
+    stock.get_stock_info()
 
-    # 5 year revenue cagr - https://financialmodelingprep.com/stable/financial-growth?symbol=AAPL&apikey=PIfzeXPMBKiGExOA9JdZSCfwu8264HK9
+    # Research notes (provider endpoint names, without credential-bearing URLs):
+    # industry P/E: industry-pe-snapshot
+    # ROIC and market cap: key-metrics
+    # EPS estimates: analyst-estimates; current EPS: earnings-calendar
+    # Five-year revenue growth: financial-growth
+    # Historical free cash flow is unavailable from the researched endpoints.
+
 
 if __name__ == "__main__":
     main()
