@@ -59,10 +59,10 @@ pytest
 ruff check .
 ```
 
-When type checking is configured:
+Type checking (the configured M0 scope):
 
 ```bash
-mypy src/
+python -m mypy
 ```
 
 Targeted example:
@@ -80,7 +80,8 @@ configured to collect `test_*.py` under `tests/`; root-level `test.py` is a
 sanitized manual live-provider scratch script and must only run explicitly.
 The checkout is placed on the test import path so both pytest invocations
 verify current source instead of an older installed wheel.
-No mypy configuration or `src/` layout exists yet. Ruff's explicit baseline in
+Mypy checks the scope configured below; no `src/` layout exists yet.
+Ruff's explicit baseline in
 `pyproject.toml` selects `E4`, `E7`, `E9` and `F`: import/statement errors,
 syntax errors and Pyflakes checks such as undefined names and unused imports.
 These are Ruff's default rule families, made explicit to keep the baseline
@@ -95,6 +96,51 @@ The baseline covers compilation of every tracked Python module, independent
 watchlists, add/remove/presence, ticker listing, both CLI help surfaces, and
 the explicitly unavailable unfinished evaluation method. Provider semantics,
 financial calculations and persistence migration remain separately scoped work.
+
+## Type-check readiness decision — issue #11
+
+Implements DEV-001 and TEST-005; SRS §23 permits type checking when ready.
+After the foundation repairs, `config.py` is ready: its configuration dataclass,
+loader and credential validator have explicit annotations, including nullable
+keys and the validator's non-null return. Enable strict mypy for this real
+runtime module through `[tool.mypy]` in `pyproject.toml`. Run `python -m mypy`
+from the checkout after the canonical development installation, locally and in
+future CI. The pinned dev extra includes mypy and its additional dependency;
+existing runtime pins supply typing_extensions. No separate tooling workflow
+or stubs are introduced. Mypy follows the typed dotenv dependency normally;
+there are no missing-import ignores, error suppressions or skipped imports.
+Tests and fixtures are not substituted for the checked runtime source.
+
+This is a configuration baseline, not whole-application type coverage. The
+inspected legacy gaps are:
+
+- `stock.py`: fields annotated `str` default to `None`; prices, ownership and
+  returns are formatted strings or sentinel values, and most methods lack
+  return annotations. M1 owns readiness work alongside the specified domain
+  isolation and numeric model; this task does not define replacement interfaces.
+- `watch_list.py`: the bare `list` loses element types, `add_stock` accepts
+  `object`, and methods access Stock attributes through untyped collections.
+  M1 owns typed domain collections as part of its refactor.
+- `utils/utility_module.py`: JSON parsing has an untyped payload and a `None`
+  failure return; CSV collections are unparameterized. M2 owns provider typing
+  and error contracts, with no provider behavior changes in M0.
+- `menu_watchlist.py` and `daniils_stock_method.py`: untyped command functions
+  consume the legacy models and `pickle.load` results. M1 should reassess these
+  callers after domain contracts stabilize; M3/M6 own persistence/presentation
+  migration. `test.py` remains a manual scratch script outside this baseline.
+
+Review evidence with `git ls-files '*.py'`, `git grep -n 'load_configuration'`,
+and the source links: [configuration](../config.py), [Stock](../stock.py),
+[watchlist](../watch_list.py), [utility](../utils/utility_module.py),
+[menu CLI](../menu_watchlist.py), [evaluation CLI](../daniils_stock_method.py).
+These gaps are deliberately deferred, not hidden with checker suppressions.
+Expand `files` only when the corresponding maintained modules are ready.
+
+When changing the baseline, verify enforcement: temporarily introduce an
+incompatible annotated assignment in `config.py`, run the exact command above
+and require a nonzero exit with an assignment error in that file. Remove the
+probe and rerun successfully before committing. This check does not import or
+execute credential loading and requires no credentials or provider transport.
 
 ---
 

@@ -40,6 +40,8 @@ dependencies = [
 dev = [
     "pytest==8.3.4",
     "ruff==0.8.4",
+    "mypy==1.13.0",
+    "mypy_extensions==1.0.0",
     # pytest's additional dependencies on the supported Python 3.11/3.12.
     "iniconfig==2.0.0",
     "pluggy==1.5.0",
@@ -64,3 +66,9 @@ target-version = "py311"
 [tool.ruff.lint]
 # Focused baseline: import/statement errors, syntax errors, and Pyflakes.
 select = ["E4", "E7", "E9", "F"]
+
+[tool.mypy]
+# M0 checks the maintained configuration boundary; see docs/TESTING.md.
+python_version = "3.11"
+files = ["config.py"]
+strict = true
