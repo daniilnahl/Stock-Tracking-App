@@ -23,9 +23,7 @@ The **Stock Tracking App** was created as a passion project driven by my interes
 
 ### 2. Access the API Key
 - Once logged in, navigate to the [API Documentation](https://site.financialmodelingprep.com/developer/docs).
-- Copy everything that's after the equals sign (=). Save this API key for later use.
-  > ?apikey=[API_KEY]
-  > | Example: ?apiKey=3fsdFSDffsjf32fsdfs42fdsf
+- Copy your API key and save it locally as `MY_API_KEY` using the setup below.
 
 ## How to download or clone the Project?
 ### Option 1: Download the ZIP File
@@ -78,9 +76,11 @@ transitive dependencies. The former `reqs.txt` is no longer needed. Run the
 CLI commands below from the repository checkout; its CSV and watchlist files
 currently use paths relative to the working directory.
 
-### 4. Copy the API key into the .env
-- Open the .env file code in your editor.
-- Replace **[SAMPLE API KEY]** with your actual API key.
+### 4. Configure MY_API_KEY locally
+- Copy `.env.example` to `.env` (do not overwrite an existing local `.env`).
+- Set `MY_API_KEY` to your own API key in `.env`, or set the environment variable.
+- The template intentionally leaves the value empty. Keep `.env` and local
+  overrides out of Git; never paste credentials into source or examples.
 
 ### 5. Run the App
 In the terminal type the following line to open the app menu:
@@ -111,6 +111,16 @@ Read [AGENTS.md](AGENTS.md) and the approved [SRS.md](SRS.md) before implementin
 an issue. The [foundation decision](docs/adr/0005-canonical-python-dependencies.md)
 records the dependency migration and approval. Testing policy and financial
 calculation documentation listed in the SRS remain separate M0 deliverables.
+
+`test.py` is a developer scratch script that makes live API calls only when
+run explicitly. It is separate from the offline repository hygiene checks:
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+These checks verify credential patterns with redacted diagnostics and Git ignore
+rules. They do not certify that arbitrary secrets or historical commits are clean.
 
 ## License
 This project is licensed under the MIT License.
