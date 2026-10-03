@@ -262,7 +262,7 @@ Rounding MUST occur only at defined boundaries.
 
 Presentation rounding MUST NOT mutate stored domain values.
 
-The exact rounding conventions are defined in `docs/FINANCIAL_CALCULATIONS.md`.
+The exact rounding conventions are defined in [docs/FINANCIAL_CALCULATIONS.md](docs/FINANCIAL_CALCULATIONS.md).
 
 ## FIN-004 — Calculation definitions
 
@@ -278,7 +278,7 @@ Any implemented financial metric MUST have:
 
 Agents MUST NOT invent the meaning of an undefined financial metric.
 
-If a metric is requested but not defined in `docs/FINANCIAL_CALCULATIONS.md`, implementation MUST stop and the ambiguity MUST be escalated.
+If a metric is requested but not defined in [docs/FINANCIAL_CALCULATIONS.md](docs/FINANCIAL_CALCULATIONS.md), implementation MUST stop and the ambiguity MUST be escalated.
 
 ---
 
@@ -462,7 +462,7 @@ Core analytics MAY include:
 
 ## AN-001 — Specification dependency
 
-No analytics metric may be implemented until its semantics are defined in `docs/FINANCIAL_CALCULATIONS.md`.
+No analytics metric may be implemented until its semantics are defined in [docs/FINANCIAL_CALCULATIONS.md](docs/FINANCIAL_CALCULATIONS.md).
 
 ## AN-002 — Benchmark behavior
 

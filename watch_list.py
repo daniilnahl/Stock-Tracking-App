@@ -105,7 +105,7 @@ class Watch_list:
         console = Console()
         console.print(table)
     def show_stocks_daniil_method(self):
-        
+        raise NotImplementedError("Daniil's stock evaluation method is not implemented.")
     def refresh_stocks(self):
         """
         Goes through all stock instances inside this instance and uses stock class functions to updates the attributes inside the stock instances.

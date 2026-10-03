@@ -113,18 +113,55 @@ Feel free to contribute by creating issues or submitting pull requests to enhanc
 
 Read [AGENTS.md](AGENTS.md) and the approved [SRS.md](SRS.md) before implementing
 an issue. The [foundation decision](docs/adr/0005-canonical-python-dependencies.md)
-records the dependency migration and approval. Testing policy and financial
-calculation documentation listed in the SRS remain separate M0 deliverables.
+records the dependency migration and approval. [Testing policy](docs/TESTING.md)
+defines the offline suite; financial calculation documentation remains a
+separate M0 deliverable.
 
 `test.py` is a developer scratch script that makes live API calls only when
-run explicitly. It is separate from the offline repository hygiene checks:
+run explicitly. Pytest collects only automated tests under `tests/`:
 
 ```bash
-python -m unittest discover -s tests -v
+python -m pytest
 ```
 
 These checks verify credential patterns with redacted diagnostics and Git ignore
 rules. They do not certify that arbitrary secrets or historical commits are clean.
+
+### Development installation and packaging checks
+
+Use a fresh virtual environment as described above with Python 3.11 or 3.12.
+Install the application and development tools together:
+
+```bash
+python -m pip install ".[dev]"
+python -m pip check
+python -m pytest tests/test_packaging.py -v
+python -m pytest
+python -m ruff check .
+python -m pip wheel . --no-deps --no-build-isolation --wheel-dir dist
+```
+
+Repeat this workflow on each supported Python version. A second
+`python -m pip install ".[dev]"` must preserve the installed dependency versions.
+Runtime, development, transitive and build-backend versions are pinned in
+`pyproject.toml`; update those pins together. This provides version-pinned
+resolution, not byte-identical or hash-verified artifacts across platforms.
+Installation and packaging checks need package-index access but no API key,
+`.env`, user database or market-data request.
+
+The wheel contains the four existing application modules and `utils`; scratch
+scripts, tests, CSV data and local state are excluded. Existing CLI scripts must
+still run from the checkout. Packaging smoke checks import only `stock` and
+`utils.utility_module` with transport blocked, without instantiating a stock.
+The unfinished watchlist evaluation method explicitly raises `NotImplementedError`.
+The offline baseline verifies both CLI help surfaces without keys or saved state.
+
+Ruff's baseline is configured in `pyproject.toml` for Python 3.11 with explicit
+`E4`, `E7`, `E9` and `F` rules (import/statement errors, syntax errors and
+Pyflakes). Run `python -m ruff check .` from the checkout to check application
+code, automated tests and the sanitized scratch script. See the
+[testing policy](docs/TESTING.md) for rule rationale and coverage.
+No mypy configuration exists yet.
 
 ## License
 This project is licensed under the MIT License.
