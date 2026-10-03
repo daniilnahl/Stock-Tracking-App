@@ -109,14 +109,15 @@ Feel free to contribute by creating issues or submitting pull requests to enhanc
 
 Read [AGENTS.md](AGENTS.md) and the approved [SRS.md](SRS.md) before implementing
 an issue. The [foundation decision](docs/adr/0005-canonical-python-dependencies.md)
-records the dependency migration and approval. Testing policy and financial
-calculation documentation listed in the SRS remain separate M0 deliverables.
+records the dependency migration and approval. [Testing policy](docs/TESTING.md)
+defines the offline suite; financial calculation documentation remains a
+separate M0 deliverable.
 
 `test.py` is a developer scratch script that makes live API calls only when
-run explicitly. It is separate from the offline repository hygiene checks:
+run explicitly. Pytest collects only automated tests under `tests/`:
 
 ```bash
-python -m unittest discover -s tests -v
+python -m pytest
 ```
 
 These checks verify credential patterns with redacted diagnostics and Git ignore
@@ -148,8 +149,9 @@ The wheel contains the four existing application modules and `utils`; scratch
 scripts, tests, CSV data and local state are excluded. Existing CLI scripts must
 still run from the checkout. Packaging smoke checks import only `stock` and
 `utils.utility_module` with transport blocked, without instantiating a stock.
-The known unfinished watchlist method and canonical testing policy are tracked
-in issue #6; lint configuration and legacy lint cleanup remain separate M0 work.
+The unfinished watchlist evaluation method explicitly raises `NotImplementedError`.
+The offline baseline verifies both CLI help surfaces without keys or saved state;
+lint configuration and legacy lint cleanup remain separate M0 work.
 No mypy configuration exists yet.
 
 ## License
