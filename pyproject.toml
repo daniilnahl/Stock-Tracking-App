@@ -36,6 +36,18 @@ dependencies = [
     "typing_extensions==4.12.2",
 ]
 
+[project.optional-dependencies]
+dev = [
+    "pytest==8.3.4",
+    "ruff==0.8.4",
+    # pytest's additional dependencies on the supported Python 3.11/3.12.
+    "iniconfig==2.0.0",
+    "pluggy==1.5.0",
+    # Build smoke checks use the same backend as isolated pip builds.
+    "setuptools==75.6.0",
+    "wheel==0.45.1",
+]
+
 [tool.setuptools]
 py-modules = ["stock", "watch_list", "menu_watchlist", "daniils_stock_method"]
 packages = ["utils"]

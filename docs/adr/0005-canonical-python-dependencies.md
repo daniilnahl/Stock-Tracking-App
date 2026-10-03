@@ -50,6 +50,20 @@ readiness; those remain M0 work. `docs/TESTING.md` and
 `docs/FINANCIAL_CALCULATIONS.md` are referenced target deliverables and are not
 published by this issue. Agent instructions are copied without rewriting them.
 
+## Issue #5 implementation detail
+
+The approved Python range, setuptools backend and pip workflow remain unchanged.
+The `dev` extra extends the same exact-pin mechanism to pytest, Ruff, pytest's
+additional transitive dependencies and wheel-building tools. Runtime pins supply
+pytest's shared packaging/colorama dependencies. No second requirements or lock
+file is maintained. Pins constrain versions on Python 3.11 and 3.12; they do not
+guarantee artifact hashes or identical platform-specific wheel bytes. Pin updates
+must be validated in fresh environments on both supported runtimes.
+
+The original consequences above describe issue #2; issue #5 adds development
+tools and packaging checks, while testing policy, baseline repairs and lint
+configuration remain separate M0 deliverables.
+
 ## References
 
 - [Issue #2](https://github.com/daniilnahl/Stock-Tracking-App/issues/2)
