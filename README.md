@@ -175,6 +175,16 @@ Run `python -m mypy` from the checkout; it uses the explicit file scope in
 records the concrete legacy gaps and milestone ownership for expanding coverage.
 This baseline does not certify legacy domain, provider, persistence or CLI types.
 
+## Continuous integration
+
+The Foundation workflow runs pytest on Python 3.11 and 3.12, Ruff, the configured
+mypy scope, and a redacted credential-pattern scan on pull requests and pushes
+to `main`. It installs the same pinned `.[dev]` environment and needs no FMP
+credentials. See the [CI contract](docs/TESTING.md#foundation-actions-workflow--issue-12)
+for exact check names, scanner limits, failure probes, and owner-only protection
+setup. A passing PR run must be followed by a passing `main` run after an
+owner-authorized merge before issue #12 can close.
+
 ## License
 This project is licensed under the MIT License.
 
