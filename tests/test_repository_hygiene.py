@@ -12,7 +12,7 @@ import unittest
 
 
 ROOT = Path(__file__).resolve().parents[1]
-KEY_NAMES = {"api_key", "apikey", "my_api_key", "token", "password", "secret"}
+KEY_NAMES = {"api_key", "apikey", "fmp_api_key", "my_api_key", "token", "password", "secret"}
 
 
 def credential_lines(text, python_source=False):
@@ -69,6 +69,8 @@ class CredentialScannerTests(unittest.TestCase):
             ("Stock('AMD', API_KEY=" + repr(dummy) + ")", True),
             ("https://example.invalid/quote?" + "apikey=" + dummy, False),
             ("MY_API_KEY=" + dummy, False),
+            ("FMP_API_KEY=" + dummy, False),
+            ("FMP_API_KEY = " + repr(dummy), True),
         ]
         for text, python_source in cases:
             # No assertion includes the source or dummy value in diagnostics.
@@ -76,8 +78,10 @@ class CredentialScannerTests(unittest.TestCase):
 
     def test_accepts_empty_template_and_dynamic_credentials(self):
         self.assertEqual(credential_lines("MY_API_KEY="), [])
+        self.assertEqual(credential_lines("FMP_API_KEY="), [])
         source = '\n'.join([
             'api_key = os.getenv("MY_API_KEY")',
+            'api_key = os.getenv("FMP_API_KEY", os.getenv("MY_API_KEY"))',
             'Stock("AMD", api_key)',
             'url = f"https://example.invalid/quote?apikey={API_KEY}"',
         ])
@@ -104,17 +108,17 @@ class RepositoryHygieneTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             git("init", "--quiet", cwd=directory)
             env = Path(directory) / ".env"
-            original = b"MY_API_KEY=synthetic-dummy-not-a-real-key\r\n"
+            original = b"FMP_API_KEY=synthetic-dummy-not-a-real-key\r\n"
             env.write_bytes(original)
             git("add", "--", ".env", cwd=directory)
             git("rm", "--cached", "--", ".env", cwd=directory)
             self.assertTrue(env.read_bytes() == original, "Environment bytes changed")
             self.assertEqual(git("ls-files", "--", ".env", cwd=directory).strip(), "")
 
-    def test_template_documents_existing_variable_without_a_key(self):
+    def test_template_documents_canonical_variable_without_a_key(self):
         lines = (ROOT / ".env.example").read_text(encoding="utf-8").splitlines()
         assignments = [line for line in lines if line and not line.startswith("#")]
-        self.assertTrue(assignments == ["MY_API_KEY="], "Template must contain only an empty MY_API_KEY")
+        self.assertTrue(assignments == ["FMP_API_KEY="], "Template must contain only an empty FMP_API_KEY")
 
     def test_ignore_rules_in_isolated_git_repository(self):
         ignored = [

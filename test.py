@@ -1,6 +1,6 @@
 """Developer scratch script, not an automated test.
 
-Run explicitly with ``python test.py`` after configuring MY_API_KEY locally.
+Run explicitly with ``python test.py`` after configuring FMP_API_KEY locally.
 This makes live market-data requests; automated tests must not run main().
 """
 
@@ -11,9 +11,10 @@ def main():
     from dotenv import load_dotenv
 
     load_dotenv()
-    api_key = os.getenv("MY_API_KEY")
+    # FMP_API_KEY is canonical; retain the old name for existing local setups.
+    api_key = os.getenv("FMP_API_KEY", os.getenv("MY_API_KEY"))
     if not api_key:
-        raise SystemExit("Set MY_API_KEY in your environment or local .env first.")
+        raise SystemExit("Set FMP_API_KEY in your environment or local .env first.")
 
     from stock import Stock
 
