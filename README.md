@@ -145,6 +145,7 @@ python -m pip check
 python -m pytest tests/test_packaging.py -v
 python -m pytest
 python -m ruff check .
+python -m mypy
 python -m pip wheel . --no-deps --no-build-isolation --wheel-dir dist
 ```
 
@@ -168,7 +169,11 @@ Ruff's baseline is configured in `pyproject.toml` for Python 3.11 with explicit
 Pyflakes). Run `python -m ruff check .` from the checkout to check application
 code, automated tests and the sanitized scratch script. See the
 [testing policy](docs/TESTING.md) for rule rationale and coverage.
-No mypy configuration exists yet.
+Mypy is configured in strict mode for the maintained `config.py` boundary.
+Run `python -m mypy` from the checkout; it uses the explicit file scope in
+`pyproject.toml`. The [type-check readiness decision](docs/TESTING.md#type-check-readiness-decision--issue-11)
+records the concrete legacy gaps and milestone ownership for expanding coverage.
+This baseline does not certify legacy domain, provider, persistence or CLI types.
 
 ## License
 This project is licensed under the MIT License.
