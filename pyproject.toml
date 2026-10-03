@@ -51,3 +51,8 @@ dev = [
 [tool.setuptools]
 py-modules = ["stock", "watch_list", "menu_watchlist", "daniils_stock_method"]
 packages = ["utils"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+pythonpath = ["."]

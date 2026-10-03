@@ -1,0 +1,401 @@
+# Testing Strategy
+
+## Purpose
+
+This document defines the testing contract for the Stock Tracking App.
+
+The goal is to make tests deterministic, meaningful, isolated, and suitable for both human and AI-driven development.
+
+---
+
+# 1. Test Layers
+
+## Unit tests
+
+Unit tests cover isolated behavior such as:
+
+- domain calculations
+- validation
+- provider-response parsing
+- service behavior with fakes/mocks
+- error mapping
+- analytics formulas
+
+Unit tests MUST NOT require:
+
+- network access
+- the user's database
+- current stock prices
+- current date/time unless explicitly controlled
+
+## Integration tests
+
+Integration tests cover:
+
+- SQLite repositories
+- schema/migration behavior
+- application-service wiring
+- provider adapters with controlled mocked HTTP responses
+- CLI flows where appropriate
+
+Integration tests must still avoid dependence on live third-party services.
+
+## End-to-end tests
+
+End-to-end tests MAY be introduced later for a REST/web application.
+
+They require a separate execution profile and MUST NOT become a hidden dependency of fast local unit tests.
+
+---
+
+# 2. Canonical Commands
+
+Use repository-configured commands.
+
+Expected baseline:
+
+```bash
+pytest
+ruff check .
+```
+
+When type checking is configured:
+
+```bash
+mypy src/
+```
+
+Targeted example:
+
+```bash
+pytest tests/test_baseline.py -v
+```
+
+Agents must not claim a command passed unless it was actually executed.
+
+Use Python 3.11 or 3.12 and install the pinned development environment with
+`python -m pip install ".[dev]"`. `python -m pytest` and
+`python -m ruff check .` are equivalent module-based invocations. Pytest is
+configured to collect `test_*.py` under `tests/`; root-level `test.py` is a
+sanitized manual live-provider scratch script and must only run explicitly.
+The checkout is placed on the test import path so both pytest invocations
+verify current source instead of an older installed wheel.
+No mypy configuration or `src/` layout exists yet. Ruff currently uses its
+default rules; pre-existing lint failures must be reported rather than hidden
+through exclusions or broad suppressions.
+Baseline CLI lint cleanup is assigned to issue #8; issue #6 does not perform it.
+
+The baseline covers compilation of every tracked Python module, independent
+watchlists, add/remove/presence, ticker listing, both CLI help surfaces, and
+the explicitly unavailable unfinished evaluation method. Provider semantics,
+financial calculations and persistence migration remain separately scoped work.
+
+---
+
+# 3. Determinism
+
+Tests MUST be deterministic.
+
+## Time
+
+Tests MUST NOT depend directly on `datetime.now()`, `date.today()`, or the current market session without a controllable boundary.
+
+Preferred patterns:
+
+- inject a clock
+- pass an explicit date/time
+- patch the smallest clock boundary
+
+Use fixed test timestamps.
+
+## Market calendar behavior
+
+Weekend and holiday behavior must be represented by explicit fixtures.
+
+A test must not pass or fail depending on whether today's exchange is open.
+
+## Randomness
+
+If randomness is used:
+
+- fix the seed
+- avoid probabilistic pass/fail assertions
+
+## Ordering
+
+Tests MUST NOT depend on execution order.
+
+Each test must create and clean up its own state.
+
+---
+
+# 4. Network Isolation
+
+Normal automated tests MUST NOT call live market-data providers.
+
+Use:
+
+- mocked HTTP transports
+- provider fakes
+- recorded provider fixtures only if sanitized and stable
+
+Fixtures MUST NOT contain real credentials.
+
+`tests/conftest.py` blocks urllib transport and socket connection/DNS/datagram
+operations by default. Denials fail tests even through legacy handlers that
+catch ordinary exceptions. Tests import application modules inside test
+functions or fixtures so these boundaries are active before application imports.
+Mock transports explicitly when testing provider responses. Subprocess tests
+must install their own network guard; parent-process patches do not propagate.
+The packaging subprocess uses offline pip flags and its own socket guard.
+
+Every test runs in its own `tmp_path` working directory, removes `MY_API_KEY`
+from its test environment, disables dotenv discovery at the loading boundary,
+and redirects Matplotlib configuration to temporary storage with the Agg
+backend. Import CLI modules only after isolation is active. This prevents
+cwd-relative pickle/CSV access and source-relative dotenv discovery from
+touching user state. Never import application modules at collection time.
+The CSV harness test writes only fictional ticker data in its temporary cwd.
+
+Test cases should cover:
+
+- 200 success
+- empty valid response
+- malformed payload
+- 400-class invalid request where relevant
+- 404/not-found semantics where provider uses them
+- 429/rate limiting
+- 500-class transient failure
+- timeout
+- connection failure
+
+Provider-specific behavior must be mapped to application-level exceptions according to the SRS.
+
+---
+
+# 5. Database Isolation
+
+Persistence tests MUST use temporary databases.
+
+Never point tests at the user's production/local application database.
+
+Each test or test group must begin from a known schema state.
+
+Test:
+
+- inserts
+- reads
+- updates
+- deletes
+- uniqueness constraints
+- foreign-key behavior
+- transactions
+- rollback behavior
+- migrations
+- data preservation across migrations where applicable
+
+---
+
+# 6. Financial Tests
+
+Financial calculations require known-value tests.
+
+For each metric:
+
+1. Define the exact formula.
+2. Provide simple hand-verifiable fixtures.
+3. Test normal case.
+4. Test zero denominator.
+5. Test missing data.
+6. Test negative values when valid.
+7. Test precision/rounding boundary when relevant.
+
+Do not obtain expected values from the implementation under test.
+
+Expected results should come from the normative calculation specification or independently computed fixtures.
+
+---
+
+# 7. Price-History Tests
+
+Historical-data tests must explicitly state whether they use:
+
+- raw close
+- adjusted close
+- OHLC
+- split-adjusted data
+- dividend-adjusted data
+
+Test fixtures should include at least one corporate-action scenario once that behavior is supported.
+
+Do not infer historical prices from summary return percentages.
+
+---
+
+# 8. CLI Tests
+
+CLI tests should verify behavior observable to the user without coupling unnecessarily to terminal formatting details.
+
+Test:
+
+- command success/failure
+- validation
+- meaningful error messages
+- service invocation
+- exit codes where relevant
+
+Avoid asserting whole formatted tables unless formatting itself is the requirement.
+
+---
+
+# 9. Regression Testing
+
+A bug fix SHOULD include a regression test.
+
+Preferred workflow:
+
+1. Reproduce the defect with a failing test.
+2. Implement the smallest fix.
+3. Confirm the new test passes.
+4. Run related tests.
+5. Run the full suite.
+
+If reproducing the bug in a test is impractical, explain why in the PR.
+
+---
+
+# 10. Mocking Rules
+
+Mock boundaries, not arbitrary internals.
+
+Good mock targets:
+
+- HTTP transport
+- market provider interface
+- clock
+- repository interface
+- filesystem boundary
+
+Avoid mocks that simply return the implementation's desired output from the method under test.
+
+Tests should verify behavior, not implementation trivia.
+
+---
+
+# 11. Fixtures
+
+Fixtures should be:
+
+- small
+- explicit
+- reusable only where reuse improves clarity
+- sanitized
+- stable
+
+Provider-response fixtures must identify the provider/schema version or date when useful.
+
+Do not store unnecessarily large live payloads.
+
+---
+
+# 12. Coverage
+
+Coverage percentage alone is not a quality target.
+
+Prioritize coverage for:
+
+- financial calculations
+- persistence/migrations
+- provider parsing
+- error handling
+- security-sensitive boundaries
+- regression-prone logic
+
+A high percentage does not justify weak assertions.
+
+---
+
+# 13. Flaky Test Policy
+
+A flaky test is a defect.
+
+Do not repeatedly rerun CI until it passes.
+
+When a flaky test is found:
+
+1. reproduce if possible
+2. identify nondeterministic dependency
+3. isolate time/network/randomness/shared state
+4. fix or quarantine only with an issue and justification
+
+Skipping a flaky test permanently is not an acceptable default resolution.
+
+---
+
+# 14. Failure Diagnostics
+
+Tests should fail with enough information to identify:
+
+- input
+- expected result
+- actual result
+- relevant identifier/symbol/date
+
+Do not expose credentials in failure output.
+
+---
+
+# 15. Test Data Safety
+
+Test data must be fictional or public/non-sensitive.
+
+Do not use personal brokerage data, passwords, API keys, or private account information.
+
+---
+
+# 16. CI Contract
+
+CI should fail when:
+
+- tests fail
+- linting fails
+- type checking fails once configured
+- secret scanning fails
+- migration checks fail once configured
+
+Required CI checks should be enforced through branch protection when available.
+
+Agents must not bypass failed required checks.
+
+---
+
+# 17. Manual Verification
+
+Manual verification may complement automated tests but must not replace them for deterministic logic.
+
+Manual checks are useful for:
+
+- CLI usability
+- chart appearance
+- installation flow
+- release packaging
+
+PRs should state exactly what was manually verified.
+
+---
+
+# 18. Test Completion Checklist
+
+Before PR creation:
+
+```text
+[ ] Targeted tests pass
+[ ] Full pytest suite passes
+[ ] Ruff passes
+[ ] Type checking passes when configured
+[ ] No live provider calls occurred
+[ ] No real user database was modified
+[ ] No secrets exist in fixtures/logs
+[ ] Regression tests were added for bug fixes where practical
+[ ] Time/randomness are controlled where relevant
+```
