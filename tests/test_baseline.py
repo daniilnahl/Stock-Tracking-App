@@ -117,6 +117,7 @@ def test_cli_help_without_credentials_or_state(cli_module, tmp_path):
      (True, "Stock already exists in the watchlist.")],
 )
 def test_cli_add_stock_validation(cli_module, valid, message, monkeypatch, tmp_path):
+    monkeypatch.setattr(cli_module, "API_KEY", "synthetic-validation")
     cli_module.current_watchlist.add_stock(SimpleNamespace(ticker_symbol="AAPL"))
     calls = []
 
@@ -128,7 +129,7 @@ def test_cli_add_stock_validation(cli_module, valid, message, monkeypatch, tmp_p
     result = CliRunner().invoke(cli_module.app, ["add-stock"], input="aapl\n")
     assert result.exit_code == 0, result.output
     assert message in result.output
-    assert calls == [("AAPL", None)]
+    assert calls == [("AAPL", "synthetic-validation")]
     assert len(cli_module.current_watchlist.stocks) == 1
     assert not (tmp_path / cli_module.WATCHLIST_FILE).exists()
 

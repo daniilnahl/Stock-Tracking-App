@@ -85,6 +85,13 @@ currently use paths relative to the working directory.
   The legacy name `MY_API_KEY` is supported only when `FMP_API_KEY` is absent
   from both sources. An explicitly empty `FMP_API_KEY` does not use the fallback;
   remove the empty variable if you still rely on the legacy name.
+- `config.py` is the shared credential loader. Missing or whitespace-only keys
+  stop `add-stock`, `refresh`, and explicit scratch-script requests before any
+  network work. Both CLI help surfaces and commands using saved data remain
+  available without a key.
+- Configuration representations and request diagnostics omit credential values
+  and request URLs. Legacy `Stock.API_KEY` and pickle files still contain keys;
+  removing that coupling is deferred to the domain/persistence milestones.
 
 ### 5. Run the App
 In the terminal type the following line to open the app menu:
