@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools==75.6.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "stock-tracking-app"
+version = "1.1.0.1"
+description = "CLI stock tracking application"
+readme = "README.md"
+requires-python = ">=3.11,<3.13"
+license = {file = "LICENSE"}
+dependencies = [
+    # Direct imports in the current application.
+    "certifi==2024.8.30",
+    "matplotlib==3.10.0",
+    "python-dotenv==1.0.1",
+    "rich==13.9.4",
+    "typer==0.13.0",
+    # Preserve the existing transitive resolution from reqs.txt.
+    "click==8.1.7",
+    "colorama==0.4.6",
+    "contourpy==1.3.1",
+    "cycler==0.12.1",
+    "fonttools==4.55.3",
+    "kiwisolver==1.4.7",
+    "markdown-it-py==3.0.0",
+    "mdurl==0.1.2",
+    "numpy==2.2.0",
+    "packaging==24.2",
+    "pillow==11.0.0",
+    "Pygments==2.18.0",
+    "pyparsing==3.2.0",
+    "python-dateutil==2.9.0.post0",
+    "shellingham==1.5.4",
+    "six==1.17.0",
+    "typing_extensions==4.12.2",
+]
+
+[tool.setuptools]
+py-modules = ["stock", "watch_list", "menu_watchlist", "daniils_stock_method"]
+packages = ["utils"]

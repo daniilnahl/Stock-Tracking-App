@@ -12,7 +12,7 @@ The **Stock Tracking App** was created as a passion project driven by my interes
 
 # Setup Instructions
 ## Prerequisites
-- Python 3.6 or higher.
+- Python 3.11 or 3.12 (declared in `pyproject.toml`).
 - An API key from the stock data provider (Financial Modeling Prep).
 
 ## How do I get an API key from Financial Modeling Prep?
@@ -51,8 +51,10 @@ cd repository
 ### 1. Create a Virtual Environment
 To ensure your project dependencies are isolated, create a virtual environment:
 ```bash
-python -m venv .venv
+python3.11 -m venv .venv
 ```
+
+On Windows, use `py -3.11 -m venv .venv`. Python 3.12 is also supported.
 
 ### 2. Activate the Virtual Environment
 On Windows:
@@ -68,8 +70,13 @@ Once activated, your terminal prompt should show (venv) indicating the virtual e
 ### 3. Install Dependencies
 Install the required Python packages by running:
 ```bash
-pip install -r reqs.txt
+python -m pip install .
 ```
+
+`pyproject.toml` is the master dependency file and pins the application and
+transitive dependencies. The former `reqs.txt` is no longer needed. Run the
+CLI commands below from the repository checkout; its CSV and watchlist files
+currently use paths relative to the working directory.
 
 ### 4. Copy the API key into the .env
 - Open the .env file code in your editor.
@@ -99,6 +106,11 @@ py menu_watchlist.py --help
   
 ## Contributing
 Feel free to contribute by creating issues or submitting pull requests to enhance the app.
+
+Read [AGENTS.md](AGENTS.md) and the approved [SRS.md](SRS.md) before implementing
+an issue. The [foundation decision](docs/adr/0005-canonical-python-dependencies.md)
+records the dependency migration and approval. Testing policy and financial
+calculation documentation listed in the SRS remain separate M0 deliverables.
 
 ## License
 This project is licensed under the MIT License.
