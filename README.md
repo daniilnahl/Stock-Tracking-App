@@ -10,98 +10,163 @@ The **Stock Tracking App** was created as a passion project driven by my interes
 - Refresh stocks' data to be up-to-date.
 - Graph a stock's performance.
 
-# Setup Instructions
-## Prerequisites
-- Python 3.11 or 3.12 (declared in `pyproject.toml`).
-- An API key from the stock data provider (Financial Modeling Prep).
+The existing chart is approximate; real historical charting remains M4 work.
+The unfinished personal evaluation method is unavailable. This foundation
+does not certify financial analytics or production readiness.
 
-## How do I get an API key from Financial Modeling Prep?
-### 1. Sign Up for an Account
-- Go to the [Financial Modeling Prep website](https://site.financialmodelingprep.com/).
-- Click on Sign Up in the upper-right corner of the page.
-- Create a free account by providing your email, username, and password.
+## Canonical setup
 
-### 2. Access the API Key
-- Once logged in, navigate to the [API Documentation](https://site.financialmodelingprep.com/developer/docs).
-- Copy your API key and save it locally as `FMP_API_KEY` using the setup below.
+Use Git and **Python 3.11 or 3.12** (`>=3.11,<3.13` in `pyproject.toml`).
+No provider key, `.env` or saved watchlist is needed for installation, tests or
+help in a fresh checkout. Installation needs package-index access; automated
+verification blocks market-provider transport and isolates temporary state.
 
-## How to download or clone the Project?
-### Option 1: Download the ZIP File
-- Visit the project repository on GitHub.
-- Click the green Code button at the top-right corner of the repository page.
-- Select **Download ZIP**.
-- Extract the downloaded ZIP file to your desired location.
-
-### Option 2: Clone the Repository
-To clone the project using Git, follow these steps:
-- Copy the repository URL from the Code button (e.g., https://github.com/username/repository.git).
-- Open your terminal or command prompt and navigate to the directory where you want to store the project.
-- Run the following command (put the link you copied instead):
 ```bash
-git clone https://github.com/username/repository.git
-```
-- Navigate into the project directory:
-```bash
-cd repository
+git clone https://github.com/daniilnahl/Stock-Tracking-App.git
+cd Stock-Tracking-App
 ```
 
-## How to start the Application?
-### 1. Create a Virtual Environment
-To ensure your project dependencies are isolated, create a virtual environment:
+Create and activate a fresh virtual environment. On Windows PowerShell:
+
+```powershell
+py -3.11 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
+
+On macOS/Linux:
+
 ```bash
 python3.11 -m venv .venv
-```
-
-On Windows, use `py -3.11 -m venv .venv`. Python 3.12 is also supported.
-
-### 2. Activate the Virtual Environment
-On Windows:
-```bash
-.venv\Scripts\activate
-```
-On macOS/Linux:
-```bash
 source .venv/bin/activate
 ```
-Once activated, your terminal prompt should show (venv) indicating the virtual environment is active.
 
-### 3. Install Dependencies
-Install the required Python packages by running:
+For Python 3.12, substitute `-3.12` or `python3.12` in the creation command.
+Use `python` after activation so all commands use that environment.
+
+From the checkout, install the application and pinned development tools, then
+run the canonical checks from [docs/TESTING.md](docs/TESTING.md):
+
 ```bash
-python -m pip install .
+python -m pip install ".[dev]"
+python -m pip check
+python -m pytest tests/test_baseline.py tests/test_packaging.py tests/test_repository_hygiene.py -v
+python -m pytest
+python -m ruff check .
+python -m mypy
 ```
 
-`pyproject.toml` is the master dependency file and pins the application and
-transitive dependencies. The former `reqs.txt` is no longer needed. Run the
-CLI commands below from the repository checkout; its CSV and watchlist files
-currently use paths relative to the working directory.
+The targeted checks verify both Typer help surfaces in empty temporary working
+directories, offline wheel packaging, dependency pins, Git ignore behavior and
+redacted tracked-source credential patterns. Full pytest collects only `tests/`;
+`test.py` is a manual live-provider scratch script, outside collection.
 
-### 4. Configure FMP_API_KEY locally
-- Copy `.env.example` to `.env` (do not overwrite an existing local `.env`).
-- Set `FMP_API_KEY` to your own API key in `.env`, or set the environment variable.
-- The template intentionally leaves the value empty. Keep `.env` and local
-  overrides out of Git; never paste credentials into source or examples.
-- The process environment takes precedence over `.env` for the same variable.
-  The legacy name `MY_API_KEY` is supported only when `FMP_API_KEY` is absent
-  from both sources. An explicitly empty `FMP_API_KEY` does not use the fallback;
-  remove the empty variable if you still rely on the legacy name.
-- `config.py` is the shared credential loader. Missing or whitespace-only keys
-  stop `add-stock`, `refresh`, and explicit scratch-script requests before any
-  network work. Both CLI help surfaces and commands using saved data remain
-  available without a key.
-- Configuration representations and request diagnostics omit credential values
-  and request URLs. Legacy `Stock.API_KEY` and pickle files still contain keys;
-  removing that coupling is deferred to the domain/persistence milestones.
+`pyproject.toml` is the single master dependency file. Runtime, development,
+transitive and build-backend versions use exact pins; there is no separately
+maintained `reqs.txt` or second lockfile. Repeat
+`python -m pip install ".[dev]"` and the checks in the same environment to verify
+that installed dependency versions stay pinned. Repeat the fresh environment
+walkthrough on each supported Python version when changing pins. Pins provide
+version resolution, not artifact hashes or byte-identical builds across platforms.
+Runtime-only installation uses `python -m pip install .`.
 
-### 5. Run the App
-In the terminal type the following line to open the app menu:
+Optional wheel build, using the installed pinned backend:
+
 ```bash
-py .\menu_watchlist.py --help
+python -m pip wheel . --no-deps --no-build-isolation --wheel-dir dist
 ```
-or 
+
+The wheel includes five flat modules (`stock`, `watch_list`, `menu_watchlist`,
+`daniils_stock_method`, `config`) and `utils.utility_module`. It excludes tests,
+scratch scripts, CSV data and local state. CLI usage still requires the checkout.
+
+Ruff checks application code, tests and the scratch script using `E4`, `E7`,
+`E9` and `F`. Mypy runs in strict mode on **`config.py` only**, using the file
+scope in `pyproject.toml`; do not run `mypy src/` because no `src/` tree exists.
+The [readiness decision](docs/TESTING.md#type-check-readiness-decision--issue-11)
+assigns remaining domain, provider, persistence and CLI typing to M1/M2/M3/M6.
+
+## CLI help and usage
+
+In a fresh checkout, before creating local credentials or watchlist files:
+
 ```bash
-py menu_watchlist.py --help
+python menu_watchlist.py --help
 ```
+
+This prints the existing commands: `add-stock`, `remove-stock`, `show-stocks`,
+`refresh` and `graph-stock`. Run a command from the checkout using
+`python menu_watchlist.py <command>`; add/remove commands prompt for input.
+`add-stock` and `refresh` require a provider credential before network work.
+Help and saved-data commands do not require a key. The alternate Typer app in
+`daniils_stock_method.py` is covered by the offline help tests; it has no script
+entry point. The unfinished evaluation method raises `NotImplementedError`.
+
+**Existing-state caveat:** both CLI modules load cwd-relative pickle state at
+import, including when displaying help (`watchlist.pkl` or
+`daniils_stock_methodd.pkl`). Pickle can execute code; never load an untrusted
+file. For verification of an existing installation, use the isolated tests
+above or a separate fresh checkout, rather than importing the CLI in a user-data
+directory. Do not inspect, delete, migrate or overwrite saved user files as part
+of setup. Legacy `Stock.API_KEY` values can also be stored in these files;
+removing credential coupling and replacing pickle are M1/M3 work. CSV paths
+are also relative to the working directory.
+
+## Optional provider configuration
+
+Obtain your own key through [Financial Modeling Prep](https://site.financialmodelingprep.com/developer/docs).
+Keep it outside source control in the process environment, or copy the empty
+[.env.example](.env.example) to a local `.env` **only if `.env` does not exist**.
+On PowerShell:
+
+```powershell
+if (-not (Test-Path -LiteralPath .env)) { Copy-Item -LiteralPath .env.example -Destination .env }
+```
+
+On macOS/Linux:
+
+```bash
+[ -e .env ] || cp .env.example .env
+```
+
+Edit only the local file to set `FMP_API_KEY`. `.env` and local overrides are
+ignored by Git; `.env.example` deliberately contains an empty value. Never
+paste a credential into source, tests, command examples, logs or PR text.
+
+[config.py](config.py) loads optional dotenv configuration. Process environment
+values override dotenv values of the same name. `FMP_API_KEY` wins across
+sources; the legacy `MY_API_KEY` fallback applies only when `FMP_API_KEY` is
+absent from both. A present but empty/whitespace canonical value fails validation
+and does not fall back. Remove the empty canonical variable if using the legacy
+name. Missing or blank credentials stop `add-stock`, `refresh` and explicit
+scratch-script requests before network work. Diagnostics omit credential values
+and request URLs.
+
+Previously exposed keys are covered by the
+[owner rotation attestation](docs/security/issue-3-credential-rotation.md).
+This is owner-confirmed revocation/replacement, not an agent live-key test.
+Tracked-source scanning covers known literal credential and URL patterns with
+redacted findings; it does not certify arbitrary secret formats or Git history.
+
+## Contributing and foundation status
+
+Read the approved [SRS](SRS.md), [agent operating policy](AGENTS.md),
+[testing policy](docs/TESTING.md), [financial calculation specification](docs/FINANCIAL_CALCULATIONS.md)
+and [accepted dependency ADR](docs/adr/0005-canonical-python-dependencies.md).
+Implement a bounded issue on a task branch, run required checks, review the diff
+and open a PR using the repository templates. Do not merge automatically.
+
+The [Foundation workflow](.github/workflows/foundation.yml) runs pytest on
+Python 3.11 and 3.12, Ruff, configuration mypy and credential-pattern checks
+on PRs and pushes to `main`, using the same pinned installation without provider
+secrets. The [CI contract](docs/TESTING.md#foundation-actions-workflow--issue-12)
+lists exact check names, scanner limitations and owner-only protection setup.
+
+[Issue #13](https://github.com/daniilnahl/Stock-Tracking-App/issues/13) and its PR
+record the SRS §23 requirement/issue checklist and sanitized exit evidence.
+[M0](https://github.com/daniilnahl/Stock-Tracking-App/milestone/1) stays open while
+required issues remain open. Passing setup checks alone do not close the
+milestone: all required issues, successful CI on `main` after an authorized
+merge, source security evidence and canonical documentation must be accounted for.
 
 ## Acknowledgments 
 - ### Financial Modeling Prep API
@@ -187,8 +252,3 @@ owner-authorized merge before issue #12 can close.
 
 ## License
 This project is licensed under the MIT License.
-
-
-
-
-
