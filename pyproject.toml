@@ -52,12 +52,13 @@ dev = [
 
 [tool.setuptools]
 py-modules = ["stock", "watch_list", "menu_watchlist", "daniils_stock_method", "config"]
-packages = ["utils"]
+packages = ["utils", "stock_tracker", "stock_tracker.domain"]
+package-dir = {stock_tracker = "src/stock_tracker"}
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
-pythonpath = ["."]
+pythonpath = [".", "src"]
 
 [tool.ruff]
 # Match the oldest supported runtime in requires-python (ADR-0005).
