@@ -761,6 +761,16 @@ Canonical setup/test commands are documented.
 
 ## Milestone 1 — Domain Refactor
 
+**Review status (2026-10-04):** M1 is achieved under `AGENTS.md` §10.7 at
+`788d3c4119e9ebb196256e9355f24ce8b31dc037` on `main`, after owner merge of
+PR #46. All nine required issues (#25–31, #33 and #42) are closed; the
+post-merge Foundation run passed all five checks, including Python 3.11/3.12.
+The [M1 exit evidence](docs/milestones/m1-exit-evidence.md#completion-review--2026-10-04)
+maps every deliverable to source/tests and records verification and remaining
+later-milestone limitations. GitHub's milestone container remains open with
+zero open issues at this review. This status note changes no requirement or
+exit criterion.
+
 - Introduce clean Stock model.
 - Introduce Position.
 - Introduce Portfolio.

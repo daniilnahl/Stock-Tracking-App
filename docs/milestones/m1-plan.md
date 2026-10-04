@@ -4,11 +4,16 @@ Status: accepted contract plan for [#25](https://github.com/daniilnahl/Stock-Tra
 [ADR-0006](../adr/0006-domain-contracts.md) is **Accepted**: the owner accepted
 proposal commit `f4693ab` on 2026-10-03 in the
 [PR #37 acceptance comment](https://github.com/daniilnahl/Stock-Tracking-App/pull/37#issuecomment-5973462602).
-The contract gate is satisfied; runtime implementation remains pending and
-requires resolved upstream implementation dependencies. This plan does not close
-an issue or milestone and does not authorize agent merges.
+The contract gate and M1 implementation/verification gates are satisfied as of
+2026-10-04. Owner-merged [PR #46](https://github.com/daniilnahl/Stock-Tracking-App/pull/46)
+published the reviewed stack to `main` at `788d3c4`; all nine required issues
+(#25–31, #33, #42) are closed and all five post-merge Foundation checks passed.
+See the [completion review](m1-exit-evidence.md#completion-review--2026-10-04).
+GitHub's milestone container remains open with zero open issues at review.
+This plan authorizes no agent merge or milestone state change.
 
-The current baseline is main `d94a0cacc73f986581680e4e26167c67ee2c583c`.
+The planning baseline was main `d94a0cacc73f986581680e4e26167c67ee2c583c`;
+the completion baseline is `788d3c4119e9ebb196256e9355f24ce8b31dc037`.
 M0 exit issue #13 is closed; canonical Python/pip/pins remain ADR-0005.
 Strict mypy is configured for config.py; run `python -m mypy` alongside full
 `python -m pytest` and `python -m ruff check .`. Older M1 issue notes saying
@@ -25,6 +30,7 @@ not drive implementation. Follow [TESTING.md](../TESTING.md) isolation rules.
 | [#30](https://github.com/daniilnahl/Stock-Tracking-App/issues/30) | root Stock facade, compatibility numeric/operations/presentation modules, minimum Watch_list.wrap_percent sentinel mapping, synthetic state/credential tests | #25, #26, #27, #29; completed #7 configuration preserved | Constructor/method/field mapping, real calculation beneath mocked IO, serialized-state/bytes key exclusion, saved-key discard/current rebinding, local restore with missing/blank config then blocked request, trusted state holdings |
 | [#31](https://github.com/daniilnahl/Stock-Tracking-App/issues/31) | Both CLI ownership prompts/errors and broader Watch_list display/refresh integration | #25, #30 | High-precision text, meaningful re-prompts, no invalid save, safe unavailable/undefined display, unchanged help/commands |
 | [#33](https://github.com/daniilnahl/Stock-Tracking-App/issues/33) | Focused domain isolation/installed wheel tests and exit documentation | #25–31 complete | Guarded fresh process on 3.11/3.12, canonical checks and real required CI evidence |
+| [#42](https://github.com/daniilnahl/Stock-Tracking-App/issues/42) | Reviewed-stack publication to main and integration provenance | Independently reviewed #26–31/#33 | Owner merge of PR #46, actual main source, passing main CI and issue closure |
 
 #26 creates package export/error scaffolding; later model owners extend the
 exports only after those contracts land. Implement sequentially where shared
@@ -58,7 +64,9 @@ metrics and unresolved financial conventions. M6 owns CLI V2, larger service
 wiring/table relabeling and redesign. Existing synthetic charts and unsafe legacy
 pickle loading remain visible limitations; no production certification is implied.
 
-Before recommending M1 complete, #33 must record all required issue/PR statuses,
+The following exit-verification obligations were satisfied by #33/#42; the
+completion review records their actual results. Before recommending M1 complete,
+#33 must record all required issue/PR statuses,
 actual passing canonical checks and required PR/main CI after human merges, and
 prove domain imports/construction/calculation work without environment, network,
 DB, CLI/chart or legacy imports. Subprocess guards must be independent of parent

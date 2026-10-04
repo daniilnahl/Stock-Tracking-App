@@ -559,4 +559,10 @@ Financial correctness remains covered by independent known-value tests in
 `test_position_calculations.py`; facade and both CLI flows retain real domain
 arithmetic under mocked infrastructure. Strict mypy still checks `config.py`
 only. See [M1 evidence](milestones/m1-exit-evidence.md) for requirement/test/topic
-PR mapping and the separate pending main integration gate in issue #42.
+PR mapping and the [2026-10-04 completion review](milestones/m1-exit-evidence.md#completion-review--2026-10-04).
+Owner-merged PR #46 includes the domain, facade, CLI and isolation tests on
+`main` at `788d3c4119e9ebb196256e9355f24ce8b31dc037`; all nine required M1
+issues are closed. The [post-merge Foundation run](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/37214866386)
+passed Tests (Python 3.11), Tests (Python 3.12), Ruff, Mypy (configuration)
+and Credential patterns. This establishes M1 exit evidence without expanding
+configured mypy coverage or certifying later provider/persistence/history work.

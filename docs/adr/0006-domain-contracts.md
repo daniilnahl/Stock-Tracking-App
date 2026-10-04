@@ -8,8 +8,11 @@
 This records the contract decision for
 [issue #25](https://github.com/daniilnahl/Stock-Tracking-App/issues/25) in
 [M1](https://github.com/daniilnahl/Stock-Tracking-App/milestone/2).
-The contract-acceptance gate is satisfied; runtime implementation remains pending
-and must follow the issue dependency plan. Acceptance does not authorize agent
+The contract-acceptance gate is satisfied. Runtime implementation reached `main`
+at `788d3c4` through owner-merged PR #46 on 2026-10-04; the
+[M1 completion review](../milestones/m1-exit-evidence.md#completion-review--2026-10-04)
+records passing main CI, source/test evidence and closure of all required issues.
+Acceptance does not authorize agent
 merges, user-data migration, unrelated public-contract changes or a new SRS.
 
 ## Context
@@ -307,9 +310,10 @@ financial formulas remain those already approved.
 The owner accepted the package extension, field/signature/error contracts,
 identity/list semantics, pure result and facade/state corrections as one coherent
 proposal at `f4693ab`, with dated evidence recorded above. The #25 human acceptance
-criterion is satisfied. Runtime work for #26–31/#33 remains pending and must still
-resolve its upstream implementation dependencies. No agent merge is authorized;
-acceptance does not itself complete an implementation issue or M1.
+criterion is satisfied. Runtime work for #26–31/#33 and main integration #42
+is now included on `main`, with completion evidence linked in the status above.
+No agent merge is authorized; acceptance alone did not complete implementation
+or M1. The package/field/caller contracts in this ADR remain the accepted decision.
 M0 is complete on the current baseline; old issue text describing open #13 or
 unconfigured mypy is historical. Strict mypy currently checks config.py with
 `python -m mypy`; extending its coverage needs maintained typed implementation,

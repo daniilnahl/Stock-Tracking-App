@@ -124,11 +124,15 @@ Snapshot inputs use one currency; missing quotes and undefined zero-basis return
 stay distinct from zero. Advanced metrics and transaction conventions remain
 blocked by the financial specification.
 
-The [M1 evidence record](docs/milestones/m1-exit-evidence.md) distinguishes tested
-topic source from publication on `main`. [Integration issue #42](https://github.com/daniilnahl/Stock-Tracking-App/issues/42)
-still requires owner main integration, passing main CI and issue reconciliation
-before M1 can be reported complete. Provider reliability, safe structured storage,
-real historical charts and CLI V2 remain later milestones.
+M1 is achieved as of 2026-10-04: owner-merged
+[PR #46](https://github.com/daniilnahl/Stock-Tracking-App/pull/46) includes the
+reviewed implementation on `main` at `788d3c4`; all nine required M1 issues
+are closed and the [post-merge Foundation run](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/37214866386)
+passed all five checks. The [M1 completion review](docs/milestones/m1-exit-evidence.md#completion-review--2026-10-04)
+records source, tests, issue/PR reconciliation and local verification.
+GitHub's milestone container remains open with zero open issues at the review.
+Provider reliability, safe structured storage, real historical charts and CLI V2
+remain later milestones.
 
 ## Optional provider configuration
 
