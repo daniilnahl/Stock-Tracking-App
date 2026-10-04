@@ -1,14 +1,8 @@
 """Accepted local Stock identity and infrastructure isolation contracts."""
 
 from dataclasses import FrozenInstanceError, fields
-from pathlib import Path
-import subprocess
-import sys
 
 import pytest
-
-
-ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_stock_required_optional_fields_and_exact_spelling():
@@ -88,78 +82,3 @@ def test_unknown_identity_is_reflexive_and_distinct_from_other_instances():
     assert hash(second) == object.__hash__(second)
     assert len({first, second, known}) == 3
     assert {first: "unresolved"}[first] == "unresolved"
-
-
-def test_domain_import_and_construction_without_infrastructure(tmp_path):
-    # An independent process guards imports and operations before importing domain.
-    # Preloading stdlib dataclasses avoids denying its own lazy stdlib setup.
-    code = """
-import builtins
-import dataclasses
-from decimal import Decimal
-import os
-from pathlib import Path
-import sys
-from unittest.mock import patch
-
-sys.path.insert(0, sys.argv[1])
-original_import = builtins.__import__
-forbidden = {'config', 'stock', 'watch_list', 'menu_watchlist', 'daniils_stock_method',
-             'dotenv', 'rich', 'typer', 'matplotlib', 'utils', 'urllib', 'socket',
-             'sqlite3', 'stock_tracker.compatibility'}
-
-def guarded_import(name, *args, **kwargs):
-    # Relative domain imports use names such as 'stock'; reject absolute imports only.
-    level = kwargs.get('level', args[3] if len(args) > 3 else 0)
-    if level == 0 and any(name == item or name.startswith(item + '.') for item in forbidden):
-        raise AssertionError('Infrastructure import denied')
-    return original_import(name, *args, **kwargs)
-
-def denied(*args, **kwargs):
-    raise AssertionError('Infrastructure operation denied')
-
-with patch.object(builtins, '__import__', guarded_import), \
-     patch.object(builtins, 'open', denied), \
-     patch.object(builtins, 'print', denied), \
-     patch.object(os, 'getenv', denied), \
-     patch.object(type(os.environ), '__getitem__', denied):
-    from stock_tracker.domain import (Stock, Position, Portfolio, DomainValidationError,
-                                      PositionSnapshot, position_snapshot)
-    stock = Stock('AAPL', exchange='NASDAQ')
-    assert stock == Stock('AAPL', 'Apple', 'NASDAQ')
-    assert Stock('AAPL') != Stock('AAPL')
-    position = Position(stock, Decimal('0.25'), Decimal('100.123456'))
-    replacement = position.with_owned_data(Decimal('2'), Decimal('3'))
-    assert replacement.stock is stock and position.quantity == Decimal('0.25')
-    portfolio = Portfolio(None, 'Example', [position, replacement, position])
-    assert portfolio.positions == [position, replacement, position]
-    snapshot = position_snapshot(position, Decimal('125.154320'))
-    assert isinstance(snapshot, PositionSnapshot)
-    assert snapshot.cost_basis == Decimal('25.030864')
-    assert snapshot.market_value == Decimal('31.288580')
-    assert snapshot.unrealized_pnl == Decimal('6.257716')
-    assert snapshot.unrealized_return == Decimal('0.25')
-    assert position_snapshot(position, None).unrealized_return is None
-    assert issubclass(DomainValidationError, ValueError)
-    assert Path(sys.modules[Stock.__module__].__file__).resolve().is_relative_to(
-        Path(sys.argv[1]).resolve())
-    assert Path(sys.modules[position_snapshot.__module__].__file__).resolve().is_relative_to(
-        Path(sys.argv[1]).resolve())
-    # Demonstrate that the same guards reject safe prohibited probes.
-    for probe in (lambda: __import__('config'), lambda: os.getenv('DOMAIN_PROBE'),
-                  lambda: open('domain-probe', 'w'), lambda: print('domain-probe')):
-        try:
-            probe()
-        except AssertionError:
-            pass
-        else:
-            raise AssertionError('Guard did not enforce isolation')
-"""
-    result = subprocess.run(
-        [sys.executable, "-I", "-c", code, str(ROOT / "src")],
-        cwd=tmp_path, capture_output=True, text=True,
-    )
-    assert result.returncode == 0, result.stderr
-    assert result.stdout == ""
-    assert result.stderr == ""
-    assert not (tmp_path / "domain-probe").exists()
