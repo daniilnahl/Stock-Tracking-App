@@ -5,6 +5,7 @@ import typer #CLI
 
 #OBJECTS 
 from stock import Stock
+from stock_tracker.domain import DomainValidationError
 from watch_list import Watch_list
 
 #helper functions
@@ -86,16 +87,12 @@ def add_stock():
                 #loop to get user info on owned stocks
                 while True:
                     try:
-                        stock_amount = typer.prompt("Enter amount of stocks owned", type=(float))
-                        stock_cb = typer.prompt("Enter cost basis of owned stocks", type=(float))
-
-                        if stock_amount < 0 or stock_cb < 0: #if values are negative dont add them
-                            typer.echo('Invalid input. Please enter numeric values that are greater or equal to 0.')
-                        else:
-                            stock.set_owned_data(stock_amount, stock_cb)
-                            break   
-                    except ValueError:
-                        typer.echo("Invalid input. Please enter numeric values, such as 10.1 or 123.")
+                        stock_amount = typer.prompt("Enter amount of stocks owned")
+                        stock_cb = typer.prompt("Enter average cost per share of owned stocks")
+                        stock.set_owned_data(stock_amount, stock_cb)
+                        break
+                    except DomainValidationError as error:
+                        typer.echo(f"Invalid input. {error} Please try again.")
                     
                         
                 #record the stock instance into the watchlist
