@@ -77,7 +77,8 @@ configured to collect `test_*.py` under `tests/`; root-level `test.py` is a
 sanitized manual live-provider scratch script and must only run explicitly.
 The checkout is placed on the test import path so both pytest invocations
 verify current source instead of an older installed wheel.
-Mypy checks the scope configured below; no `src/` layout exists yet.
+Mypy checks the scope configured below; the added `src/stock_tracker` package
+does not automatically expand that configured scope.
 Ruff's explicit baseline in
 `pyproject.toml` selects `E4`, `E7`, `E9` and `F`: import/statement errors,
 syntax errors and Pyflakes checks such as undefined names and unused imports.
@@ -111,10 +112,10 @@ Tests and fixtures are not substituted for the checked runtime source.
 This is a configuration baseline, not whole-application type coverage. The
 inspected legacy gaps are:
 
-- `stock.py`: fields annotated `str` default to `None`; prices, ownership and
-  returns are formatted strings or sentinel values, and most methods lack
-  return annotations. M1 owns readiness work alongside the specified domain
-  isolation and numeric model; this task does not define replacement interfaces.
+- `stock.py` is now an external legacy facade over typed numeric domain models.
+  Its display fields remain strings/sentinels and external methods are not all
+  annotated. The domain has an accepted typed contract, but this configured
+  check still covers only `config.py`.
 - `watch_list.py`: the bare `list` loses element types, `add_stock` accepts
   `object`, and methods access Stock attributes through untyped collections.
   M1 owns typed domain collections as part of its refactor.
@@ -122,8 +123,8 @@ inspected legacy gaps are:
   failure return; CSV collections are unparameterized. M2 owns provider typing
   and error contracts, with no provider behavior changes in M0.
 - `menu_watchlist.py` and `daniils_stock_method.py`: untyped command functions
-  consume the legacy models and `pickle.load` results. M1 should reassess these
-  callers after domain contracts stabilize; M3/M6 own persistence/presentation
+  consume the legacy facade and `pickle.load` results. Ownership prompts delegate
+  validation to the domain; M3/M6 own persistence/presentation
   migration. `test.py` remains a manual scratch script outside this baseline.
 
 Review evidence with `git ls-files '*.py'`, `git grep -n 'load_configuration'`,
@@ -215,8 +216,10 @@ Issue #7 coverage also rejects missing/blank keys before add/refresh work,
 checks the shared configuration representation and dotenv failure diagnostics,
 and captures HTTP/URL/JSON/unexpected request logs using synthetic credentials.
 Successful add coverage inspects only a pickle produced in its temporary path;
-the shared Configuration object is not persisted, while legacy Stock.API_KEY
-storage remains explicitly covered as a deferred limitation.
+the shared Configuration object and runtime Stock.API_KEY are not persisted.
+Facade compatibility tests use trusted synthetic legacy state, discard saved keys,
+preserve numeric holdings and rebind current runtime configuration under ADR-0006.
+Unsafe existing pickle loading remains M3 work; no user-data migration is tested.
 
 Test cases should cover:
 
@@ -531,3 +534,29 @@ Before PR creation:
 [ ] Regression tests were added for bug fixes where practical
 [ ] Time/randomness are controlled where relevant
 ```
+
+## M1 domain isolation — issue #33
+
+Run the focused source, offline wheel and staged-index security checks with:
+
+```bash
+python -m pytest tests/test_domain_isolation.py tests/test_packaging.py tests/test_repository_hygiene.py -v
+```
+
+`tests/domain_isolation_probe.py` is a subprocess helper, not a live application
+entry point. Source and installed-wheel tests launch it independently with
+`python -I` and an explicit application import root. It installs its own resolved
+import/environment/network/database/data-IO/output guards before domain imports;
+parent pytest patches are not assumed to propagate. Safe synthetic probes verify
+the guards, then actual models and known/missing/zero snapshot cases execute.
+Installed module paths must lie inside the wheel target, and that domain-only
+process runs before a separate legacy root-module smoke. Exact wheel contents
+still exclude tests, local state, CSV and scratch files. Import-loader code reads
+remain possible; ordinary data opens/output are denied.
+
+The stronger focused probe replaces the earlier narrow Stock subprocess smoke.
+Financial correctness remains covered by independent known-value tests in
+`test_position_calculations.py`; facade and both CLI flows retain real domain
+arithmetic under mocked infrastructure. Strict mypy still checks `config.py`
+only. See [M1 evidence](milestones/m1-exit-evidence.md) for requirement/test/topic
+PR mapping and the separate pending main integration gate in issue #42.

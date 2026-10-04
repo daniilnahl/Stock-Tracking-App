@@ -41,6 +41,13 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
     assert payload == {
         "stock.py", "watch_list.py", "menu_watchlist.py", "daniils_stock_method.py",
         "utils/utility_module.py", "config.py",
+        "stock_tracker/__init__.py", "stock_tracker/domain/__init__.py",
+        "stock_tracker/domain/errors.py", "stock_tracker/domain/stock.py",
+        "stock_tracker/domain/position.py", "stock_tracker/domain/portfolio.py",
+        "stock_tracker/domain/calculations.py",
+        "stock_tracker/compatibility/__init__.py", "stock_tracker/compatibility/numeric.py",
+        "stock_tracker/compatibility/stock_operations.py",
+        "stock_tracker/compatibility/presentation.py",
     }
 
     installed = tmp_path / "installed"
@@ -50,20 +57,75 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
         env=environment, check=True, capture_output=True, text=True,
     )
 
+    # Domain-only process runs first; legacy imports cannot prime its dependencies.
+    isolated = subprocess.run(
+        [sys.executable, "-I", str(ROOT / "tests" / "domain_isolation_probe.py"), str(installed)],
+        cwd=tmp_path, env=environment, capture_output=True, text=True,
+    )
+    assert isolated.returncode == 0, isolated.stderr
+    assert isolated.stdout == isolated.stderr == ""
+    assert not (tmp_path / "domain-probe").exists()
+
     # -I and an empty cwd keep the checkout out of imports. The built wheel,
     # rather than source files, supplies the modules under verification.
     code = """
 import socket
 import sys
+from decimal import Decimal
+from pathlib import Path
 from unittest.mock import patch
 
 sys.path.insert(0, sys.argv[1])
+# Installed domain must work even when legacy/provider/UI modules are unavailable.
+blocked = {name: None for name in (
+    'stock', 'config', 'watch_list', 'menu_watchlist', 'daniils_stock_method',
+    'utils', 'utils.utility_module', 'dotenv', 'rich', 'typer', 'matplotlib',
+    'urllib', 'socket', 'sqlite3',
+)}
+with patch.dict(sys.modules, blocked):
+    import stock_tracker
+    import stock_tracker.domain
+    from stock_tracker.domain import (Stock, Position, Portfolio, DomainValidationError,
+                                      PositionSnapshot, position_snapshot)
+    first = Stock('AAPL', exchange='NASDAQ')
+    assert first == Stock('AAPL', 'Apple', 'NASDAQ')
+    assert first != Stock('AAPL', exchange='NYSE')
+    assert Stock('AAPL') != Stock('AAPL')
+    position = Position(first, Decimal('0.25'), Decimal('100.123456'))
+    assert position.with_owned_data(Decimal('1'), Decimal('2')).stock is first
+    assert position.quantity == Decimal('0.25')
+    supplied = [position, position]
+    portfolio = Portfolio(None, 'Example', supplied)
+    assert portfolio.positions == supplied and portfolio.positions is not supplied
+    supplied.clear()
+    assert portfolio.positions == [position, position]
+    snapshot = position_snapshot(position, Decimal('125.154320'))
+    assert isinstance(snapshot, PositionSnapshot)
+    assert snapshot.cost_basis == Decimal('25.030864')
+    assert snapshot.market_value == Decimal('31.288580')
+    assert snapshot.unrealized_pnl == Decimal('6.257716')
+    assert snapshot.unrealized_return == Decimal('0.25')
+    assert position_snapshot(position, None).market_value is None
+    assert issubclass(DomainValidationError, ValueError)
+    for name in ('stock_tracker', 'stock_tracker.domain', Stock.__module__,
+                 Position.__module__, Portfolio.__module__, DomainValidationError.__module__,
+                 PositionSnapshot.__module__, position_snapshot.__module__):
+        assert Path(sys.modules[name].__file__).resolve().is_relative_to(
+            Path(sys.argv[1]).resolve())
+
+# Preserve installed legacy module checks after guarded fresh domain imports.
 with patch.object(socket.socket, 'connect', side_effect=AssertionError('Network denied')):
     import utils.utility_module as utility
     with patch.object(utility, 'urlopen', side_effect=AssertionError('Provider denied')):
         import stock
-assert stock.__file__.startswith(sys.argv[1])
-assert utility.__file__.startswith(sys.argv[1])
+        legacy = stock.Stock('AAPL', None, current_price='120', amount_owned='10', cost_basis='100')
+        assert legacy.total_return == '20.0'
+        assert legacy._position.quantity == Decimal('10')
+        assert 'API_KEY' not in legacy.__getstate__()
+        assert '_runtime_key' not in legacy.__getstate__()
+for name in ('stock', 'utils.utility_module', 'stock_tracker.compatibility.numeric',
+             'stock_tracker.compatibility.presentation', 'stock_tracker.compatibility.stock_operations'):
+    assert Path(sys.modules[name].__file__).resolve().is_relative_to(Path(sys.argv[1]).resolve())
 """
     subprocess.run(
         [sys.executable, "-I", "-c", code, str(installed)], cwd=tmp_path,

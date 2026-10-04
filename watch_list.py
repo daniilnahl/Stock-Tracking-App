@@ -128,6 +128,8 @@ class Watch_list:
         Returns:
             str: A string with colored text and percent sign at the end.
         """
+        if percent is None or percent in ("-", "N/A"):
+            return "-"
         return f"[{ Watch_list.get_color(float(percent))}]{percent}%[/]"
     
     @staticmethod       
