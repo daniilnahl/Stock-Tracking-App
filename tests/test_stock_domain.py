@@ -123,7 +123,8 @@ with patch.object(builtins, '__import__', guarded_import), \
      patch.object(builtins, 'print', denied), \
      patch.object(os, 'getenv', denied), \
      patch.object(type(os.environ), '__getitem__', denied):
-    from stock_tracker.domain import Stock, Position, Portfolio, DomainValidationError
+    from stock_tracker.domain import (Stock, Position, Portfolio, DomainValidationError,
+                                      PositionSnapshot, position_snapshot)
     stock = Stock('AAPL', exchange='NASDAQ')
     assert stock == Stock('AAPL', 'Apple', 'NASDAQ')
     assert Stock('AAPL') != Stock('AAPL')
@@ -132,8 +133,17 @@ with patch.object(builtins, '__import__', guarded_import), \
     assert replacement.stock is stock and position.quantity == Decimal('0.25')
     portfolio = Portfolio(None, 'Example', [position, replacement, position])
     assert portfolio.positions == [position, replacement, position]
+    snapshot = position_snapshot(position, Decimal('125.154320'))
+    assert isinstance(snapshot, PositionSnapshot)
+    assert snapshot.cost_basis == Decimal('25.030864')
+    assert snapshot.market_value == Decimal('31.288580')
+    assert snapshot.unrealized_pnl == Decimal('6.257716')
+    assert snapshot.unrealized_return == Decimal('0.25')
+    assert position_snapshot(position, None).unrealized_return is None
     assert issubclass(DomainValidationError, ValueError)
     assert Path(sys.modules[Stock.__module__].__file__).resolve().is_relative_to(
+        Path(sys.argv[1]).resolve())
+    assert Path(sys.modules[position_snapshot.__module__].__file__).resolve().is_relative_to(
         Path(sys.argv[1]).resolve())
     # Demonstrate that the same guards reject safe prohibited probes.
     for probe in (lambda: __import__('config'), lambda: os.getenv('DOMAIN_PROBE'),
