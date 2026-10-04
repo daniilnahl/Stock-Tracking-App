@@ -502,6 +502,20 @@ positive portfolio value.
 
 # 21. Legacy Discrepancies and Milestone Ownership
 
+**M1 reconciliation (2026-10-04):** the table below preserves the M0 publication
+snapshot. M1 now supplies numeric domain Position/PositionSnapshot values and
+one pure Decimal calculation in `src/stock_tracker/domain/calculations.py` for
+FC-020/030/040/041. The root Stock facade delegates to that calculation; its
+legacy `cost_basis` string getter still means average cost per share, while
+snapshot `cost_basis` means `Q × C`. Both CLI ownership prompts preserve decimal
+text and identify average cost per share. Missing-price and zero-basis results
+are explicit `None` values, displayed as `-`; display does not mutate domain
+values. See the [M1 completion review](milestones/m1-exit-evidence.md#completion-review--2026-10-04)
+for known-value, precision, recomputation and nonmutation tests on `main`.
+Legacy table labels/provider summaries and approximate charts remain M4/M6 work;
+portfolio aggregation and unapproved conventions remain later M5 work. This
+reconciliation changes no FC definition, rounding policy or open decision.
+
 These observations describe the tracked legacy code at publication. They are
 future work under [SRS §23](../SRS.md#23-milestones), not approved financial
 semantics or repairs included in M0.

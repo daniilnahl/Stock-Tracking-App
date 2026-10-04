@@ -1,5 +1,99 @@
 # M1 Domain Refactor technical evidence
 
+## Completion review — 2026-10-04
+
+**M1 is achieved under `AGENTS.md` §10.7.** This review inspected actual source
+on `main` at `788d3c4119e9ebb196256e9355f24ce8b31dc037`, the owner merge of
+[PR #46](https://github.com/daniilnahl/Stock-Tracking-App/pull/46), live issue
+states and the post-merge CI jobs. The sections following this completion review
+preserve the 2026-10-03 topic/preparation snapshots; their pending gates are
+historical and superseded by the evidence here.
+
+All six SRS §23 M1 deliverables have concrete source and automated evidence:
+
+| Deliverable | Source on main | Tests |
+| --- | --- | --- |
+| Clean Stock | `src/stock_tracker/domain/stock.py`: immutable identity, exchange-aware equality, no credentials/ownership | `tests/test_stock_domain.py` |
+| Position | `src/stock_tracker/domain/position.py`: finite nonnegative Decimal inputs, immutable replacement | `tests/test_position_domain.py` |
+| Portfolio | `src/stock_tracker/domain/portfolio.py`: validated identity, copied independent lists, order/duplicates retained | `tests/test_portfolio_domain.py` |
+| Financial logic outside CLI | `domain/calculations.py` is the single position snapshot formula; root `stock.py` delegates; both CLI add flows pass raw text and map domain errors | `tests/test_position_calculations.py`, `tests/test_stock_facade.py`, `tests/test_cli_ownership.py` |
+| Infrastructure outside domain | Domain imports only domain/stdlib; `compatibility/stock_operations.py` and `compatibility/presentation.py` own HTTP and display/chart work | `tests/test_domain_isolation.py`, `tests/domain_isolation_probe.py`, `tests/test_packaging.py` |
+| Unit tests and isolation exit | Fresh source/installed-wheel processes construct all models and calculate snapshots while independently denying infrastructure dependencies and side effects | All suites above plus legacy/credential regressions in full pytest |
+
+The requirement/test matrix below remains applicable: ARCH-001/002/006,
+DOM-001–004, FIN-001–005, ERR-001–003, TEST-001–005 and GH-003/004. ARCH-005
+coverage is reuse of domain behavior by both legacy CLIs; the future shared
+REST/CLI application service remains later work. The accepted ADR-0006 scope
+does not claim full SRS architecture completion beyond M1.
+
+### Issue and publication reconciliation
+
+GitHub issue reads confirmed all nine required M1 issues closed with reason
+`completed`, milestone 2. The milestone API reported zero open items and 18
+closed items (nine issues and nine PRs). Its administrative state remains `open`;
+this review does not change the milestone state or repository protections.
+
+| Required issue | Reviewed PR | Publication confirmed at review |
+| --- | --- | --- |
+| [#25](https://github.com/daniilnahl/Stock-Tracking-App/issues/25) | [#37](https://github.com/daniilnahl/Stock-Tracking-App/pull/37) | Accepted contracts merged to main; issue closed 2026-10-03 |
+| [#26](https://github.com/daniilnahl/Stock-Tracking-App/issues/26) | [#38](https://github.com/daniilnahl/Stock-Tracking-App/pull/38) | Topic PR merged; source included by #46; issue closed 2026-10-04 |
+| [#27](https://github.com/daniilnahl/Stock-Tracking-App/issues/27) | [#39](https://github.com/daniilnahl/Stock-Tracking-App/pull/39) | Topic PR merged; source included by #46; issue closed 2026-10-04 |
+| [#28](https://github.com/daniilnahl/Stock-Tracking-App/issues/28) | [#40](https://github.com/daniilnahl/Stock-Tracking-App/pull/40) | Topic PR merged; source included by #46; issue closed 2026-10-04 |
+| [#29](https://github.com/daniilnahl/Stock-Tracking-App/issues/29) | [#41](https://github.com/daniilnahl/Stock-Tracking-App/pull/41) | Topic PR merged; source included by #46; issue closed 2026-10-04 |
+| [#30](https://github.com/daniilnahl/Stock-Tracking-App/issues/30) | [#43](https://github.com/daniilnahl/Stock-Tracking-App/pull/43) | Topic PR merged; source included by #46; issue closed 2026-10-04 |
+| [#31](https://github.com/daniilnahl/Stock-Tracking-App/issues/31) | [#44](https://github.com/daniilnahl/Stock-Tracking-App/pull/44) | Topic PR merged; source included by #46; issue closed 2026-10-04 |
+| [#33](https://github.com/daniilnahl/Stock-Tracking-App/issues/33) | [#45](https://github.com/daniilnahl/Stock-Tracking-App/pull/45) | Topic PR merged; guards/evidence included by #46; issue closed 2026-10-04 |
+| [#42](https://github.com/daniilnahl/Stock-Tracking-App/issues/42) | [#46](https://github.com/daniilnahl/Stock-Tracking-App/pull/46) | Merged to main 2026-10-04 at 08:56 PDT; issue closed |
+
+PR #46's reviewed head was `bc9b972140c75da47309e515b9f24022ff2cf8f3`.
+Its [Foundation PR run 37178047311](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/37178047311)
+completed successfully. The subsequent
+[Foundation main push run 37214866386](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/37214866386)
+ran at the exact merge SHA `788d3c4119e9ebb196256e9355f24ce8b31dc037`.
+All five jobs completed successfully: Tests (Python 3.11), Tests (Python 3.12),
+Ruff, Mypy (configuration), and Credential patterns. Topic checks alone were
+not used to establish main completion.
+
+### Completion-review verification
+
+The review used a fresh canonical pinned Python 3.11.9 environment in this task's
+`.venv` and the existing pinned Python 3.12.10 environment from `570c/.venv`,
+with commands run against this checkout. The fresh 3.11 setup used
+`py -3.11 -m venv .venv` and `python -m pip install ".[dev]"` successfully;
+no dependency pins or supported runtimes changed. Earlier local results remain
+in the historical sections.
+
+| Command | Python 3.11.9 | Python 3.12.10 |
+| --- | --- | --- |
+| Targeted M1 suite below | 229 passed | 229 passed |
+| `python -m pytest -q` | 310 passed | 310 passed |
+| `python -m ruff check .` | Passed | Passed |
+| `python -m mypy` | Passed, 1 source file | Passed, 1 source file |
+| `python -m pip check` | No broken requirements | No broken requirements |
+
+The targeted command was:
+
+```bash
+python -m pytest tests/test_stock_domain.py tests/test_position_domain.py tests/test_portfolio_domain.py tests/test_position_calculations.py tests/test_stock_facade.py tests/test_cli_ownership.py tests/test_domain_isolation.py tests/test_packaging.py -q
+```
+
+Full pytest includes eight repository-hygiene tests. Source/installed-wheel
+isolation, hand-derived financial values, missing-versus-zero cases, atomic
+validation, runtime-only credentials and both CLI flows all passed. No runtime
+source or tests were edited for this documentation reconciliation.
+
+### Boundaries and follow-up
+
+No required M1 implementation blocker remains. Existing limitations stay with
+their assigned SRS milestones: provider contracts/reliability (M2), unsafe legacy
+pickle loading and structured persistence/migration (M3), synthetic history
+(M4), portfolio analytics and undefined financial conventions (M5), and legacy
+table labels/CLI V2/shared service wiring (M6/M7). These were explicit accepted
+scope boundaries, not deferred M1 acceptance criteria. No new metric, formula,
+rounding convention, public interface or toolchain is approved by this review.
+Configured mypy still covers only `config.py`. No live provider, real user state
+or production credentials are used; branch protection enforcement is not verified.
+
 ## Status and publication boundary
 
 This is the technical evidence proposal for [issue #33](https://github.com/daniilnahl/Stock-Tracking-App/issues/33),
