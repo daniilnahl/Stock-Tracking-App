@@ -23,7 +23,7 @@ from unittest.mock import patch
 FORBIDDEN = {
     "config", "stock", "watch_list", "menu_watchlist", "daniils_stock_method",
     "utils", "dotenv", "rich", "typer", "matplotlib", "urllib", "socket",
-    "sqlite3", "stock_tracker.compatibility",
+    "sqlite3", "stock_tracker.compatibility", "stock_tracker.providers", "stock_tracker.exceptions",
 }
 
 
@@ -66,6 +66,8 @@ def main(import_root):
         lambda: __import__("stock"),
         lambda: __import__("stock_operations", {"__package__": "stock_tracker.compatibility"}, level=1),
         lambda: importlib.import_module("stock_tracker.compatibility"),
+        lambda: importlib.import_module("stock_tracker.providers"),
+        lambda: importlib.import_module("stock_tracker.exceptions"),
         lambda: os.getenv("DOMAIN_ISOLATION_PROBE"),
         lambda: os.environ["DOMAIN_ISOLATION_PROBE"],
         lambda: list(os.environ),

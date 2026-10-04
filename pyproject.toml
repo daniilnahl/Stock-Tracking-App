@@ -52,7 +52,7 @@ dev = [
 
 [tool.setuptools]
 py-modules = ["stock", "watch_list", "menu_watchlist", "daniils_stock_method", "config"]
-packages = ["utils", "stock_tracker", "stock_tracker.domain", "stock_tracker.compatibility"]
+packages = ["utils", "stock_tracker", "stock_tracker.domain", "stock_tracker.compatibility", "stock_tracker.providers"]
 package-dir = {stock_tracker = "src/stock_tracker"}
 
 [tool.pytest.ini_options]

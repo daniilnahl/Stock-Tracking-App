@@ -48,6 +48,8 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
         "stock_tracker/compatibility/__init__.py", "stock_tracker/compatibility/numeric.py",
         "stock_tracker/compatibility/stock_operations.py",
         "stock_tracker/compatibility/presentation.py",
+        "stock_tracker/exceptions.py", "stock_tracker/providers/__init__.py",
+        "stock_tracker/providers/models.py", "stock_tracker/providers/protocols.py",
     }
 
     installed = tmp_path / "installed"
@@ -66,6 +68,13 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
     assert isolated.stdout == isolated.stderr == ""
     assert not (tmp_path / "domain-probe").exists()
 
+    contracts = subprocess.run(
+        [sys.executable, "-I", str(ROOT / "tests" / "provider_contract_probe.py"), str(installed)],
+        cwd=tmp_path, env=environment, capture_output=True, text=True,
+    )
+    assert contracts.returncode == 0, contracts.stderr
+    assert contracts.stdout == contracts.stderr == ""
+
     # -I and an empty cwd keep the checkout out of imports. The built wheel,
     # rather than source files, supplies the modules under verification.
     code = """
@@ -80,7 +89,7 @@ sys.path.insert(0, sys.argv[1])
 blocked = {name: None for name in (
     'stock', 'config', 'watch_list', 'menu_watchlist', 'daniils_stock_method',
     'utils', 'utils.utility_module', 'dotenv', 'rich', 'typer', 'matplotlib',
-    'urllib', 'socket', 'sqlite3',
+    'urllib', 'socket', 'sqlite3', 'stock_tracker.providers', 'stock_tracker.exceptions',
 )}
 with patch.dict(sys.modules, blocked):
     import stock_tracker
