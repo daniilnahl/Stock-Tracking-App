@@ -45,6 +45,9 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
         "stock_tracker/domain/errors.py", "stock_tracker/domain/stock.py",
         "stock_tracker/domain/position.py", "stock_tracker/domain/portfolio.py",
         "stock_tracker/domain/calculations.py",
+        "stock_tracker/compatibility/__init__.py", "stock_tracker/compatibility/numeric.py",
+        "stock_tracker/compatibility/stock_operations.py",
+        "stock_tracker/compatibility/presentation.py",
     }
 
     installed = tmp_path / "installed"
@@ -64,13 +67,6 @@ from pathlib import Path
 from unittest.mock import patch
 
 sys.path.insert(0, sys.argv[1])
-with patch.object(socket.socket, 'connect', side_effect=AssertionError('Network denied')):
-    import utils.utility_module as utility
-    with patch.object(utility, 'urlopen', side_effect=AssertionError('Provider denied')):
-        import stock
-assert stock.__file__.startswith(sys.argv[1])
-assert utility.__file__.startswith(sys.argv[1])
-
 # Installed domain must work even when legacy/provider/UI modules are unavailable.
 blocked = {name: None for name in (
     'stock', 'config', 'watch_list', 'menu_watchlist', 'daniils_stock_method',
@@ -107,6 +103,20 @@ with patch.dict(sys.modules, blocked):
                  PositionSnapshot.__module__, position_snapshot.__module__):
         assert Path(sys.modules[name].__file__).resolve().is_relative_to(
             Path(sys.argv[1]).resolve())
+
+# Preserve installed legacy module checks after guarded fresh domain imports.
+with patch.object(socket.socket, 'connect', side_effect=AssertionError('Network denied')):
+    import utils.utility_module as utility
+    with patch.object(utility, 'urlopen', side_effect=AssertionError('Provider denied')):
+        import stock
+        legacy = stock.Stock('AAPL', None, current_price='120', amount_owned='10', cost_basis='100')
+        assert legacy.total_return == '20.0'
+        assert legacy._position.quantity == Decimal('10')
+        assert 'API_KEY' not in legacy.__getstate__()
+        assert '_runtime_key' not in legacy.__getstate__()
+for name in ('stock', 'utils.utility_module', 'stock_tracker.compatibility.numeric',
+             'stock_tracker.compatibility.presentation', 'stock_tracker.compatibility.stock_operations'):
+    assert Path(sys.modules[name].__file__).resolve().is_relative_to(Path(sys.argv[1]).resolve())
 """
     subprocess.run(
         [sys.executable, "-I", "-c", code, str(installed)], cwd=tmp_path,
