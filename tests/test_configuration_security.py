@@ -122,7 +122,9 @@ def test_successful_add_does_not_persist_configuration(script, monkeypatch, tmp_
     assert result.exit_code == 0, result.output
     saved = pickle.loads((tmp_path / module["WATCHLIST_FILE"]).read_bytes())
     assert saved.stocks[0].ticker_symbol == "AAPL"
-    assert saved.stocks[0].API_KEY == "synthetic-secret"  # Explicit legacy limitation.
+    assert saved.stocks[0].API_KEY == "synthetic-secret"  # Rebound from current runtime config.
+    assert "API_KEY" not in saved.stocks[0].__getstate__()
+    assert b"synthetic-secret" not in (tmp_path / module["WATCHLIST_FILE"]).read_bytes()
     assert not any(isinstance(value, Configuration) for value in vars(saved).values())
     assert not any(isinstance(value, Configuration) for value in vars(saved.stocks[0]).values())
     assert "synthetic-secret" not in result.output

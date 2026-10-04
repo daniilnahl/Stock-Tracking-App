@@ -215,8 +215,10 @@ Issue #7 coverage also rejects missing/blank keys before add/refresh work,
 checks the shared configuration representation and dotenv failure diagnostics,
 and captures HTTP/URL/JSON/unexpected request logs using synthetic credentials.
 Successful add coverage inspects only a pickle produced in its temporary path;
-the shared Configuration object is not persisted, while legacy Stock.API_KEY
-storage remains explicitly covered as a deferred limitation.
+the shared Configuration object and runtime Stock.API_KEY are not persisted.
+Facade compatibility tests use trusted synthetic legacy state, discard saved keys,
+preserve numeric holdings and rebind current runtime configuration under ADR-0006.
+Unsafe existing pickle loading remains M3 work; no user-data migration is tested.
 
 Test cases should cover:
 
