@@ -2,13 +2,20 @@
 
 ## Status
 
-**Proposed — human acceptance required.** Prepared 2026-10-04 for
+**Accepted.** On **2026-10-04**, the repository owner stated **"I approve A"**
+in the Codex milestone chat, accepting the complete proposal at exact commit
+`cf909dfc6c9766c440b1aeaf408d10c1f112e6a4` and retaining the DATA-006
+definitive network unknown-instrument classification exit blocker. The Master
+Agent faithfully recorded that user approval in the
+[PR #57 acceptance record](https://github.com/daniilnahl/Stock-Tracking-App/pull/57#issuecomment-5982448860);
+the GitHub comment is the Master's record of the human chat instruction, not
+an independently authored human GitHub approval. This decision is for
 [#47](https://github.com/daniilnahl/Stock-Tracking-App/issues/47) in
 [M2 — Market Data Layer](https://github.com/daniilnahl/Stock-Tracking-App/milestone/3).
-Every decision and number below is an unapproved proposal. Issue creation,
-passing checks, agent review or merging documentation does not establish owner
-acceptance. Record acceptance of the exact reviewed commit, date and owner
-comment here before downstream runtime work begins. Acceptance: **not recorded**.
+The exact reviewed contracts and reliability values below are accepted; their
+original proposal wording documents how the decision was presented. Acceptance
+does not implement runtime behavior, satisfy unresolved implementation dependencies,
+close the DATA-006 evidence gate, authorize agent merges or change other milestones.
 
 Implements the contract planning for ARCH-001/002/003/006, DATA-001/002/006/007,
 DATA-009–011, SEC-002/005, ERR-001–003 and PERF-001; references DATA-004/005/008
@@ -34,10 +41,11 @@ unrelated results. A missing CSV prevents validation.
 Profile/quote failures print and overwrite fields with `N/A`. Period-summary
 failures can crash or partially publish fields. Both CLIs validate then fetch
 profile and summaries; Watch_list refresh fetches profile then summaries.
-No current configured reliability values resolve SRS §11. They require the
-acceptance gate above, rather than inferred production defaults.
+At that baseline no configured reliability values resolved SRS §11. The values
+in this ADR now have the explicit acceptance recorded above; runtime application
+remains dependent implementation work, not inferred production defaults.
 
-## Proposed package and dependency direction
+## Accepted package and dependency direction
 
 Add `stock_tracker.providers` with `models.py`, `protocols.py`, `transport.py`
 and `fmp.py`; add application errors in `stock_tracker.exceptions`. Keep root
@@ -289,13 +297,13 @@ arguments except `RateLimitError(*, retry_after_seconds: float | None = None)`
 is validated against the model field names and consumed FMP keys listed here;
 unknown fields cannot carry arbitrary input into error messages.
 
-## Proposed reliability values — all unapproved
+## Accepted reliability values
 
 `ProviderPolicy` is a frozen dataclass with exactly the following field names
 and types. Production construction must explicitly supply approved values;
 there are no automatic environment overrides or fallback policies in M2.
 
-| Field | Proposed value | Meaning |
+| Field | Approved value | Meaning |
 | --- | --- | --- |
 | timeout_seconds: float | 10.0 | urllib blocking socket-operation timeout; not a total-request wall-time guarantee |
 | max_attempts: int | 2 | Total attempts including the first, hence at most one retry |
@@ -447,10 +455,14 @@ requires a separate data contract and belongs with later cache/persistence work.
 
 ## Acceptance and implementation gate
 
-The owner must accept the exact commit covering model signatures, Stable family,
-NASDAQ/exact-search limitations, typed failure propagation/invalidation, CSV
-bypass and every policy value above. Record the reviewed SHA and comment URL,
-not just an issue checkbox. If a choice is rejected, revise only the proposal
-and dependent issue scope before runtime. See [M2 plan](../milestones/m2-plan.md).
-The proposal can be reviewed and published now; #47's human-acceptance criterion
-and M2 completion remain unmet.
+The owner accepted exact commit `cf909dfc6c9766c440b1aeaf408d10c1f112e6a4`,
+including model signatures, Stable family, NASDAQ/exact-search limitations,
+typed failure propagation/invalidation, CSV bypass and every reliability value.
+The status section links the faithful Master record of the human instruction.
+The contract-acceptance gate is satisfied; implementation still follows the
+[M2 dependency plan](../milestones/m2-plan.md), review and publication gates.
+The DATA-006 definitive network unknown-instrument classification remains an
+explicit #56 exit blocker until verified evidence or a further explicitly
+accepted supported-scope interpretation resolves it. This acceptance does not
+silently certify that incomplete search proves global nonexistence. M2 remains
+incomplete; changes to these accepted decisions require further human approval.

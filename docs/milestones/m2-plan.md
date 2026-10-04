@@ -1,10 +1,17 @@
 # M2 Market Data Layer implementation plan
 
-Status: **proposal; runtime blocked on owner acceptance of
-[ADR-0007](../adr/0007-market-provider-contracts.md)**. Snapshot 2026-10-04.
+Status: **accepted contract plan; runtime implementation pending**.
+The owner stated **"I approve A"** in the Codex milestone chat on **2026-10-04**,
+accepting [ADR-0007](../adr/0007-market-provider-contracts.md) exactly at
+`cf909dfc6c9766c440b1aeaf408d10c1f112e6a4`, while retaining the DATA-006
+definitive network unknown-instrument classification exit blocker. The
+[PR #57 acceptance record](https://github.com/daniilnahl/Stock-Tracking-App/pull/57#issuecomment-5982448860)
+is the Master's faithful record of that human chat instruction, not an
+independently authored human GitHub approval. Snapshot 2026-10-04.
 Parent milestone: [M2 — Market Data Layer](https://github.com/daniilnahl/Stock-Tracking-App/milestone/3).
-Planning and contract publication are safe to proceed; issue creation does not
-authorize policy or runtime behavior. No agent merge is authorized.
+The contract-acceptance gate is satisfied. Implementation remains subject to
+the dependency and review/publication gates below; this record neither closes
+issues nor declares runtime complete. No agent merge is authorized.
 
 Baseline main is `788d3c4119e9ebb196256e9355f24ce8b31dc037`. M1 integration
 [#42](https://github.com/daniilnahl/Stock-Tracking-App/issues/42) is closed, with
@@ -18,20 +25,21 @@ facade/state contracts remain authoritative. Canonical checks are
 
 All issues belong to M2. A runtime issue is dispatchable only after its listed
 dependencies are implemented/included on main and #47's exact-commit acceptance
-is recorded. Agent names below identify current assignment, not future automatic
+is recorded. Acceptance is recorded above; PR #57's human merge and main inclusion
+remain pending. Agent names identify current assignment, not future automatic
 dispatch. PR/review cells describe observed state, not expected outcomes.
 
 | Issue | Bounded objective | Status / dependency state | Assigned agent | PR / review | Blocking reason |
 | --- | --- | --- | --- | --- | --- |
-| [#47](https://github.com/daniilnahl/Stock-Tracking-App/issues/47) | Proposed ADR, policy and this issue map | Documentation drafted; M1 dependency satisfied | m2_analysis (proposal implementation); master reviews | Publication pending / review in progress | Owner acceptance of exact reviewed commit remains required |
-| [#48](https://github.com/daniilnahl/Stock-Tracking-App/issues/48) | Typed models, protocol, application errors, package discovery | Blocked (open); depends #47 | Unassigned | None / not started | Accepted contract |
-| [#50](https://github.com/daniilnahl/Stock-Tracking-App/issues/50) | Injectable urllib transport and approved reliability policy | Blocked (open); depends #47, #48 | Unassigned | None / not started | Accepted contract, typed errors |
+| [#47](https://github.com/daniilnahl/Stock-Tracking-App/issues/47) | Accepted ADR, policy and this issue map | Human acceptance recorded; publication reconciliation pending | m2_analysis (acceptance record); master reviews | [#57](https://github.com/daniilnahl/Stock-Tracking-App/pull/57) / acceptance-update review and CI pending | Required publication/review evidence; no agent merge |
+| [#48](https://github.com/daniilnahl/Stock-Tracking-App/issues/48) | Typed models, protocol, application errors, package discovery | Blocked (open); acceptance gate satisfied; depends #47 main inclusion | Unassigned | None / not started | Human merge of PR #57 and verified main inclusion |
+| [#50](https://github.com/daniilnahl/Stock-Tracking-App/issues/50) | Injectable urllib transport and approved reliability policy | Blocked (open); depends #47, #48 | Unassigned | None / not started | Implemented typed contracts |
 | [#51](https://github.com/daniilnahl/Stock-Tracking-App/issues/51) | FMP quote retrieval and validation | Blocked (open); depends #47, #48, #50 | Unassigned | None / not started | Stable transport/models |
 | [#52](https://github.com/daniilnahl/Stock-Tracking-App/issues/52) | FMP company-profile retrieval | Blocked (open); depends #47, #48, #50; sequence after #51 | Unassigned | None / not started | Stable transport/models and shared adapter ordering |
 | [#53](https://github.com/daniilnahl/Stock-Tracking-App/issues/53) | Typed provider period summaries | Blocked (open); depends #47, #48, #50; sequence after #52 | Unassigned | None / not started | Stable transport/models and shared adapter ordering |
-| [#54](https://github.com/daniilnahl/Stock-Tracking-App/issues/54) | Exact-symbol validation and safe CSV behavior | Blocked (open); depends #47, #48, #50, #52 | Unassigned | None / not started | Accepted identity/CSV policy and stable profile/transport |
-| [#55](https://github.com/daniilnahl/Stock-Tracking-App/issues/55) | Facade, both CLI and Watch_list provider integration | Blocked (open); depends #47, #48, #50–54 | Unassigned | None / not started | Implemented adapter operations and accepted compatibility corrections |
-| [#56](https://github.com/daniilnahl/Stock-Tracking-App/issues/56) | M2 exit evidence and boundary verification | Blocked (open); depends #47, #48, #50–55 | Unassigned | None / not started | Runtime, review, owner merges and required main CI |
+| [#54](https://github.com/daniilnahl/Stock-Tracking-App/issues/54) | Exact-symbol validation and safe CSV behavior | Blocked (open); depends #47, #48, #50, #52 | Unassigned | None / not started | Stable profile/transport; identity/CSV contract accepted |
+| [#55](https://github.com/daniilnahl/Stock-Tracking-App/issues/55) | Facade, both CLI and Watch_list provider integration | Blocked (open); depends #47, #48, #50–54 | Unassigned | None / not started | Implemented adapter operations; compatibility contract accepted |
+| [#56](https://github.com/daniilnahl/Stock-Tracking-App/issues/56) | M2 exit evidence and boundary verification | Blocked (open); depends #47, #48, #50–55 | Unassigned | None / not started | Runtime, review, owner merges, required main CI and DATA-006 definitive unknown evidence |
 
 One issue normally produces one isolated branch/worktree and PR. Do not dispatch
 blocked issues merely because scaffold edits seem additive. #51–54 share fmp.py
@@ -79,7 +87,7 @@ not establish milestone completion.
 
 DATA-006's definitive network unknown-instrument classification is an explicit
 #56 exit blocker until verified provider evidence or an explicitly accepted
-supported-scope interpretation resolves it. The proposal's tests can demonstrate
+supported-scope interpretation resolves it. The accepted contract's tests can demonstrate
 local invalid input, unresolved scoped lookup, unavailable data for resolved
 identity and every infrastructure category; a no-match search cannot certify
 global nonexistence. Accepting the other ADR choices alone does not silently
@@ -89,15 +97,16 @@ satisfy this remaining requirement/evidence gate.
 
 M2 defines a separate historical protocol/PriceBar, not history retrieval,
 adjustment/return conventions or charts. M4 owns real history, cache and removal
-of synthetic charts under DATA-003–005; disabled TTL proposals authorize no cache
+of synthetic charts under DATA-003–005; accepted disabled TTLs authorize no cache
 implementation. M3 owns persistence/unsafe pickle replacement and migration;
 CSV bypass neither deletes nor migrates user data. M5 owns portfolio metrics;
 M6/M7 own broader service/CLI/API work. No new dependencies, Python version,
 CI architecture, SRS rewrite or financial formula is part of M2.
 
-The owner must decide ADR-0007's Stable endpoint switch, exact NASDAQ lookup
+The owner accepted ADR-0007's Stable endpoint switch, exact NASDAQ lookup
 limitations, missing/time/currency contracts, error/invalidation compatibility,
-CSV bypass and all proposed reliability values. Public documentation does not
+CSV bypass and all reliability values. Public documentation does not
 prove current account entitlements, complete search or quote freshness; no key
 was tested. Any unverifiable external contract remains an explicit implementation
-blocker. **M2 is incomplete and runtime is blocked; proposal review continues.**
+blocker. **M2 is incomplete; downstream runtime and DATA-006 exit evidence remain
+pending.** Acceptance-record publication/review proceeds without changing runtime.
