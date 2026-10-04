@@ -57,6 +57,15 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
         env=environment, check=True, capture_output=True, text=True,
     )
 
+    # Domain-only process runs first; legacy imports cannot prime its dependencies.
+    isolated = subprocess.run(
+        [sys.executable, "-I", str(ROOT / "tests" / "domain_isolation_probe.py"), str(installed)],
+        cwd=tmp_path, env=environment, capture_output=True, text=True,
+    )
+    assert isolated.returncode == 0, isolated.stderr
+    assert isolated.stdout == isolated.stderr == ""
+    assert not (tmp_path / "domain-probe").exists()
+
     # -I and an empty cwd keep the checkout out of imports. The built wheel,
     # rather than source files, supplies the modules under verification.
     code = """

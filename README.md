@@ -76,12 +76,13 @@ python -m pip wheel . --no-deps --no-build-isolation --wheel-dir dist
 ```
 
 The wheel includes five flat modules (`stock`, `watch_list`, `menu_watchlist`,
-`daniils_stock_method`, `config`) and `utils.utility_module`. It excludes tests,
-scratch scripts, CSV data and local state. CLI usage still requires the checkout.
+`daniils_stock_method`, `config`), `utils.utility_module`, and the
+`stock_tracker.domain` and `stock_tracker.compatibility` packages. It excludes
+tests, scratch scripts, CSV data and local state. CLI usage still requires the checkout.
 
 Ruff checks application code, tests and the scratch script using `E4`, `E7`,
 `E9` and `F`. Mypy runs in strict mode on **`config.py` only**, using the file
-scope in `pyproject.toml`; do not run `mypy src/` because no `src/` tree exists.
+scope in `pyproject.toml`; `mypy src/` is not the configured verification command.
 The [readiness decision](docs/TESTING.md#type-check-readiness-decision--issue-11)
 assigns remaining domain, provider, persistence and CLI typing to M1/M2/M3/M6.
 
@@ -107,9 +108,27 @@ import, including when displaying help (`watchlist.pkl` or
 file. For verification of an existing installation, use the isolated tests
 above or a separate fresh checkout, rather than importing the CLI in a user-data
 directory. Do not inspect, delete, migrate or overwrite saved user files as part
-of setup. Legacy `Stock.API_KEY` values can also be stored in these files;
-removing credential coupling and replacing pickle are M1/M3 work. CSV paths
-are also relative to the working directory.
+of setup. New facade state excludes runtime credentials; historical saved keys
+are ignored when restoring state and current configuration supplies the runtime
+binding. This does not migrate real user files or make pickle safe. Replacing
+pickle remains M3 work. CSV paths are also relative to the working directory.
+
+## Domain boundary and M1 status
+
+The installed `stock_tracker.domain` package exposes immutable security identity
+and ownership, a Portfolio with an owned Position list, and pure Decimal position
+snapshots. It imports and runs independently of credentials, HTTP, databases and
+terminal/chart libraries. Root `stock.Stock` is a compatibility facade; existing
+CLI commands retain their names and ownership prompts preserve decimal text.
+Snapshot inputs use one currency; missing quotes and undefined zero-basis returns
+stay distinct from zero. Advanced metrics and transaction conventions remain
+blocked by the financial specification.
+
+The [M1 evidence record](docs/milestones/m1-exit-evidence.md) distinguishes tested
+topic source from publication on `main`. [Integration issue #42](https://github.com/daniilnahl/Stock-Tracking-App/issues/42)
+still requires owner main integration, passing main CI and issue reconciliation
+before M1 can be reported complete. Provider reliability, safe structured storage,
+real historical charts and CLI V2 remain later milestones.
 
 ## Optional provider configuration
 
