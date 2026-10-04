@@ -119,3 +119,46 @@ historical portfolio return, benchmark or risk convention is approved here.
 Before reporting M1 complete, #42 must verify actual runtime source on main,
 passing required main CI after owner merge, required issue closures and no
 blocking work. The evidence of source in this topic stack alone is insufficient.
+
+## Main integration preparation — issue #42
+
+The original topic-authoring snapshot above is retained as historical evidence.
+The final independently reviewed [PR #45](https://github.com/daniilnahl/Stock-Tracking-App/pull/45)
+head is `dd5a47d98e79b03642a3e67dec242092391dde7a`; its
+[Foundation run 37177633168](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/37177633168)
+passed all five required checks. Both independent review and master review passed.
+
+The isolated `codex/42-m1-main-integration` branch starts at that exact head.
+On 2026-10-03, refreshing `origin/main` still resolved to
+`7ea5867114b9cee9171413c9853facdee093e84f`; the common ancestor was accepted
+ADR commit `73055483a1d20db599000c479c0649bc73cdebb8`. The seven implementation
+commits listed above (#26–31 plus #33) are retained without rewriting history.
+The main comparison contains only the reviewed M1 implementation/tests/docs and
+accepted package-discovery extension; no dependency pins, supported Python,
+configuration implementation, CI workflow or financial specification changed.
+Issue #42 adds only this final evidence section to the reviewed topic source.
+
+From this integration worktree, serial checks in the same existing pinned
+Python 3.11.9 and 3.12.10 environments produced:
+
+| Command | Python 3.11 | Python 3.12 |
+| --- | --- | --- |
+| `python -m pytest -q` | 310 passed | 310 passed |
+| `python -m ruff check .` | Passed | Passed |
+| `python -m mypy` | Passed, 1 source file | Passed, 1 source file |
+| `python -m pytest tests/test_repository_hygiene.py --tb=short` | 8 passed | 8 passed |
+
+Full suites include independent source/wheel isolation, installed legacy smoke,
+known-value calculations, facade state/credential and both CLI regressions.
+Staged credential scanning includes the integration documentation. Final diff,
+secret and generated-artifact inspection passed; tests used only mocked provider
+work and trusted temporary synthetic state. No live credentials or user state
+were accessed. Configured strict mypy remains limited to `config.py`.
+
+Integration PR publication, exact integration-head hosted checks, owner merge,
+actual runtime inclusion on main, subsequent required main CI and closure of
+#26/#27/#28/#29/#30/#31/#33/#42 remain pending. The integration PR will carry all
+closing links; this preparation does not close issues or declare M1 complete.
+Its eventual PR/review record supplies its own head and CI evidence without a
+circular self-commit claim. Only the owner may merge; milestone completion still
+requires the final gates recorded above.
