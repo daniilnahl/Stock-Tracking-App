@@ -1,13 +1,16 @@
 # M2 Market Data Layer implementation plan
 
-Status: **runtime issues merged; exit verification in progress; DATA-006 blocked**.
+Status: **prior runtime/verification PRs merged; #66 scoped rejection in progress**.
 The owner stated **"I approve A"** in the Codex milestone chat on **2026-10-04**,
 accepting [ADR-0007](../adr/0007-market-provider-contracts.md) exactly at
 `cf909dfc6c9766c440b1aeaf408d10c1f112e6a4`, while retaining the DATA-006
 definitive network unknown-instrument classification exit blocker. The
 [PR #57 acceptance record](https://github.com/daniilnahl/Stock-Tracking-App/pull/57#issuecomment-5982448860)
 is the Master's faithful record of that human chat instruction, not an
-independently authored human GitHub approval. Snapshot 2026-10-04.
+independently authored human GitHub approval. That historical gate decision is
+superseded for scoped product invalidity by the owner's later instruction,
+recorded in accepted [ADR-0008](../adr/0008-scoped-ticker-rejection.md) and
+[#66](https://github.com/daniilnahl/Stock-Tracking-App/issues/66). Snapshot 2026-10-05.
 Parent milestone: [M2 — Market Data Layer](https://github.com/daniilnahl/Stock-Tracking-App/milestone/3).
 The contract-acceptance gate is satisfied. Implementation remains subject to
 the dependency and review/publication gates below; this record neither closes
@@ -20,11 +23,11 @@ passing all five checks. ADR-0005 pins/pip/Python 3.11/3.12 and ADR-0006 domain,
 facade/state contracts remain authoritative. Canonical checks are
 `python -m pytest`, `python -m ruff check .` and configured `python -m mypy`
 (config.py only). Apply [TESTING.md](../TESTING.md) offline/temp-state isolation.
-Current verified main is `2de8ce2069e7a85a9d5cf46f0a770065b7c8a7f0`, after
-human merge of PR #64. [Foundation run 37262947445](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/37262947445)
+Current verified main is `22cc27c2c009231428c935fabaa352d52eabbcc0`, after
+human merge of PR #65. [Foundation run 37264563909](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/37264563909)
 passed all five checks. See [exit evidence](m2-exit-evidence.md) for the current
-requirement/test mapping and the unresolved gate; this verification branch's
-publication, exact-head CI and human merge remain pending.
+requirement/test mapping and historical gate. #66's scoped rejection branch
+publication, exact-head CI, human merge/main CI and final #56 review remain pending.
 
 ## Live issue and dependency view
 
@@ -44,7 +47,8 @@ dispatch. PR/review cells describe observed state, not expected outcomes.
 | [#53](https://github.com/daniilnahl/Stock-Tracking-App/issues/53) | Typed provider period summaries | Closed; dependencies #47, #48, #50 satisfied; sequenced after #52 | Completed | [#62](https://github.com/daniilnahl/Stock-Tracking-App/pull/62) / human merged | None |
 | [#54](https://github.com/daniilnahl/Stock-Tracking-App/issues/54) | Exact-symbol validation and safe CSV behavior | Closed; dependencies #47, #48, #50, #52 satisfied | Completed | [#63](https://github.com/daniilnahl/Stock-Tracking-App/pull/63) / human merged | None |
 | [#55](https://github.com/daniilnahl/Stock-Tracking-App/issues/55) | Facade, both CLI and Watch_list provider integration | Closed; dependencies #47, #48, #50–54 satisfied | Completed | [#64](https://github.com/daniilnahl/Stock-Tracking-App/pull/64) / human merged | None |
-| [#56](https://github.com/daniilnahl/Stock-Tracking-App/issues/56) | M2 exit evidence and boundary verification | Open; implementation dependencies satisfied; unblocked verification drafting | m2_analysis; master and m2_review review | Verification PR / publication and exact-head CI pending | DATA-006 definitive unknown evidence or explicitly accepted interpretation; human merge/main CI for verification changes |
+| [#56](https://github.com/daniilnahl/Stock-Tracking-App/issues/56) | M2 exit evidence and boundary verification | Open; verification portion merged; final review pending #66 | master reviews final exit | [#65](https://github.com/daniilnahl/Stock-Tracking-App/pull/65) / human merged, main CI passed | #66 implementation/human merge/main CI and final exit review |
+| [#66](https://github.com/daniilnahl/Stock-Tracking-App/issues/66) | Approved scoped no-match rejection | Open; ADR-0008 accepted; implementation and tests in task branch | m2_analysis; master and m2_review review | Publication / exact-head CI pending | Human merge/main CI; no agent merge |
 
 One issue normally produces one isolated branch/worktree and PR. Do not dispatch
 blocked issues merely because scaffold edits seem additive. #51–54 share fmp.py
@@ -61,7 +65,7 @@ assignments, PRs and evidence at every milestone update.
 | Implement FMP adapter; DATA-001, DATA-006 | #50 transport; #51 quote, #52 profile, #53 summary, #54 resolution; schema fixtures and safe explicit failure classification |
 | Typed provider models; DATA-002/007/008 | #48 immutable Decimal/nullable/UTC models and history capability; #51–54 parsing; currency metadata without FX/aggregate assumptions |
 | Define timeout/retry/rate-limit policy; DATA-009–011, SRS §11/18, SEC-002/005, ERR-001/002 | #47 exact value acceptance; #50 deterministic timeout/status/retry/429/backoff tests and credential-safe logs/errors |
-| Fix ticker validation; DATA-006, ERR-001–003 | #54 exact scoped match, unrelated/empty/truncated/malformed/failure distinctions, untouched CSV; #55 safe user messages and no failed add/save |
+| Fix ticker validation; DATA-006, ERR-001–003 | #54 exact scoped match and untouched CSV; #55 safe messages/no failed save; #66 approved successful-no-match rejection with malformed/provider failure distinctions preserved |
 | Mocked provider tests; TEST-001–005 | #48, #50–55 targeted tests under default network/temp-state guards; #56 source/wheel/full-suite and required CI evidence |
 | No direct FMP calls from application code; ARCH-003, PERF-001 | #55 all four URL/schema sites replaced, preserved root callers; #56 static caller scan and request-count/injected-provider integration checks |
 
@@ -90,13 +94,12 @@ domain isolation. Record actual PR/main commits, all five required CI checks,
 owner merges, issue closure and unresolved blockers. Green local tests alone do
 not establish milestone completion.
 
-DATA-006's definitive network unknown-instrument classification is an explicit
-#56 exit blocker until verified provider evidence or an explicitly accepted
-supported-scope interpretation resolves it. The accepted contract's tests can demonstrate
-local invalid input, unresolved scoped lookup, unavailable data for resolved
-identity and every infrastructure category; a no-match search cannot certify
-global nonexistence. Accepting the other ADR choices alone does not silently
-satisfy this remaining requirement/evidence gate.
+The previous DATA-006 definitive unknown evidence gate is superseded by the
+explicitly accepted ADR-0008 supported-scope product rule. #66 must implement
+successful schema-valid no-match rejection, while preserving malformed and
+infrastructure errors, then receive human merge and passing main CI before
+final #56 exit review. A no-match still cannot certify global nonexistence.
+Acceptance alone does not establish implemented main behavior or M2 completion.
 
 ## Deferred scope and current blockers
 
@@ -113,6 +116,6 @@ limitations, missing/time/currency contracts, error/invalidation compatibility,
 CSV bypass and all reliability values. Public documentation does not
 prove current account entitlements, complete search or quote freshness; no key
 was tested. Any unverifiable external contract remains an explicit implementation
-blocker. **M2 is incomplete; DATA-006 exit evidence and publication/review of #56's
-verification portion remain pending.** Closing #54 accepted the inconclusive
-lookup implementation, not definitive unknown classification or a gate waiver.
+blocker. **M2 is incomplete; #66 implementation publication/review, human merge,
+main CI and final #56 review remain pending.** #54's historical inconclusive
+contract is superseded only by the approved ADR-0008 scoped rejection rule.

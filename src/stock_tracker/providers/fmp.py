@@ -11,7 +11,7 @@ from urllib.parse import urlencode
 
 from config import ConfigurationError, require_api_key
 from stock_tracker.exceptions import (
-    InstrumentLookupInconclusiveError, InvalidTickerError, MarketDataUnavailableError,
+    InvalidTickerError, MarketDataUnavailableError,
     ProviderAccessError, ProviderAuthenticationError, ProviderRequestError,
     ProviderResponseError, ProviderTimeoutError, ProviderUnavailableError, RateLimitError,
 )
@@ -198,7 +198,7 @@ class FMPMarketDataProvider:
         if len(matches) > 1:
             raise ProviderResponseError()
         if not matches:
-            raise InstrumentLookupInconclusiveError()
+            raise InvalidTickerError()
         return matches[0]
 
     def _request_json(self, operation: str, parameters: Mapping[str, str]) -> tuple[list[dict], datetime]:

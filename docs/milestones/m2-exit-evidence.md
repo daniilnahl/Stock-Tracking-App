@@ -1,5 +1,33 @@
 # M2 market-provider exit evidence
 
+## Current update — 2026-10-05
+
+The owner later instructed rejection/reporting of a stock not found through the
+FMP API. Approved [#66](https://github.com/daniilnahl/Stock-Tracking-App/issues/66),
+accepted [ADR-0008](../adr/0008-scoped-ticker-rejection.md) and SRS DATA-006 now
+record scoped product invalidity: a completed schema-valid successful NASDAQ
+search with no exact supported match rejects the new candidate as invalid.
+This supersedes the historical definitive unknown evidence gate below; it
+accepts incomplete/truncated-search false negatives without asserting global
+nonexistence or completeness. Malformed/duplicate identities and provider
+failures retain their categories; no existing holdings are deleted.
+
+PR [#65](https://github.com/daniilnahl/Stock-Tracking-App/pull/65) human merge
+included the verification portion of #56 on main
+`22cc27c2c009231428c935fabaa352d52eabbcc0`. The Master verified all five checks
+in [main Foundation run 37264563909](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/37264563909).
+#66's task branch adds actual-adapter wrapper/CLI no-match regressions in
+test_fmp_lookup.py and test_cli_ownership.py, with saved-byte/ordered-holding
+preservation and no downstream request or candidate construction. Its PR,
+exact-head CI, human merge and subsequent main CI remain pending. Final #56/M2
+exit review remains required; neither issue nor milestone is closed here.
+
+Local #66 canonical verification passed 1,334 full pytest cases, 142 focused
+lookup/wrapper/CLI/factory cases, Ruff and configured mypy (config.py only).
+These local results do not substitute for exact-head PR or post-merge main CI.
+
+## Historical verification snapshot before #66
+
 Snapshot: **2026-10-04; incomplete**. This records the unblocked verification
 portion of [#56](https://github.com/daniilnahl/Stock-Tracking-App/issues/56), not
 issue or milestone completion. DATA-006's definitive network unknown-instrument

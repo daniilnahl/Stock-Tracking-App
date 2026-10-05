@@ -51,7 +51,7 @@ def cli(request, monkeypatch, tmp_path):
         symbol = query.get('symbol', query.get('query'))[0]
         provider['calls'].append(endpoint)
         if endpoint == 'search-symbol':
-            payload = [{'symbol': symbol, 'exchange': 'NASDAQ'}]
+            payload = provider.get('lookup_rows', [{'symbol': symbol, 'exchange': 'NASDAQ'}])
         elif endpoint == 'profile':
             payload = [] if provider['missing_payload'] else [{
                 'symbol': symbol, 'price': provider['price'], 'marketCap': 1_000_000_000,
@@ -234,3 +234,31 @@ def test_aborted_invalid_add_preserves_existing_list_and_file(cli, field):
     assert module["current_watchlist"].stocks[0] is item
     assert (directory / module["WATCHLIST_FILE"]).read_bytes() == before
     assert item._position.quantity == Decimal("0.25") and item._position.average_cost == Decimal("100")
+
+
+@pytest.mark.parametrize('rows', [[], [{'symbol': 'UNKNOWNX', 'exchange': 'NASDAQ'}]])
+def test_scoped_no_match_discards_only_new_candidate_and_preserves_saved_holdings(cli, rows, monkeypatch):
+    module, provider, directory = cli
+    assert add(cli).exit_code == 0
+    assert CliRunner().invoke(module['app'], ['add-stock'], input='msft\n2\n50\n').exit_code == 0
+    existing = list(module['current_watchlist'].stocks)
+    states = [dict(item.__dict__) for item in existing]
+    saved = directory / module['WATCHLIST_FILE']
+    before = saved.read_bytes()
+    csv = directory / 'list_of_valid_tickers.csv'
+    csv.write_bytes(b'UNKNOWN\n')  # A legacy positive must not override lookup.
+    provider['calls'].clear()
+    provider['lookup_rows'] = rows
+    def denied(*args, **kwargs):
+        pytest.fail('rejected candidate was constructed or persisted')
+    monkeypatch.setitem(module['add_stock'].__globals__, 'Stock', denied)
+    monkeypatch.setitem(module['add_stock'].__globals__, 'save_watchlist', denied)
+    result = CliRunner().invoke(module['app'], ['add-stock'], input='unknown\n')
+    assert result.exit_code == 0 and 'Invalid ticker. Try again.' in result.output
+    assert 'Succesfully' not in result.output and 'amount of stocks owned' not in result.output
+    assert 'average cost per share' not in result.output
+    assert provider['calls'] == ['search-symbol']
+    assert module['current_watchlist'].stocks == existing
+    assert all(item is old and item.__dict__ == state
+               for item, old, state in zip(module['current_watchlist'].stocks, existing, states))
+    assert saved.read_bytes() == before and csv.read_bytes() == b'UNKNOWN\n'

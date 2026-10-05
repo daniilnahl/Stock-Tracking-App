@@ -71,7 +71,7 @@ def get_jsonparsed_data(url):
 def check_ticker(ticker_symbol: str, API_KEY):
     """Resolve an exact supported identity; CSV hints are never read or changed.
 
-    Only locally invalid input returns False. Inconclusive lookup and provider
+    Local invalid input or a validated scoped no-match returns False. Provider
     failures propagate as safe typed errors; no failure becomes cached validity.
     """
     provider = provider_factory.create_market_data_provider(API_KEY)

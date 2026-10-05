@@ -348,6 +348,15 @@ The application MUST distinguish:
 
 A provider outage MUST NOT be interpreted as proof that a ticker is invalid.
 
+**Approved scoped interpretation (ADR-0008, issue #66):** a completed,
+schema-valid successful FMP identity search with no exact supported NASDAQ
+match classifies a newly entered candidate as invalid for this application.
+Reject it without adding or saving; never remove existing holdings. This
+accepts incomplete/truncated-search false-negative risk and does not assert
+global nonexistence or provider completeness. Malformed responses and provider
+failures, including HTTP 404, retain their distinct errors. See
+[ADR-0008](docs/adr/0008-scoped-ticker-rejection.md).
+
 ## DATA-007 — Time semantics
 
 Market-data timestamps MUST have an explicit timezone or documented date-only meaning.

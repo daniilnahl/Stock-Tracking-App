@@ -1,7 +1,7 @@
 """Synthetic Stable search schema, official docs inspected 2026-10-04.
 
 Source: https://site.financialmodelingprep.com/developer/docs/stable/search-symbol
-Search completeness is not guaranteed; no-match means scoped inconclusive.
+Search completeness is not guaranteed; ADR-0008 chooses scoped product rejection.
 """
 
 from datetime import datetime, timezone
@@ -46,10 +46,10 @@ def test_unique_exact_scoped_match_and_single_encoded_request(rig):
     [{'symbol': 'MSFT', 'exchange': 'NASDAQ'}], [{'symbol': 'AAPL', 'exchange': 'NYSE'}],
     [{'symbol': 'AAPL', 'exchange': 'Nasdaq'}],
     [{'symbol': 'X' + str(i), 'exchange': 'NASDAQ'} for i in range(100)]])
-def test_no_exact_scope_result_never_proves_global_invalidity(rig, rows):
-    from stock_tracker.exceptions import InstrumentLookupInconclusiveError
+def test_no_exact_scope_result_rejects_candidate_without_global_truth_claim(rig, rows):
+    from stock_tracker.exceptions import InvalidTickerError
     rig.rows = rows
-    with pytest.raises(InstrumentLookupInconclusiveError):
+    with pytest.raises(InvalidTickerError):
         rig.provider.resolve_symbol('AAPL')
     assert len(rig.requests) == 1
 
@@ -60,7 +60,8 @@ def test_no_exact_scope_result_never_proves_global_invalidity(rig, rows):
     [{'symbol': 'AAPL', 'exchange': None}], [{'symbol': 'AAPL', 'exchange': ''}],
     [{'symbol': 'AAPL', 'exchange': ' NASDAQ '}], [{'symbol': 'AAPL', 'exchange': 1}],
     [{'symbol': 'AAPL', 'exchange': 'NASDAQ'}] * 2,
-    [{'symbol': 'AAPL', 'exchange': 'NASDAQ'}, {'symbol': 'MSFT'}]])
+    [{'symbol': 'AAPL', 'exchange': 'NASDAQ'}, {'symbol': 'MSFT'}],
+    [{'symbol': 'MSFT', 'exchange': 'NASDAQ'}, {'symbol': 'GOOG'}]])
 def test_every_row_validated_before_exact_identity_publication(rig, rows):
     from stock_tracker.exceptions import ProviderResponseError
     rig.rows = rows
@@ -112,3 +113,20 @@ def test_lookup_timeout_is_not_false_validation(rig):
     rig.provider._transport = SimpleNamespace(get=get)
     with pytest.raises(ProviderTimeoutError):
         rig.provider.resolve_symbol('AAPL')
+
+
+@pytest.mark.parametrize('rows,expected', [([], False),
+    ([{'symbol': 'AAPLX', 'exchange': 'NASDAQ'}], False),
+    ([{'symbol': 'AAPL', 'exchange': 'NASDAQ'}], True)])
+def test_real_adapter_wrapper_returns_scoped_result_without_csv(rig, rows, expected, monkeypatch, tmp_path):
+    from utils import utility_module as utility
+    path = tmp_path / 'list_of_valid_tickers.csv'
+    path.write_bytes(b'AAPL\n')
+    rig.rows = rows
+    monkeypatch.setattr(utility.provider_factory, 'create_market_data_provider', lambda key: rig.provider)
+    def denied(*args, **kwargs):
+        pytest.fail('validation used CSV or legacy transport')
+    for name in ('read_file', 'write_file', 'get_jsonparsed_data'):
+        monkeypatch.setattr(utility, name, denied)
+    assert utility.check_ticker(' aapl ', 'synthetic-wrapper-fixture') is expected
+    assert len(rig.requests) == 1 and path.read_bytes() == b'AAPL\n'

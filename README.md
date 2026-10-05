@@ -113,8 +113,11 @@ are ignored when restoring state and current configuration supplies the runtime
 binding. This does not migrate real user files or make pickle safe. Replacing
 pickle remains M3 work. Explicit legacy CSV helpers use paths relative to the
 working directory. Ticker validation does not read or change CSV hints: it
-requires a unique exact NASDAQ provider match each time; an inconclusive lookup
-or provider failure propagates separately from locally invalid input.
+requires a unique exact NASDAQ provider match each time. A completed valid
+search without that match reports the new candidate as invalid and rejects it
+without adding or saving; existing holdings stay unchanged. This scoped rule
+can reject real instruments when search is incomplete or truncated and does
+not claim global nonexistence. Provider failures remain separate errors.
 Both CLIs render safe provider/configuration failures with exit code 1 and do
 not save a failed add or refresh. A failed profile/quote invalidates the current
 price in memory while preserving known metadata and holdings; a failed summary
