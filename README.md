@@ -143,8 +143,25 @@ are closed and the [post-merge Foundation run](https://github.com/daniilnahl/Sto
 passed all five checks. The [M1 completion review](docs/milestones/m1-exit-evidence.md#completion-review--2026-10-04)
 records source, tests, issue/PR reconciliation and local verification.
 GitHub's milestone container remains open with zero open issues at the review.
-Provider reliability, safe structured storage, real historical charts and CLI V2
-remain later milestones.
+Safe structured storage, real historical charts and CLI V2 remain later milestones.
+
+## Market data layer and M2 status
+
+M2 is implemented and achieved as of 2026-10-05 on `main` at
+`5eccf3b24edbe03a6f01e86b9dfcffb80a1ad0c7`. It supplies immutable typed provider
+models/interfaces, FMP quote/profile/period/identity operations, approved HTTP
+timeout/retry/rate-limit behavior, scoped ticker rejection and offline mocked
+verification. Maintained application paths delegate through the provider boundary;
+successful no-match rejects only a new candidate, while provider failures stay
+distinct and existing holdings remain untouched.
+
+All ten required M2 issues are closed after human merges of PR #57–65 and #67.
+The [post-merge Foundation run](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/37346059176)
+passed all five checks; the [completion evidence](docs/milestones/m2-exit-evidence.md#completion-review--2026-10-05)
+records the six deliverables, boundary exit criterion and final review.
+[M2](https://github.com/daniilnahl/Stock-Tracking-App/milestone/3) is closed at
+100%, with zero open and 20 closed items. This does not implement persistence,
+genuine historical retrieval/charts, FX or broader exchange support.
 
 ## Optional provider configuration
 

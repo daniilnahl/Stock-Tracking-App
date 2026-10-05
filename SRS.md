@@ -795,6 +795,15 @@ Domain code runs without network, database, environment, or CLI dependencies.
 
 ## Milestone 2 — Market Data Layer
 
+**Completion review (2026-10-05; status note only):** M2 is achieved at
+`5eccf3b24edbe03a6f01e86b9dfcffb80a1ad0c7` on `main`, after human merge of
+PR #67. All ten required issues (#47, #48, #50–56 and #66) are closed; the
+post-merge Foundation run passed all five checks. The
+[completion evidence](docs/milestones/m2-exit-evidence.md#completion-review--2026-10-05)
+records all six deliverables and the provider-boundary exit criterion under
+accepted ADR-0007/0008. GitHub milestone 3 is closed at 100% with zero open and
+20 closed items. This note changes no requirement, product rule or later scope.
+
 - Create MarketDataProvider.
 - Implement FMP adapter.
 - Add typed provider models.
