@@ -50,6 +50,7 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
         "stock_tracker/compatibility/presentation.py",
         "stock_tracker/exceptions.py", "stock_tracker/providers/__init__.py",
         "stock_tracker/providers/models.py", "stock_tracker/providers/protocols.py",
+        "stock_tracker/providers/transport.py", "stock_tracker/providers/fmp.py",
     }
 
     installed = tmp_path / "installed"
@@ -123,6 +124,13 @@ with patch.dict(sys.modules, blocked):
             Path(sys.argv[1]).resolve())
 
 # Preserve installed legacy module checks after guarded fresh domain imports.
+import stock_tracker.providers.transport as provider_transport
+import stock_tracker.providers.fmp as provider_fmp
+for module in (provider_transport, provider_fmp):
+    assert Path(module.__file__).resolve().is_relative_to(Path(sys.argv[1]).resolve())
+with patch.object(provider_transport.ssl, 'create_default_context', side_effect=AssertionError('TLS IO denied')):
+    provider_transport.UrllibHttpTransport()
+
 with patch.object(socket.socket, 'connect', side_effect=AssertionError('Network denied')):
     import utils.utility_module as utility
     with patch.object(utility, 'urlopen', side_effect=AssertionError('Provider denied')):
