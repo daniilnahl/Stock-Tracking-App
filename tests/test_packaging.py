@@ -77,6 +77,14 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
     assert contracts.returncode == 0, contracts.stderr
     assert contracts.stdout == contracts.stderr == ""
 
+    provider = subprocess.run(
+        [sys.executable, '-I', str(ROOT / 'tests' / 'provider_integration_probe.py'), str(installed)],
+        cwd=tmp_path, env=dict(environment, MPLCONFIGDIR=str(tmp_path / 'provider-matplotlib'), MPLBACKEND='Agg'),
+        capture_output=True, text=True,
+    )
+    assert provider.returncode == 0, provider.stderr
+    assert provider.stdout == provider.stderr == ''
+
     # -I and an empty cwd keep the checkout out of imports. The built wheel,
     # rather than source files, supplies the modules under verification.
     code = """
