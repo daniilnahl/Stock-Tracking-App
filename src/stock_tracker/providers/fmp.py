@@ -1,4 +1,4 @@
-"""FMP quote/profile retrieval and shared requests; other operations follow later."""
+"""FMP typed retrieval and shared requests; identity lookup follows separately."""
 
 from collections.abc import Callable, Mapping
 from datetime import datetime, timedelta, timezone
@@ -15,12 +15,15 @@ from stock_tracker.exceptions import (
     ProviderAccessError, ProviderAuthenticationError, ProviderRequestError,
     ProviderResponseError, ProviderTimeoutError, ProviderUnavailableError, RateLimitError,
 )
-from .models import CompanyProfile, Quote
+from .models import CompanyProfile, PeriodChanges, Quote
 from .transport import HttpTransport, ProviderPolicy, _TransportConnectionError, _TransportTimeout
 
 
 logger = logging.getLogger(__name__)
 _ROUTES = frozenset({"quote", "profile", "stock-price-change", "search-symbol"})
+_PERIOD_FIELDS = (("1D", "day_1"), ("5D", "day_5"), ("1M", "month_1"),
+                  ("3M", "month_3"), ("6M", "month_6"), ("1Y", "year_1"),
+                  ("3Y", "year_3"), ("5Y", "year_5"))
 
 
 def _input_symbol(value: str) -> str:
@@ -41,13 +44,13 @@ def _optional_text(value: object, field: str) -> str | None:
     return value if value.strip() else None
 
 
-def _price(value: object, field: str = "price") -> Decimal | None:
+def _number(value: object, field: str = "price", *, nonnegative: bool = True) -> Decimal | None:
     if value is None:
         return None
     if type(value) is not int and not isinstance(value, Decimal):
         raise ProviderResponseError(field=field)
     number = Decimal(value)
-    if not number.is_finite() or number < 0:
+    if not number.is_finite() or (nonnegative and number < 0):
         raise ProviderResponseError(field=field)
     return number
 
@@ -101,7 +104,7 @@ def _retry_after(headers: Mapping[str, str], clock: Callable[[], datetime]) -> f
 
 
 class FMPMarketDataProvider:
-    """Injected quote/profile adapter; summary and identity lookup remain pending."""
+    """Injected retrieval adapter; identity lookup remains pending."""
 
     def __init__(
         self, *, api_key: str, transport: HttpTransport, policy: ProviderPolicy,
@@ -135,7 +138,7 @@ class FMPMarketDataProvider:
             raise ProviderResponseError(field="symbol")
         if "price" not in row:
             raise ProviderResponseError(field="price")
-        return Quote(requested, _price(row["price"]),
+        return Quote(requested, _number(row["price"]),
                      _optional_text(row.get("exchange"), "exchange"),
                      _optional_text(row.get("currency"), "currency"),
                      _market_time(row.get("timestamp")), received)
@@ -158,8 +161,24 @@ class FMPMarketDataProvider:
                               _optional_text(row.get("currency"), "currency"),
                               _optional_text(row.get("sector"), "sector"),
                               _optional_text(row.get("country"), "country"),
-                              _price(row["price"]), _price(row["marketCap"], "market_cap"),
+                              _number(row["price"]), _number(row["marketCap"], "market_cap"),
                               None, received)
+
+    def get_period_changes(self, symbol: str) -> PeriodChanges:
+        requested = _input_symbol(symbol)
+        rows, received = self._request_json("stock-price-change", {"symbol": requested})
+        if not rows:
+            raise MarketDataUnavailableError()
+        if len(rows) != 1:
+            raise ProviderResponseError()
+        row = rows[0]
+        if row.get("symbol") != requested:
+            raise ProviderResponseError(field="symbol")
+        # These are provider-reported percentage points, not a calculated return
+        # ratio or a history series. Validate every field before publishing.
+        values = {field: _number(row.get(key), field, nonnegative=False)
+                  for key, field in _PERIOD_FIELDS}
+        return PeriodChanges(symbol=requested, **values, as_of=None, retrieved_at=received)
 
     def _request_json(self, operation: str, parameters: Mapping[str, str]) -> tuple[list[dict], datetime]:
         """One approved route and bounded retry loop, without endpoint field parsing."""
