@@ -4,6 +4,8 @@ from urllib.error import HTTPError, URLError
 import json
 import logging
 import certifi
+from stock_tracker.exceptions import InvalidTickerError
+from stock_tracker.providers import factory as provider_factory
 
 logger = logging.getLogger(__name__)
 
@@ -67,30 +69,14 @@ def get_jsonparsed_data(url):
         return None
     
 def check_ticker(ticker_symbol: str, API_KEY):
-    """
-    Checks if a stock ticker is valid. First checks local file and If wasn't on local file checks using API. If valid stores to local file to preserve limited amount of API requests and returns true. 
-    If not on file and can't be found through API returns false, meaning the stock ticker is invalid.
-    
-    Args:
-        ticker_symbol: stock ticker thats getting checked.
-        API_KEY: API key to get a succseful response from the FTM server.
-    """
-    valid_tickers_list = []
-    read_file(valid_tickers_list)
-        
-    #checks if the ticker symbol is found on file(valid_tickers_list)
-    found_ticker = any(ticker_symbol == valid_ticker[0] for valid_ticker in valid_tickers_list)
-        
-    #if ticker found return true
-    if found_ticker:
-        return True
-    else: #checks if provided ticker is valid using API
-        url = (f"https://financialmodelingprep.com/api/v3/search-ticker?query={ticker_symbol}&limit=10&exchange=NASDAQ&apikey={API_KEY}")
-        data = get_jsonparsed_data(url)
+    """Resolve an exact supported identity; CSV hints are never read or changed.
 
-        # Check the API response
-        if data == []:  #empty list means ticker wasn't found
-            return False
-        else:
-            write_file(ticker_symbol)
-            return True
+    Only locally invalid input returns False. Inconclusive lookup and provider
+    failures propagate as safe typed errors; no failure becomes cached validity.
+    """
+    provider = provider_factory.create_market_data_provider(API_KEY)
+    try:
+        provider.resolve_symbol(ticker_symbol)
+    except InvalidTickerError:
+        return False
+    return True
