@@ -1,4 +1,4 @@
-"""FMP quote retrieval and shared requests; remaining operations are later issues."""
+"""FMP quote/profile retrieval and shared requests; other operations follow later."""
 
 from collections.abc import Callable, Mapping
 from datetime import datetime, timedelta, timezone
@@ -15,7 +15,7 @@ from stock_tracker.exceptions import (
     ProviderAccessError, ProviderAuthenticationError, ProviderRequestError,
     ProviderResponseError, ProviderTimeoutError, ProviderUnavailableError, RateLimitError,
 )
-from .models import Quote
+from .models import CompanyProfile, Quote
 from .transport import HttpTransport, ProviderPolicy, _TransportConnectionError, _TransportTimeout
 
 
@@ -41,14 +41,14 @@ def _optional_text(value: object, field: str) -> str | None:
     return value if value.strip() else None
 
 
-def _price(value: object) -> Decimal | None:
+def _price(value: object, field: str = "price") -> Decimal | None:
     if value is None:
         return None
     if type(value) is not int and not isinstance(value, Decimal):
-        raise ProviderResponseError(field="price")
+        raise ProviderResponseError(field=field)
     number = Decimal(value)
     if not number.is_finite() or number < 0:
-        raise ProviderResponseError(field="price")
+        raise ProviderResponseError(field=field)
     return number
 
 
@@ -101,7 +101,7 @@ def _retry_after(headers: Mapping[str, str], clock: Callable[[], datetime]) -> f
 
 
 class FMPMarketDataProvider:
-    """Injected quote adapter; other MarketDataProvider operations remain pending."""
+    """Injected quote/profile adapter; summary and identity lookup remain pending."""
 
     def __init__(
         self, *, api_key: str, transport: HttpTransport, policy: ProviderPolicy,
@@ -139,6 +139,27 @@ class FMPMarketDataProvider:
                      _optional_text(row.get("exchange"), "exchange"),
                      _optional_text(row.get("currency"), "currency"),
                      _market_time(row.get("timestamp")), received)
+
+    def get_company_profile(self, symbol: str) -> CompanyProfile:
+        requested = _input_symbol(symbol)
+        rows, received = self._request_json("profile", {"symbol": requested})
+        if not rows:
+            raise MarketDataUnavailableError()
+        if len(rows) != 1:
+            raise ProviderResponseError()
+        row = rows[0]
+        if row.get("symbol") != requested:
+            raise ProviderResponseError(field="symbol")
+        for field in ("companyName", "price", "marketCap"):
+            if field not in row:
+                raise ProviderResponseError(field=field)
+        return CompanyProfile(requested, row["companyName"],
+                              _optional_text(row.get("exchange"), "exchange"),
+                              _optional_text(row.get("currency"), "currency"),
+                              _optional_text(row.get("sector"), "sector"),
+                              _optional_text(row.get("country"), "country"),
+                              _price(row["price"]), _price(row["marketCap"], "market_cap"),
+                              None, received)
 
     def _request_json(self, operation: str, parameters: Mapping[str, str]) -> tuple[list[dict], datetime]:
         """One approved route and bounded retry loop, without endpoint field parsing."""
