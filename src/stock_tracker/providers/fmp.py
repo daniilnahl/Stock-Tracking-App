@@ -1,7 +1,7 @@
-"""Common FMP request mechanism; capability parsers are separate M2 issues."""
+"""FMP quote retrieval and shared requests; remaining operations are later issues."""
 
 from collections.abc import Callable, Mapping
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from decimal import Decimal, InvalidOperation
 from email.utils import parsedate_to_datetime
 import json
@@ -11,14 +11,63 @@ from urllib.parse import urlencode
 
 from config import ConfigurationError, require_api_key
 from stock_tracker.exceptions import (
+    InvalidTickerError, MarketDataUnavailableError,
     ProviderAccessError, ProviderAuthenticationError, ProviderRequestError,
     ProviderResponseError, ProviderTimeoutError, ProviderUnavailableError, RateLimitError,
 )
+from .models import Quote
 from .transport import HttpTransport, ProviderPolicy, _TransportConnectionError, _TransportTimeout
 
 
 logger = logging.getLogger(__name__)
 _ROUTES = frozenset({"quote", "profile", "stock-price-change", "search-symbol"})
+
+
+def _input_symbol(value: str) -> str:
+    if not isinstance(value, str):
+        raise InvalidTickerError()
+    symbol = value.strip().upper()
+    if not symbol or any(char.isspace() or ord(char) < 32 or 127 <= ord(char) <= 159
+                         or char == ',' for char in symbol):
+        raise InvalidTickerError()
+    return symbol
+
+
+def _optional_text(value: object, field: str) -> str | None:
+    if value is None:
+        return None
+    if not isinstance(value, str):
+        raise ProviderResponseError(field=field)
+    return value if value.strip() else None
+
+
+def _price(value: object) -> Decimal | None:
+    if value is None:
+        return None
+    if type(value) is not int and not isinstance(value, Decimal):
+        raise ProviderResponseError(field="price")
+    number = Decimal(value)
+    if not number.is_finite() or number < 0:
+        raise ProviderResponseError(field="price")
+    return number
+
+
+def _market_time(value: object) -> datetime | None:
+    if value is None:
+        return None
+    if type(value) is not int and not isinstance(value, Decimal):
+        raise ProviderResponseError(field="timestamp")
+    number = Decimal(value)
+    if not number.is_finite() or number < 0 or number != number.to_integral_value():
+        raise ProviderResponseError(field="timestamp")
+    # Bound before conversion: avoids allocating a giant integer from a remote
+    # Decimal exponent. Integer arithmetic preserves seconds without float rounding.
+    if number > 253402300799:
+        raise ProviderResponseError(field="timestamp")
+    try:
+        return datetime(1970, 1, 1, tzinfo=timezone.utc) + timedelta(seconds=int(number))
+    except (ValueError, OverflowError):
+        raise ProviderResponseError(field="timestamp") from None
 
 
 def _reject_constant(value: str) -> None:
@@ -52,7 +101,7 @@ def _retry_after(headers: Mapping[str, str], clock: Callable[[], datetime]) -> f
 
 
 class FMPMarketDataProvider:
-    """Injected common machinery only; does not yet claim provider capabilities."""
+    """Injected quote adapter; other MarketDataProvider operations remain pending."""
 
     def __init__(
         self, *, api_key: str, transport: HttpTransport, policy: ProviderPolicy,
@@ -73,6 +122,23 @@ class FMPMarketDataProvider:
 
     def __reduce_ex__(self, protocol):
         raise TypeError("Market-data providers cannot be serialized.")
+
+    def get_quote(self, symbol: str) -> Quote:
+        requested = _input_symbol(symbol)
+        rows, received = self._request_json("quote", {"symbol": requested})
+        if not rows:
+            raise MarketDataUnavailableError()
+        if len(rows) != 1:
+            raise ProviderResponseError()
+        row = rows[0]
+        if row.get("symbol") != requested:
+            raise ProviderResponseError(field="symbol")
+        if "price" not in row:
+            raise ProviderResponseError(field="price")
+        return Quote(requested, _price(row["price"]),
+                     _optional_text(row.get("exchange"), "exchange"),
+                     _optional_text(row.get("currency"), "currency"),
+                     _market_time(row.get("timestamp")), received)
 
     def _request_json(self, operation: str, parameters: Mapping[str, str]) -> tuple[list[dict], datetime]:
         """One approved route and bounded retry loop, without endpoint field parsing."""
