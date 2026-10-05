@@ -7,6 +7,12 @@
 watchlist.pkl
 daniils_stock_methodd.pkl
 
+# Local SQLite holdings and SQLite-managed sidecar files.
+*.sqlite3
+*.sqlite3-journal
+*.sqlite3-wal
+*.sqlite3-shm
+
 # Python, testing, linting, packaging, and virtual environments.
 __pycache__/
 *.py[cod]

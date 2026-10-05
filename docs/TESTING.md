@@ -265,6 +265,20 @@ Test:
 - migrations
 - data preservation across migrations where applicable
 
+## M3 schema integration — issue #70
+
+Run `python -m pytest tests/test_sqlite_migrations.py tests/test_packaging.py -v`.
+Tests use real temporary SQLite files to check exact version-1 shape, both child
+foreign keys/cascade, default lock timeout, encoded read-only paths, missing-file
+absence and missing-parent failure. Unsupported versions, corrupt/unversioned
+populated files and altered constraints/extra objects must be refused without
+changing existing bytes. Injected DDL/commit failures prove schema, version and
+rows roll back together and acquired connections close. Installed-wheel smoke
+initializes/reopens a temporary database with its own urllib/socket network guard.
+The persistence contract probe continues to prohibit database IO during package
+imports. Repository/CLI restart and transfer/backup evidence remain later issues.
+See [Persistence operations](PERSISTENCE.md) for the single runner and its limits.
+
 ---
 
 # 6. Financial Tests

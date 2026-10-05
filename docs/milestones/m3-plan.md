@@ -1,7 +1,7 @@
 # M3 Persistence implementation plan
 
-Status: **contract accepted; #69 records/interfaces implementation in progress**.
-Snapshot: 2026-10-05. Implementation baseline main: 48944f9.
+Status: **contract accepted; #69 merged; #70 schema/migration implementation in progress**.
+Snapshot: 2026-10-05. Implementation baseline main: c32cc4a.
 Parent: [M3 — Persistence](https://github.com/daniilnahl/Stock-Tracking-App/milestone/4).
 [ADR-0009](../adr/0009-persistence-contracts.md) Option A was accepted by the
 owner's direct statement "Option A approved and PR merged" at exact commit
@@ -23,8 +23,10 @@ root CLIs save separate cwd-relative pickle files and automatically load at
 import. Watch_list is a distinct ordered collection with display/orchestration;
 its unowned stock entries have no Position. Stock.__getstate__ excludes runtime
 keys and restoration recomputes derived return. M2 routes provider operations
-through typed interfaces; CSV is no longer validation evidence. No persistence
-package, schema, repository, migration runner or backup policy exists.
+through typed interfaces; CSV is no longer validation evidence. Merged #69 adds
+persistence records, protocols and safe errors. #70 supplies the draft schema/
+connection/runner; concrete repositories, CLI integration and transfer/backup
+utilities remain outstanding.
 
 PERS-001–007 runtime implementation and M3 restart behavior are outstanding;
 PERS-008's decisions are accepted in ADR-0009. Decimal text avoids the
@@ -42,8 +44,8 @@ untouched; no safe-state test may read them.
 | Issue | Bounded objective | Status / dependencies | Assigned agent | PR / review | Blocking reason |
 | --- | --- | --- | --- | --- | --- |
 | [#68](https://github.com/daniilnahl/Stock-Tracking-App/issues/68) | Accepted persistence ADR and this issue map | Closed; contract gate satisfied | Completed | [#77](https://github.com/daniilnahl/Stock-Tracking-App/pull/77); owner merged/main CI passed | None |
-| [#69](https://github.com/daniilnahl/Stock-Tracking-App/issues/69) | Records, repository interfaces, errors, packaging | In progress; #68 satisfied | persistence_analysis; Master/independent review | None; draft verification | Implementation/review/owner merge |
-| [#70](https://github.com/daniilnahl/Stock-Tracking-App/issues/70) | SQLite connection/schema/migration runner | Open; #68, #69 | Unassigned | None | Contracts and interfaces |
+| [#69](https://github.com/daniilnahl/Stock-Tracking-App/issues/69) | Records, repository interfaces, errors, packaging | Closed; #68 satisfied | Completed | [#78](https://github.com/daniilnahl/Stock-Tracking-App/pull/78); Master review passed/owner merged/main CI passed | None |
+| [#70](https://github.com/daniilnahl/Stock-Tracking-App/issues/70) | SQLite connection/schema/migration runner | In progress; #68/#69 satisfied | sqlite_implementation; Master/independent review | None; draft verification | Review/CI/owner merge |
 | [#71](https://github.com/daniilnahl/Stock-Tracking-App/issues/71) | SQLite Portfolio repository | Open; #68, #69, #70 | Unassigned | None | Stable schema/interfaces |
 | [#72](https://github.com/daniilnahl/Stock-Tracking-App/issues/72) | Ordered watchlist repository and facade mapping | Open; #68, #69, #70 | Unassigned | None | Stable schema/interfaces |
 | [#73](https://github.com/daniilnahl/Stock-Tracking-App/issues/73) | Both CLI storage integration | Open; #68, #72 | Unassigned | None | Watchlist implementation/approval |
@@ -112,8 +114,8 @@ passed 24 tests; full python -m pytest passed 1,334 tests in 22.69 seconds;
 python -m ruff check . passed; python -m mypy passed config.py (one file).
 These verified the existing baseline only. #68 owner acceptance, merge and CI
 subsequently passed as recorded above. #69 verification and PR-head CI are
-separate evidence. No M3 schema/repository/import/backup or restart exit behavior
-has been implemented or verified.
+separate evidence. No concrete repository/import/backup or restart exit behavior
+has been implemented or verified; #70 schema evidence is separate below.
 
 #69 draft verification on the same Windows Python 3.11.9 pinned environment:
 python -m pytest tests/test_persistence_contracts.py tests/test_packaging.py -q
@@ -123,7 +125,22 @@ config.py scope. Source and offline installed-wheel probes exercised import and
 record construction with filesystem/environment/network/database access denied.
 This verifies records/interfaces/errors and packaging, not concrete repository,
 schema, CLI storage, neutral transfer, backup or M3 restart behavior. Independent
-review and PR-head CI/owner merge remain publication gates.
+review and PR-head CI/owner merge subsequently passed: [PR #78](https://github.com/daniilnahl/Stock-Tracking-App/pull/78)
+is owner-merged on main c32cc4a977b9c6436805ddcb68de31b6171e802c, and all five
+required checks passed in [Foundation run 37359918390](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/37359918390).
+#69 is closed. #70 is the active prerequisite for #71/#72.
+
+#70 draft verification on Windows Python 3.11.9 in the existing pinned .venv:
+python -m pytest tests/test_sqlite_migrations.py tests/test_packaging.py -q
+passed 34 tests in 11.12 seconds; python -m pytest passed 1,578 tests in
+33.45 seconds; python -m ruff check . passed; python -m mypy passed its
+configured config.py-only scope; python -m pip check passed. Exact schema,
+foreign keys, unsupported-schema byte preservation, transaction rollback and
+installed-wheel initialization are covered in isolated temporary storage.
+Git diff --check and SQLite/sidecar ignore checks passed. Master/independent
+review, staged hygiene, PR-head CI and owner merge remain publication gates.
+Operational runner documentation is in [Persistence operations](../PERSISTENCE.md).
+This implements schema infrastructure, not M3's repository/CLI restart exit.
 
 #75 records all merged commits, required main CI and issue closure against the
 unchanged SRS exit criterion: **Application restart preserves portfolio state

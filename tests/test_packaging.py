@@ -54,6 +54,7 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
         "stock_tracker/providers/factory.py",
         "stock_tracker/persistence/__init__.py", "stock_tracker/persistence/models.py",
         "stock_tracker/persistence/protocols.py",
+        "stock_tracker/persistence/connection.py", "stock_tracker/persistence/migrations.py",
     }
 
     installed = tmp_path / "installed"
@@ -85,6 +86,45 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
     )
     assert persistence.returncode == 0, persistence.stderr
     assert persistence.stdout == persistence.stderr == ""
+
+    migration_code = """
+import sys
+from contextlib import ExitStack
+from pathlib import Path
+from unittest.mock import patch
+import socket
+import urllib.request
+sys.path.insert(0, sys.argv[1])
+def denied(*args, **kwargs):
+    raise AssertionError('Network denied')
+with ExitStack() as guards:
+    for target, attribute in (
+        (urllib.request, 'urlopen'), (urllib.request.OpenerDirector, 'open'),
+        (socket, 'getaddrinfo'), (socket, 'create_connection'),
+        (socket.socket, 'connect'), (socket.socket, 'connect_ex'), (socket.socket, 'sendto'),
+    ):
+        guards.enter_context(patch.object(target, attribute, denied))
+    from stock_tracker.persistence.migrations import migrate_database, validate_schema
+    from stock_tracker.persistence.connection import database_connection, transaction
+    path = Path(sys.argv[2])
+    assert not path.exists()
+    migrate_database(path)
+    migrate_database(path)
+    with database_connection(path) as connection:
+        with transaction(connection):
+            validate_schema(connection)
+            assert connection.execute('PRAGMA foreign_keys').fetchone() == (1,)
+            assert connection.execute('PRAGMA user_version').fetchone() == (1,)
+    for name in ('stock_tracker.persistence.migrations', 'stock_tracker.persistence.connection'):
+        assert Path(sys.modules[name].__file__).resolve().is_relative_to(Path(sys.argv[1]).resolve())
+"""
+    migration = subprocess.run(
+        [sys.executable, "-I", "-c", migration_code, str(installed),
+         str(tmp_path / "installed-migration.sqlite3")],
+        cwd=tmp_path, env=environment, capture_output=True, text=True,
+    )
+    assert migration.returncode == 0, migration.stderr
+    assert migration.stdout == migration.stderr == ""
 
     provider = subprocess.run(
         [sys.executable, '-I', str(ROOT / 'tests' / 'provider_integration_probe.py'), str(installed)],
