@@ -12,6 +12,48 @@ class StockTrackerError(Exception):
         super().__init__(self._message)
 
 
+class PersistenceError(StockTrackerError):
+    """Local database or filesystem failure without raw storage diagnostics."""
+
+    _message = "Local storage operation failed."
+
+
+class PersistenceValidationError(PersistenceError):
+    """Invalid supplied storage or transfer candidate."""
+
+    _message = "Local storage input is invalid."
+
+
+class PersistenceDataError(PersistenceError):
+    """Stored data violates the accepted application contract."""
+
+    _message = "Local storage data is invalid."
+
+
+class PersistenceConflictError(PersistenceError):
+    """Explicit creation or transfer collides with an existing record."""
+
+    _message = "Local storage record already exists."
+
+
+class PersistenceNotFoundError(PersistenceError):
+    """An update requires an existing target."""
+
+    _message = "Local storage record was not found."
+
+
+class SchemaVersionError(PersistenceError):
+    """Schema shape or version cannot be safely used."""
+
+    _message = "Local storage schema is unsupported."
+
+
+class LegacyStatePresentError(PersistenceError):
+    """Legacy state prevents an implicit empty replacement."""
+
+    _message = "Legacy state requires an explicit safe transition before saving."
+
+
 class InvalidTickerError(StockTrackerError):
     """Local input or a validated lookup is invalid in the supported scope."""
 

@@ -1,11 +1,18 @@
 # M3 Persistence implementation plan
 
-Status: **planning and proposed contract review; runtime blocked on approval**.
-Snapshot: 2026-10-05. Baseline main: 5eccf3b.
+Status: **contract accepted; #69 records/interfaces implementation in progress**.
+Snapshot: 2026-10-05. Implementation baseline main: 48944f9.
 Parent: [M3 — Persistence](https://github.com/daniilnahl/Stock-Tracking-App/milestone/4).
-[ADR-0009](../adr/0009-persistence-contracts.md) is PROPOSED, never accepted by
-agent recommendation. SRS §23 requires an approved persistence ADR before schema
-implementation. No runtime work may begin before the concrete acceptance gate.
+[ADR-0009](../adr/0009-persistence-contracts.md) Option A was accepted by the
+owner's direct statement "Option A approved and PR merged" at exact commit
+8e525177c7443fc92e1afc6b42e573ad3a3c43b2. The Master recorded acceptance in
+[issue #68](https://github.com/daniilnahl/Stock-Tracking-App/issues/68#issuecomment-5999983033);
+that comment is a faithful record, not independently human-authored approval.
+Owner-merged [PR #77](https://github.com/daniilnahl/Stock-Tracking-App/pull/77)
+reached main at 48944f98938639628cfe216d4d0bc6883f0f5f26 with all five required checks
+passing in [Foundation](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/37351164698).
+The SRS §23 contract gate is satisfied; downstream implementation dependencies
+and owner merges remain required. Acceptance is not M3 runtime completion.
 No agent merge is authorized; reviewed PRs require owner merge under AGENTS.md.
 
 ## Repository analysis
@@ -19,13 +26,14 @@ keys and restoration recomputes derived return. M2 routes provider operations
 through typed interfaces; CSV is no longer validation evidence. No persistence
 package, schema, repository, migration runner or backup policy exists.
 
-PERS-001–008 and M3 restart behavior are outstanding. Decimal text avoids the
+PERS-001–007 runtime implementation and M3 restart behavior are outstanding;
+PERS-008's decisions are accepted in ADR-0009. Decimal text avoids the
 unapproved financial quantization question. Watchlist/Portfolio distinction,
 namespaces, duplicates, missing quotes and ownership must survive restart; a
 unique ticker table or implicit conversion would lose accepted semantics.
-ADR-0009 requires owner approval for database location, schema/versioning,
+Accepted ADR-0009 defines database location, schema/versioning,
 uniqueness, allocation, delete/cascade, legacy transition and backup/restore.
-The legacy filename/loading extension is explicit. Manual neutral recovery does
+The approved legacy filename/loading extension is explicit. Manual neutral recovery does
 not promise to recover arbitrary pickle contents. Existing user files remain
 untouched; no safe-state test may read them.
 
@@ -33,8 +41,8 @@ untouched; no safe-state test may read them.
 
 | Issue | Bounded objective | Status / dependencies | Assigned agent | PR / review | Blocking reason |
 | --- | --- | --- | --- | --- | --- |
-| [#68](https://github.com/daniilnahl/Stock-Tracking-App/issues/68) | Proposed persistence ADR and this issue map | In progress; no implementation dependency | persistence_analysis; Master reviews | None; independent review pending | Owner acceptance of exact contract |
-| [#69](https://github.com/daniilnahl/Stock-Tracking-App/issues/69) | Records, repository interfaces, errors, packaging | Open; #68 | Unassigned | None | Accepted #68 contract |
+| [#68](https://github.com/daniilnahl/Stock-Tracking-App/issues/68) | Accepted persistence ADR and this issue map | Closed; contract gate satisfied | Completed | [#77](https://github.com/daniilnahl/Stock-Tracking-App/pull/77); owner merged/main CI passed | None |
+| [#69](https://github.com/daniilnahl/Stock-Tracking-App/issues/69) | Records, repository interfaces, errors, packaging | In progress; #68 satisfied | persistence_analysis; Master/independent review | None; draft verification | Implementation/review/owner merge |
 | [#70](https://github.com/daniilnahl/Stock-Tracking-App/issues/70) | SQLite connection/schema/migration runner | Open; #68, #69 | Unassigned | None | Contracts and interfaces |
 | [#71](https://github.com/daniilnahl/Stock-Tracking-App/issues/71) | SQLite Portfolio repository | Open; #68, #69, #70 | Unassigned | None | Stable schema/interfaces |
 | [#72](https://github.com/daniilnahl/Stock-Tracking-App/issues/72) | Ordered watchlist repository and facade mapping | Open; #68, #69, #70 | Unassigned | None | Stable schema/interfaces |
@@ -98,13 +106,24 @@ expand scope. Preserve pip/setuptools and Python 3.11/3.12. Report exact unavail
 tools/environment failures, never substitute a toolchain or invent pass results.
 Inspect diffs, secrets/generated artifacts, scope and CI before PR publication.
 
-Master verification for this documentation proposal on Windows Python 3.11.9 in
+Historical Master verification for the #68 documentation proposal on Windows Python 3.11.9 in
 the pinned .venv: python -m pip check passed; targeted baseline/packaging/hygiene
 passed 24 tests; full python -m pytest passed 1,334 tests in 22.69 seconds;
 python -m ruff check . passed; python -m mypy passed config.py (one file).
-These verify the existing baseline only. No M3 runtime/schema/import/backup or
-restart exit behavior has been implemented or verified. PR-head CI and owner
-contract acceptance remain outstanding.
+These verified the existing baseline only. #68 owner acceptance, merge and CI
+subsequently passed as recorded above. #69 verification and PR-head CI are
+separate evidence. No M3 schema/repository/import/backup or restart exit behavior
+has been implemented or verified.
+
+#69 draft verification on the same Windows Python 3.11.9 pinned environment:
+python -m pytest tests/test_persistence_contracts.py tests/test_packaging.py -q
+passed 214 tests; python -m pytest passed 1,546 tests in 33.90 seconds;
+python -m ruff check . passed; python -m mypy passed its configured one-file
+config.py scope. Source and offline installed-wheel probes exercised import and
+record construction with filesystem/environment/network/database access denied.
+This verifies records/interfaces/errors and packaging, not concrete repository,
+schema, CLI storage, neutral transfer, backup or M3 restart behavior. Independent
+review and PR-head CI/owner merge remain publication gates.
 
 #75 records all merged commits, required main CI and issue closure against the
 unchanged SRS exit criterion: **Application restart preserves portfolio state

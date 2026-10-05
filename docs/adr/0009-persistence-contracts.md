@@ -2,12 +2,20 @@
 
 ## Status
 
-**PROPOSED — human approval required.** Snapshot: 2026-10-05.
+**Accepted, 2026-10-05.** The owner stated **"Option A approved and PR merged"**
+in the Codex milestone chat, accepting Option A at exact reviewed commit
+`8e525177c7443fc92e1afc6b42e573ad3a3c43b2`, including the legacy filename/behavior
+extension. The [Master's acceptance record](https://github.com/daniilnahl/Stock-Tracking-App/issues/68#issuecomment-5999983033)
+faithfully records that human instruction; it is not separately human-authored
+GitHub acceptance. Owner-merged [PR #77](https://github.com/daniilnahl/Stock-Tracking-App/pull/77)
+is on main at `48944f98938639628cfe216d4d0bc6883f0f5f26`; all five required checks
+passed in [Foundation run 37351164698](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/37351164698).
 This documentation-only proposal addresses [issue #68](https://github.com/daniilnahl/Stock-Tracking-App/issues/68)
 in [M3 — Persistence](https://github.com/daniilnahl/Stock-Tracking-App/milestone/4).
-No persistence decision below is accepted or implemented. Approval must identify
-the reviewed commit and explicitly include the legacy filename/behavior extension.
-Neither approval nor this proposal authorizes agent merges or real user migration.
+The original proposal wording below preserves the exact accepted contract.
+#68 is closed; runtime implementation remains separately scoped #69–75 work.
+Acceptance does not authorize agent merges, certify restart persistence, or
+authorize execution of migration against real user files.
 
 The governing sources are SRS §§5, 6, 8, 9, 12 and 23; ADRs 0005–0008;
 AGENTS.md; TESTING.md; and FC-001–004, FC-110 and missing-data rules.

@@ -52,6 +52,8 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
         "stock_tracker/providers/models.py", "stock_tracker/providers/protocols.py",
         "stock_tracker/providers/transport.py", "stock_tracker/providers/fmp.py",
         "stock_tracker/providers/factory.py",
+        "stock_tracker/persistence/__init__.py", "stock_tracker/persistence/models.py",
+        "stock_tracker/persistence/protocols.py",
     }
 
     installed = tmp_path / "installed"
@@ -76,6 +78,13 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
     )
     assert contracts.returncode == 0, contracts.stderr
     assert contracts.stdout == contracts.stderr == ""
+
+    persistence = subprocess.run(
+        [sys.executable, "-I", str(ROOT / "tests" / "persistence_contract_probe.py"), str(installed)],
+        cwd=tmp_path, env=environment, capture_output=True, text=True,
+    )
+    assert persistence.returncode == 0, persistence.stderr
+    assert persistence.stdout == persistence.stderr == ""
 
     provider = subprocess.run(
         [sys.executable, '-I', str(ROOT / 'tests' / 'provider_integration_probe.py'), str(installed)],
