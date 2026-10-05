@@ -1,6 +1,6 @@
 """Legacy root facade contracts using real domain arithmetic and synthetic state."""
 
-from datetime import datetime
+from datetime import datetime, timezone
 from decimal import Decimal
 import inspect
 import pickle
@@ -149,24 +149,31 @@ def test_property_updates_and_return_assignment_use_domain(stock):
 
 def test_provider_request_order_schema_mapping_and_refresh(monkeypatch, stock):
     from stock_tracker.compatibility import stock_operations
+    from stock_tracker.providers.models import CompanyProfile, PeriodChanges, Quote
+    from stock_tracker.exceptions import MarketDataUnavailableError
     from watch_list import Watch_list
 
     calls = []
-    changes = [{key: value for key, value in zip(
-        ("1D", "5D", "1M", "3M", "6M", "1Y", "3Y", "5Y"), range(1, 9),
-    )}]
-    profiles = [[{"price": 120, "mktCap": 1_000_000_000, "companyName": "Example",
-                 "sector": "Tech", "country": "US", "exchange": "NASDAQ", "currency": "USD"}], []]
-
-    def transport(url):
-        calls.append(url)
-        if "/profile/" in url:
-            return profiles.pop(0)
-        if "/quote-short/" in url:
-            return [{"price": 80}]
-        return changes
-
-    monkeypatch.setattr(stock_operations.um, "get_jsonparsed_data", transport)
+    received = datetime(2020, 1, 1, tzinfo=timezone.utc)
+    profiles = [CompanyProfile('AAPL', 'Example', 'NASDAQ', 'USD', 'Tech', 'US', Decimal(120), Decimal(10**9), None, received),
+                MarketDataUnavailableError()]
+    def profile(symbol):
+        calls.append('profile')
+        value = profiles.pop(0)
+        if isinstance(value, BaseException):
+            raise value
+        return value
+    def quote(symbol):
+        calls.append('quote')
+        return Quote(symbol, Decimal(80), 'NASDAQ', None, None, received)
+    def periods(symbol):
+        calls.append('periods')
+        return PeriodChanges(symbol, *(Decimal(i) for i in range(1, 9)), None, received)
+    provider = SimpleNamespace(get_company_profile=profile, get_quote=quote, get_period_changes=periods)
+    def factory(key):
+        assert key == 'synthetic-runtime'
+        return provider
+    monkeypatch.setattr(stock_operations.provider_factory, 'create_market_data_provider', factory)
     stock.set_owned_data("10", "100")
     watchlist = Watch_list("Example", [stock])
     watchlist.refresh_stocks()
@@ -176,13 +183,11 @@ def test_provider_request_order_schema_mapping_and_refresh(monkeypatch, stock):
     assert stock._position.stock.exchange == "NASDAQ"
     stock.get_realtime_price()
     assert stock.total_return == "-20.0"
-    watchlist.refresh_stocks()
-    assert stock.current_price == "N/A" and stock.total_return == "-"
-    assert stock._position.stock.exchange is None
-    assert [url.split('/api/v3/')[1].split('/')[0] for url in calls] == [
-        "profile", "stock-price-change", "quote-short", "profile", "stock-price-change",
-    ]
-    assert all(url.endswith("apikey=synthetic-runtime") for url in calls)
+    with pytest.raises(MarketDataUnavailableError):
+        watchlist.refresh_stocks()
+    assert stock.current_price is None and stock.total_return == "-"
+    assert stock._position.stock.exchange == 'NASDAQ' and stock.name == 'Example'
+    assert calls == ['profile', 'periods', 'quote', 'profile']
 
 
 def test_legacy_chart_delegates_with_fixed_clock(monkeypatch, stock):
@@ -281,9 +286,10 @@ def test_restore_without_usable_runtime_key_is_local_only(monkeypatch, stock, ca
     stock.__setstate__(state)
     assert stock.API_KEY == canonical
     assert stock.current_price == "120" and stock.total_return == "-"
-    monkeypatch.setattr(stock_operations.um, "get_jsonparsed_data", lambda *a: pytest.fail("transport reached"))
+    monkeypatch.setattr(stock_operations.provider_factory.UrllibHttpTransport, 'get', lambda *a, **kw: pytest.fail('transport reached'))
     with pytest.raises(ConfigurationError, match="Set FMP_API_KEY"):
         stock.get_stock_info()
+    assert stock.current_price is None
 
 
 def test_restore_uses_legacy_config_fallback_only_when_canonical_absent(monkeypatch, stock):
@@ -307,28 +313,37 @@ def test_failed_legacy_restoration_does_not_replace_existing_holdings(stock, cos
 @pytest.mark.parametrize("method", ["get_stock_info", "get_realtime_price"])
 def test_provider_null_quote_is_unavailable_without_display_crash(monkeypatch, stock, method, capsys):
     from stock_tracker.compatibility import stock_operations
+    from stock_tracker.providers.models import CompanyProfile, Quote
     from watch_list import Watch_list
 
     stock.set_owned_data("10", "100")
-    payload = [{"price": None, "mktCap": 1_000_000_000, "companyName": "Example",
-                "sector": "Tech", "country": "US", "exchange": "NASDAQ", "currency": "USD"}]
-    monkeypatch.setattr(stock_operations.um, "get_jsonparsed_data", lambda url: payload)
+    monkeypatch.setenv('COLUMNS', '300')
+    stamp = datetime(2020, 1, 1, tzinfo=timezone.utc)
+    provider = SimpleNamespace(get_company_profile=lambda symbol: CompanyProfile(symbol, 'Example', 'NASDAQ', 'USD', 'Tech', 'US', None, Decimal(10**9), None, stamp),
+                               get_quote=lambda symbol: Quote(symbol, None, None, None, None, stamp))
+    monkeypatch.setattr(stock_operations.provider_factory, 'create_market_data_provider', lambda key: provider)
     getattr(stock, method)()
     stock.calculate_return()
     assert stock.current_price is None and stock.total_return == "-"
     assert stock._snapshot.market_value is None
     Watch_list("Example", [stock]).show_stocks()
-    assert "Example" in capsys.readouterr().out
+    assert "AAPL" in capsys.readouterr().out
 
 
 def test_runtime_property_rebinding_reaches_real_provider_boundary(monkeypatch, stock):
     from stock_tracker.compatibility import stock_operations
+    from stock_tracker.providers.transport import HttpResponse
+    from stock_tracker.exceptions import MarketDataUnavailableError
 
     replacement = "synthetic-replacement"
     stock.API_KEY = replacement
     calls = []
-    monkeypatch.setattr(stock_operations.um, "get_jsonparsed_data", lambda url: calls.append(url) or [])
-    stock.get_realtime_price()
-    assert calls[0].endswith("apikey=" + replacement)
+    def transport(self, url, *, headers, timeout_seconds):
+        calls.append((url, headers))
+        return HttpResponse(200, {}, b'[]')
+    monkeypatch.setattr(stock_operations.provider_factory.UrllibHttpTransport, 'get', transport)
+    with pytest.raises(MarketDataUnavailableError):
+        stock.get_realtime_price()
+    assert calls[0][1] == {'apikey': replacement} and replacement not in calls[0][0]
     assert replacement not in repr(stock)
     assert replacement.encode() not in pickle.dumps(stock)

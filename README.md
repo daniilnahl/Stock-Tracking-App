@@ -115,6 +115,12 @@ pickle remains M3 work. Explicit legacy CSV helpers use paths relative to the
 working directory. Ticker validation does not read or change CSV hints: it
 requires a unique exact NASDAQ provider match each time; an inconclusive lookup
 or provider failure propagates separately from locally invalid input.
+Both CLIs render safe provider/configuration failures with exit code 1 and do
+not save a failed add or refresh. A failed profile/quote invalidates the current
+price in memory while preserving known metadata and holdings; a failed summary
+invalidates all summary fields. Earlier entries may already have refreshed when
+a later entry fails, but the saved file stays unchanged. Explicit null prices
+are successful missing data, with unavailable return values rather than zero.
 
 ## Domain boundary and M1 status
 
