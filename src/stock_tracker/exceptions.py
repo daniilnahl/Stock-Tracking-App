@@ -13,7 +13,7 @@ class StockTrackerError(Exception):
 
 
 class InvalidTickerError(StockTrackerError):
-    """Local symbol input is invalid; not a network lookup conclusion."""
+    """Local input or a validated lookup is invalid in the supported scope."""
 
     _message = "Ticker input is invalid."
 

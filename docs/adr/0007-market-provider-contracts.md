@@ -27,6 +27,12 @@ This document changes neither SRS nor runtime behavior.
 
 ## Context and current behavior
 
+**Subsequent decision:** [ADR-0008](0008-scoped-ticker-rejection.md) supersedes
+the successful no-match/local-only invalidity provisions and corresponding
+DATA-006 evidence gate for the approved scoped product rule. The original
+accepted proposal below is preserved as historical decision content; all other
+contracts remain unchanged.
+
 Baseline main is `788d3c4119e9ebb196256e9355f24ce8b31dc037`. Domain models are
 isolated. Three legacy FMP calls live in
 `src/stock_tracker/compatibility/stock_operations.py`: profile, quote-short and
