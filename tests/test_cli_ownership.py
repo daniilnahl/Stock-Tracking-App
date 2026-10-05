@@ -1,12 +1,14 @@
 """Legacy CLI ownership flows with real domain arithmetic and controlled HTTP."""
 
 from decimal import Decimal
+from datetime import datetime, timezone
 import io
 import json
 import pickle
 import runpy
 from pathlib import Path
-from urllib.parse import urlsplit
+from types import SimpleNamespace
+from urllib.parse import parse_qs, urlsplit
 
 import pytest
 from typer.testing import CliRunner
@@ -34,6 +36,8 @@ class TerminalInput(io.BytesIO):
 @pytest.fixture(params=["menu_watchlist.py", "daniils_stock_method.py"])
 def cli(request, monkeypatch, tmp_path):
     from utils import utility_module
+    from stock_tracker.providers import factory
+    from stock_tracker.providers.transport import HttpResponse
 
     monkeypatch.setenv("FMP_API_KEY", "synthetic-cli-runtime")
     monkeypatch.setenv("COLUMNS", "300")
@@ -43,9 +47,7 @@ def cli(request, monkeypatch, tmp_path):
     def transport(url, **kwargs):
         endpoint = urlsplit(url).path.split("/api/v3/")[1].split("/")[0]
         provider["calls"].append(endpoint)
-        if endpoint == "search-ticker":
-            payload = [{"symbol": "AAPL"}]
-        elif endpoint == "profile":
+        if endpoint == "profile":
             payload = [] if provider["missing_payload"] else [{
                 "price": provider["price"], "mktCap": 1_000_000_000,
                 "companyName": "Fictional company", "sector": "Tech", "country": "US",
@@ -58,6 +60,15 @@ def cli(request, monkeypatch, tmp_path):
         return io.BytesIO(json.dumps(payload).encode("utf-8"))
 
     monkeypatch.setattr(utility_module, "urlopen", transport)
+    def search_transport(url, *, headers, timeout_seconds):
+        assert urlsplit(url).path == '/stable/search-symbol'
+        assert headers == {'apikey': 'synthetic-cli-runtime'}
+        symbol = parse_qs(urlsplit(url).query)['query'][0]
+        provider['calls'].append('search-symbol')
+        return HttpResponse(200, {}, json.dumps([{'symbol': symbol, 'exchange': 'NASDAQ'}]).encode())
+    monkeypatch.setattr(factory, 'UrllibHttpTransport', lambda: SimpleNamespace(get=search_transport))
+    monkeypatch.setattr(factory, 'datetime', SimpleNamespace(now=lambda tz: datetime(2020, 1, 1, tzinfo=timezone.utc)))
+    monkeypatch.setattr(factory.time, 'monotonic', lambda: 0.0)
     module = runpy.run_path(str(ROOT / request.param), run_name="ownership_test")
     assert module["WATCHLIST_FILE"] == (
         "watchlist.pkl" if request.param == "menu_watchlist.py" else "daniils_stock_methodd.pkl"
@@ -85,7 +96,7 @@ def test_add_preserves_high_precision_inputs_in_memory_and_saved_state(cli):
     assert restored._position.quantity == Decimal(quantity)
     assert restored._position.average_cost == Decimal(cost)
     assert b"synthetic-cli-runtime" not in encoded
-    assert provider["calls"] == ["search-ticker", "profile", "stock-price-change"]
+    assert provider["calls"] == ["search-symbol", "profile", "stock-price-change"]
 
 
 @pytest.mark.parametrize("quantity,cost", [("0.25", "100"), ("0", "100"), ("10", "0"), ("0", "0")])
@@ -127,7 +138,7 @@ def test_invalid_input_reprompts_then_saves_only_valid_pair(cli, field, invalid)
     assert item._snapshot.unrealized_return == Decimal("0.20")
     restored = pickle.loads((directory / module["WATCHLIST_FILE"]).read_bytes())
     assert restored.stocks[0].amount_owned == "0.25" and restored.stocks[0].cost_basis == "100"
-    assert provider["calls"] == ["search-ticker", "profile", "stock-price-change"]
+    assert provider["calls"] == ["search-symbol", "profile", "stock-price-change"]
 
 
 @pytest.mark.parametrize("field", ["quantity", "cost"])
@@ -166,7 +177,7 @@ def test_refresh_missing_quote_replaces_return_and_display_preserves_state(cli, 
     restored = pickle.loads((directory / module["WATCHLIST_FILE"]).read_bytes()).stocks[0]
     assert restored._position.quantity == Decimal("0.25") and restored.total_return == "-"
     assert provider["calls"] == [
-        "search-ticker", "profile", "stock-price-change", "profile", "stock-price-change",
+        "search-symbol", "profile", "stock-price-change", "profile", "stock-price-change",
     ]
 
 
@@ -178,7 +189,7 @@ def test_duplicate_and_remove_preserve_existing_behavior(cli):
     assert duplicate.exit_code == 0
     assert "Stock already exists in the watchlist." in duplicate.output
     assert (directory / module["WATCHLIST_FILE"]).read_bytes() == encoded
-    assert provider["calls"] == ["search-ticker", "profile", "stock-price-change"]
+    assert provider["calls"] == ["search-symbol", "profile", "stock-price-change", "search-symbol"]
     removed = CliRunner().invoke(module["app"], ["remove-stock"], input="aapl\n")
     assert removed.exit_code == 0
     assert module["current_watchlist"].stocks == []

@@ -211,6 +211,11 @@ explicit temporary files. They exercise all three runtime scripts and mock
 only scratch-script transport work, using the actual Stock and Watch_list
 classes. CLI tests also verify that the canonical key reaches ticker validation.
 The CSV harness test writes only fictional ticker data in its temporary cwd.
+M2 ticker validation uses the real FMP adapter through a factory-injected fake
+HTTP transport in CLI ownership tests; profile/summary compatibility still use
+the legacy mocked transport until issue #55. Lookup tests deny CSV reads/writes
+and preserve temporary CSV bytes on success and every failure. CSV entries are
+unverified hints; check_ticker always performs exact supported provider lookup.
 
 Issue #7 coverage also rejects missing/blank keys before add/refresh work,
 checks the shared configuration representation and dotenv failure diagnostics,

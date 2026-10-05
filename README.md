@@ -111,7 +111,10 @@ directory. Do not inspect, delete, migrate or overwrite saved user files as part
 of setup. New facade state excludes runtime credentials; historical saved keys
 are ignored when restoring state and current configuration supplies the runtime
 binding. This does not migrate real user files or make pickle safe. Replacing
-pickle remains M3 work. CSV paths are also relative to the working directory.
+pickle remains M3 work. Explicit legacy CSV helpers use paths relative to the
+working directory. Ticker validation does not read or change CSV hints: it
+requires a unique exact NASDAQ provider match each time; an inconclusive lookup
+or provider failure propagates separately from locally invalid input.
 
 ## Domain boundary and M1 status
 

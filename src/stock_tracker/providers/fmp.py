@@ -1,4 +1,4 @@
-"""FMP typed retrieval and shared requests; identity lookup follows separately."""
+"""FMP typed retrieval, scoped identity lookup and shared safe requests."""
 
 from collections.abc import Callable, Mapping
 from datetime import datetime, timedelta, timezone
@@ -11,11 +11,11 @@ from urllib.parse import urlencode
 
 from config import ConfigurationError, require_api_key
 from stock_tracker.exceptions import (
-    InvalidTickerError, MarketDataUnavailableError,
+    InstrumentLookupInconclusiveError, InvalidTickerError, MarketDataUnavailableError,
     ProviderAccessError, ProviderAuthenticationError, ProviderRequestError,
     ProviderResponseError, ProviderTimeoutError, ProviderUnavailableError, RateLimitError,
 )
-from .models import CompanyProfile, PeriodChanges, Quote
+from .models import CompanyProfile, InstrumentIdentity, PeriodChanges, Quote
 from .transport import HttpTransport, ProviderPolicy, _TransportConnectionError, _TransportTimeout
 
 
@@ -104,7 +104,7 @@ def _retry_after(headers: Mapping[str, str], clock: Callable[[], datetime]) -> f
 
 
 class FMPMarketDataProvider:
-    """Injected retrieval adapter; identity lookup remains pending."""
+    """Injected market-data adapter with exact NASDAQ identity lookup."""
 
     def __init__(
         self, *, api_key: str, transport: HttpTransport, policy: ProviderPolicy,
@@ -179,6 +179,27 @@ class FMPMarketDataProvider:
         values = {field: _number(row.get(key), field, nonnegative=False)
                   for key, field in _PERIOD_FIELDS}
         return PeriodChanges(symbol=requested, **values, as_of=None, retrieved_at=received)
+
+    def resolve_symbol(self, symbol: str) -> InstrumentIdentity:
+        requested = _input_symbol(symbol)
+        rows, _ = self._request_json("search-symbol", {"query": requested, "limit": "100", "exchange": "NASDAQ"})
+        matches = []
+        for row in rows:
+            if "symbol" not in row:
+                raise ProviderResponseError(field="symbol")
+            exchange = row.get("exchange")
+            if not isinstance(exchange, str) or not exchange.strip():
+                raise ProviderResponseError(field="exchange")
+            identity = InstrumentIdentity(row["symbol"], exchange,
+                                          _optional_text(row.get("name"), "name"),
+                                          _optional_text(row.get("currency"), "currency"))
+            if identity.symbol == requested and identity.exchange == "NASDAQ":
+                matches.append(identity)
+        if len(matches) > 1:
+            raise ProviderResponseError()
+        if not matches:
+            raise InstrumentLookupInconclusiveError()
+        return matches[0]
 
     def _request_json(self, operation: str, parameters: Mapping[str, str]) -> tuple[list[dict], datetime]:
         """One approved route and bounded retry loop, without endpoint field parsing."""
