@@ -1,102 +1,78 @@
-"""Existing FMP orchestration, pending the M2 provider contract."""
+"""Legacy facade mappings over typed provider capabilities, without HTTP schemas."""
 
-from config import require_api_key
-from utils import utility_module as um
+from config import ConfigurationError
+from stock_tracker.domain import Position, Stock as Security, position_snapshot
+from stock_tracker.exceptions import ProviderResponseError, StockTrackerError
+from stock_tracker.providers import factory as provider_factory
 from . import presentation
 
 
+_PERIOD_FIELDS = (('price_1d', 'day_1'), ('price_5d', 'day_5'), ('price_30d', 'month_1'),
+                  ('price_3m', 'month_3'), ('price_6m', 'month_6'), ('price_1y', 'year_1'),
+                  ('price_3y', 'year_3'), ('price_5y', 'year_5'))
+
+
+def _known(value):
+    return None if value in (None, 'N/A') else value
+
+
+def _identity_metadata(self, result):
+    if result.symbol != self.ticker_symbol.strip().upper():
+        raise ProviderResponseError(field='symbol')
+    changes = {}
+    for field in ('exchange', 'currency'):
+        existing, returned = _known(getattr(self, field)), getattr(result, field)
+        if existing is not None and returned is not None and existing != returned:
+            raise ProviderResponseError(field=field)
+        changes[field] = returned if returned is not None else existing or 'N/A'
+    return changes
+
+
+def _publish_price(self, price, metadata):
+    # Validate the entire candidate with unchanged domain arithmetic before any
+    # metadata/price publication. Never reinterpret known holding identity.
+    security = Security(self.ticker_symbol, _known(metadata.get('name', self.name)),
+                        _known(metadata.get('exchange', self.exchange)))
+    position = None if self._position is None else Position(
+        security, self._position.quantity, self._position.average_cost,
+    )
+    snapshot = None if position is None else position_snapshot(position, price)
+    changes = dict(metadata, _position=position, _snapshot=snapshot, _quote=price,
+                   _price_text=None if price is None else str(price))
+    self.__dict__.update(changes)
+
+
 def get_stock_info(self):
-    """
-        Fetches stock profile data from an API and updates the instance's attributes.
-
-        The method sends a GET request to the Financial Modeling Prep API using the stock's ticker symbol
-        and assigns the retrieved data (e.g., company name, market cap, current price) to the relevant
-        attributes of the stock instance.
-
-        If the API request fails or returns invalid data, the attributes are set to default values (e.g., 'N/A').
-
-        Attributes updated:
-        - current_price: The current stock price.
-        - market_cap: The company's market capitalization.
-        - name: The company's name.
-        - sector: The sector the company operates in.
-        - country: The company's country of operation.
-        - exchange: The stock exchange where the company is listed.
-        - currency: The currency used for stock trading.
-
-        Raises:
-        - This method does not raise exceptions directly but logs errors if the API request fails.
-        """
-    url = f'https://financialmodelingprep.com/api/v3/profile/{self.ticker_symbol}?apikey={require_api_key(self.API_KEY)}'
-    data = um.get_jsonparsed_data(url)
-    if data == [] or data is None:
-        print('API request failed. Please try again.')
-        self.current_price = 'N/A'
-        self.market_cap = 'N/A'
-        self.name = 'N/A'
-        self.sector = 'N/A'
-        self.country = 'N/A'
-        self.exchange = 'N/A'
-        self.currency = 'N/A'
-    else:
-        self.market_cap = presentation.format_mcap(data[0]['mktCap'])
-        self.current_price = data[0]['price']
-        self.name = data[0]['companyName']
-        self.sector = data[0]['sector']
-        self.country = data[0]['country']
-        self.exchange = data[0]['exchange']
-        self.currency = data[0]['currency']
+    try:
+        profile = provider_factory.create_market_data_provider(self.API_KEY).get_company_profile(self.ticker_symbol)
+        metadata = _identity_metadata(self, profile)
+        metadata.update(name=profile.name, sector=profile.sector or 'N/A', country=profile.country or 'N/A',
+                        market_cap='N/A' if profile.market_cap is None else presentation.format_mcap(profile.market_cap))
+        _publish_price(self, profile.price, metadata)
+    except (StockTrackerError, ConfigurationError):
+        self.current_price = None
+        raise
 
 
 def get_realtime_price(self):
-    """
-        Fetches stock realtime price from an API and updates the instance's attribute.
-
-        The method sends a GET request to the Financial Modeling Prep API using the stock's ticker symbol
-        and assigns the retrieved data (current price).
-
-        If the API request fails or returns invalid data, the attribute is set to default value (e.g., 'N/A').
-
-        Attributes updated:
-        - current_price: The current stock price.
-
-        Raises:
-        - This method does not raise exceptions directly but logs errors if the API request fails.
-        """
-    url = f'https://financialmodelingprep.com/api/v3/quote-short/{self.ticker_symbol}?apikey={require_api_key(self.API_KEY)}'
-    data = um.get_jsonparsed_data(url)
-    if data == [] or data is None:
-        print('API request failed. Please try again.')
-        self.current_price = 'N/A'
-    else:
-        self.current_price = data[0]['price']
+    try:
+        quote = provider_factory.create_market_data_provider(self.API_KEY).get_quote(self.ticker_symbol)
+        _publish_price(self, quote.price, _identity_metadata(self, quote))
+    except (StockTrackerError, ConfigurationError):
+        self.current_price = None
+        raise
 
 
 def get_price_over_time(self):
-    """
-        Fetches stock return data from an API and updates the instance's attributes.
-
-        The method sends a GET request to the Financial Modeling Prep API using the stock's ticker symbol
-        and assigns the retrieved data (percent return for last 1 day, 5 days, 1 mounth, etc) to the relevant
-        attributes of the stock instance.
-
-        Attributes updated:
-        - price_1d: The current stock's percent return for the past 1 day.
-        - price_5d: The current stock's percent return for the past 5 days.
-        - price_30d: The current stock's percent return for the past 30 days.
-        - price_3m: The current stock's percent return for the past 3 months.
-        - price_6m: The current stock's percent return for the past 6 months.
-        - price_1y: The current stock's percent return for the past 1 year.
-        - price_3y: The current stock's percent return for the past 3 years.
-        - price_5y: The current stock's percent return for the past 5 years.
-        """
-    url = f'https://financialmodelingprep.com/api/v3/stock-price-change/{self.ticker_symbol}?apikey={require_api_key(self.API_KEY)}'
-    data = um.get_jsonparsed_data(url)
-    self.price_1d = str(round(data[0]['1D'], 2))
-    self.price_5d = str(round(data[0]['5D'], 2))
-    self.price_30d = str(round(data[0]['1M'], 2))
-    self.price_3m = str(round(data[0]['3M'], 2))
-    self.price_6m = str(round(data[0]['6M'], 2))
-    self.price_1y = str(round(data[0]['1Y'], 2))
-    self.price_3y = str(round(data[0]['3Y'], 2))
-    self.price_5y = str(round(data[0]['5Y'], 2))
+    try:
+        result = provider_factory.create_market_data_provider(self.API_KEY).get_period_changes(self.ticker_symbol)
+        if result.symbol != self.ticker_symbol.strip().upper():
+            raise ProviderResponseError(field='symbol')
+        changes = {target: 'N/A' if getattr(result, field) is None else
+                   format(getattr(result, field), '.2f').rstrip('0').rstrip('.')
+                   for target, field in _PERIOD_FIELDS}
+        self.__dict__.update(changes)
+    except (StockTrackerError, ConfigurationError):
+        for target, _ in _PERIOD_FIELDS:
+            setattr(self, target, 'N/A')
+        raise

@@ -44,29 +44,28 @@ def cli(request, monkeypatch, tmp_path):
     (tmp_path / "list_of_valid_tickers.csv").write_text("", encoding="utf-8")
     provider = {"price": 120, "missing_payload": False, "calls": []}
 
-    def transport(url, **kwargs):
-        endpoint = urlsplit(url).path.split("/api/v3/")[1].split("/")[0]
-        provider["calls"].append(endpoint)
-        if endpoint == "profile":
-            payload = [] if provider["missing_payload"] else [{
-                "price": provider["price"], "mktCap": 1_000_000_000,
-                "companyName": "Fictional company", "sector": "Tech", "country": "US",
-                "exchange": "NASDAQ", "currency": "USD",
-            }]
-        elif endpoint == "stock-price-change":
-            payload = [{period: 0 for period in ("1D", "5D", "1M", "3M", "6M", "1Y", "3Y", "5Y")}]
-        else:
-            pytest.fail("Unexpected provider endpoint")
-        return io.BytesIO(json.dumps(payload).encode("utf-8"))
-
-    monkeypatch.setattr(utility_module, "urlopen", transport)
-    def search_transport(url, *, headers, timeout_seconds):
-        assert urlsplit(url).path == '/stable/search-symbol'
+    def transport(url, *, headers, timeout_seconds):
+        endpoint = urlsplit(url).path.removeprefix('/stable/')
         assert headers == {'apikey': 'synthetic-cli-runtime'}
-        symbol = parse_qs(urlsplit(url).query)['query'][0]
-        provider['calls'].append('search-symbol')
-        return HttpResponse(200, {}, json.dumps([{'symbol': symbol, 'exchange': 'NASDAQ'}]).encode())
-    monkeypatch.setattr(factory, 'UrllibHttpTransport', lambda: SimpleNamespace(get=search_transport))
+        query = parse_qs(urlsplit(url).query)
+        symbol = query.get('symbol', query.get('query'))[0]
+        provider['calls'].append(endpoint)
+        if endpoint == 'search-symbol':
+            payload = [{'symbol': symbol, 'exchange': 'NASDAQ'}]
+        elif endpoint == 'profile':
+            payload = [] if provider['missing_payload'] else [{
+                'symbol': symbol, 'price': provider['price'], 'marketCap': 1_000_000_000,
+                'companyName': 'Fictional company', 'sector': 'Tech', 'country': 'US',
+                'exchange': 'NASDAQ', 'currency': 'USD',
+            }]
+        elif endpoint == 'stock-price-change':
+            payload = [dict(symbol=symbol, **{period: 0 for period in ('1D', '5D', '1M', '3M', '6M', '1Y', '3Y', '5Y')})]
+        else:
+            pytest.fail('Unexpected provider endpoint')
+        return HttpResponse(200, {}, json.dumps(payload).encode())
+
+    monkeypatch.setattr(utility_module, 'urlopen', lambda *a, **kw: pytest.fail('Legacy transport reached'))
+    monkeypatch.setattr(factory, 'UrllibHttpTransport', lambda: SimpleNamespace(get=transport))
     monkeypatch.setattr(factory, 'datetime', SimpleNamespace(now=lambda tz: datetime(2020, 1, 1, tzinfo=timezone.utc)))
     monkeypatch.setattr(factory.time, 'monotonic', lambda: 0.0)
     module = runpy.run_path(str(ROOT / request.param), run_name="ownership_test")
@@ -161,9 +160,10 @@ def test_refresh_missing_quote_replaces_return_and_display_preserves_state(cli, 
     assert item._snapshot.unrealized_return == Decimal("0.20")
     provider["price"] = None
     provider["missing_payload"] = missing_payload
+    before = (directory / module["WATCHLIST_FILE"]).read_bytes()
     result = CliRunner().invoke(module["app"], ["refresh"])
-    assert result.exit_code == 0, result.output
-    assert item.current_price == ("N/A" if missing_payload else None)
+    assert result.exit_code == (1 if missing_payload else 0), result.output
+    assert item.current_price is None
     assert item._snapshot.cost_basis == Decimal("25")
     assert item._snapshot.market_value is None and item._snapshot.unrealized_return is None
     assert item.total_return == "-"
@@ -171,14 +171,14 @@ def test_refresh_missing_quote_replaces_return_and_display_preserves_state(cli, 
     shown = CliRunner().invoke(module["app"], ["show-stocks"], terminal_width=300)
     assert shown.exit_code == 0, shown.output
     assert "AAPL" in shown.output
-    if missing_payload:
-        assert "N/A" in shown.output
     assert item._position is position and item._snapshot is snapshot
     restored = pickle.loads((directory / module["WATCHLIST_FILE"]).read_bytes()).stocks[0]
-    assert restored._position.quantity == Decimal("0.25") and restored.total_return == "-"
-    assert provider["calls"] == [
-        "search-symbol", "profile", "stock-price-change", "profile", "stock-price-change",
-    ]
+    assert restored._position.quantity == Decimal("0.25")
+    assert restored.total_return == ('20.0' if missing_payload else '-')
+    if missing_payload:
+        assert (directory / module["WATCHLIST_FILE"]).read_bytes() == before
+        assert 'Market data is unavailable.' in result.output
+    assert provider["calls"] == ['search-symbol', 'profile', 'stock-price-change', 'profile'] + ([] if missing_payload else ['stock-price-change'])
 
 
 def test_duplicate_and_remove_preserve_existing_behavior(cli):

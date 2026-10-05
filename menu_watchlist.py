@@ -6,6 +6,7 @@ import typer #CLI
 #OBJECTS 
 from stock import Stock
 from stock_tracker.domain import DomainValidationError
+from stock_tracker.exceptions import StockTrackerError
 from watch_list import Watch_list
 
 #helper functions
@@ -61,46 +62,33 @@ def validate_configuration(ctx: typer.Context):
 
 @app.command()
 def add_stock():
-    """
-    add a stock to the watchlist.
-    """
+    """add a stock to the watchlist."""
     stock_ticker = (typer.prompt("Enter stock ticker")).upper()
-    stock_valid = utility_module.check_ticker(stock_ticker, API_KEY)
-    
-    if not stock_valid: #if stock ticker is invalid
-        typer.echo("Invalid ticker. Try again.")
-    else:#if stock ticker is valid pass
-        
-        #check if this stock already exists if not create an instance of the object and fill it up with data
+    try:
+        stock_valid = utility_module.check_ticker(stock_ticker, API_KEY)
+        if not stock_valid:
+            typer.echo("Invalid ticker. Try again.")
+            return
         if current_watchlist.check_stock_existance(stock_ticker):
             typer.echo("Stock already exists in the watchlist.")
-        
-        else:
-            stock = Stock(stock_ticker, API_KEY)   
-            #gets stock info
-            stock.get_stock_info()
-            if stock.name == "N/A":
-                typer.echo("Warning: API request didn't retrieve any data. Make sure API key was correctly stored and run this command again.")
-            else:
-                stock.get_price_over_time()
-                
-                #loop to get user info on owned stocks
-                while True:
-                    try:
-                        stock_amount = typer.prompt("Enter amount of stocks owned")
-                        stock_cb = typer.prompt("Enter average cost per share of owned stocks")
-                        stock.set_owned_data(stock_amount, stock_cb)
-                        break
-                    except DomainValidationError as error:
-                        typer.echo(f"Invalid input. {error} Please try again.")
-                    
-                        
-                #record the stock instance into the watchlist
-                current_watchlist.add_stock(stock) 
-                
-                save_watchlist(current_watchlist)#updates the external file
-                
-                typer.echo("Succesfully added stock to watchlist.")
+            return
+        stock = Stock(stock_ticker, API_KEY)
+        stock.get_stock_info()
+        stock.get_price_over_time()
+        while True:
+            try:
+                stock_amount = typer.prompt("Enter amount of stocks owned")
+                stock_cb = typer.prompt("Enter average cost per share of owned stocks")
+                stock.set_owned_data(stock_amount, stock_cb)
+                break
+            except DomainValidationError as error:
+                typer.echo(f"Invalid input. {error} Please try again.")
+    except (StockTrackerError, ConfigurationError) as error:
+        typer.echo(str(error), err=True)
+        raise typer.Exit(code=1) from None
+    current_watchlist.add_stock(stock)
+    save_watchlist(current_watchlist)
+    typer.echo("Succesfully added stock to watchlist.")
  
 @app.command()  
 def remove_stock():
@@ -131,12 +119,15 @@ def show_stocks():
 
 @app.command()
 def refresh():
-    """
-    update stocks data to ensure accuracy and reflect the most current market information.
-    """
-    current_watchlist.refresh_stocks()
+    """update stocks data to ensure accuracy and reflect the most current market information."""
+    try:
+        current_watchlist.refresh_stocks()
+    except (StockTrackerError, ConfigurationError) as error:
+        typer.echo(str(error), err=True)
+        raise typer.Exit(code=1) from None
     typer.echo("Succesfully updated stocks data.")
     save_watchlist(current_watchlist)
+
        
 if __name__ == "__main__":
     app()
