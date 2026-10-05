@@ -1,6 +1,57 @@
 # M2 market-provider exit evidence
 
-## Current update — 2026-10-05
+## Completion review — 2026-10-05
+
+**M2 is implemented and achieved under AGENTS.md §10.7.** The
+[final issue #56 completion report](https://github.com/daniilnahl/Stock-Tracking-App/issues/56#issuecomment-5999403521)
+records no remaining M2 blocker. All ten required issues (#47, #48, #50–56 and
+#66) are closed after human merges of PR #57–65 and #67. At this completion
+snapshot, [milestone 3](https://github.com/daniilnahl/Stock-Tracking-App/milestone/3)
+is closed at 100%, with zero open and 20 closed items (issues and PRs).
+
+Completed implementation main is `5eccf3b24edbe03a6f01e86b9dfcffb80a1ad0c7`,
+the human merge of [PR #67](https://github.com/daniilnahl/Stock-Tracking-App/pull/67).
+Its exact reviewed implementation head is
+`a73b66135c3b85b1a68800407a4d5ed525bbd793`. The
+[exact-head PR Foundation run 37345838578](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/37345838578)
+and [post-merge main run 37346059176](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/37346059176)
+both passed **Tests (Python 3.11), Tests (Python 3.12), Ruff, Mypy (configuration)
+and Credential patterns**. The final closing audit passed **301 focused cases**;
+fresh main verification passed **1,334 full pytest cases**, Ruff and configured
+mypy for **one source file (`config.py`)**. These completed implementation checks
+are separate from this later documentation-only branch's pending PR/CI.
+
+| SRS §23 M2 deliverable / exit | Result and evidence | Issue / human-merged PR |
+| --- | --- | --- |
+| Create MarketDataProvider | PASS: provider/history protocols, pure contract/source/wheel probes | #47 / #57; #48 / #58 |
+| Implement FMP adapter | PASS: all four capabilities, precise parser/status/request-count matrices | #50 / #59; #51 / #60; #52 / #61; #53 / #62; #54 / #63 |
+| Add typed provider models | PASS: immutable Decimal/nullable/UTC models and safe typed errors | #48 / #58 |
+| Define timeout/retry/rate-limit policy | PASS: accepted ADR-0007 values, explicit factory and deterministic transport tests | #47 / #57; #50 / #59 |
+| Fix ticker validation | PASS: exact NASDAQ identities; ADR-0008 scoped no-match rejection; real wrapper/both CLI preservation tests; failures remain distinct | #54 / #63; #55 / #64; #66 / #67 |
+| Add mocked provider tests | PASS: offline adapter/facade/domain/CLI/error/security/source/wheel checks | #48/#50–55/#66 implementation PRs; #56 / #65 |
+| Application code no longer calls FMP directly | PASS: maintained callers delegate; controlled static violations, bounded legacy-helper exception, installed-wheel guards and exact request counts | #55 / #64; #56 / #65 |
+
+The full historical issue/PR and requirement/test maps remain below; the current
+final rows are **#56 / PR #65: closed after final exit review** and
+**#66 / PR #67: closed after human merge and passing main CI**. ADR-0008 replaces
+the earlier definitive unknown evidence gate only for scoped product invalidity.
+A completed schema-valid NASDAQ no-match rejects a new candidate without adding
+or saving; existing holdings remain intact. Malformed/duplicate identities,
+authentication/access/request/HTTP 404/rate-limit/timeout/outage errors retain
+their categories. Incomplete/truncated-search false negatives are an accepted
+limitation; no global nonexistence or API completeness is asserted.
+
+M3 persistence/pickle replacement, M4 genuine historical retrieval/corporate
+actions/synthetic-chart removal, M5 analytics and M6 broader CLI work remain
+later-milestone work outside M2; no required M2 deliverable is deferred.
+Historical interfaces are not implemented retrieval; configured mypy
+does not cover the whole application. No live key, account entitlement, search
+completeness or branch-protection enforcement was verified by this completion audit.
+
+## Historical #66 implementation update — 2026-10-05
+
+The following dated snapshots describe the then-pending state. They are
+superseded by the completion review above and preserved for traceability.
 
 The owner later instructed rejection/reporting of a stock not found through the
 FMP API. Approved [#66](https://github.com/daniilnahl/Stock-Tracking-App/issues/66),

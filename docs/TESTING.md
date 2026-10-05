@@ -573,3 +573,19 @@ issues are closed. The [post-merge Foundation run](https://github.com/daniilnahl
 passed Tests (Python 3.11), Tests (Python 3.12), Ruff, Mypy (configuration)
 and Credential patterns. This establishes M1 exit evidence without expanding
 configured mypy coverage or certifying later provider/persistence/history work.
+
+## M2 completion evidence — 2026-10-05
+
+The [M2 completion review](milestones/m2-exit-evidence.md#completion-review--2026-10-05)
+records 301 focused exit-audit cases, 1,334 full pytest cases, Ruff and configured
+mypy (one source file, `config.py`) passing on completed implementation main
+`5eccf3b24edbe03a6f01e86b9dfcffb80a1ad0c7`. Human-merged PR #67's
+[exact-head Foundation run](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/37345838578)
+and [post-merge main run](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/37346059176)
+passed all five checks. All ten required M2 issues and milestone 3 are closed.
+Source boundary violation controls, installed-wheel provider/facade probes,
+scoped no-match rejection and malformed/provider failure matrices establish
+M2 evidence using synthetic offline fixtures. This does not expand mypy scope,
+prove global ticker nonexistence/search completeness or certify later historical,
+persistence or analytics behavior. Current documentation-only verification is
+reported separately in its PR; earlier implementation runs are not its CI.

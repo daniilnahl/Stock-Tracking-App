@@ -1,6 +1,12 @@
 # M2 Market Data Layer implementation plan
 
-Status: **prior runtime/verification PRs merged; #66 scoped rejection in progress**.
+Status: **COMPLETE — implemented and verified on main, 2026-10-05**.
+All ten required issues (#47, #48, #50–56 and #66) are closed after human
+merges of PR #57–65 and #67. No M2 blocker remains. The
+[final completion report](https://github.com/daniilnahl/Stock-Tracking-App/issues/56#issuecomment-5999403521)
+and [exit evidence](m2-exit-evidence.md#completion-review--2026-10-05) record the
+six delivered objectives, passing boundary exit criterion and final checks.
+Milestone 3 is closed at 100%, with zero open and 20 closed items.
 The owner stated **"I approve A"** in the Codex milestone chat on **2026-10-04**,
 accepting [ADR-0007](../adr/0007-market-provider-contracts.md) exactly at
 `cf909dfc6c9766c440b1aeaf408d10c1f112e6a4`, while retaining the DATA-006
@@ -12,9 +18,8 @@ superseded for scoped product invalidity by the owner's later instruction,
 recorded in accepted [ADR-0008](../adr/0008-scoped-ticker-rejection.md) and
 [#66](https://github.com/daniilnahl/Stock-Tracking-App/issues/66). Snapshot 2026-10-05.
 Parent milestone: [M2 — Market Data Layer](https://github.com/daniilnahl/Stock-Tracking-App/milestone/3).
-The contract-acceptance gate is satisfied. Implementation remains subject to
-the dependency and review/publication gates below; this record neither closes
-issues nor declares runtime complete. No agent merge is authorized.
+The contract acceptance, implementation, human merge/main inclusion and final
+verification gates are satisfied. No agent merge is authorized.
 
 Planning baseline main was `788d3c4119e9ebb196256e9355f24ce8b31dc037`. M1 integration
 [#42](https://github.com/daniilnahl/Stock-Tracking-App/issues/42) is closed, with
@@ -23,11 +28,12 @@ passing all five checks. ADR-0005 pins/pip/Python 3.11/3.12 and ADR-0006 domain,
 facade/state contracts remain authoritative. Canonical checks are
 `python -m pytest`, `python -m ruff check .` and configured `python -m mypy`
 (config.py only). Apply [TESTING.md](../TESTING.md) offline/temp-state isolation.
-Current verified main is `22cc27c2c009231428c935fabaa352d52eabbcc0`, after
-human merge of PR #65. [Foundation run 37264563909](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/37264563909)
+Current verified main is `5eccf3b24edbe03a6f01e86b9dfcffb80a1ad0c7`, after
+human merge of PR #67. [Foundation run 37346059176](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/37346059176)
 passed all five checks. See [exit evidence](m2-exit-evidence.md) for the current
-requirement/test mapping and historical gate. #66's scoped rejection branch
-publication, exact-head CI, human merge/main CI and final #56 review remain pending.
+requirement/test mapping and historical gate. Final exit audit passed 301 focused
+cases; fresh full verification passed 1,334 tests, Ruff and configured mypy.
+This later documentation-only update has separate PR/CI publication gates.
 
 ## Live issue and dependency view
 
@@ -47,8 +53,8 @@ dispatch. PR/review cells describe observed state, not expected outcomes.
 | [#53](https://github.com/daniilnahl/Stock-Tracking-App/issues/53) | Typed provider period summaries | Closed; dependencies #47, #48, #50 satisfied; sequenced after #52 | Completed | [#62](https://github.com/daniilnahl/Stock-Tracking-App/pull/62) / human merged | None |
 | [#54](https://github.com/daniilnahl/Stock-Tracking-App/issues/54) | Exact-symbol validation and safe CSV behavior | Closed; dependencies #47, #48, #50, #52 satisfied | Completed | [#63](https://github.com/daniilnahl/Stock-Tracking-App/pull/63) / human merged | None |
 | [#55](https://github.com/daniilnahl/Stock-Tracking-App/issues/55) | Facade, both CLI and Watch_list provider integration | Closed; dependencies #47, #48, #50–54 satisfied | Completed | [#64](https://github.com/daniilnahl/Stock-Tracking-App/pull/64) / human merged | None |
-| [#56](https://github.com/daniilnahl/Stock-Tracking-App/issues/56) | M2 exit evidence and boundary verification | Open; verification portion merged; final review pending #66 | master reviews final exit | [#65](https://github.com/daniilnahl/Stock-Tracking-App/pull/65) / human merged, main CI passed | #66 implementation/human merge/main CI and final exit review |
-| [#66](https://github.com/daniilnahl/Stock-Tracking-App/issues/66) | Approved scoped no-match rejection | Open; ADR-0008 accepted; implementation and tests in task branch | m2_analysis; master and m2_review review | Publication / exact-head CI pending | Human merge/main CI; no agent merge |
+| [#56](https://github.com/daniilnahl/Stock-Tracking-App/issues/56) | M2 exit evidence and boundary verification | Closed; final exit review passed | Completed | [#65](https://github.com/daniilnahl/Stock-Tracking-App/pull/65) / human merged; final report after #67/main CI | None |
+| [#66](https://github.com/daniilnahl/Stock-Tracking-App/issues/66) | Approved scoped no-match rejection | Closed; ADR-0008 implemented on main | Completed | [#67](https://github.com/daniilnahl/Stock-Tracking-App/pull/67) / human merged, PR/main CI passed | None |
 
 One issue normally produces one isolated branch/worktree and PR. Do not dispatch
 blocked issues merely because scaffold edits seem additive. #51–54 share fmp.py
@@ -95,13 +101,13 @@ owner merges, issue closure and unresolved blockers. Green local tests alone do
 not establish milestone completion.
 
 The previous DATA-006 definitive unknown evidence gate is superseded by the
-explicitly accepted ADR-0008 supported-scope product rule. #66 must implement
-successful schema-valid no-match rejection, while preserving malformed and
-infrastructure errors, then receive human merge and passing main CI before
-final #56 exit review. A no-match still cannot certify global nonexistence.
-Acceptance alone does not establish implemented main behavior or M2 completion.
+explicitly accepted ADR-0008 supported-scope product rule. #66 implemented
+successful schema-valid no-match rejection and is now human
+merged, with passing exact-head/main CI and final #56 review. Malformed and
+infrastructure errors remain distinct. A no-match still cannot certify global
+nonexistence; completion relies on the approved scoped product interpretation.
 
-## Deferred scope and current blockers
+## Deferred scope and limitations
 
 M2 defines a separate historical protocol/PriceBar, not history retrieval,
 adjustment/return conventions or charts. M4 owns real history, cache and removal
@@ -113,9 +119,9 @@ CI architecture, SRS rewrite or financial formula is part of M2.
 
 The owner accepted ADR-0007's Stable endpoint switch, exact NASDAQ lookup
 limitations, missing/time/currency contracts, error/invalidation compatibility,
-CSV bypass and all reliability values. Public documentation does not
-prove current account entitlements, complete search or quote freshness; no key
-was tested. Any unverifiable external contract remains an explicit implementation
-blocker. **M2 is incomplete; #66 implementation publication/review, human merge,
-main CI and final #56 review remain pending.** #54's historical inconclusive
-contract is superseded only by the approved ADR-0008 scoped rejection rule.
+CSV bypass and all reliability values. Live-account entitlements, complete
+search and quote freshness are not certified by this offline completion
+evidence; no key was tested. **M2 is complete under its accepted scope,
+with no open blocker.**
+#54's historical inconclusive contract is superseded only by the approved
+ADR-0008 scoped rejection rule. Persistence/history/analytics remain later work.
