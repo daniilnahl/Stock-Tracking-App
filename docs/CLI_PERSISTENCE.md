@@ -8,6 +8,13 @@ Names, ordered entries, duplicate identities, exact ownership inputs, last
 observed quotes and display metadata persist. Saved quotes support offline
 display and do not imply freshness. Portfolios remain separate records.
 
+Percentage display metadata may contain empty or nonnumeric text. Empty/missing
+values and the existing dash/N/A sentinels display as `-`. Other nonnumeric
+metadata displays literally, with Rich markup escaped and no percentage suffix
+or numeric color classification. Numeric percentage strings retain their exact
+text and existing colors. This presentation behavior does not change saved
+metadata, holdings, or database state.
+
 Importing an entrypoint creates an empty in-memory `current_watchlist`; it does
 not load application state. Root and subcommand help never load storage or
 require a provider key. Command execution loads state lazily. Existing
