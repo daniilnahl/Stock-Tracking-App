@@ -3,7 +3,6 @@
 import io
 import logging
 from pathlib import Path
-import pickle
 import runpy
 from urllib.error import HTTPError, URLError
 
@@ -120,7 +119,7 @@ def test_successful_add_does_not_persist_configuration(script, monkeypatch, tmp_
     monkeypatch.setattr(Stock, "get_price_over_time", lambda stock: None)
     result = CliRunner().invoke(module["app"], ["add-stock"], input="aapl\n2\n5\n")
     assert result.exit_code == 0, result.output
-    saved = pickle.loads((tmp_path / module["WATCHLIST_FILE"]).read_bytes())
+    saved = module["load_watchlist"]()
     assert saved.stocks[0].ticker_symbol == "AAPL"
     assert saved.stocks[0].API_KEY == "synthetic-secret"  # Rebound from current runtime config.
     assert "API_KEY" not in saved.stocks[0].__getstate__()

@@ -222,11 +222,13 @@ unverified hints; check_ticker always performs exact supported provider lookup.
 Issue #7 coverage also rejects missing/blank keys before add/refresh work,
 checks the shared configuration representation and dotenv failure diagnostics,
 and captures HTTP/URL/JSON/unexpected request logs using synthetic credentials.
-Successful add coverage inspects only a pickle produced in its temporary path;
+Successful add coverage restores the real temporary SQLite namespace through
+the maintained CLI load surface and checks its database bytes;
 the shared Configuration object and runtime Stock.API_KEY are not persisted.
 Facade compatibility tests use trusted synthetic legacy state, discard saved keys,
 preserve numeric holdings and rebind current runtime configuration under ADR-0006.
-Unsafe existing pickle loading remains M3 work; no user-data migration is tested.
+Maintained CLIs no longer load/save pickle. Trusted synthetic facade compatibility
+tests retain their narrow pickle checks; no test reads real legacy user data.
 
 Test cases should cover:
 
@@ -278,6 +280,34 @@ initializes/reopens a temporary database with its own urllib/socket network guar
 The persistence contract probe continues to prohibit database IO during package
 imports. Repository/CLI restart and transfer/backup evidence remain later issues.
 See [Persistence operations](PERSISTENCE.md) for the single runner and its limits.
+
+## M3 CLI integration — issue #73
+
+Run `python -m pytest tests/test_cli_persistence.py tests/test_cli_ownership.py
+tests/test_configuration_security.py tests/test_provider_integration.py
+tests/test_baseline.py tests/test_fmp_configuration.py tests/test_packaging.py -v`
+as one command. Both root entrypoints use real temporary SQLite storage and
+controlled providers. Existing known values, high precision, prompt counts,
+unowned/missing quotes, provider call order and outage/no-match/abort byte
+preservation remain checked. Storage failures must exit nonzero without success
+messages; corruption/future schema/malformed records refuse empty replacement.
+
+Import and every root/subcommand help surface are tested with missing keys,
+synthetic legacy entries and corrupt state while database/pickle access and
+legacy inspection are denied. Empty local display creates no database. Legacy
+existence refuses absent-namespace load/save without opening contents; existing
+namespaces stay authoritative. Controlled dangling-directory-entry and OSError
+fixtures exercise existence-only protection without requiring OS symlink privileges.
+
+`cli_persistence_probe.py` executes independent write/read processes against
+source and the offline installed wheel with their own network/provider/pickle
+guards. It runs actual add/local-display flows, persists both namespaces,
+ordered duplicate and unowned entries, exact holdings and a separate Portfolio,
+then proves restart display with no key and original synthetic legacy files
+untouched. Fresh process paths are verified against source/wheel roots. Package
+contract import guards remain unchanged. See [CLI storage](CLI_PERSISTENCE.md).
+Milestone exit closure, neutral transfer and checked backup/restore remain separate
+evidence; these tests do not certify all M3 requirements.
 
 ---
 

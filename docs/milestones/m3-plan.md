@@ -1,7 +1,7 @@
 # M3 Persistence implementation plan
 
-Status: **contract accepted; #69/#70 merged; #71/#72 repositories in progress**.
-Snapshot: 2026-10-05. Implementation baseline main: 31a671a.
+Status: **contract accepted; #69–72 merged; #73/#74 implementation in progress**.
+Snapshot: 2026-10-05. Implementation baseline main: dcb9eea.
 Parent: [M3 — Persistence](https://github.com/daniilnahl/Stock-Tracking-App/milestone/4).
 [ADR-0009](../adr/0009-persistence-contracts.md) Option A was accepted by the
 owner's direct statement "Option A approved and PR merged" at exact commit
@@ -19,16 +19,17 @@ No agent merge is authorized; reviewed PRs require owner merge under AGENTS.md.
 
 Domain Stock, Position and Portfolio already exist and are isolated. Portfolio
 preserves any non-bool integer/None id and ordered duplicate Positions. The two
-root CLIs save separate cwd-relative pickle files and automatically load at
-import. Watch_list is a distinct ordered collection with display/orchestration;
+root CLIs at the implementation baseline save separate cwd-relative pickle files
+and automatically load at import; #73 replaces that IO behind command execution.
+Watch_list is a distinct ordered collection with display/orchestration;
 its unowned stock entries have no Position. Stock.__getstate__ excludes runtime
 keys and restoration recomputes derived return. M2 routes provider operations
 through typed interfaces; CSV is no longer validation evidence. Merged #69 adds
 persistence records, protocols and safe errors. Merged #70 supplies the schema/
-connection/runner; concrete repositories, CLI integration and transfer/backup
-utilities remain outstanding.
+connection/runner; merged #71/#72 add both concrete repositories and facade mapping.
+CLI integration and transfer/backup utilities are active draft work.
 
-PERS-001–007 runtime implementation and M3 restart behavior are outstanding;
+PERS-001–007 have partial implementation evidence; complete M3 exit remains open.
 PERS-008's decisions are accepted in ADR-0009. Decimal text avoids the
 unapproved financial quantization question. Watchlist/Portfolio distinction,
 namespaces, duplicates, missing quotes and ownership must survive restart; a
@@ -46,10 +47,10 @@ untouched; no safe-state test may read them.
 | [#68](https://github.com/daniilnahl/Stock-Tracking-App/issues/68) | Accepted persistence ADR and this issue map | Closed; contract gate satisfied | Completed | [#77](https://github.com/daniilnahl/Stock-Tracking-App/pull/77); owner merged/main CI passed | None |
 | [#69](https://github.com/daniilnahl/Stock-Tracking-App/issues/69) | Records, repository interfaces, errors, packaging | Closed; #68 satisfied | Completed | [#78](https://github.com/daniilnahl/Stock-Tracking-App/pull/78); Master review passed/owner merged/main CI passed | None |
 | [#70](https://github.com/daniilnahl/Stock-Tracking-App/issues/70) | SQLite connection/schema/migration runner | Closed; #68/#69 satisfied | Completed | [#79](https://github.com/daniilnahl/Stock-Tracking-App/pull/79); Master review passed/owner merged/main CI passed | None |
-| [#71](https://github.com/daniilnahl/Stock-Tracking-App/issues/71) | SQLite Portfolio repository | In progress; #68/#69/#70 satisfied | portfolio_repository | None; draft verification | Review/CI/owner merge |
-| [#72](https://github.com/daniilnahl/Stock-Tracking-App/issues/72) | Ordered watchlist repository and facade mapping | In progress; #68/#69/#70 satisfied | watchlist_repository; isolated worktree | None; draft verification | Review/CI/owner merge |
-| [#73](https://github.com/daniilnahl/Stock-Tracking-App/issues/73) | Both CLI storage integration | Open; #68, #72 | Unassigned | None | Watchlist implementation/approval |
-| [#74](https://github.com/daniilnahl/Stock-Tracking-App/issues/74) | Safe neutral transition, backup/restore, documentation | Open; #68, #70, #71, #72 | Unassigned | None | Approved transfer and repositories |
+| [#71](https://github.com/daniilnahl/Stock-Tracking-App/issues/71) | SQLite Portfolio repository | Closed; #68/#69/#70 satisfied | Completed | [#80](https://github.com/daniilnahl/Stock-Tracking-App/pull/80); Master review passed/owner merged/main CI passed | None |
+| [#72](https://github.com/daniilnahl/Stock-Tracking-App/issues/72) | Ordered watchlist repository and facade mapping | Closed; #68/#69/#70 satisfied | Completed | [#81](https://github.com/daniilnahl/Stock-Tracking-App/pull/81); Master review passed/owner merged/main CI passed | None |
+| [#73](https://github.com/daniilnahl/Stock-Tracking-App/issues/73) | Both CLI storage integration | In progress; #68/#72 satisfied | portfolio_repository | None; draft verification | Review/CI/owner merge |
+| [#74](https://github.com/daniilnahl/Stock-Tracking-App/issues/74) | Safe neutral transition, backup/restore, documentation | In progress; #68/#70/#71/#72 satisfied | transfer agent; isolated worktree | None; draft verification | Review/CI/owner merge |
 | [#75](https://github.com/daniilnahl/Stock-Tracking-App/issues/75) | Restart/installed-artifact verification and exit evidence | Open; #68–74 | Unassigned | None | All required implementation and owner merges |
 
 Implement #69 then #70. #71/#72 may run concurrently only in isolated branches
@@ -158,6 +159,27 @@ write/schema rollback. Independent source and installed-wheel write/read
 processes prove Portfolio restart without network or pickle access. Master
 review, staged hygiene, PR-head CI and owner merge remain publication gates;
 watchlist/CLI/transfer implementation and full M3 exit evidence remain separate.
+
+#71/#72 subsequently passed review/publication gates and are closed. Owner-merged
+[PR #80](https://github.com/daniilnahl/Stock-Tracking-App/pull/80) and
+[PR #81](https://github.com/daniilnahl/Stock-Tracking-App/pull/81) are included on
+main dcb9eea2b5e59cdf56ff89e543e89c86f60b0c80. All five checks passed in
+[post-merge Foundation run 37398264762](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/37398264762).
+#73/#74 now run independently in isolated branches against these stable contracts.
+
+#73 draft verification on Windows Python 3.11.9 in the existing pinned .venv:
+targeted CLI persistence/ownership/configuration/provider/baseline/FMP/packaging
+tests passed 297 cases in 24.77 seconds; `python -m pytest` passed 1,746 tests
+in 52.37 seconds. Ruff, configured mypy (config.py only), pip check and tracked
+diff checks passed. Real temporary SQLite CLI tests preserve exact holdings,
+provider sequence and committed bytes on abort/outage/no-match; storage errors
+are safe/nonzero and success follows commit. Every root/subcommand help bypasses
+state and key checks. Independent source/installed-wheel write/read probes
+exercise both namespaces and a separate Portfolio without network/pickle access.
+Legacy contents remain untouched and absent namespaces refuse unsafe replacement.
+See [CLI storage](../CLI_PERSISTENCE.md) and [testing policy](../TESTING.md).
+Master review, staged hygiene, PR-head CI and owner merge remain publication gates;
+transfer/backup and complete milestone exit evidence remain separate issues.
 
 #75 records all merged commits, required main CI and issue closure against the
 unchanged SRS exit criterion: **Application restart preserves portfolio state
