@@ -123,9 +123,9 @@ inspected legacy gaps are:
   failure return; CSV collections are unparameterized. M2 owns provider typing
   and error contracts, with no provider behavior changes in M0.
 - `menu_watchlist.py` and `daniils_stock_method.py`: untyped command functions
-  consume the legacy facade and `pickle.load` results. Ownership prompts delegate
-  validation to the domain; M3/M6 own persistence/presentation
-  migration. `test.py` remains a manual scratch script outside this baseline.
+  consume the legacy facade and SQLite-restored watchlists. Ownership prompts delegate
+  validation to the domain; configured mypy coverage still does not check
+  CLI/persistence modules. `test.py` remains a manual scratch script outside this baseline.
 
 Review evidence with `git ls-files '*.py'`, `git grep -n 'load_configuration'`,
 and the source links: [configuration](../config.py), [Stock](../stock.py),
@@ -278,7 +278,7 @@ changing existing bytes. Injected DDL/commit failures prove schema, version and
 rows roll back together and acquired connections close. Installed-wheel smoke
 initializes/reopens a temporary database with its own urllib/socket network guard.
 The persistence contract probe continues to prohibit database IO during package
-imports. Repository/CLI restart and transfer/backup evidence remain later issues.
+imports. Repository/CLI restart and transfer/backup have separate included tests.
 See [Persistence operations](PERSISTENCE.md) for the single runner and its limits.
 
 ## M3 CLI integration — issue #73
@@ -308,6 +308,27 @@ untouched. Fresh process paths are verified against source/wheel roots. Package
 contract import guards remain unchanged. See [CLI storage](CLI_PERSISTENCE.md).
 Milestone exit closure, neutral transfer and checked backup/restore remain separate
 evidence; these tests do not certify all M3 requirements.
+
+## M3 combined exit audit — issue #75
+
+`tests/test_persistence_exit.py` and the installed-wheel audit in
+`tests/test_packaging.py` launch the same independent-process helper,
+`persistence_exit_probe.py`. It combines strict neutral import of a nonempty
+precise Portfolio and both CLI namespaces, initial restart, checked backup,
+restore to a new directory and fresh offline CLI/repository reads. Child processes
+install and probe their own network/pickle/provider/legacy-content guards,
+clear provider keys, disable dotenv discovery and verify runtime import paths.
+Original JSON/database/opaque legacy fixtures are temporary and preserved.
+
+The initial 2026-10-06 audit found a valid empty percentage-metadata display
+regression. It was separately fixed in owner-merged PR #85 for #84; the
+post-merge main checks passed. The combined fixture retains the exact empty
+metadata and also verifies literal nonnumeric metadata, distinct exchanges and
+zero-cost owned state. See [M3 exit evidence](milestones/m3-exit-evidence.md)
+for current results, the historical failure, exact issue/PR/CI trace,
+requirement mapping and outstanding audit merge/closure gates. Existing repository,
+migration, transfer, precision and CLI failure matrices remain meaningful
+separate evidence; they do not replace the combined exit criterion.
 
 ---
 

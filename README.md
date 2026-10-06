@@ -77,8 +77,10 @@ python -m pip wheel . --no-deps --no-build-isolation --wheel-dir dist
 
 The wheel includes five flat modules (`stock`, `watch_list`, `menu_watchlist`,
 `daniils_stock_method`, `config`), `utils.utility_module`, and the
-`stock_tracker.domain` and `stock_tracker.compatibility` packages. It excludes
-tests, scratch scripts, CSV data and local state. CLI usage still requires the checkout.
+`stock_tracker.domain`, `stock_tracker.compatibility`, `stock_tracker.providers`
+and `stock_tracker.persistence` packages. It excludes
+tests, scratch scripts, CSV data and local state. No installed console-script entry
+point is configured; the documented direct script commands use the checkout.
 
 Ruff checks application code, tests and the scratch script using `E4`, `E7`,
 `E9` and `F`. Mypy runs in strict mode on **`config.py` only**, using the file
@@ -104,19 +106,22 @@ entry point. The unfinished evaluation method raises `NotImplementedError`.
 
 Reusable SQLite repositories and [safe neutral import/backup/restore utilities](docs/PERSISTENCE_TRANSFER.md)
 are available. The documented transition requires manual reviewed neutral JSON and
-preserves original files; it provides no pickle extraction. CLI storage replacement
-and legacy-file refusal are tracked separately in issue #73.
+preserves original files; it provides no pickle extraction. Both CLIs now use
+one cwd-relative `stock_tracker.sqlite3`, with independent namespaces and lazy
+restoration. Imports and root/subcommand help do not load state. Offline saved
+display needs no provider key; runtime credentials are never persisted.
 
-**Existing-state caveat:** both CLI modules load cwd-relative pickle state at
-import, including when displaying help (`watchlist.pkl` or
-`daniils_stock_methodd.pkl`). Pickle can execute code; never load an untrusted
-file. For verification of an existing installation, use the isolated tests
-above or a separate fresh checkout, rather than importing the CLI in a user-data
-directory. Do not inspect, delete, migrate or overwrite saved user files as part
-of setup. New facade state excludes runtime credentials; historical saved keys
-are ignored when restoring state and current configuration supplies the runtime
-binding. This does not migrate real user files or make pickle safe. Replacing
-pickle remains M3 work. Explicit legacy CSV helpers use paths relative to the
+**Existing-state transition:** if a SQLite namespace is absent and its original
+`watchlist.pkl` or `daniils_stock_methodd.pkl` directory entry exists, load/save
+refuses with guidance to preserve it and follow the documented manual neutral
+transition. Only existence is inspected; legacy contents are never deserialized,
+deleted or overwritten. An existing namespace is authoritative after an explicit
+reviewed import. Do not inspect or mutate real user files during setup/testing.
+See [CLI storage](docs/CLI_PERSISTENCE.md), [persistence operations](docs/PERSISTENCE.md)
+and [M3 audit evidence](docs/milestones/m3-exit-evidence.md) for behavior and closure
+status. Trusted synthetic facade compatibility retains isolated pickle tests;
+application storage and transfer do not use pickle.
+Explicit legacy CSV helpers use paths relative to the
 working directory. Ticker validation does not read or change CSV hints: it
 requires a unique exact NASDAQ provider match each time. A completed valid
 search without that match reports the new candidate as invalid and rejects it
@@ -127,7 +132,7 @@ Both CLIs render safe provider/configuration failures with exit code 1 and do
 not save a failed add or refresh. A failed profile/quote invalidates the current
 price in memory while preserving known metadata and holdings; a failed summary
 invalidates all summary fields. Earlier entries may already have refreshed when
-a later entry fails, but the saved file stays unchanged. Explicit null prices
+a later entry fails, but committed SQLite state stays unchanged. Explicit null prices
 are successful missing data, with unavailable return values rather than zero.
 
 ## Domain boundary and M1 status
@@ -148,7 +153,8 @@ are closed and the [post-merge Foundation run](https://github.com/daniilnahl/Sto
 passed all five checks. The [M1 completion review](docs/milestones/m1-exit-evidence.md#completion-review--2026-10-04)
 records source, tests, issue/PR reconciliation and local verification.
 GitHub's milestone container remains open with zero open issues at the review.
-Safe structured storage, real historical charts and CLI V2 remain later milestones.
+M3 implements structured storage separately; real historical charts and CLI V2
+remain later milestones.
 
 ## Market data layer and M2 status
 

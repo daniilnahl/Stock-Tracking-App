@@ -180,6 +180,25 @@ with ExitStack() as guards:
         assert cli.returncode == 0, cli.stderr
         assert cli.stdout == cli.stderr == ""
 
+    exit_original, exit_restored = tmp_path / "exit-original", tmp_path / "exit-restored"
+    exit_original.mkdir()
+    exit_restored.mkdir()
+    for directory in (exit_original, exit_restored):
+        for name in ("watchlist.pkl", "daniils_stock_methodd.pkl"):
+            (directory / name).write_bytes(b"opaque installed legacy fixture")
+    for mode, directory in (("prepare", exit_original), ("verify", exit_original),
+                            ("copy", exit_original), ("verify", exit_restored)):
+        audit = subprocess.run(
+            [sys.executable, "-I", str(ROOT / "tests" / "persistence_exit_probe.py"),
+             str(installed), str(installed), mode, str(exit_restored)],
+            cwd=directory, env=environment, capture_output=True, text=True,
+        )
+        assert audit.returncode == 0, audit.stderr
+        assert audit.stdout == audit.stderr == ""
+    for directory in (exit_original, exit_restored):
+        for name in ("watchlist.pkl", "daniils_stock_methodd.pkl"):
+            assert (directory / name).read_bytes() == b"opaque installed legacy fixture"
+
     provider = subprocess.run(
         [sys.executable, '-I', str(ROOT / 'tests' / 'provider_integration_probe.py'), str(installed)],
         cwd=tmp_path, env=dict(environment, MPLCONFIGDIR=str(tmp_path / 'provider-matplotlib'), MPLBACKEND='Agg'),
