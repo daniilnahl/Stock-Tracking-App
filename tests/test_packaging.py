@@ -48,6 +48,7 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
         "stock_tracker/compatibility/__init__.py", "stock_tracker/compatibility/numeric.py",
         "stock_tracker/compatibility/stock_operations.py",
         "stock_tracker/compatibility/watchlist_persistence.py",
+        "stock_tracker/compatibility/cli_persistence.py",
         "stock_tracker/compatibility/presentation.py",
         "stock_tracker/exceptions.py", "stock_tracker/providers/__init__.py",
         "stock_tracker/providers/models.py", "stock_tracker/providers/protocols.py",
@@ -152,6 +153,17 @@ with ExitStack() as guards:
         )
         assert portfolios.returncode == 0, portfolios.stderr
         assert portfolios.stdout == portfolios.stderr == ""
+
+    cli_directory = tmp_path / "installed-cli"
+    cli_directory.mkdir()
+    for mode in ("write", "read"):
+        cli = subprocess.run(
+            [sys.executable, "-I", str(ROOT / "tests" / "cli_persistence_probe.py"),
+             str(installed), str(installed), mode],
+            cwd=cli_directory, env=environment, capture_output=True, text=True,
+        )
+        assert cli.returncode == 0, cli.stderr
+        assert cli.stdout == cli.stderr == ""
 
     provider = subprocess.run(
         [sys.executable, '-I', str(ROOT / 'tests' / 'provider_integration_probe.py'), str(installed)],

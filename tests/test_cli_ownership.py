@@ -4,7 +4,6 @@ from decimal import Decimal
 from datetime import datetime, timezone
 import io
 import json
-import pickle
 import runpy
 from pathlib import Path
 from types import SimpleNamespace
@@ -69,9 +68,8 @@ def cli(request, monkeypatch, tmp_path):
     monkeypatch.setattr(factory, 'datetime', SimpleNamespace(now=lambda tz: datetime(2020, 1, 1, tzinfo=timezone.utc)))
     monkeypatch.setattr(factory.time, 'monotonic', lambda: 0.0)
     module = runpy.run_path(str(ROOT / request.param), run_name="ownership_test")
-    assert module["WATCHLIST_FILE"] == (
-        "watchlist.pkl" if request.param == "menu_watchlist.py" else "daniils_stock_methodd.pkl"
-    )
+    assert module["WATCHLIST_FILE"] == tmp_path / "stock_tracker.sqlite3"
+    assert module["WATCHLIST_NAMESPACE"] == request.param.removesuffix(".py")
     return module, provider, tmp_path
 
 
@@ -91,7 +89,7 @@ def test_add_preserves_high_precision_inputs_in_memory_and_saved_state(cli):
     assert item._position.quantity == Decimal(quantity)
     assert item._position.average_cost == Decimal(cost)
     encoded = (directory / module["WATCHLIST_FILE"]).read_bytes()
-    restored = pickle.loads(encoded).stocks[0]
+    restored = module["load_watchlist"]().stocks[0]
     assert restored._position.quantity == Decimal(quantity)
     assert restored._position.average_cost == Decimal(cost)
     assert b"synthetic-cli-runtime" not in encoded
@@ -135,7 +133,7 @@ def test_invalid_input_reprompts_then_saves_only_valid_pair(cli, field, invalid)
     item = module["current_watchlist"].stocks[0]
     assert (item._position.quantity, item._position.average_cost) == (Decimal("0.25"), Decimal("100"))
     assert item._snapshot.unrealized_return == Decimal("0.20")
-    restored = pickle.loads((directory / module["WATCHLIST_FILE"]).read_bytes())
+    restored = module["load_watchlist"]()
     assert restored.stocks[0].amount_owned == "0.25" and restored.stocks[0].cost_basis == "100"
     assert provider["calls"] == ["search-symbol", "profile", "stock-price-change"]
 
@@ -172,7 +170,7 @@ def test_refresh_missing_quote_replaces_return_and_display_preserves_state(cli, 
     assert shown.exit_code == 0, shown.output
     assert "AAPL" in shown.output
     assert item._position is position and item._snapshot is snapshot
-    restored = pickle.loads((directory / module["WATCHLIST_FILE"]).read_bytes()).stocks[0]
+    restored = module["load_watchlist"]().stocks[0]
     assert restored._position.quantity == Decimal("0.25")
     assert restored.total_return == ('20.0' if missing_payload else '-')
     if missing_payload:
@@ -193,7 +191,7 @@ def test_duplicate_and_remove_preserve_existing_behavior(cli):
     removed = CliRunner().invoke(module["app"], ["remove-stock"], input="aapl\n")
     assert removed.exit_code == 0
     assert module["current_watchlist"].stocks == []
-    assert pickle.loads((directory / module["WATCHLIST_FILE"]).read_bytes()).stocks == []
+    assert module["load_watchlist"]().stocks == []
 
 
 def test_exponent_inputs_reach_domain_without_float_roundtrip(cli):
@@ -216,7 +214,7 @@ def test_unowned_watchlist_entry_stays_unowned_through_display_and_save(cli):
     shown = CliRunner().invoke(module["app"], ["show-stocks"])
     assert shown.exit_code == 0, shown.output
     assert item._position is None
-    restored = pickle.loads((directory / module["WATCHLIST_FILE"]).read_bytes()).stocks[0]
+    restored = module["load_watchlist"]().stocks[0]
     assert restored._position is None and restored.cost_basis == "-"
 
 
