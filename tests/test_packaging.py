@@ -56,6 +56,7 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
         "stock_tracker/providers/factory.py",
         "stock_tracker/persistence/__init__.py", "stock_tracker/persistence/models.py",
         "stock_tracker/persistence/protocols.py",
+        "stock_tracker/persistence/transfer.py",
         "stock_tracker/persistence/sqlite_watchlists.py",
         "stock_tracker/persistence/connection.py", "stock_tracker/persistence/migrations.py",
         "stock_tracker/persistence/sqlite_portfolios.py",
@@ -132,7 +133,21 @@ with ExitStack() as guards:
     assert restored.stocks[0].amount_owned == '0.2500'
     assert restored.stocks[0].total_return == '20.0'
     assert fresh.get('daniils_stock_method') is None
-    for name in ('stock_tracker.persistence.migrations', 'stock_tracker.persistence.connection',
+    from stock_tracker.persistence.transfer import import_neutral_state, backup_database, restore_database
+    from stock_tracker.persistence.sqlite_portfolios import SQLitePortfolioRepository
+    import json
+    neutral = path.with_suffix('.json')
+    neutral.write_text(json.dumps({'format': 'stock-tracker-neutral', 'version': 1,
+        'portfolios': [{'id': '9', 'name': 'Transferred', 'positions': []}], 'watchlists': []}),
+        encoding='utf-8')
+    import_neutral_state(neutral, path)
+    backup = path.with_name('installed-backup.sqlite3')
+    restored_path = path.with_name('installed-restored.sqlite3')
+    backup_database(path, backup)
+    restore_database(backup, restored_path)
+    assert SQLitePortfolioRepository(restored_path).get(9).name == 'Transferred'
+    assert SQLiteWatchlistRepository(restored_path).get('menu_watchlist').name == 'Installed offline'
+    for name in ('stock_tracker.persistence.transfer', 'stock_tracker.persistence.migrations', 'stock_tracker.persistence.connection',
                  'stock_tracker.persistence.sqlite_watchlists',
                  'stock_tracker.compatibility.watchlist_persistence'):
         assert Path(sys.modules[name].__file__).resolve().is_relative_to(Path(sys.argv[1]).resolve())

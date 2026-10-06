@@ -86,7 +86,7 @@ revalidated before IO, including UTF-8 representability of bound text; values
 are never normalized or replaced to fit storage. Save/create failures roll back schema and rows together;
 failed creation can leave an empty file as documented above. Public methods own
 their transactions. Internal mapping helpers accept caller-owned connections
-for later neutral import and record validation; they do not commit transactions.
+for neutral import and record validation; they do not commit transactions.
 There is no quote/provider access, persisted runtime configuration or watchlist
 conversion. This repository adds no public CLI commands.
 
@@ -96,12 +96,14 @@ Internal `ensure_schema(connection)` and `validate_schema(connection)` require
 an active transaction with enforced foreign keys and never commit caller work.
 Writers use `transaction(connection, write=True)` (`BEGIN IMMEDIATE`); readers
 use `transaction(connection)` (`BEGIN`) for a stable snapshot. Nesting is rejected.
-Owned transactions roll back operation or commit failures. Future neutral import
-must initialize and insert on the same connection/transaction rather than call
+Owned transactions roll back operation or commit failures. Neutral import
+initializes and inserts on the same connection/transaction rather than calling
 the separately committing public runner.
 
 No upgrade beyond initial version 1 exists. Future upgrades require verified
 backup, data-preservation tests and documented before/after behavior. Issue #74
-owns safe neutral import and checked SQLite backup/restore to a new destination.
-Until implemented, no backup utility or legacy recovery method is available.
+implements strict neutral import and checked SQLite backup/restore to a new destination.
+See [safe transition and backup operations](PERSISTENCE_TRANSFER.md) for the exact
+JSON format, limits, collision/alias refusal, manual reconstruction limitations and
+owner restore procedure. CLI SQLite wiring and legacy-file refusal remain #73 work.
 Preserve original legacy files; never execute/deserialize them for migration.
