@@ -489,8 +489,12 @@ FC-010 still limits aggregation to one currency. The section 18 example gives
 `10 × 100 = 1000`, `10 × 120 = 1200`, `1200 - 1000 = 200`, and
 `200 / 1000 = 0.20` (20% at presentation).
 
-Exact quantization scale, rounding mode and field-specific persistence rules
-remain unapproved under FC-004 and section 19. Benchmark normalization and
+Exact quantization scale and rounding mode remain unapproved under FC-004 and
+section 19. Accepted ADR-0009 defines M3's field mappings as lossless Decimal
+text, preserving exponent/trailing-zero spelling without quantization; the
+[M3 completion evidence](milestones/m3-exit-evidence.md) verifies those mappings
+and restart recomputation. This implementation adds no financial rounding rule.
+Benchmark normalization and
 alignment, portfolio cash-flow methodology and risk conventions remain blocked
 under sections 12, 15, 16 and 19. Missing or zero-denominator cases not fully
 specified by this baseline require an approved definition before implementation;
@@ -501,6 +505,14 @@ positive portfolio value.
 ---
 
 # 21. Legacy Discrepancies and Milestone Ownership
+
+**M3 reconciliation (2026-10-06):** structured SQLite state now preserves exact
+Decimal holdings/quotes and zero/missing/unowned distinctions for Portfolio
+and both CLI namespaces. Imported/restored snapshots use the existing domain
+calculations; no derived return or runtime credential is stored. M3 also repairs
+display of accepted empty/literal percentage metadata without changing formulas.
+The table below remains a historical M0 snapshot, supplemented by M1 and M3
+evidence. Unapproved quantization and later financial conventions remain open.
 
 **M1 reconciliation (2026-10-04):** the table below preserves the M0 publication
 snapshot. M1 now supplies numeric domain Position/PositionSnapshot values and

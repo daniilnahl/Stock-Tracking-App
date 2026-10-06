@@ -2,6 +2,13 @@
 
 ## Status
 
+**Subsequent persistence completion (2026-10-06):** accepted ADR-0009 expressly
+extends this ADR's M1 legacy filename/pickle-IO preservation for maintained CLI
+storage. [M3 is complete](../milestones/m3-exit-evidence.md): SQLite namespaces
+replace application pickle IO, with lazy loading and preserved legacy files.
+The original accepted M1 contract and context below remain intact; their
+pickle-loading limitations describe that historical scope.
+
 **Accepted.** The repository owner accepted the complete proposal at commit
 `f4693ab` on **2026-10-03**, recorded in the
 [PR #37 acceptance comment](https://github.com/daniilnahl/Stock-Tracking-App/pull/37#issuecomment-5973462602).

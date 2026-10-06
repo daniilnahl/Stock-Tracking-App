@@ -1,5 +1,15 @@
 # Issue #3: owner credential-rotation attestation
 
+
+**Subsequent M3 update (2026-10-06):** [M3 completion evidence](../milestones/m3-exit-evidence.md) records
+closed milestone 4 and all nine required issues. Maintained CLIs now restore
+SQLite state lazily, without application pickle IO or persisted runtime keys;
+legacy files are preserved for manual reviewed neutral reconstruction. References
+below to unsafe pickle, credential-bearing state or future M3 work describe the
+original dated snapshot, not current behavior. Historical acceptance, verification
+and external credential-rotation attribution remain unchanged.
+
+
 Related issue: [#3](https://github.com/daniilnahl/Stock-Tracking-App/issues/3)
 
 Requirements: SEC-004 (rotate exposed secrets outside the codebase) and

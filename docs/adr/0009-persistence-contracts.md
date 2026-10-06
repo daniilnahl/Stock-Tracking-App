@@ -2,6 +2,12 @@
 
 ## Status
 
+**Implementation completed, 2026-10-06:** [M3 completion evidence](../milestones/m3-exit-evidence.md)
+records owner-merged PR #77–83/#85/#86, all nine required issues closed, passing
+final main CI and closed milestone 4. The status/proposal wording below records
+the accepted proposal and its original implementation boundaries; future-work
+phrases there are historical. Its accepted contract body is unchanged.
+
 **Accepted, 2026-10-05.** The owner stated **"Option A approved and PR merged"**
 in the Codex milestone chat, accepting Option A at exact reviewed commit
 `8e525177c7443fc92e1afc6b42e573ad3a3c43b2`, including the legacy filename/behavior

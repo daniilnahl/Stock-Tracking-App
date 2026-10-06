@@ -86,7 +86,9 @@ Ruff checks application code, tests and the scratch script using `E4`, `E7`,
 `E9` and `F`. Mypy runs in strict mode on **`config.py` only**, using the file
 scope in `pyproject.toml`; `mypy src/` is not the configured verification command.
 The [readiness decision](docs/TESTING.md#type-check-readiness-decision--issue-11)
-assigns remaining domain, provider, persistence and CLI typing to M1/M2/M3/M6.
+records the historical readiness decision. Completed M1–M3 implementation has
+not expanded configured type checking beyond `config.py`; wider typing remains
+separate follow-up work.
 
 ## CLI help and usage
 
@@ -236,6 +238,21 @@ and its completed state was reconciled after owner confirmation.
 is complete under `AGENTS.md` §10.7.
 The foundation does not complete the later domain, provider, persistence or
 financial milestones.
+
+## Persistence milestone status
+
+**M3 is COMPLETE as of 2026-10-06.** All nine required issues (#68–75 and #84)
+are closed after owner merges of PR #77–83, #85 and #86. Completed main is
+`534a178005a5dd5662ec0cb261cadaf3ce5f2888`; all five checks in the
+[post-merge Foundation run](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/37533716609)
+passed. [Milestone 4](https://github.com/daniilnahl/Stock-Tracking-App/milestone/4)
+is closed with zero open and nine closed issues. The
+[exit evidence](docs/milestones/m3-exit-evidence.md) records precise Portfolio
+and both CLI restart preservation, source/wheel offline checks, neutral import
+and checked backup/restore. Local full verification passed 1,850 tests; final
+merged-main persistence verification passed 498 tests. Storage remains cwd-local,
+schema version 1 and last-successful-save; manual legacy reconstruction preserves
+original files. Historical data, analytics and CLI V2 remain later milestones.
 
 ## Acknowledgments 
 - ### Financial Modeling Prep API

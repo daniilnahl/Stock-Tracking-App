@@ -1,5 +1,15 @@
 # M2 Market Data Layer implementation plan
 
+
+**Subsequent M3 update (2026-10-06):** [M3 completion evidence](m3-exit-evidence.md) records
+closed milestone 4 and all nine required issues. Maintained CLIs now restore
+SQLite state lazily, without application pickle IO or persisted runtime keys;
+legacy files are preserved for manual reviewed neutral reconstruction. References
+below to unsafe pickle, credential-bearing state or future M3 work describe the
+original dated snapshot, not current behavior. Historical acceptance, verification
+and external credential-rotation attribution remain unchanged.
+
+
 Status: **COMPLETE — implemented and verified on main, 2026-10-05**.
 All ten required issues (#47, #48, #50–56 and #66) are closed after human
 merges of PR #57–65 and #67. No M2 blocker remains. The

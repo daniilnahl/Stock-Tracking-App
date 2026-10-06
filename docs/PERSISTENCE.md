@@ -1,5 +1,9 @@
 # Persistence operations
 
+**M3 complete, 2026-10-06.** [Completion evidence](milestones/m3-exit-evidence.md)
+records all nine required issues closed, owner merges and passing final main CI.
+The operational contracts and limitations below remain those accepted in ADR-0009.
+
 The accepted [ADR-0009](adr/0009-persistence-contracts.md) defines M3's contracts.
 Issue #70 supplies the connection boundary and initial schema. Issue #71 adds
 the Portfolio repository. Merged #72–74 supply the independent watchlist repository,
@@ -108,5 +112,5 @@ JSON format, limits, collision/alias refusal, manual reconstruction limitations 
 owner restore procedure. [CLI storage](CLI_PERSISTENCE.md) documents the included
 SQLite wiring, independent namespaces, lazy state loading and existence-only
 legacy refusal. [M3 audit evidence](milestones/m3-exit-evidence.md) records
-verification and outstanding closure gates.
+verification and completed closure gates.
 Preserve original legacy files; never execute/deserialize them for migration.

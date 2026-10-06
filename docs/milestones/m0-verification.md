@@ -1,5 +1,15 @@
 # Milestone 0 verification record
 
+
+**Subsequent M3 update (2026-10-06):** [M3 completion evidence](m3-exit-evidence.md) records
+closed milestone 4 and all nine required issues. Maintained CLIs now restore
+SQLite state lazily, without application pickle IO or persisted runtime keys;
+legacy files are preserved for manual reviewed neutral reconstruction. References
+below to unsafe pickle, credential-bearing state or future M3 work describe the
+original dated snapshot, not current behavior. Historical acceptance, verification
+and external credential-rotation attribution remain unchanged.
+
+
 Review date: 2026-10-03 (America/Los_Angeles).
 Audited main commit: `e0bbeb1b743405a5019e11d55eaea7577aa03977` (merged PR #35).
 Parent milestone: [M0 — Security & Foundation](https://github.com/daniilnahl/Stock-Tracking-App/milestone/1).

@@ -819,6 +819,16 @@ Application code no longer calls FMP directly.
 
 ## Milestone 3 — Persistence
 
+**Completion review (2026-10-06; status note only):** M3 is complete under
+`AGENTS.md` §10.7 at `534a178005a5dd5662ec0cb261cadaf3ce5f2888` on `main`,
+after owner merge of PR #86. All nine required issues (#68–75 and #84) are
+closed; milestone 4 is closed with zero open and nine closed issues. All five
+post-merge Foundation checks passed. The
+[completion evidence](docs/milestones/m3-exit-evidence.md) records all seven
+deliverables, exact Decimal state, source/installed-wheel restart without
+application pickle storage and checked import/backup/new-destination restore
+under accepted ADR-0009. This note changes no requirement or exit criterion.
+
 - Approve persistence ADR.
 - Design schema.
 - Implement repository interfaces.

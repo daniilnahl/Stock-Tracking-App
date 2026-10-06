@@ -1,7 +1,7 @@
 # M3 Persistence implementation plan
 
-Status: **#68–74/#84 closed/owner-merged; #75 final exit audit in progress**.
-Snapshot: 2026-10-06. Implementation baseline main: f690ddb.
+Status: **COMPLETE — all nine required issues closed and owner-merged**.
+Snapshot: 2026-10-06. Completed main: 534a178005a5dd5662ec0cb261cadaf3ce5f2888.
 Parent: [M3 — Persistence](https://github.com/daniilnahl/Stock-Tracking-App/milestone/4).
 [ADR-0009](../adr/0009-persistence-contracts.md) Option A was accepted by the
 owner's direct statement "Option A approved and PR merged" at exact commit
@@ -11,8 +11,10 @@ that comment is a faithful record, not independently human-authored approval.
 Owner-merged [PR #77](https://github.com/daniilnahl/Stock-Tracking-App/pull/77)
 reached main at 48944f98938639628cfe216d4d0bc6883f0f5f26 with all five required checks
 passing in [Foundation](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/37351164698).
-The SRS §23 contract gate is satisfied; downstream implementation dependencies
-and owner merges remain required. Acceptance is not M3 runtime completion.
+The SRS §23 contract and runtime completion gates are satisfied; all downstream
+dependencies and owner merges are included. [Exit evidence](m3-exit-evidence.md)
+and the [completion record](https://github.com/daniilnahl/Stock-Tracking-App/issues/75#issuecomment-6025782936)
+record final CI, verification and closed milestone 4 (zero open, nine closed issues).
 No agent merge is authorized; reviewed PRs require owner merge under AGENTS.md.
 
 ## Repository analysis
@@ -31,7 +33,7 @@ Merged #73/#74 add CLI integration and strict neutral import/checked backup/rest
 The initial combined #75 audit exposed a valid display-metadata regression;
 merged #84 repairs it without changing accepted storage or financial semantics.
 
-PERS-001–007 have partial implementation evidence; complete M3 exit remains open.
+PERS-001–007 and the complete M3 restart exit have passing implementation evidence.
 PERS-008's decisions are accepted in ADR-0009. Decimal text avoids the
 unapproved financial quantization question. Watchlist/Portfolio distinction,
 namespaces, duplicates, missing quotes and ownership must survive restart; a
@@ -54,9 +56,9 @@ untouched; no safe-state test may read them.
 | [#73](https://github.com/daniilnahl/Stock-Tracking-App/issues/73) | Both CLI storage integration | Closed; #68/#72 satisfied | Completed | [#82](https://github.com/daniilnahl/Stock-Tracking-App/pull/82); owner merged/main CI passed | None |
 | [#74](https://github.com/daniilnahl/Stock-Tracking-App/issues/74) | Safe neutral transition, backup/restore, documentation | Closed; #68/#70/#71/#72 satisfied | Completed | [#83](https://github.com/daniilnahl/Stock-Tracking-App/pull/83); owner merged/main CI passed | None |
 | [#84](https://github.com/daniilnahl/Stock-Tracking-App/issues/84) | Render accepted empty/literal percentage metadata | Closed; found by #75 audit | Completed | [#85](https://github.com/daniilnahl/Stock-Tracking-App/pull/85); owner merged/main CI passed | None |
-| [#75](https://github.com/daniilnahl/Stock-Tracking-App/issues/75) | Restart/installed-artifact verification and exit evidence | In progress; #68–74/#84 satisfied | portfolio_repository; independent Master/reviewer audit | None; final combined tests/evidence | Audit review/CI/owner merge/final closure gates |
+| [#75](https://github.com/daniilnahl/Stock-Tracking-App/issues/75) | Restart/installed-artifact verification and exit evidence | Closed; #68–74/#84 satisfied | Completed; independent Master/reviewer audit | [#86](https://github.com/daniilnahl/Stock-Tracking-App/pull/86); owner merged/main CI passed | None |
 
-Implement #69 then #70. #71/#72 may run concurrently only in isolated branches
+Historical dependency plan (all work below is now completed): implement #69 then #70. #71/#72 may run concurrently only in isolated branches
 after interfaces/schema stabilize, with non-overlapping implementation modules.
 #73 waits for #72. #74 needs both repositories and must avoid changing their
 contracts implicitly. Each issue owns its own tests; #75 does not defer testing.
@@ -85,7 +87,7 @@ src/stock_tracker/domain/{stock,position,portfolio,calculations}.py;
 compatibility/numeric.py; config.py; pyproject.toml and stock_tracker.exceptions.
 Root CLI signatures remain reviewable; no public domain redesign is needed.
 
-Existing tests requiring deliberate integration updates: test_cli_ownership.py,
+Historical integration inventory, now implemented: test_cli_ownership.py,
 test_configuration_security.py, test_provider_integration.py, test_baseline.py,
 test_fmp_configuration.py and test_packaging.py. They assert exact legacy paths,
 pickle bytes/decoding and empty-state no-write behavior. Update storage-specific
@@ -111,6 +113,12 @@ Mypy currently checks config.py only; do not imply src/ is checked or silently
 expand scope. Preserve pip/setuptools and Python 3.11/3.12. Report exact unavailable
 tools/environment failures, never substitute a toolchain or invent pass results.
 Inspect diffs, secrets/generated artifacts, scope and CI before PR publication.
+
+### Historical implementation verification
+
+The following draft snapshots describe each issue's verification at that time.
+Their pending publication gates and partial behavior claims are superseded by
+the final completion record below; they do not describe current blockers.
 
 Historical Master verification for the #68 documentation proposal on Windows Python 3.11.9 in
 the pinned .venv: python -m pip check passed; targeted baseline/packaging/hygiene
@@ -197,7 +205,7 @@ preserved. Separately scoped #84 was repaired in owner-merged
 f690ddb6ca2f118abb8aafda93c2a511e29538e5. All five checks passed in
 [Foundation run 37512406525](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/37512406525),
 unblocking final audit verification. [M3 exit evidence](m3-exit-evidence.md) maps requirements,
-implementation merge commits, known limits and pending final closure gates.
+implementation merge commits, known limits and completed closure gates.
 
 #75 final local verification on the repaired baseline: combined source/wheel
 checks passed 3 tests in 23.21 seconds (independent rerun: 3 in 22.46 seconds);
@@ -205,7 +213,13 @@ broader M3 targeted checks passed 498 in 35.69 seconds; full pytest passed
 1,850 in 55.56 seconds. Ruff, configured config.py-only mypy, pip check and diff
 check passed. Exact commands are in the exit evidence. Master staged hygiene
 passed 8 tests; Master and independent review passed with no unresolved findings.
-Audit PR CI, owner merge, final main CI and closure remain pending.
+These publication gates subsequently passed: owner-merged PR #86 reached main
+at 534a178005a5dd5662ec0cb261cadaf3ce5f2888. All five checks in
+[Foundation run 37533716609](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/37533716609)
+passed. The reviewed head and merged main have identical tree
+03febb29876f8cbdef4319d359d39faf01c1c03e. Final merged-main targeted verification
+passed 498 tests in 43.45 seconds; all nine required issues and milestone 4 are
+closed, with no remaining M3 blocker or deferred requirement.
 
 #75 records all merged commits, required main CI and issue closure against the
 unchanged SRS exit criterion: **Application restart preserves portfolio state
