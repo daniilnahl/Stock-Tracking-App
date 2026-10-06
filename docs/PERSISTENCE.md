@@ -1,8 +1,9 @@
 # Persistence operations
 
 The accepted [ADR-0009](adr/0009-persistence-contracts.md) defines M3's contracts.
-Issue #70 supplies the connection boundary and initial schema. Repositories,
-CLI integration and transfer/backup utilities remain separate issues. Existing
+Issue #70 supplies the connection boundary and initial schema. Issue #71 adds
+the Portfolio repository; the watchlist repository, CLI integration and
+transfer/backup utilities remain separate issues. Existing
 CLIs still use legacy storage until integration; initialization does not convert it.
 
 ## Location and explicit initialization
@@ -48,6 +49,46 @@ yields absence without creating state. Missing parents and SQLite/filesystem
 failures raise fixed safe errors. Reads cannot silently upgrade old versions.
 Connections close on success/failure; programming exceptions propagate.
 Package/record imports perform no database IO.
+
+## Portfolio repository
+
+Import the concrete implementation explicitly; package imports remain IO-free:
+
+```python
+from pathlib import Path
+from stock_tracker.domain import Portfolio
+from stock_tracker.persistence.sqlite_portfolios import SQLitePortfolioRepository
+
+repository = SQLitePortfolioRepository(Path('stock_tracker.sqlite3'))
+# Construction performs no IO. This explicit write creates an empty Portfolio.
+created = repository.create(Portfolio(None, 'Example'))
+saved = repository.get(created.id)
+```
+
+Each operation closes its connections. Reads validate schema and all requested
+parent/child rows in one snapshot. `get` returns `None` for absence; `list` returns
+fresh Portfolios in numeric ID order. Positions preserve order, duplicate symbols,
+exact exchange/name metadata and lossless Decimal text, without quantization.
+Malformed requested rows, including orphan positions, raise `PersistenceDataError`
+instead of returning a partial aggregate/list.
+
+`create` preserves an unused explicit integer ID, including negative/zero IDs
+and IDs exceeding 4,300 digits; a collision raises `PersistenceConflictError`.
+With `id=None`, it allocates `max(0, existing IDs) + 1` under `BEGIN IMMEDIATE`
+and returns a fresh Portfolio without changing the caller. Deleted IDs may be
+reused. `save` requires an existing non-None ID and replaces its complete
+name/ordered positions atomically; absence raises `PersistenceNotFoundError`.
+`delete(id)` returns whether that aggregate existed and cascades only its children.
+It does not create storage when the database is absent.
+
+Complete mutable Portfolio candidates and nested Stock/Position inputs are
+revalidated before IO, including UTF-8 representability of bound text; values
+are never normalized or replaced to fit storage. Save/create failures roll back schema and rows together;
+failed creation can leave an empty file as documented above. Public methods own
+their transactions. Internal mapping helpers accept caller-owned connections
+for later neutral import and record validation; they do not commit transactions.
+There is no quote/provider access, persisted runtime configuration or watchlist
+conversion. This repository adds no public CLI commands.
 
 ## Caller-owned transactions and future upgrades
 

@@ -1,7 +1,7 @@
 # M3 Persistence implementation plan
 
-Status: **contract accepted; #69 merged; #70 schema/migration implementation in progress**.
-Snapshot: 2026-10-05. Implementation baseline main: c32cc4a.
+Status: **contract accepted; #69/#70 merged; #71/#72 repositories in progress**.
+Snapshot: 2026-10-05. Implementation baseline main: 31a671a.
 Parent: [M3 — Persistence](https://github.com/daniilnahl/Stock-Tracking-App/milestone/4).
 [ADR-0009](../adr/0009-persistence-contracts.md) Option A was accepted by the
 owner's direct statement "Option A approved and PR merged" at exact commit
@@ -24,7 +24,7 @@ import. Watch_list is a distinct ordered collection with display/orchestration;
 its unowned stock entries have no Position. Stock.__getstate__ excludes runtime
 keys and restoration recomputes derived return. M2 routes provider operations
 through typed interfaces; CSV is no longer validation evidence. Merged #69 adds
-persistence records, protocols and safe errors. #70 supplies the draft schema/
+persistence records, protocols and safe errors. Merged #70 supplies the schema/
 connection/runner; concrete repositories, CLI integration and transfer/backup
 utilities remain outstanding.
 
@@ -45,9 +45,9 @@ untouched; no safe-state test may read them.
 | --- | --- | --- | --- | --- | --- |
 | [#68](https://github.com/daniilnahl/Stock-Tracking-App/issues/68) | Accepted persistence ADR and this issue map | Closed; contract gate satisfied | Completed | [#77](https://github.com/daniilnahl/Stock-Tracking-App/pull/77); owner merged/main CI passed | None |
 | [#69](https://github.com/daniilnahl/Stock-Tracking-App/issues/69) | Records, repository interfaces, errors, packaging | Closed; #68 satisfied | Completed | [#78](https://github.com/daniilnahl/Stock-Tracking-App/pull/78); Master review passed/owner merged/main CI passed | None |
-| [#70](https://github.com/daniilnahl/Stock-Tracking-App/issues/70) | SQLite connection/schema/migration runner | In progress; #68/#69 satisfied | sqlite_implementation; Master/independent review | None; draft verification | Review/CI/owner merge |
-| [#71](https://github.com/daniilnahl/Stock-Tracking-App/issues/71) | SQLite Portfolio repository | Open; #68, #69, #70 | Unassigned | None | Stable schema/interfaces |
-| [#72](https://github.com/daniilnahl/Stock-Tracking-App/issues/72) | Ordered watchlist repository and facade mapping | Open; #68, #69, #70 | Unassigned | None | Stable schema/interfaces |
+| [#70](https://github.com/daniilnahl/Stock-Tracking-App/issues/70) | SQLite connection/schema/migration runner | Closed; #68/#69 satisfied | Completed | [#79](https://github.com/daniilnahl/Stock-Tracking-App/pull/79); Master review passed/owner merged/main CI passed | None |
+| [#71](https://github.com/daniilnahl/Stock-Tracking-App/issues/71) | SQLite Portfolio repository | In progress; #68/#69/#70 satisfied | portfolio_repository | None; draft verification | Review/CI/owner merge |
+| [#72](https://github.com/daniilnahl/Stock-Tracking-App/issues/72) | Ordered watchlist repository and facade mapping | In progress; #68/#69/#70 satisfied | watchlist_repository; isolated worktree | None; draft verification | Review/CI/owner merge |
 | [#73](https://github.com/daniilnahl/Stock-Tracking-App/issues/73) | Both CLI storage integration | Open; #68, #72 | Unassigned | None | Watchlist implementation/approval |
 | [#74](https://github.com/daniilnahl/Stock-Tracking-App/issues/74) | Safe neutral transition, backup/restore, documentation | Open; #68, #70, #71, #72 | Unassigned | None | Approved transfer and repositories |
 | [#75](https://github.com/daniilnahl/Stock-Tracking-App/issues/75) | Restart/installed-artifact verification and exit evidence | Open; #68–74 | Unassigned | None | All required implementation and owner merges |
@@ -128,7 +128,7 @@ schema, CLI storage, neutral transfer, backup or M3 restart behavior. Independen
 review and PR-head CI/owner merge subsequently passed: [PR #78](https://github.com/daniilnahl/Stock-Tracking-App/pull/78)
 is owner-merged on main c32cc4a977b9c6436805ddcb68de31b6171e802c, and all five
 required checks passed in [Foundation run 37359918390](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/37359918390).
-#69 is closed. #70 is the active prerequisite for #71/#72.
+#69 is closed. #70's merge and main CI subsequently resolved the repository prerequisite.
 
 #70 draft verification on Windows Python 3.11.9 in the existing pinned .venv:
 python -m pytest tests/test_sqlite_migrations.py tests/test_packaging.py -q
@@ -138,9 +138,26 @@ configured config.py-only scope; python -m pip check passed. Exact schema,
 foreign keys, unsupported-schema byte preservation, transaction rollback and
 installed-wheel initialization are covered in isolated temporary storage.
 Git diff --check and SQLite/sidecar ignore checks passed. Master/independent
-review, staged hygiene, PR-head CI and owner merge remain publication gates.
+review and publication gates subsequently passed. Owner-merged
+[PR #79](https://github.com/daniilnahl/Stock-Tracking-App/pull/79) is included on
+main at 31a671acd31c9dd5c46f8111d4f3d9cde3ec6c88; all five checks passed in
+[post-merge Foundation run 37394995033](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/37394995033).
+#70 is closed; #71/#72 run independently against these stable contracts.
 Operational runner documentation is in [Persistence operations](../PERSISTENCE.md).
 This implements schema infrastructure, not M3's repository/CLI restart exit.
+
+#71 draft verification on Windows Python 3.11.9 in the existing pinned .venv:
+`python -m pytest tests/test_sqlite_portfolios.py tests/test_packaging.py -q`
+passed 66 tests in 13.34 seconds; `python -m pytest` passed 1,642 tests in
+38.29 seconds. `python -m ruff check .`, configured `python -m mypy`
+(config.py only), and `python -m pip check` passed. Real temporary databases
+cover complete CRUD, exact Decimal spelling and ordered duplicates, canonical
+IDs above 4,300 digits, allocation/collisions, cascade, malformed rows/orphans,
+whole-result refusal, candidate validation before IO, snapshot consistency and
+write/schema rollback. Independent source and installed-wheel write/read
+processes prove Portfolio restart without network or pickle access. Master
+review, staged hygiene, PR-head CI and owner merge remain publication gates;
+watchlist/CLI/transfer implementation and full M3 exit evidence remain separate.
 
 #75 records all merged commits, required main CI and issue closure against the
 unchanged SRS exit criterion: **Application restart preserves portfolio state

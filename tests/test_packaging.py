@@ -55,6 +55,7 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
         "stock_tracker/persistence/__init__.py", "stock_tracker/persistence/models.py",
         "stock_tracker/persistence/protocols.py",
         "stock_tracker/persistence/connection.py", "stock_tracker/persistence/migrations.py",
+        "stock_tracker/persistence/sqlite_portfolios.py",
     }
 
     installed = tmp_path / "installed"
@@ -125,6 +126,15 @@ with ExitStack() as guards:
     )
     assert migration.returncode == 0, migration.stderr
     assert migration.stdout == migration.stderr == ""
+
+    for mode in ("write", "read"):
+        portfolios = subprocess.run(
+            [sys.executable, "-I", str(ROOT / "tests" / "portfolio_repository_probe.py"),
+             str(installed), str(tmp_path / "installed-portfolios.sqlite3"), mode],
+            cwd=tmp_path, env=environment, capture_output=True, text=True,
+        )
+        assert portfolios.returncode == 0, portfolios.stderr
+        assert portfolios.stdout == portfolios.stderr == ""
 
     provider = subprocess.run(
         [sys.executable, '-I', str(ROOT / 'tests' / 'provider_integration_probe.py'), str(installed)],
