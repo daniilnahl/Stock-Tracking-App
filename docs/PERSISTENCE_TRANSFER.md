@@ -111,8 +111,8 @@ merges existing records. A collision or failed write leaves existing committed
 schema/rows unchanged. JSON source and legacy files stay untouched. A failed
 first write may leave an empty version-zero file; the standard migration rule
 can initialize an empty file later. No automatic deletion/recovery is performed.
-An imported namespace is authoritative once later CLI integration is included;
-its preserved legacy file does not then block that namespace.
+An imported namespace is authoritative for the included CLI integration;
+its preserved legacy file does not block that namespace.
 
 ## Backup and restore
 
@@ -145,7 +145,7 @@ No existing/source file is deleted or overwritten as recovery.
 
 Before selecting restored state, stop application processes. Create/select an
 empty new directory yourself, restore to its new `stock_tracker.sqlite3`, verify
-it offline, then launch the existing application with that directory as cwd once
+it offline, then launch the existing application with that directory as cwd.
 SQLite CLI integration is included. Keep the old directory/database untouched.
 Never replace an active database in place. The owner chooses access-controlled
 backup storage and retention; no encryption, scheduling or automatic relocation
@@ -157,4 +157,6 @@ Tests use fictional neutral/opaque legacy fixtures and temporary SQLite only,
 including exact limits, aliases, collisions, partial rollback, active WAL,
 concurrent consistent snapshot, complete record validation and copy failures.
 Installed-wheel smoke imports/copies/restores temporary state with transport
-guards. Complete CLI restart and milestone verification remain #73/#75 work.
+guards. [CLI storage](CLI_PERSISTENCE.md) describes merged #73 behavior;
+[M3 audit evidence](milestones/m3-exit-evidence.md) records combined source/wheel
+restart through neutral import, backup and restoration plus final closure gates.

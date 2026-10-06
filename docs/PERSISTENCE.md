@@ -2,13 +2,13 @@
 
 The accepted [ADR-0009](adr/0009-persistence-contracts.md) defines M3's contracts.
 Issue #70 supplies the connection boundary and initial schema. Issue #71 adds
-the Portfolio repository; the watchlist repository, CLI integration and
-transfer/backup utilities remain separate issues. Existing
-CLIs still use legacy storage until integration; initialization does not convert it.
+the Portfolio repository. Merged #72–74 supply the independent watchlist repository,
+offline facade mapping, both existing CLI flows and strict neutral import/checked
+backup/restore. Initialization alone does not recover legacy contents.
 
 ## Location and explicit initialization
 
-CLI composition will select `Path.cwd() / 'stock_tracker.sqlite3'`. Infrastructure
+CLI composition selects `Path.cwd() / 'stock_tracker.sqlite3'` once per process. Infrastructure
 functions receive an explicit `pathlib.Path`; there is no environment override,
 home fallback or automatic parent-directory creation. Local `.sqlite3` files and
 their journal/WAL/shared-memory sidecars are ignored by Git.
@@ -105,5 +105,8 @@ backup, data-preservation tests and documented before/after behavior. Issue #74
 implements strict neutral import and checked SQLite backup/restore to a new destination.
 See [safe transition and backup operations](PERSISTENCE_TRANSFER.md) for the exact
 JSON format, limits, collision/alias refusal, manual reconstruction limitations and
-owner restore procedure. CLI SQLite wiring and legacy-file refusal remain #73 work.
+owner restore procedure. [CLI storage](CLI_PERSISTENCE.md) documents the included
+SQLite wiring, independent namespaces, lazy state loading and existence-only
+legacy refusal. [M3 audit evidence](milestones/m3-exit-evidence.md) records
+verification and outstanding closure gates.
 Preserve original legacy files; never execute/deserialize them for migration.
