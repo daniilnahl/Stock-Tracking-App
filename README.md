@@ -102,6 +102,11 @@ Help and saved-data commands do not require a key. The alternate Typer app in
 `daniils_stock_method.py` is covered by the offline help tests; it has no script
 entry point. The unfinished evaluation method raises `NotImplementedError`.
 
+Reusable SQLite repositories and [safe neutral import/backup/restore utilities](docs/PERSISTENCE_TRANSFER.md)
+are available. The documented transition requires manual reviewed neutral JSON and
+preserves original files; it provides no pickle extraction. CLI storage replacement
+and legacy-file refusal are tracked separately in issue #73.
+
 **Existing-state caveat:** both CLI modules load cwd-relative pickle state at
 import, including when displaying help (`watchlist.pkl` or
 `daniils_stock_methodd.pkl`). Pickle can execute code; never load an untrusted
