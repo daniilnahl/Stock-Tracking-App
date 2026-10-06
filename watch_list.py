@@ -1,6 +1,7 @@
 #CLASS FOR A WATCH LIST
 from dataclasses import dataclass, field
 from rich.console import Console
+from rich.markup import escape
 from rich.table import Table
 
 @dataclass
@@ -120,17 +121,23 @@ class Watch_list:
     
     def wrap_percent(percent):
         """
-        Wraps a percent variable into a specific color based on its float value and adds a percent sign at the end.
+        Render numeric percentages with their existing colors and exact text.
+        Missing metadata displays as a dash; other text remains escaped literal text.
 
         Args:
             percent (str): Percent value in a string format.
 
         Returns:
-            str: A string with colored text and percent sign at the end.
+            str: A missing marker, colored percentage, or escaped display text.
         """
-        if percent is None or percent in ("-", "N/A"):
+        if percent is None or percent in ("", "-", "N/A"):
             return "-"
-        return f"[{ Watch_list.get_color(float(percent))}]{percent}%[/]"
+        try:
+            value = float(percent)
+        except ValueError:
+            # Restored metadata is display text; preserve it without arithmetic.
+            return escape(percent)
+        return f"[{ Watch_list.get_color(value)}]{percent}%[/]"
     
     @staticmethod       
     def get_color(value: float):
