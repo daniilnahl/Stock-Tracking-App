@@ -47,6 +47,7 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
         "stock_tracker/domain/calculations.py",
         "stock_tracker/compatibility/__init__.py", "stock_tracker/compatibility/numeric.py",
         "stock_tracker/compatibility/stock_operations.py",
+        "stock_tracker/compatibility/watchlist_persistence.py",
         "stock_tracker/compatibility/presentation.py",
         "stock_tracker/exceptions.py", "stock_tracker/providers/__init__.py",
         "stock_tracker/providers/models.py", "stock_tracker/providers/protocols.py",
@@ -54,6 +55,7 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
         "stock_tracker/providers/factory.py",
         "stock_tracker/persistence/__init__.py", "stock_tracker/persistence/models.py",
         "stock_tracker/persistence/protocols.py",
+        "stock_tracker/persistence/sqlite_watchlists.py",
         "stock_tracker/persistence/connection.py", "stock_tracker/persistence/migrations.py",
     }
 
@@ -115,7 +117,22 @@ with ExitStack() as guards:
             validate_schema(connection)
             assert connection.execute('PRAGMA foreign_keys').fetchone() == (1,)
             assert connection.execute('PRAGMA user_version').fetchone() == (1,)
-    for name in ('stock_tracker.persistence.migrations', 'stock_tracker.persistence.connection'):
+    from stock import Stock as LegacyStock
+    from watch_list import Watch_list
+    from stock_tracker.persistence.sqlite_watchlists import SQLiteWatchlistRepository
+    from stock_tracker.compatibility.watchlist_persistence import watchlist_to_record, record_to_watchlist
+    repo = SQLiteWatchlistRepository(path)
+    original = Watch_list('Installed offline', [LegacyStock('ABC', None, amount_owned='0.2500',
+                          cost_basis='100.0000', current_price='120.0000')])
+    repo.save(watchlist_to_record(original, 'menu_watchlist'))
+    fresh = SQLiteWatchlistRepository(path)
+    restored = record_to_watchlist(fresh.get('menu_watchlist'), None)
+    assert restored.stocks[0].amount_owned == '0.2500'
+    assert restored.stocks[0].total_return == '20.0'
+    assert fresh.get('daniils_stock_method') is None
+    for name in ('stock_tracker.persistence.migrations', 'stock_tracker.persistence.connection',
+                 'stock_tracker.persistence.sqlite_watchlists',
+                 'stock_tracker.compatibility.watchlist_persistence'):
         assert Path(sys.modules[name].__file__).resolve().is_relative_to(Path(sys.argv[1]).resolve())
 """
     migration = subprocess.run(
