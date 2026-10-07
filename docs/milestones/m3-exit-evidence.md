@@ -2,13 +2,15 @@
 
 Audit date: **2026-10-06**. Milestone: [M3 — Persistence](https://github.com/daniilnahl/Stock-Tracking-App/milestone/4).
 Audit issue: [#75](https://github.com/daniilnahl/Stock-Tracking-App/issues/75).
-Implementation baseline: `f690ddb6ca2f118abb8aafda93c2a511e29538e5`.
-**Status: local behavior verification PASS; milestone INCOMPLETE.** The initial
+Completed main: `534a178005a5dd5662ec0cb261cadaf3ce5f2888` (owner-merged PR #86).
+**Status: COMPLETE, all behavior and closure gates PASS.** The initial
 combined audit found a valid display-metadata regression. Its separately scoped
 repair, #84/PR #85, is now owner-merged with passing main CI. The exact empty
-metadata case remains in the audit; no runtime changes are made by this branch.
-The audit's own PR, owner merge, final main CI and issue/milestone closure also
-remain pending. Existing implementation evidence does not close these gates.
+metadata case remains in the audit. The owner merged the audit, final main CI
+passed and all nine required issues and milestone 4 are closed. The
+[completion record](https://github.com/daniilnahl/Stock-Tracking-App/issues/75#issuecomment-6025782936)
+records zero open and nine closed milestone issues, with no blocker or deferred
+M3 requirement. The historical verification below retains its original context.
 
 ## Approved deliverables and implementation trace
 
@@ -26,8 +28,8 @@ faithfully records that instruction; it is not separately human-authored GitHub
 approval. This includes the explicit ADR-0006 extension replacing maintained
 CLI pickle storage and preserving legacy files without deserialization.
 
-The following eight prerequisite issues are closed and owner merges are
-included in the implementation baseline. The audit's own closure remains pending.
+All nine required issues are closed; the following owner merges are included
+in completed main.
 
 | Issue | Deliverable | Owner-merged PR | Exact merge commit |
 | --- | --- | --- | --- |
@@ -39,14 +41,22 @@ included in the implementation baseline. The audit's own closure remains pending
 | [#73](https://github.com/daniilnahl/Stock-Tracking-App/issues/73) | Both existing CLI storage flows | [#82](https://github.com/daniilnahl/Stock-Tracking-App/pull/82) | `abd3fbae637f81c9ba1960cf5ad651ed0ecca26a` |
 | [#74](https://github.com/daniilnahl/Stock-Tracking-App/issues/74) | Strict neutral import and checked backup/new-destination restore | [#83](https://github.com/daniilnahl/Stock-Tracking-App/pull/83) | `68134088556646c7b1bf586fc0c9ac67b02332ec` |
 | [#84](https://github.com/daniilnahl/Stock-Tracking-App/issues/84) | Safe display of accepted empty/literal percentage metadata | [#85](https://github.com/daniilnahl/Stock-Tracking-App/pull/85) | `f690ddb6ca2f118abb8aafda93c2a511e29538e5` |
+| [#75](https://github.com/daniilnahl/Stock-Tracking-App/issues/75) | Combined source/wheel restart and final exit audit | [#86](https://github.com/daniilnahl/Stock-Tracking-App/pull/86) | `534a178005a5dd5662ec0cb261cadaf3ce5f2888` |
 
 The Master verified all five checks in the repaired baseline
 [Foundation run 37512406525](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/37512406525):
 Tests (Python 3.11), Tests (Python 3.12), Ruff, Mypy (configuration), Credential
 patterns. The earlier implementation baseline `6813408` also passed all five
 checks in [run 37406946853](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/37406946853).
-These are implementation-main checks, not this audit's exact-head PR CI or its
-eventual post-merge main CI.
+These earlier implementation-main checks are historical. Final post-merge
+[Foundation run 37533716609](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/37533716609)
+passed all five configured checks on completed main after PR #86. The reviewed
+audit head `74d64f4c396d845327daffcf2a1b86aede50bff3` and final main have identical
+Git tree `03febb29876f8cbdef4319d359d39faf01c1c03e`; the 1,850-test full local
+verification therefore covers the final merged contents. The Master reran the
+exact broader targeted command below on final merged main: **498 passed in
+43.45 seconds**. PR review/CI, owner merge and closure are reconciled in the
+completion record.
 
 ## Requirement and test map
 
@@ -134,8 +144,8 @@ source/test/documentation review passed with no unresolved findings.
 | Local targeted pytest, Ruff, configured mypy, pip check and diff check | PASS; exact commands/results above |
 | Local full pytest | PASS, 1,850 tests in 55.56 seconds |
 | Master staged hygiene and final review | PASS; 8 hygiene tests and no unresolved review findings |
-| Audit exact-head PR CI, owner merge, final main CI and #75 closure | PENDING |
-| Final required-issue/blocker reconciliation and milestone closure | PENDING; milestone remains open |
+| Audit PR review/CI, owner merge, final main CI and #75 closure | PASS, PR #86; final Foundation run 37533716609 |
+| Final required-issue/blocker reconciliation and milestone closure | PASS; all nine issues closed, zero blockers; milestone 4 closed |
 
 ## Honest limits and later work
 
@@ -158,6 +168,7 @@ are changed by this audit. Historical data/charts, analytics, transaction ledger
 and CLI V2 remain later approved milestones. The discovered display regression
 was repaired within M3, not deferred to evade the exit criterion.
 
-Final milestone status: **INCOMPLETE** at this audit snapshot. No new human product
-or architecture decision is requested; the audit's owner merge, final CI and
-closure reconciliation remain repository-policy gates.
+Final milestone status: **COMPLETE**. All SRS M3 deliverables and the unchanged
+restart-without-pickle exit criterion pass. No human decision, blocking issue
+or deferred M3 work remains. Accepted limits and later milestone scope above
+remain unchanged; this completion does not authorize operations on real user data.

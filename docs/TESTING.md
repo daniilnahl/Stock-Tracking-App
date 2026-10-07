@@ -93,7 +93,9 @@ per-file suppressions. No formatter is introduced by this lint baseline.
 The baseline covers compilation of every tracked Python module, independent
 watchlists, add/remove/presence, ticker listing, both CLI help surfaces, and
 the explicitly unavailable unfinished evaluation method. Provider semantics,
-financial calculations and persistence migration remain separately scoped work.
+financial calculations and persistence were separately scoped work at that
+foundation snapshot. Subsequent M1–M3 evidence below records their implemented
+scope; baseline checks alone do not certify those milestones.
 
 ## Type-check readiness decision — issue #11
 
@@ -326,9 +328,23 @@ post-merge main checks passed. The combined fixture retains the exact empty
 metadata and also verifies literal nonnumeric metadata, distinct exchanges and
 zero-cost owned state. See [M3 exit evidence](milestones/m3-exit-evidence.md)
 for current results, the historical failure, exact issue/PR/CI trace,
-requirement mapping and outstanding audit merge/closure gates. Existing repository,
+requirement mapping and completed audit merge/closure gates. Existing repository,
 migration, transfer, precision and CLI failure matrices remain meaningful
 separate evidence; they do not replace the combined exit criterion.
+
+## M3 completion evidence — 2026-10-06
+
+M3 is complete on owner-merged main `534a178005a5dd5662ec0cb261cadaf3ce5f2888`
+(PR #86). All nine required issues (#68–75 and #84) and milestone 4 are closed.
+The reviewed head's identical merged tree passed 1,850 full pytest tests;
+final merged-main targeted persistence verification passed 498 tests in
+43.45 seconds. All five checks in
+[Foundation run 37533716609](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/37533716609)
+passed. [Exit evidence](milestones/m3-exit-evidence.md) records exact commands,
+source/wheel combined restart, preservation/security guards and accepted limits.
+Configured mypy still covers **config.py only**. These are milestone completion
+results, not CI for subsequent documentation changes, whose actual verification
+is recorded in their PR.
 
 ---
 

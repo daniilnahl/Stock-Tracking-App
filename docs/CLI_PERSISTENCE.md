@@ -1,5 +1,9 @@
 # Existing CLI storage
 
+**M3 complete, 2026-10-06.** [Completion evidence](milestones/m3-exit-evidence.md)
+records actual source/installed-wheel offline restarts of both namespaces and
+Portfolio, owner merges, final passing main CI and closed milestone 4.
+
 Both maintained entrypoints retain their existing commands, prompts and provider
 flows. They select `Path.cwd() / 'stock_tracker.sqlite3'` once when imported and
 store independent namespaces: `menu_watchlist` and `daniils_stock_method`.

@@ -1,5 +1,9 @@
 # Safe neutral transition and SQLite backup/restore
 
+**M3 complete, 2026-10-06.** [Completion evidence](milestones/m3-exit-evidence.md)
+records source/installed-wheel neutral import, checked backup/new-destination
+restore and fresh Portfolio/CLI reads, with original state preserved.
+
 The utilities in `stock_tracker.persistence.transfer` implement accepted
 ADR-0009 for local reviewed data. They are Python functions, not new CLI commands.
 Never run them against real user files as part of automated tests.
@@ -159,4 +163,4 @@ concurrent consistent snapshot, complete record validation and copy failures.
 Installed-wheel smoke imports/copies/restores temporary state with transport
 guards. [CLI storage](CLI_PERSISTENCE.md) describes merged #73 behavior;
 [M3 audit evidence](milestones/m3-exit-evidence.md) records combined source/wheel
-restart through neutral import, backup and restoration plus final closure gates.
+restart through neutral import, backup and restoration and completed closure gates.

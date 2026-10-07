@@ -46,7 +46,9 @@ snapshots. Wheel smoke builds/installs offline and verifies both new modules and
 real restored precision/returns from the installed package. No real database,
 legacy file, provider credential, or live transport is used.
 
-This change supplies reusable storage/mapping only. Existing CLI storage wiring,
-legacy refusal/neutral transition, backup/restore and complete milestone restart
-verification remain issues #73–75. No CLI command/contract, domain formula,
-dependency, schema or public record/protocol contract changes here.
+Issue #72 supplied reusable storage/mapping only. Subsequent owner-merged #73–75
+and the #84 display repair complete CLI storage wiring, legacy refusal/neutral
+transition, backup/restore and source/installed-wheel restart verification.
+[M3 completion evidence](milestones/m3-exit-evidence.md) records all nine closed
+issues and passing final main CI. No later CLI command/contract, domain formula,
+dependency, schema or public record/protocol redesign is implied by completion.
