@@ -1,6 +1,6 @@
 # M4 Historical Market Data implementation plan
 
-Status: **contract proposal in progress; runtime work blocked pending owner acceptance**.
+Status: **contract proposal published; runtime work blocked pending owner acceptance**.
 Snapshot: 2026-10-07. Baseline: `534a178` (owner-merged M3 audit PR #86).
 Parent: [M4 — Historical Market Data](https://github.com/daniilnahl/Stock-Tracking-App/milestone/5).
 Contract: [Proposed ADR-0010](../adr/0010-historical-market-data-contracts.md).
@@ -42,7 +42,7 @@ return, benchmark, dividend, FX, risk and transaction semantics remain outside M
 
 | Issue | Bounded objective | Status / dependencies | Agent | PR / review | Blocking reason |
 | --- | --- | --- | --- | --- | --- |
-| [#88](https://github.com/daniilnahl/Stock-Tracking-App/issues/88) | Proposed historical ADR and dependency plan | Drafting unblocked | `m4_contract_audit`, GPT-6.1 low | Pending; Master plus independent review | Exact proposal needs owner acceptance |
+| [#88](https://github.com/daniilnahl/Stock-Tracking-App/issues/88) | Proposed historical ADR and dependency plan | Proposal published; owner acceptance/merge pending | `m4_contract_audit`, GPT-6.1 low | [#95](https://github.com/daniilnahl/Stock-Tracking-App/pull/95); local checks and independent review passed, hosted CI pending | Exact proposal needs owner acceptance |
 | [#89](https://github.com/daniilnahl/Stock-Tracking-App/issues/89) | FMP OHLCV retrieval and approved validation | Queued; #88 acceptance/merge | `m4_history_retrieval`, GPT-6.1 low | None | Contract gate |
 | [#90](https://github.com/daniilnahl/Stock-Tracking-App/issues/90) | Bounded historical cache and freshness | Queued; #88/#89 | `m4_history_cache`, GPT-6.1 low | None | Accepted cache policy and retrieval |
 | [#91](https://github.com/daniilnahl/Stock-Tracking-App/issues/91) | Historical composition and facade | Queued; #88–90 | `m4_history_integration`, GPT-6.1 low | None | Stable retrieval/cache contracts |
@@ -52,8 +52,8 @@ return, benchmark, dividend, FX, risk and transaction semantics remain outside M
 
 Queued agent names are assignments for future dispatch, not claims of running
 agents. Two completed read-only audits (`m4_contract_audit`, `m4_chart_audit`)
-established provider/chart callers and approval blockers. Only documentation
-drafting is currently dispatched. Each runtime issue receives an isolated
+established provider/chart callers and approval blockers. Documentation drafting
+and independent review are complete; no runtime agent is dispatched. Each runtime issue receives an isolated
 branch/worktree after prerequisites are accepted, reviewed and owner-merged.
 Avoid simultaneous changes to FMP, facade or CLI interfaces. Update this table
 with actual dispatch, branch, PR, CI, review and blocking evidence as work advances.
