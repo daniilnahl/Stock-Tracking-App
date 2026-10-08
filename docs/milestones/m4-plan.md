@@ -1,6 +1,6 @@
 # M4 Historical Market Data implementation plan
 
-Status: **contracts accepted and owner-merged; #89 retrieval verified, awaiting PR/owner merge**.
+Status: **contracts accepted and owner-merged; #89 retrieval verified in PR #96, awaiting owner merge**.
 Snapshot: 2026-10-08. Planning baseline: `534a178` (owner-merged M3 audit PR #86).
 Runtime branch baseline: `7f67c32` (owner-merged M4 contract PR #95).
 Parent: [M4 — Historical Market Data](https://github.com/daniilnahl/Stock-Tracking-App/milestone/5).
@@ -44,7 +44,7 @@ return, benchmark, dividend, FX, risk and transaction semantics remain outside M
 | Issue | Bounded objective | Status / dependencies | Agent | PR / review | Blocking reason |
 | --- | --- | --- | --- | --- | --- |
 | [#88](https://github.com/daniilnahl/Stock-Tracking-App/issues/88) | Historical ADR and dependency plan | Accepted and owner-merged | `m4_contract_audit`, GPT-6.1 low | [#95](https://github.com/daniilnahl/Stock-Tracking-App/pull/95); independent review, local checks and PR/main CI passed | None |
-| [#89](https://github.com/daniilnahl/Stock-Tracking-App/issues/89) | FMP OHLCV retrieval and approved validation | Verified on `feature/89-fmp-price-history`; publication/owner merge pending | `m4_retrieval_impl`, GPT-6.1 low | `m4_retrieval_review`, GPT-6.1 low: no actionable findings; local checks passed | PR/main CI and owner merge |
+| [#89](https://github.com/daniilnahl/Stock-Tracking-App/issues/89) | FMP OHLCV retrieval and approved validation | Verified on `feature/89-fmp-price-history`; owner merge pending | `m4_retrieval_impl`, GPT-6.1 low | [#96](https://github.com/daniilnahl/Stock-Tracking-App/pull/96); `m4_retrieval_review`, GPT-6.1 low: no actionable findings; local checks passed | PR/main CI and owner merge |
 | [#90](https://github.com/daniilnahl/Stock-Tracking-App/issues/90) | Bounded historical cache and freshness | Queued; #88/#89 | `m4_history_cache`, GPT-6.1 low | None | Accepted cache policy and retrieval |
 | [#91](https://github.com/daniilnahl/Stock-Tracking-App/issues/91) | Historical composition and facade | Queued; #88–90 | `m4_history_integration`, GPT-6.1 low | None | Stable retrieval/cache contracts |
 | [#92](https://github.com/daniilnahl/Stock-Tracking-App/issues/92) | Genuine-observation chart rendering | Queued; #88/#91 | `m4_chart_rendering`, GPT-6.1 low | None | Stable facade data boundary |
@@ -112,7 +112,8 @@ Ruff, configured mypy (`config.py` only), pip check and staged hygiene (8 tests)
 passed. Independent review passed 578 focused tests, including the offline wheel,
 then 129 final history tests; no actionable finding remained. These verify #89
 retrieval, not downstream caching, charts, date selection or M4 completion.
-PR and post-merge main CI remain publication/merge evidence gates.
+Exact-head hosted CI/review is tracked in [PR #96](https://github.com/daniilnahl/Stock-Tracking-App/pull/96).
+Owner merge and post-merge main CI remain downstream dispatch gates.
 
 ## Exit mapping and completion gates
 
