@@ -1,6 +1,6 @@
 # M4 Historical Market Data implementation plan
 
-Status: **retrieval owner-merged and verified; #90 historical cache implementation active**.
+Status: **retrieval owner-merged and verified; #90 cache PR ready for hosted checks and owner review**.
 Snapshot: 2026-10-08. Planning baseline: `534a178` (owner-merged M3 audit PR #86).
 Current runtime branch baseline: `9218229` (owner-merged retrieval PR #96).
 Parent: [M4 — Historical Market Data](https://github.com/daniilnahl/Stock-Tracking-App/milestone/5).
@@ -45,7 +45,7 @@ return, benchmark, dividend, FX, risk and transaction semantics remain outside M
 | --- | --- | --- | --- | --- | --- |
 | [#88](https://github.com/daniilnahl/Stock-Tracking-App/issues/88) | Historical ADR and dependency plan | Accepted and owner-merged | `m4_contract_audit`, GPT-6.1 low | [#95](https://github.com/daniilnahl/Stock-Tracking-App/pull/95); independent review, local checks and PR/main CI passed | None |
 | [#89](https://github.com/daniilnahl/Stock-Tracking-App/issues/89) | FMP OHLCV retrieval and approved validation | Owner-merged and verified | `m4_retrieval_impl`, GPT-6.1 low | [#96](https://github.com/daniilnahl/Stock-Tracking-App/pull/96); `m4_retrieval_review`, GPT-6.1 low: no findings; local and PR/main CI passed | None |
-| [#90](https://github.com/daniilnahl/Stock-Tracking-App/issues/90) | Bounded historical cache and freshness | Active on `feature/90-history-cache` | `m4_history_cache`, GPT-6.1 low | Implementation/verification in progress; `m4_cache_review`, GPT-6.1 low, independent review | None |
+| [#90](https://github.com/daniilnahl/Stock-Tracking-App/issues/90) | Bounded historical cache and freshness | Awaiting owner merge on `feature/90-history-cache` | `m4_history_cache`, GPT-6.1 low | [#97](https://github.com/daniilnahl/Stock-Tracking-App/pull/97); `m4_cache_review`, GPT-6.1 low: no findings; local checks passed; hosted checks tracked in PR | Required hosted CI and owner merge |
 | [#91](https://github.com/daniilnahl/Stock-Tracking-App/issues/91) | Historical composition and facade | Queued; #88–90 | `m4_history_integration`, GPT-6.1 low | None | Stable retrieval/cache contracts |
 | [#92](https://github.com/daniilnahl/Stock-Tracking-App/issues/92) | Genuine-observation chart rendering | Queued; #88/#91 | `m4_chart_rendering`, GPT-6.1 low | None | Stable facade data boundary |
 | [#93](https://github.com/daniilnahl/Stock-Tracking-App/issues/93) | Existing chart command date selection | Queued; #88/#91/#92 | `m4_date_selection`, GPT-6.1 low | None | Approved UI/defaults and real chart |
@@ -129,7 +129,10 @@ staged diff checks passed. Independent review passed 212 focused tests and then
 21 final staged hygiene/boundary tests, with no remaining actionable findings.
 The neutral sidecar retains holdings/schema isolation. Explicit production
 composition remains #91; cache verification does not establish M4 completion.
-PR publication and exact-head hosted checks are the remaining #90 review gates.
+[PR #97](https://github.com/daniilnahl/Stock-Tracking-App/pull/97) records exact-head
+hosted checks and the Master review. Runtime/test implementation commit is
+`ca8dbe7bce2d054c5bd4da68e34a0225a003d4e2`; the subsequent tracking change edits
+only this plan. Required hosted CI and owner merge remain #91 dependency gates.
 
 ## Exit mapping and completion gates
 
