@@ -1,7 +1,7 @@
 """FMP typed retrieval, scoped identity lookup and shared safe requests."""
 
 from collections.abc import Callable, Mapping
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone
 from decimal import Decimal, InvalidOperation
 from email.utils import parsedate_to_datetime
 import json
@@ -11,16 +11,17 @@ from urllib.parse import urlencode
 
 from config import ConfigurationError, require_api_key
 from stock_tracker.exceptions import (
-    InvalidTickerError, MarketDataUnavailableError,
+    HistoryRangeError, InvalidTickerError, MarketDataUnavailableError,
     ProviderAccessError, ProviderAuthenticationError, ProviderRequestError,
     ProviderResponseError, ProviderTimeoutError, ProviderUnavailableError, RateLimitError,
 )
-from .models import CompanyProfile, InstrumentIdentity, PeriodChanges, Quote
+from .models import CompanyProfile, HistoryObservation, InstrumentIdentity, PeriodChanges, PriceBar, Quote
 from .transport import HttpTransport, ProviderPolicy, _TransportConnectionError, _TransportTimeout
 
 
 logger = logging.getLogger(__name__)
-_ROUTES = frozenset({"quote", "profile", "stock-price-change", "search-symbol"})
+_HISTORY_ROUTE = "historical-price-eod/non-split-adjusted"
+_ROUTES = frozenset({"quote", "profile", "stock-price-change", "search-symbol", _HISTORY_ROUTE})
 _PERIOD_FIELDS = (("1D", "day_1"), ("5D", "day_5"), ("1M", "month_1"),
                   ("3M", "month_3"), ("6M", "month_6"), ("1Y", "year_1"),
                   ("3Y", "year_3"), ("5Y", "year_5"))
@@ -201,12 +202,64 @@ class FMPMarketDataProvider:
             raise InvalidTickerError()
         return matches[0]
 
+    def get_price_history(self, symbol: str, start: date, end: date) -> list[PriceBar]:
+        """Return precise raw observations, without adjusted-return semantics."""
+        return list(self._load_price_history(symbol, start, end).bars)
+
+    def _load_price_history(self, symbol: str, start: date, end: date) -> HistoryObservation:
+        """Retain the transport receipt timestamp for the future cache decorator."""
+        requested = _input_symbol(symbol)
+        if (not isinstance(start, date) or isinstance(start, datetime)
+                or not isinstance(end, date) or isinstance(end, datetime)
+                or start > end or (end - start).days + 1 > 3660
+                or end >= _utc(self._clock).date()):
+            raise HistoryRangeError()
+        rows, received = self._request_json(
+            _HISTORY_ROUTE, {"symbol": requested, "from": start.isoformat(), "to": end.isoformat()},
+        )
+        if len(rows) > 5000:
+            raise ProviderResponseError()
+        bars = []
+        seen = set()
+        for row in rows:
+            if row.get("symbol") != requested:
+                raise ProviderResponseError(field="symbol")
+            value = row.get("date")
+            if not isinstance(value, str):
+                raise ProviderResponseError(field="date")
+            try:
+                session = date.fromisoformat(value)
+            except ValueError:
+                raise ProviderResponseError(field="date") from None
+            if session.isoformat() != value or session in seen:
+                raise ProviderResponseError(field="date")
+            seen.add(session)
+            prices = []
+            for field in ("adjOpen", "adjHigh", "adjLow", "adjClose"):
+                number = _number(row.get(field), field)
+                if number is None:
+                    raise ProviderResponseError(field=field)
+                prices.append(number)
+            volume = _number(row.get("volume"), "volume")
+            if volume is not None and (
+                volume > 9223372036854775807 or volume != volume.to_integral_value()
+            ):
+                raise ProviderResponseError(field="volume")
+            bar = PriceBar(requested, session, *prices, None,
+                           None if volume is None else int(volume))
+            # Validate even observations outside the inclusive application range.
+            if start <= session <= end:
+                bars.append(bar)
+        if not bars:
+            raise MarketDataUnavailableError()
+        return HistoryObservation(tuple(sorted(bars, key=lambda bar: bar.date)), received)
+
     def _request_json(self, operation: str, parameters: Mapping[str, str]) -> tuple[list[dict], datetime]:
         """One approved route and bounded retry loop, without endpoint field parsing."""
         if (not isinstance(operation, str) or operation not in _ROUTES
                 or not isinstance(parameters, Mapping)
                 or any(not isinstance(key, str) or not isinstance(value, str)
-                       or key not in {"symbol", "query", "limit", "exchange"}
+                       or key not in {"symbol", "query", "limit", "exchange", "from", "to"}
                        for key, value in parameters.items())):
             raise ProviderRequestError()
         url = "https://financialmodelingprep.com/stable/" + operation + "?" + urlencode(parameters)

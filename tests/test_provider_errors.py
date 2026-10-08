@@ -4,7 +4,7 @@ import pytest
 
 
 ERRORS = (
-    "StockTrackerError", "InvalidTickerError", "MarketDataUnavailableError",
+    "StockTrackerError", "HistoryRangeError", "InvalidTickerError", "MarketDataUnavailableError",
     "InstrumentLookupInconclusiveError", "ProviderUnavailableError", "ProviderTimeoutError",
     "RateLimitError", "ProviderAuthenticationError", "ProviderAccessError",
     "ProviderRequestError", "ProviderResponseError",
@@ -63,7 +63,8 @@ def test_rate_limit_rejects_wrong_type_negative_or_nonfinite_delay_safely(delay)
 
 
 @pytest.mark.parametrize("field", [None, "symbol", "retrieved_at", "adjusted_close",
-                                    "companyName", "marketCap", "timestamp", "1D", "5Y"])
+                                    "companyName", "marketCap", "timestamp", "1D", "5Y",
+                                    "adjOpen", "adjHigh", "adjLow", "adjClose"])
 def test_response_error_allows_only_approved_field_diagnostics(field):
     from stock_tracker.exceptions import ProviderResponseError
 

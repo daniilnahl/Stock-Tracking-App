@@ -136,8 +136,13 @@ def test_numeric_precision_missing_zero_and_sign_contract(model, field, cases):
 
     constructor, values = cases[model]
     precise = Decimal("123.123456789012345678901234567890")
+    if model == "bar":
+        values = values | dict.fromkeys(("open", "high", "low", "close"), precise)
     assert getattr(constructor(**(values | {field: precise})), field) is precise
-    assert getattr(constructor(**(values | {field: Decimal("0")})), field) == Decimal("0")
+    zero_values = values
+    if model == "bar":
+        zero_values = values | dict.fromkeys(("open", "high", "low", "close"), Decimal("0"))
+    assert getattr(constructor(**(zero_values | {field: Decimal("0")})), field) == Decimal("0")
     missing_allowed = model != "bar" or field == "adjusted_close"
     if missing_allowed:
         assert getattr(constructor(**(values | {field: None})), field) is None
@@ -198,13 +203,13 @@ def test_price_bar_uses_date_only_and_nullable_nonnegative_integer_volume(field,
 
 def test_price_bar_keeps_session_label_and_raw_adjusted_prices_separate(cases):
     constructor, values = cases["bar"]
-    bar = constructor(**(values | {"close": Decimal("100"), "adjusted_close": Decimal("50"),
+    bar = constructor(**(values | {"high": Decimal("100"), "close": Decimal("100"), "adjusted_close": Decimal("50"),
                                   "volume": 0}))
     assert bar.date == date(2020, 1, 2)
     assert (bar.close, bar.adjusted_close, bar.volume) == (Decimal("100"), Decimal("50"), 0)
     assert replace(bar, volume=10).volume == 10
-    # M2 does not invent an OHLC consistency/adjustment methodology for M4.
-    assert bar.high == Decimal("1")
+    # Raw OHLC bounds do not compare values across distinct adjustment bases.
+    assert bar.high == Decimal("100")
 
 
 def test_periods_remain_percentage_points_without_rounding_or_history(cases):

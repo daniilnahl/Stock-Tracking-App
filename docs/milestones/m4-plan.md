@@ -1,9 +1,10 @@
 # M4 Historical Market Data implementation plan
 
-Status: **contract proposal published; runtime work blocked pending owner acceptance**.
-Snapshot: 2026-10-07. Baseline: `534a178` (owner-merged M3 audit PR #86).
+Status: **contracts accepted and owner-merged; #89 retrieval verified in PR #96, awaiting owner merge**.
+Snapshot: 2026-10-08. Planning baseline: `534a178` (owner-merged M3 audit PR #86).
+Runtime branch baseline: `7f67c32` (owner-merged M4 contract PR #95).
 Parent: [M4 — Historical Market Data](https://github.com/daniilnahl/Stock-Tracking-App/milestone/5).
-Contract: [Proposed ADR-0010](../adr/0010-historical-market-data-contracts.md).
+Contract: [Accepted ADR-0010](../adr/0010-historical-market-data-contracts.md).
 
 The owner requested the supplied Master Engineering workflow for M4, superseding
 its M3 placeholders. All delegated agents use **`gpt-6.1-sol`, reasoning effort
@@ -42,8 +43,8 @@ return, benchmark, dividend, FX, risk and transaction semantics remain outside M
 
 | Issue | Bounded objective | Status / dependencies | Agent | PR / review | Blocking reason |
 | --- | --- | --- | --- | --- | --- |
-| [#88](https://github.com/daniilnahl/Stock-Tracking-App/issues/88) | Proposed historical ADR and dependency plan | Proposal published; owner acceptance/merge pending | `m4_contract_audit`, GPT-6.1 low | [#95](https://github.com/daniilnahl/Stock-Tracking-App/pull/95); local checks and independent review passed, hosted CI pending | Exact proposal needs owner acceptance |
-| [#89](https://github.com/daniilnahl/Stock-Tracking-App/issues/89) | FMP OHLCV retrieval and approved validation | Queued; #88 acceptance/merge | `m4_history_retrieval`, GPT-6.1 low | None | Contract gate |
+| [#88](https://github.com/daniilnahl/Stock-Tracking-App/issues/88) | Historical ADR and dependency plan | Accepted and owner-merged | `m4_contract_audit`, GPT-6.1 low | [#95](https://github.com/daniilnahl/Stock-Tracking-App/pull/95); independent review, local checks and PR/main CI passed | None |
+| [#89](https://github.com/daniilnahl/Stock-Tracking-App/issues/89) | FMP OHLCV retrieval and approved validation | Verified on `feature/89-fmp-price-history`; owner merge pending | `m4_retrieval_impl`, GPT-6.1 low | [#96](https://github.com/daniilnahl/Stock-Tracking-App/pull/96); `m4_retrieval_review`, GPT-6.1 low: no actionable findings; local checks passed | PR/main CI and owner merge |
 | [#90](https://github.com/daniilnahl/Stock-Tracking-App/issues/90) | Bounded historical cache and freshness | Queued; #88/#89 | `m4_history_cache`, GPT-6.1 low | None | Accepted cache policy and retrieval |
 | [#91](https://github.com/daniilnahl/Stock-Tracking-App/issues/91) | Historical composition and facade | Queued; #88–90 | `m4_history_integration`, GPT-6.1 low | None | Stable retrieval/cache contracts |
 | [#92](https://github.com/daniilnahl/Stock-Tracking-App/issues/92) | Genuine-observation chart rendering | Queued; #88/#91 | `m4_chart_rendering`, GPT-6.1 low | None | Stable facade data boundary |
@@ -53,7 +54,15 @@ return, benchmark, dividend, FX, risk and transaction semantics remain outside M
 Queued agent names are assignments for future dispatch, not claims of running
 agents. Two completed read-only audits (`m4_contract_audit`, `m4_chart_audit`)
 established provider/chart callers and approval blockers. Documentation drafting
-and independent review are complete; no runtime agent is dispatched. Each runtime issue receives an isolated
+and independent review are complete. The retrieval agent was dispatched after
+the owner's direct “Approved and merged. Proceed.” instruction accepted complete
+Option A at `e455660774e9c96e8ea8851cdeabc9d63f6e6730`. PR #95 merged as
+`7f67c322a9f96cadb6fd3f126ed7240a37ac68c5`; post-merge
+[Foundation run 37705325479](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/37705325479)
+passed. The initial retrieval dispatch was interrupted before source edits;
+`m4_retrieval_impl` resumed the bounded work on 2026-10-08, with
+`m4_retrieval_review` assigned independent review at the same model/effort.
+Each runtime issue receives an isolated
 branch/worktree after prerequisites are accepted, reviewed and owner-merged.
 Avoid simultaneous changes to FMP, facade or CLI interfaces. Update this table
 with actual dispatch, branch, PR, CI, review and blocking evidence as work advances.
@@ -95,6 +104,17 @@ hygiene; they do not claim M4 runtime behavior. Initial sandbox interpreter
 execution was denied; the same supported environment ran successfully through
 approved execution. No supported runtime, pins or system installation changed.
 
+Retrieval verification on 2026-10-08 used the same canonical Python 3.11.9
+environment. The implementation's focused history/models/errors/transport/wheel
+suite passed 686 tests; the final history boundary suite passed 129 tests.
+The exact final runtime/test diff passed **1,984 full tests in 87.63 seconds**.
+Ruff, configured mypy (`config.py` only), pip check and staged hygiene (8 tests)
+passed. Independent review passed 578 focused tests, including the offline wheel,
+then 129 final history tests; no actionable finding remained. These verify #89
+retrieval, not downstream caching, charts, date selection or M4 completion.
+Exact-head hosted CI/review is tracked in [PR #96](https://github.com/daniilnahl/Stock-Tracking-App/pull/96).
+Owner merge and post-merge main CI remain downstream dispatch gates.
+
 ## Exit mapping and completion gates
 
 | SRS M4 deliverable | Owning issues | Required evidence |
@@ -111,7 +131,7 @@ FIN-001–003; PERF-001/002; SEC-002/005; ERR-001–003; TEST-001–005;
 FC-060–062/100/101. Persistence requirements apply if accepted cache storage
 introduces persistence behavior, without changing the holdings schema implicitly.
 
-M4 remains **INCOMPLETE** until the owner accepts the exact proposed contract,
+The contract acceptance gate is satisfied. M4 remains **INCOMPLETE** until
 all required issues are closed, reviewed PRs are owner-merged into main, required
 CI and milestone verification pass, each deliverable is evidenced, no blocking
 requirement remains and deferred work has explicit follow-up ownership. Do not

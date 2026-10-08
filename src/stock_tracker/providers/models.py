@@ -130,7 +130,7 @@ class PeriodChanges:
 
 @dataclass(frozen=True, slots=True)
 class PriceBar:
-    """Future history contract; date is a trading-session label, not UTC midnight."""
+    """OHLC observation; date is a trading-session label, not UTC midnight."""
 
     symbol: str
     date: date
@@ -148,7 +148,35 @@ class PriceBar:
         for field in ("open", "high", "low", "close"):
             _decimal(getattr(self, field), field, optional=False)
         _decimal(self.adjusted_close, "adjusted_close")
+        if not self.low <= self.open <= self.high:
+            raise ProviderResponseError(field="open")
+        if not self.low <= self.close <= self.high:
+            raise ProviderResponseError(field="close")
         if self.volume is not None and (
             not isinstance(self.volume, int) or isinstance(self.volume, bool) or self.volume < 0
         ):
             raise ProviderResponseError(field="volume")
+
+
+@dataclass(frozen=True, slots=True)
+class HistoryObservation:
+    """Internal raw history receipt; request identity/range belong to the loader."""
+
+    bars: tuple[PriceBar, ...]
+    retrieved_at: datetime
+
+    def __post_init__(self) -> None:
+        _time(self.retrieved_at, "retrieved_at", optional=False)
+        if not isinstance(self.bars, tuple) or not self.bars:
+            raise ProviderResponseError()
+        previous = None
+        for bar in self.bars:
+            if not isinstance(bar, PriceBar):
+                raise ProviderResponseError()
+            if previous is not None and bar.date <= previous:
+                raise ProviderResponseError(field="date")
+            if bar.adjusted_close is not None:
+                raise ProviderResponseError(field="adjusted_close")
+            if bar.volume is not None and bar.volume > 9223372036854775807:
+                raise ProviderResponseError(field="volume")
+            previous = bar.date

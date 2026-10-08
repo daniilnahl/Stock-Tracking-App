@@ -384,6 +384,23 @@ Test fixtures should include at least one corporate-action scenario once that be
 
 Do not infer historical prices from summary return percentages.
 
+## M4 raw retrieval — issue #89
+
+`tests/test_fmp_history.py` uses synthetic fixtures for the Stable
+`historical-price-eod/non-split-adjusted` schema, reconfirmed against the
+[official FMP guide](https://site.financialmodelingprep.com/how-to/fmp-historical-price-apis-from-light-charts-to-dividendadjusted-analysis)
+on 2026-10-08. Its `adj*` fields map to raw OHLC; adjusted close stays unavailable.
+Tests verify exact Decimal precision, OHLC bounds, zero/missing volume, the
+signed-64-bit volume resource bound, strict dates, inclusive range/order,
+duplicates and invalid rows outside range, fixed-clock input limits and empty
+versus malformed classifications. Fake HTTP checks exact route/header/query,
+bounded retries, safe failure categories and absence of hidden requests.
+The existing guarded provider integration probe now exercises raw history in
+both a source subprocess and the offline installed wheel, including receipt
+metadata and public list isolation. These fixtures establish parser behavior,
+not live entitlement, session completeness, adjusted returns or the M4 exit.
+Cache, facade and chart integration remain separate dependent issues.
+
 ---
 
 # 8. CLI Tests
