@@ -72,6 +72,12 @@ class HistoryRangeError(StockTrackerError):
     _message = "Historical date range is invalid."
 
 
+class HistoryCacheError(StockTrackerError):
+    """Historical cache filesystem or validation failure."""
+
+    _message = "Historical cache operation failed."
+
+
 class InstrumentLookupInconclusiveError(MarketDataUnavailableError):
     """Scoped lookup did not establish an exact supported identity."""
 

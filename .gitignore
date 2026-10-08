@@ -33,3 +33,5 @@ dist/
 venv/
 env/
 /test
+stock_tracker.history-cache.json
+.history-cache-*
