@@ -2,17 +2,28 @@
 
 The accepted ADR-0010 cache is disposable provider data, separate from holdings,
 SQLite migrations, neutral transfer and database backups. This issue supplies
-explicit-path storage and a historical-only decorator. Production factory/path
-composition and graph integration remain issue #91; current-data composition
+explicit-path storage and a historical-only decorator. Issue #91 adds the IO-free
+historical factory and additive Stock.get_price_history capability; chart rendering
+and CLI selection remain issues #92 and #93. Current-data composition
 still has history TTL 0.0, quote TTL 0.0 and stale fallback False.
 
 Callers explicitly inject a repository path, UTC clock, receipt loader and
-ProviderPolicy. The accepted history composition will use the cwd-relative
+ProviderPolicy. The historical factory uses the cwd-relative
 `stock_tracker.history-cache.json` sidecar and 3600-second history TTL. Exact
 normalized symbol/range/raw mapping keys reuse fully validated observations;
 hits preserve original receipt time and return fresh lists of immutable numeric
 bars. Expiry at exactly one hour or a backwards clock misses. Zero TTL bypasses
 all cache IO. Failed retrieval never returns stale data or modifies the cache.
+
+The facade accepts keyword-only start/end dates, both or neither. Defaults span
+five calendar years through the prior UTC calendar date, clamping February 29 to
+February 28 where needed. An exact known NASDAQ exchange is required before
+credentials, factory construction or cache access. Unsupported saved identities
+raise MarketDataUnavailableError without changing holdings. Range selection uses
+a monkeypatchable UTC clock; the provider-independent boundary validates raw,
+nonempty, ordered in-range bars and returns a fresh list without retaining data.
+It performs no quote/profile/summary refresh and stores no historical runtime
+objects or bars in holdings. Current currency metadata is not historical proof.
 
 JSON preserves Decimal text without quantization. The complete file is bounded
 to 16 MiB, 32 entries, 3660 bars per entry and 4096 characters per string.

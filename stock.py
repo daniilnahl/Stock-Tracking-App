@@ -1,9 +1,12 @@
 """Root-class compatibility facade; ownership arithmetic lives in pure domain."""
 
+from datetime import date
 from config import load_configuration
 from stock_tracker.domain import DomainValidationError, Position, Stock as Security, position_snapshot
 from stock_tracker.compatibility.numeric import to_decimal
 from stock_tracker.compatibility import presentation, stock_operations
+from stock_tracker.compatibility import history_operations
+from stock_tracker.providers.models import PriceBar
 
 
 class Stock:
@@ -122,6 +125,9 @@ class Stock:
 
     def get_price_over_time(self):
         return stock_operations.get_price_over_time(self)
+
+    def get_price_history(self, *, start: date | None = None, end: date | None = None) -> list[PriceBar]:
+        return history_operations.get_price_history(self, start=start, end=end)
 
     def graph_performance(self):
         return presentation.graph_performance(self)
