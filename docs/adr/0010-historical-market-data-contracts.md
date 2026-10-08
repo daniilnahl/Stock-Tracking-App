@@ -2,16 +2,22 @@
 
 ## Status and approval gate
 
-**Proposed, 2026-10-07. Not accepted.** This documentation-only proposal is for
+**Accepted, 2026-10-07.** The owner explicitly instructed “Approved and merged.
+Proceed.” after reviewing PR #95 at `e455660774e9c96e8ea8851cdeabc9d63f6e6730`.
+This accepts complete Option A below. PR #95 was owner-merged as
+`7f67c322a9f96cadb6fd3f126ed7240a37ac68c5`; post-merge
+[Foundation run 37705325479](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/37705325479)
+passed. This records the direct human instruction, rather than inferring
+acceptance from merge or CI. The original proposal below was prepared for
 [issue #88](https://github.com/daniilnahl/Stock-Tracking-App/issues/88) in
 [M4 — Historical Market Data](https://github.com/daniilnahl/Stock-Tracking-App/milestone/5).
-The owner must explicitly accept the complete proposal at the exact reviewed
-commit before dependent runtime work starts. A merged proposal PR, agent review,
-green CI or an issue closure does not by itself establish acceptance. Record the
-human instruction and exact commit in this status section only after it occurs.
+The explicit acceptance and verified merge resolve the contract gate for #89.
+A merged proposal PR, agent review, green CI or issue closure alone would not
+establish acceptance. Later runtime issues retain their dependency/merge gates.
 Acceptance authorizes the bounded contracts below, not agent merges or live
-credential/data operations. Until then, ADR-0007's history TTL remains **0.0**,
-quote TTL remains **0.0**, and stale fallback remains **False**.
+credential/data operations. History composition in #91 will explicitly supply
+the accepted history TTL; existing current-data composition retains history TTL
+**0.0**, quote TTL **0.0** and stale fallback **False**.
 
 Governing sources: approved [SRS](../../SRS.md) §§5–6, 9–11, 18 and 23;
 [AGENTS.md](../../AGENTS.md); [TESTING.md](../TESTING.md);
@@ -423,5 +429,5 @@ No live credential request is required to claim offline implementation evidence.
 Record unverifiable endpoint evidence or unavailable canonical tooling honestly;
 do not run the suite under an unsupported Python version or install system tools.
 
-This ADR is a proposal artifact. It neither satisfies the runtime exit nor closes
+This accepted ADR defines contracts. It neither satisfies the runtime exit nor closes
 adjusted-price, dividend, portfolio-performance or other financial open decisions.

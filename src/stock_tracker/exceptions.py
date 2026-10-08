@@ -66,6 +66,12 @@ class MarketDataUnavailableError(StockTrackerError):
     _message = "Market data is unavailable."
 
 
+class HistoryRangeError(StockTrackerError):
+    """Invalid historical date input without exposing supplied values."""
+
+    _message = "Historical date range is invalid."
+
+
 class InstrumentLookupInconclusiveError(MarketDataUnavailableError):
     """Scoped lookup did not establish an exact supported identity."""
 
@@ -124,6 +130,7 @@ _RESPONSE_FIELDS = frozenset({
     "month_6", "year_1", "year_3", "year_5", "date", "open", "high", "low",
     "close", "adjusted_close", "volume", "companyName", "marketCap", "timestamp",
     "1D", "5D", "1M", "3M", "6M", "1Y", "3Y", "5Y",
+    "adjOpen", "adjHigh", "adjLow", "adjClose",
 })
 
 

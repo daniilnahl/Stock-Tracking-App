@@ -4,7 +4,7 @@ Synthetic Stable fields follow accepted ADR-0007 samples inspected 2026-10-04.
 Real network/TLS paths are independently denied before application imports.
 """
 
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from decimal import Decimal
 import json
 from pathlib import Path
@@ -37,6 +37,8 @@ def expect_denied(call):
 
 target = Path(sys.argv[1]).resolve()
 sys.path.insert(0, str(target))
+if (target / 'src' / 'stock_tracker').is_dir():
+    sys.path.insert(0, str(target / 'src'))
 guards = [patch.object(urllib.request, 'urlopen', denied),
           patch.object(urllib.request.OpenerDirector, 'open', denied),
           patch.object(socket, 'getaddrinfo', denied), patch.object(socket, 'create_connection', denied),
@@ -86,6 +88,10 @@ class FixtureHTTP:
         if route == 'search-symbol':
             assert query == {'query': ['AAPL'], 'limit': ['100'], 'exchange': ['NASDAQ']}
             rows = [{'symbol': 'AAPL', 'exchange': 'NASDAQ', 'name': 'Fictional company', 'currency': 'USD'}]
+        elif route == 'historical-price-eod/non-split-adjusted':
+            # Synthetic raw schema reconfirmed against official guide 2026-10-08.
+            assert query == {'symbol': ['AAPL'], 'from': ['2020-01-01'], 'to': ['2020-01-01']}
+            return HttpResponse(200, {}, b'[{"symbol":"AAPL","date":"2020-01-01","adjOpen":100,"adjHigh":120,"adjLow":99,"adjClose":110.123456789012345678901,"volume":0}]')
         else:
             assert query == {'symbol': ['AAPL']}
             if route == 'quote':
@@ -117,6 +123,37 @@ assert isinstance(periods, PeriodChanges) and periods.day_1 == Decimal('-1.5')
 assert periods.day_5 == Decimal(0) and periods.month_1 == Decimal('12.5') and periods.year_5 is None
 assert requests == ['search-symbol', 'quote', 'profile', 'stock-price-change']
 assert credential not in repr(identity) + repr(quote) + repr(profile) + repr(periods) + repr(provider)
+
+
+def verify_history():
+    from stock_tracker.exceptions import HistoryRangeError, ProviderResponseError
+    from stock_tracker.providers.models import HistoryObservation, PriceBar
+    from stock_tracker.providers.protocols import HistoricalMarketDataProvider
+    history: HistoricalMarketDataProvider = provider
+    session = date(2020, 1, 1)
+    requests.clear()
+    observed = provider._load_price_history(' aapl ', session, session)
+    assert isinstance(observed, HistoryObservation) and observed.retrieved_at == received
+    bar, = observed.bars
+    assert isinstance(bar, PriceBar) and bar.date == session
+    assert bar.close == Decimal('110.123456789012345678901')
+    assert bar.adjusted_close is None and bar.volume == 0
+    bars = history.get_price_history('AAPL', session, session)
+    bars.clear()
+    assert len(observed.bars) == 1 and requests == ['historical-price-eod/non-split-adjusted'] * 2
+    assert str(HistoryRangeError()) == 'Historical date range is invalid.'
+    assert ProviderResponseError(field='adjClose').field == 'adjClose'
+    before = list(requests)
+    try:
+        history.get_price_history('AAPL', session, received.date())
+    except HistoryRangeError:
+        pass
+    else:
+        raise AssertionError('Invalid history range accepted')
+    assert requests == before
+
+
+verify_history()
 
 
 def create(key):
