@@ -1,8 +1,8 @@
 # M4 Historical Market Data implementation plan
 
-Status: **contracts accepted and owner-merged; #89 retrieval verified in PR #96, awaiting owner merge**.
+Status: **retrieval owner-merged and verified; #90 historical cache implementation active**.
 Snapshot: 2026-10-08. Planning baseline: `534a178` (owner-merged M3 audit PR #86).
-Runtime branch baseline: `7f67c32` (owner-merged M4 contract PR #95).
+Current runtime branch baseline: `9218229` (owner-merged retrieval PR #96).
 Parent: [M4 — Historical Market Data](https://github.com/daniilnahl/Stock-Tracking-App/milestone/5).
 Contract: [Accepted ADR-0010](../adr/0010-historical-market-data-contracts.md).
 
@@ -44,8 +44,8 @@ return, benchmark, dividend, FX, risk and transaction semantics remain outside M
 | Issue | Bounded objective | Status / dependencies | Agent | PR / review | Blocking reason |
 | --- | --- | --- | --- | --- | --- |
 | [#88](https://github.com/daniilnahl/Stock-Tracking-App/issues/88) | Historical ADR and dependency plan | Accepted and owner-merged | `m4_contract_audit`, GPT-6.1 low | [#95](https://github.com/daniilnahl/Stock-Tracking-App/pull/95); independent review, local checks and PR/main CI passed | None |
-| [#89](https://github.com/daniilnahl/Stock-Tracking-App/issues/89) | FMP OHLCV retrieval and approved validation | Verified on `feature/89-fmp-price-history`; owner merge pending | `m4_retrieval_impl`, GPT-6.1 low | [#96](https://github.com/daniilnahl/Stock-Tracking-App/pull/96); `m4_retrieval_review`, GPT-6.1 low: no actionable findings; local checks passed | PR/main CI and owner merge |
-| [#90](https://github.com/daniilnahl/Stock-Tracking-App/issues/90) | Bounded historical cache and freshness | Queued; #88/#89 | `m4_history_cache`, GPT-6.1 low | None | Accepted cache policy and retrieval |
+| [#89](https://github.com/daniilnahl/Stock-Tracking-App/issues/89) | FMP OHLCV retrieval and approved validation | Owner-merged and verified | `m4_retrieval_impl`, GPT-6.1 low | [#96](https://github.com/daniilnahl/Stock-Tracking-App/pull/96); `m4_retrieval_review`, GPT-6.1 low: no findings; local and PR/main CI passed | None |
+| [#90](https://github.com/daniilnahl/Stock-Tracking-App/issues/90) | Bounded historical cache and freshness | Active on `feature/90-history-cache` | `m4_history_cache`, GPT-6.1 low | Implementation/verification in progress; `m4_cache_review`, GPT-6.1 low, independent review | None |
 | [#91](https://github.com/daniilnahl/Stock-Tracking-App/issues/91) | Historical composition and facade | Queued; #88–90 | `m4_history_integration`, GPT-6.1 low | None | Stable retrieval/cache contracts |
 | [#92](https://github.com/daniilnahl/Stock-Tracking-App/issues/92) | Genuine-observation chart rendering | Queued; #88/#91 | `m4_chart_rendering`, GPT-6.1 low | None | Stable facade data boundary |
 | [#93](https://github.com/daniilnahl/Stock-Tracking-App/issues/93) | Existing chart command date selection | Queued; #88/#91/#92 | `m4_date_selection`, GPT-6.1 low | None | Approved UI/defaults and real chart |
@@ -113,7 +113,23 @@ passed. Independent review passed 578 focused tests, including the offline wheel
 then 129 final history tests; no actionable finding remained. These verify #89
 retrieval, not downstream caching, charts, date selection or M4 completion.
 Exact-head hosted CI/review is tracked in [PR #96](https://github.com/daniilnahl/Stock-Tracking-App/pull/96).
-Owner merge and post-merge main CI remain downstream dispatch gates.
+The owner confirmed PR #96 merged on 2026-10-08. Verified merge
+`921822996bf017869c424e049c1010d75f54491f` includes exact reviewed head
+`8b7fd14933c322a7cc4b625696ad3db93ab50970`;
+[post-merge Foundation run 37844832081](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/37844832081)
+passed all five checks. This resolves #90's retrieval prerequisite. Cache
+implementation and independent review were dispatched after those gates passed.
+Later issues retain their reviewed, owner-merged prerequisite gates.
+
+Cache verification on 2026-10-08 used the same Python 3.11.9 environment.
+Focused cache/history/wheel checks passed 212 tests; final cache/boundary checks
+passed 94 tests. The final stable full suite passed **2,066 tests in 77.35 seconds**
+with no skips or failures. Ruff, configured mypy (one source file), pip check and
+staged diff checks passed. Independent review passed 212 focused tests and then
+21 final staged hygiene/boundary tests, with no remaining actionable findings.
+The neutral sidecar retains holdings/schema isolation. Explicit production
+composition remains #91; cache verification does not establish M4 completion.
+PR publication and exact-head hosted checks are the remaining #90 review gates.
 
 ## Exit mapping and completion gates
 

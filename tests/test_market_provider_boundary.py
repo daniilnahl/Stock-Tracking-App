@@ -20,6 +20,10 @@ LEGACY_IMPORTS = {'urllib.request.urlopen', 'urllib.error.HTTPError', 'urllib.er
 def boundary_findings(source, path):
     tree = ast.parse(source)
     adapter = path.startswith('src/stock_tracker/providers/')
+    # ADR-0010's neutral sidecar has a required symbol field. This one mapping
+    # is persistence data, not an FMP response parser; all HTTP, concrete-adapter
+    # and other provider-payload checks continue to apply to this module.
+    neutral_history = path == 'src/stock_tracker/persistence/history_cache.py'
     legacy = path == 'utils/utility_module.py'
     aliases = {}
     findings = []
@@ -55,7 +59,8 @@ def boundary_findings(source, path):
             key = node.slice if isinstance(node, ast.Subscript) else None
             if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute) and node.func.attr == 'get' and node.args:
                 key = node.args[0]
-            if isinstance(key, ast.Constant) and key.value in SCHEMA_KEYS:
+            if (isinstance(key, ast.Constant) and key.value in SCHEMA_KEYS
+                    and not (neutral_history and key.value == 'symbol')):
                 findings.append('provider payload field outside adapter')
         if isinstance(node, ast.Call):
             name = qualified(node.func)
@@ -100,3 +105,14 @@ def test_generic_utility_exemption_does_not_allow_new_http_or_schema_callers():
     assert boundary_findings(retained + '\ndef check_ticker(symbol, key):\n    return get_jsonparsed_data(symbol)\n', 'utils/utility_module.py')
     assert boundary_findings(retained + '\ndef helper(data):\n    return data["mktCap"]\n', 'utils/utility_module.py')
     assert boundary_findings(retained + '\nurl = "https://financialmodelingprep.com/stable/quote"', 'utils/utility_module.py')
+
+
+def test_accepted_neutral_cache_symbol_mapping_keeps_provider_boundary_guards():
+    path = 'src/stock_tracker/persistence/history_cache.py'
+    assert boundary_findings('symbol = key["symbol"]', path) == []
+    for source in ('price = payload["price"]', 'cap = payload["marketCap"]',
+                   'from urllib.request import urlopen',
+                   'from stock_tracker.providers.fmp import FMPMarketDataProvider',
+                   'url = "https://financialmodelingprep.com/stable/quote"'):
+        assert boundary_findings(source, path)
+    assert boundary_findings('symbol = payload["symbol"]', 'stock.py')

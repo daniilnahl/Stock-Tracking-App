@@ -54,8 +54,11 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
         "stock_tracker/providers/models.py", "stock_tracker/providers/protocols.py",
         "stock_tracker/providers/transport.py", "stock_tracker/providers/fmp.py",
         "stock_tracker/providers/factory.py",
+        "stock_tracker/providers/history_cache.py",
         "stock_tracker/persistence/__init__.py", "stock_tracker/persistence/models.py",
         "stock_tracker/persistence/protocols.py",
+        "stock_tracker/persistence/history_cache.py",
+        "stock_tracker/persistence/history_protocols.py",
         "stock_tracker/persistence/transfer.py",
         "stock_tracker/persistence/sqlite_watchlists.py",
         "stock_tracker/persistence/connection.py", "stock_tracker/persistence/migrations.py",
@@ -91,6 +94,15 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
     )
     assert persistence.returncode == 0, persistence.stderr
     assert persistence.stdout == persistence.stderr == ""
+
+    for mode in ("write", "read"):
+        history = subprocess.run(
+            [sys.executable, "-I", str(ROOT / "tests" / "history_cache_probe.py"),
+             str(installed), str(tmp_path / "installed-history.json"), mode],
+            cwd=tmp_path, env=environment, capture_output=True, text=True,
+        )
+        assert history.returncode == 0, history.stderr
+        assert history.stdout == history.stderr == ""
 
     migration_code = """
 import sys

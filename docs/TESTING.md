@@ -687,3 +687,18 @@ M2 evidence using synthetic offline fixtures. This does not expand mypy scope,
 prove global ticker nonexistence/search completeness or certify later historical,
 persistence or analytics behavior. Current documentation-only verification is
 reported separately in its PR; earlier implementation runs are not its CI.
+
+## M4 historical cache — issue #90
+
+Run `python -m pytest tests/test_history_cache.py tests/test_fmp_history.py
+tests/test_packaging.py -v` for explicit-path cache policy, precise neutral JSON,
+request counts, freshness boundaries, malformed-data preservation and atomic
+write failures. Fixed UTC clocks, injected receipt loaders and temporary files
+keep these checks deterministic and offline. `history_cache_probe.py` independently
+denies network and pickle in write/read subprocesses for source and installed-wheel
+reuse. Windows without symlink creation privilege exercises the lstat refusal
+boundary with a synthetic symlink mode; privileged/POSIX runs use a real symlink.
+The existing holdings isolation probes retain their provider-free contracts.
+See [cache operations](HISTORICAL_CACHE.md) for bounds and failure behavior.
+This verifies the cache capability, without claiming issue #91 production/graph
+composition or later milestone completion.
