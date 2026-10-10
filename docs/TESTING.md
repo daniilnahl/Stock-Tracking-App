@@ -702,3 +702,15 @@ The existing holdings isolation probes retain their provider-free contracts.
 See [cache operations](HISTORICAL_CACHE.md) for bounds and failure behavior.
 This verifies the cache capability, without claiming issue #91 production/graph
 composition or later milestone completion.
+
+## M4 historical composition — issue #91
+
+Run `python -m pytest tests/test_history_integration.py tests/test_history_cache.py
+tests/test_fmp_history.py tests/test_packaging.py -v` for the historical factory
+and additive facade boundary. Fixed UTC clocks, temporary working directories
+and synthetic transport results verify exact production policy, persistent reuse,
+default/explicit ranges, the NASDAQ gate, fake-result validation, restored runtime
+keys and unchanged holdings/summary state. `history_integration_probe.py` denies
+network and pickle and checks real composition reuse across write/read processes
+for source and installed wheels. Existing renderer and CLI flow remain #92/#93;
+these checks do not certify their future genuine-history plotting or M4 exit.

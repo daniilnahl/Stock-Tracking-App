@@ -47,6 +47,7 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
         "stock_tracker/domain/calculations.py",
         "stock_tracker/compatibility/__init__.py", "stock_tracker/compatibility/numeric.py",
         "stock_tracker/compatibility/stock_operations.py",
+        "stock_tracker/compatibility/history_operations.py",
         "stock_tracker/compatibility/watchlist_persistence.py",
         "stock_tracker/compatibility/cli_persistence.py",
         "stock_tracker/compatibility/presentation.py",
@@ -103,6 +104,16 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
         )
         assert history.returncode == 0, history.stderr
         assert history.stdout == history.stderr == ""
+
+    composition_directory = tmp_path / "installed-history-composition"
+    composition_directory.mkdir()
+    for mode in ("write", "read"):
+        composition = subprocess.run(
+            [sys.executable, "-I", str(ROOT / "tests/history_integration_probe.py"), str(installed), mode],
+            cwd=composition_directory, env=environment, capture_output=True, text=True,
+        )
+        assert composition.returncode == 0, composition.stderr
+        assert composition.stdout == composition.stderr == ""
 
     migration_code = """
 import sys
