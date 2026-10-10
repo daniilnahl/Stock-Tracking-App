@@ -7,6 +7,10 @@ from unittest.mock import patch
 import pickle
 import socket
 import urllib.request
+import os
+
+os.environ["MPLBACKEND"] = "Agg"
+os.environ["MPLCONFIGDIR"] = str(Path.cwd() / "matplotlib")
 
 root = Path(sys.argv[1]).resolve()
 sys.path.insert(0, str(root))
@@ -61,6 +65,22 @@ with ExitStack() as guards:
     bars = stock.get_price_history(start=date(2020, 1, 2), end=date(2020, 1, 6))
     assert len(bars) == 1 and str(bars[0].close) == "110.0000" and bars[0].adjusted_close is None
     assert stock.__dict__ == before and len(calls) == (1 if sys.argv[2] == "write" else 0)
+    from stock_tracker.compatibility import presentation
+    guards.enter_context(patch.object(presentation.plt, "show", lambda: None))
+    stock.graph_performance(start=date(2020, 1, 2), end=date(2020, 1, 6))
+    figure = presentation.plt.gcf()
+    axes, = figure.axes
+    line, = axes.lines
+    assert list(line.get_xdata(orig=True)) == [date(2020, 1, 2)]
+    assert list(line.get_ydata(orig=True)) == [110.0]
+    assert line.get_linestyle() == "None" and line.get_marker() == "o"
+    assert axes.get_title() == "AAPL — Raw historical close\nRequested: 2020-01-02 to 2020-01-06"
+    assert axes.get_ylabel() == "Price (currency unavailable)"
+    assert "1 observations" in figure.texts[0].get_text()
+    figure.canvas.draw()
+    presentation.plt.close(figure)
+    assert stock.__dict__ == before and str(bars[0].close) == "110.0000"
+    assert len(calls) == (1 if sys.argv[2] == "write" else 0)
     assert credential not in Path("stock_tracker.history-cache.json").read_text()
     stock.exchange = "NYSE"
     stock.API_KEY = None
@@ -70,7 +90,7 @@ with ExitStack() as guards:
         pass
     else:
         raise AssertionError("Exchange gate failed")
-    for name in ("stock_tracker.compatibility.history_operations", "stock_tracker.providers.factory",
+    for name in ("stock_tracker.compatibility.presentation", "stock_tracker.compatibility.history_operations", "stock_tracker.providers.factory",
                  "stock_tracker.providers.history_cache", "stock_tracker.persistence.history_cache"):
         assert Path(sys.modules[name].__file__).resolve().is_relative_to(root)
     facade_root = root.parent if root.name == "src" else root

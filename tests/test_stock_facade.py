@@ -190,28 +190,17 @@ def test_provider_request_order_schema_mapping_and_refresh(monkeypatch, stock):
     assert calls == ['profile', 'periods', 'quote', 'profile']
 
 
-def test_legacy_chart_delegates_with_fixed_clock(monkeypatch, stock):
+def test_chart_delegates_compatible_default_and_explicit_dates(monkeypatch, stock):
+    from datetime import date
     from stock_tracker.compatibility import presentation
 
-    class FixedDatetime:
-        @staticmethod
-        def today():
-            return datetime(2020, 1, 2)
-
-    calls = {}
-    monkeypatch.setattr(presentation, "datetime", FixedDatetime)
-    for name in ("figure", "title", "xlabel", "ylabel", "grid", "legend", "show"):
-        monkeypatch.setattr(presentation.plt, name, lambda *a, **kw: None)
-    monkeypatch.setattr(presentation.plt, "plot", lambda dates, prices, **kw: calls.update(
-        dates=dates, prices=prices, kwargs=kw,
-    ))
-    for name in ("price_1d", "price_5d", "price_30d", "price_3m", "price_6m", "price_1y", "price_3y", "price_5y"):
-        setattr(stock, name, "20")
-    stock.graph_performance()
-    assert calls["dates"][0] == datetime(2020, 1, 2)
-    assert calls["prices"] == (120.0,) + (100.0,) * 8
+    calls = []
+    monkeypatch.setattr(presentation, "graph_performance", lambda stock, **kw: calls.append((stock, kw)))
+    assert stock.graph_performance() is None
+    stock.graph_performance(start=date(2020, 1, 2), end=date(2020, 1, 6))
+    assert calls == [(stock, {"start": None, "end": None}),
+                     (stock, {"start": date(2020, 1, 2), "end": date(2020, 1, 6)})]
     assert stock._position is None
-
 
 @pytest.mark.parametrize("value,expected", [(None, "-"), ("-", "-"), ("N/A", "-"),
                                             ("20.0", "[green]20.0%[/]"), ("-20.0", "[red]-20.0%[/]")])

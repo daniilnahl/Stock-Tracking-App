@@ -1,8 +1,8 @@
 # M4 Historical Market Data implementation plan
 
-Status: **retrieval/cache owner-merged and verified; #91 integration PR awaiting owner review**.
-Snapshot: 2026-10-08. Planning baseline: `534a178` (owner-merged M3 audit PR #86).
-Current runtime branch baseline: `7385f7e` (owner-merged cache PR #97).
+Status: **history integration owner-merged and verified; #92 genuine chart implementation active**.
+Snapshot: 2026-10-09. Planning baseline: `534a178` (owner-merged M3 audit PR #86).
+Current runtime branch baseline: `c8f0d8f` (owner-merged integration PR #98).
 Parent: [M4 — Historical Market Data](https://github.com/daniilnahl/Stock-Tracking-App/milestone/5).
 Contract: [Accepted ADR-0010](../adr/0010-historical-market-data-contracts.md).
 
@@ -46,8 +46,8 @@ return, benchmark, dividend, FX, risk and transaction semantics remain outside M
 | [#88](https://github.com/daniilnahl/Stock-Tracking-App/issues/88) | Historical ADR and dependency plan | Accepted and owner-merged | `m4_contract_audit`, GPT-6.1 low | [#95](https://github.com/daniilnahl/Stock-Tracking-App/pull/95); independent review, local checks and PR/main CI passed | None |
 | [#89](https://github.com/daniilnahl/Stock-Tracking-App/issues/89) | FMP OHLCV retrieval and approved validation | Owner-merged and verified | `m4_retrieval_impl`, GPT-6.1 low | [#96](https://github.com/daniilnahl/Stock-Tracking-App/pull/96); `m4_retrieval_review`, GPT-6.1 low: no findings; local and PR/main CI passed | None |
 | [#90](https://github.com/daniilnahl/Stock-Tracking-App/issues/90) | Bounded historical cache and freshness | Owner-merged and verified | `m4_history_cache`, GPT-6.1 low | [#97](https://github.com/daniilnahl/Stock-Tracking-App/pull/97); `m4_cache_review`, GPT-6.1 low: no findings; local and PR/main CI passed | None |
-| [#91](https://github.com/daniilnahl/Stock-Tracking-App/issues/91) | Historical composition and facade | Awaiting owner merge on `feature/91-history-integration`; #88–90 resolved | `m4_history_integration`, GPT-6.1 low | [#98](https://github.com/daniilnahl/Stock-Tracking-App/pull/98); `m4_integration_review`, GPT-6.1 low: no findings; local checks passed; hosted checks tracked in PR | Required hosted CI and owner merge |
-| [#92](https://github.com/daniilnahl/Stock-Tracking-App/issues/92) | Genuine-observation chart rendering | Queued; #88/#91 | `m4_chart_rendering`, GPT-6.1 low | None | Stable facade data boundary |
+| [#91](https://github.com/daniilnahl/Stock-Tracking-App/issues/91) | Historical composition and facade | Owner-merged and verified | `m4_history_integration`, GPT-6.1 low | [#98](https://github.com/daniilnahl/Stock-Tracking-App/pull/98); `m4_integration_review`, GPT-6.1 low: no findings; local and PR/main CI passed | None |
+| [#92](https://github.com/daniilnahl/Stock-Tracking-App/issues/92) | Genuine-observation chart rendering | Active on `feature/92-real-history-charts`; #88/#91 resolved | `m4_chart_rendering`, GPT-6.1 low | Implementation in progress; `m4_chart_review`, GPT-6.1 low, independent review | None |
 | [#93](https://github.com/daniilnahl/Stock-Tracking-App/issues/93) | Existing chart command date selection | Queued; #88/#91/#92 | `m4_date_selection`, GPT-6.1 low | None | Approved UI/defaults and real chart |
 | [#94](https://github.com/daniilnahl/Stock-Tracking-App/issues/94) | Independent combined exit evidence | Queued; #88–93 | `m4_exit_audit`, GPT-6.1 low | None | All runtime prerequisites |
 
@@ -157,7 +157,31 @@ are preserved. #92 owns rendering/hookup; #93 owns CLI options/precheck ordering
 [PR #98](https://github.com/daniilnahl/Stock-Tracking-App/pull/98) records exact-head
 hosted checks and Master review. Runtime/test implementation commit is
 `3363350b771832e45665f8d107e7fbd4f1de1f00`; the subsequent tracking commit edits
-only this plan. Required hosted CI and owner merge remain #92 dependency gates.
+only this plan. At publication, hosted CI and owner merge remained #92 gates.
+
+The owner confirmed PR #98 merged on 2026-10-09. Verified merge
+`c8f0d8f1b253d9133209e4aa56998c214f146aec` includes exact reviewed head
+`5d2b7ba3eeb17eb045f265569c52c6cd1ca3bcb3`.
+[Final PR Foundation run 37861072014](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/37861072014)
+and [main Foundation run 38020385327](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/38020385327)
+passed all five checks, resolving #92 dependencies. Rendering implementation and
+independent review were dispatched after verification. #93/#94 remain queued.
+
+Rendering verification on 2026-10-09 used the same Python 3.11.9 environment.
+Targeted charts/facade/history/wheel checks passed 128 tests in 27.66 seconds.
+Full `python -m pytest -q` passed **2,138 tests in 75.33 seconds**, without
+failures or skips. Ruff, configured mypy (one source file), pip check and final
+staged hygiene (8 tests) passed. Independent review passed 142 related tests,
+including source/installed-wheel real Agg cache-to-chart probes, then 25 final
+chart tests after the synthetic credential fixture correction. No actionable
+finding remains. Master and reviewer inspected a supplied-fixture Agg preview:
+three unconnected raw-close markers, ISO session-date ticks, readable requested/
+observed labels, unavailable currency and split warning; no clipping.
+The shared transient range helper avoids resolving default chart dates twice.
+README/cache-operation corrections describe the new behavior; #93 CLI selection/
+error handling and #94 combined exit evidence remain pending. No M4 completion
+or live-market entitlement is claimed. PR publication and exact-head hosted
+checks remain #92 review gates.
 
 ## Exit mapping and completion gates
 

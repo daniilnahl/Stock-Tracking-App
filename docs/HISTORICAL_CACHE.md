@@ -3,8 +3,10 @@
 The accepted ADR-0010 cache is disposable provider data, separate from holdings,
 SQLite migrations, neutral transfer and database backups. This issue supplies
 explicit-path storage and a historical-only decorator. Issue #91 adds the IO-free
-historical factory and additive Stock.get_price_history capability; chart rendering
-and CLI selection remain issues #92 and #93. Current-data composition
+historical factory and additive Stock.get_price_history capability. Issue #92
+renders observed raw closes as unconnected markers with unknown historical
+currency, range/count labels and a split-price warning. CLI selection and safe
+CLI error handling remain #93. Current-data composition
 still has history TTL 0.0, quote TTL 0.0 and stale fallback False.
 
 Callers explicitly inject a repository path, UTC clock, receipt loader and

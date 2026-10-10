@@ -714,3 +714,15 @@ keys and unchanged holdings/summary state. `history_integration_probe.py` denies
 network and pickle and checks real composition reuse across write/read processes
 for source and installed wheels. Existing renderer and CLI flow remain #92/#93;
 these checks do not certify their future genuine-history plotting or M4 exit.
+
+## M4 historical charts — issue #92
+
+Run `python -m pytest tests/test_history_charts.py tests/test_stock_facade.py
+tests/test_history_integration.py tests/test_packaging.py -v` for actual Agg
+dates/closes, marker-only sparse observations, requested/observed labels and
+rendering limits. Every Decimal close is converted before figure creation;
+overflow and positive underflow fail safely while genuine zero remains usable.
+Fixed clocks verify one range resolution and matching request/title dates.
+The source and installed-wheel composition probe renders cached raw closes
+without network or state mutation. These checks leave CLI date options and safe
+CLI error handling to #93 and do not claim M4 completion or live entitlement.

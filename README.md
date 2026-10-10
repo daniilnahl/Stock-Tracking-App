@@ -10,7 +10,9 @@ The **Stock Tracking App** was created as a passion project driven by my interes
 - Refresh stocks' data to be up-to-date.
 - Graph a stock's performance.
 
-The existing chart is approximate; real historical charting remains M4 work.
+Charts use observed raw historical closes for known NASDAQ stocks, with no
+interpolation or currency assumption. Requested/observed ranges and split-price
+warnings are shown; CLI date selection and the combined M4 exit audit remain work.
 The unfinished personal evaluation method is unavailable. This foundation
 does not certify financial analytics or production readiness.
 
