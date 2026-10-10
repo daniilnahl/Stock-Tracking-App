@@ -46,6 +46,13 @@ def resolve_history_range(
 
 
 def get_price_history(stock, *, start: date | None = None, end: date | None = None) -> list[PriceBar]:
+    return get_price_history_with_range(stock, start=start, end=end)[2]
+
+
+def get_price_history_with_range(
+    stock, *, start: date | None = None, end: date | None = None,
+) -> tuple[date, date, list[PriceBar]]:
+    """Carry the single resolved request range with its validated observations."""
     require_history_identity(stock)
     start, end = resolve_history_range(start, end)
     symbol = stock.ticker_symbol
@@ -75,4 +82,4 @@ def get_price_history(stock, *, start: date | None = None, end: date | None = No
         if bar.volume is not None and bar.volume > 9223372036854775807:
             raise ProviderResponseError(field="volume")
         previous = bar.date
-    return list(bars)
+    return start, end, list(bars)

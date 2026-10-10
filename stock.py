@@ -129,8 +129,8 @@ class Stock:
     def get_price_history(self, *, start: date | None = None, end: date | None = None) -> list[PriceBar]:
         return history_operations.get_price_history(self, start=start, end=end)
 
-    def graph_performance(self):
-        return presentation.graph_performance(self)
+    def graph_performance(self, *, start: date | None = None, end: date | None = None):
+        return presentation.graph_performance(self, start=start, end=end)
 
     @staticmethod
     def format_mcap(mcap: float):
