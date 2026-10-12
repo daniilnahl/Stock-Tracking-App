@@ -82,6 +82,27 @@ with ExitStack() as guards:
     assert stock.__dict__ == before and str(bars[0].close) == "110.0000"
     assert len(calls) == (1 if sys.argv[2] == "write" else 0)
     assert credential not in Path("stock_tracker.history-cache.json").read_text()
+    import dotenv
+    guards.enter_context(patch.object(dotenv, "load_dotenv", lambda *a, **kw: False))
+    import menu_watchlist as menu
+    from typer.testing import CliRunner
+    menu.current_watchlist.stocks[:] = [stock]
+    menu._watchlist_loaded = True
+    guards.enter_context(patch.object(menu, "API_KEY", credential))
+    guards.enter_context(patch.object(menu, "save_watchlist", denied))
+    result = CliRunner().invoke(menu.app, ["graph-stock", "--start", "2020-01-02", "--end", "2020-01-06"], input="aapl\n")
+    assert result.exit_code == 0, result.output
+    assert list(presentation.plt.gca().lines[0].get_ydata()) == [110.0]
+    assert presentation.plt.gca().get_title().endswith("Requested: 2020-01-02 to 2020-01-06")
+    assert stock.__dict__ == before
+    assert len(calls) == (1 if sys.argv[2] == "write" else 0)
+    presentation.plt.close("all")
+    with patch.object(menu, "_prepare_command", denied):
+        invalid = CliRunner().invoke(menu.app, ["graph-stock", "--start", "20200102", "--end", "2020-01-06"])
+        assert invalid.exit_code == 1 and invalid.output.strip() == "Historical date range is invalid."
+        help_result = CliRunner().invoke(menu.app, ["graph-stock", "--help"])
+        assert help_result.exit_code == 0 and "--start" in help_result.output and "--end" in help_result.output
+    assert not Path("stock_tracker.sqlite3").exists()
     stock.exchange = "NYSE"
     stock.API_KEY = None
     try:
@@ -95,3 +116,4 @@ with ExitStack() as guards:
         assert Path(sys.modules[name].__file__).resolve().is_relative_to(root)
     facade_root = root.parent if root.name == "src" else root
     assert Path(sys.modules["stock"].__file__).resolve() == facade_root / "stock.py"
+    assert Path(menu.__file__).resolve() == facade_root / "menu_watchlist.py"

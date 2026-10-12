@@ -1,5 +1,7 @@
 #CLASS FOR A WATCH LIST
 from dataclasses import dataclass, field
+from datetime import date
+from stock_tracker.compatibility.history_operations import resolve_history_range
 from rich.console import Console
 from rich.markup import escape
 from rich.table import Table
@@ -19,16 +21,22 @@ class Watch_list:
         """
         self.stocks.append(stock)
     
-    def graph_stock(self, stock_ticker: str):
+    def graph_stock(self, stock_ticker: str, *, start: date | None = None, end: date | None = None):
         """
         Finds a stock instance based on the ticker symbol and if found runs stock class function to display a graph.
         
         Args:
             stock_ticker (str): stock ticker symbol provided by user.
         """
+        explicit = start is not None or end is not None
+        if explicit:
+            start, end = resolve_history_range(start, end)
         for stock in self.stocks:
             if stock_ticker == stock.ticker_symbol:
-                stock.graph_performance()
+                if explicit:
+                    stock.graph_performance(start=start, end=end)
+                else:
+                    stock.graph_performance()
                 
     def remove_stock(self, stock_ticker: str):
         """
