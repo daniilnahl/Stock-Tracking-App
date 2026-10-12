@@ -1,6 +1,6 @@
 # M4 Historical Market Data implementation plan
 
-Status: **genuine charts owner-merged and verified; #93 CLI date selection verified locally**.
+Status: **genuine charts owner-merged and verified; #93 CLI date-selection PR awaiting owner review**.
 Snapshot: 2026-10-12. Planning baseline: `534a178` (owner-merged M3 audit PR #86).
 Current runtime branch baseline: `cd0b828` (owner-merged chart PR #99).
 Parent: [M4 — Historical Market Data](https://github.com/daniilnahl/Stock-Tracking-App/milestone/5).
@@ -48,7 +48,7 @@ return, benchmark, dividend, FX, risk and transaction semantics remain outside M
 | [#90](https://github.com/daniilnahl/Stock-Tracking-App/issues/90) | Bounded historical cache and freshness | Owner-merged and verified | `m4_history_cache`, GPT-6.1 low | [#97](https://github.com/daniilnahl/Stock-Tracking-App/pull/97); `m4_cache_review`, GPT-6.1 low: no findings; local and PR/main CI passed | None |
 | [#91](https://github.com/daniilnahl/Stock-Tracking-App/issues/91) | Historical composition and facade | Owner-merged and verified | `m4_history_integration`, GPT-6.1 low | [#98](https://github.com/daniilnahl/Stock-Tracking-App/pull/98); `m4_integration_review`, GPT-6.1 low: no findings; local and PR/main CI passed | None |
 | [#92](https://github.com/daniilnahl/Stock-Tracking-App/issues/92) | Genuine-observation chart rendering | Owner-merged and verified | `m4_chart_rendering`, GPT-6.1 low | [#99](https://github.com/daniilnahl/Stock-Tracking-App/pull/99); `m4_chart_review`, GPT-6.1 low: no findings; local and PR/main CI passed | None |
-| [#93](https://github.com/daniilnahl/Stock-Tracking-App/issues/93) | Existing chart command date selection | Ready for publication on `feature/93-history-date-selection`; #88/#91/#92 resolved | `m4_date_selection`, GPT-6.1 low | `m4_date_review`, GPT-6.1 low: no findings; local checks passed | Required hosted CI and owner merge |
+| [#93](https://github.com/daniilnahl/Stock-Tracking-App/issues/93) | Existing chart command date selection | Awaiting owner merge on `feature/93-history-date-selection`; #88/#91/#92 resolved | `m4_date_selection`, GPT-6.1 low | [#100](https://github.com/daniilnahl/Stock-Tracking-App/pull/100); `m4_date_review`, GPT-6.1 low: no findings; local checks passed; hosted checks tracked in PR | Required hosted CI and owner merge |
 | [#94](https://github.com/daniilnahl/Stock-Tracking-App/issues/94) | Independent combined exit evidence | Queued; #88–93 | `m4_exit_audit`, GPT-6.1 low | None | All runtime prerequisites |
 
 Queued agent names are assignments for future dispatch, not claims of running
@@ -208,8 +208,11 @@ and history work, all selected identities precede key preflight, temporary runti
 key binding is restored, and real SQLite restore tests preserve database bytes.
 Default Stock-like calls and ordered duplicates remain compatible. No schema,
 provider policy, financial formula, dependency, toolchain or CI change is included.
-Hosted PR evidence will record the actual publication head. #94 and M4 completion
-remain gated by owner merge, main CI and combined exit verification.
+[PR #100](https://github.com/daniilnahl/Stock-Tracking-App/pull/100) records exact-head
+hosted checks and Master review. Runtime/test implementation commit is
+`e557732415053ec851848fa94f3ff4691e315d5e`; the subsequent tracking commit edits
+only this plan. #94 and M4 completion remain gated by owner merge, main CI and
+combined exit verification.
 
 ## Exit mapping and completion gates
 
