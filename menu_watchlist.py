@@ -1,4 +1,5 @@
 from pathlib import Path
+from datetime import date
 from config import ConfigurationError, load_configuration, require_api_key
 
 import typer #CLI
@@ -6,7 +7,8 @@ import typer #CLI
 #OBJECTS 
 from stock import Stock
 from stock_tracker.domain import DomainValidationError
-from stock_tracker.exceptions import PersistenceError, StockTrackerError
+from stock_tracker.exceptions import HistoryRangeError, PersistenceError, StockTrackerError
+from stock_tracker.compatibility.history_operations import require_history_identity, resolve_history_range
 from stock_tracker.compatibility.cli_persistence import (
     load_cli_watchlist, save_cli_watchlist, storage_error_message,
 )
@@ -121,14 +123,47 @@ def remove_stock():
     _save_current_watchlist()#updates the external file
 
 @app.command()
-def graph_stock():
-    """
-    shows an approximate graph of a stock's performance.
-    """
-    _prepare_command()
-    current_watchlist.show_just_tickers()
-    stock_ticker = (typer.prompt("Enter stock ticker")).upper()
-    current_watchlist.graph_stock(stock_ticker)
+def graph_stock(
+    start: str | None = typer.Option(None, help="Inclusive start date (YYYY-MM-DD); requires --end."),
+    end: str | None = typer.Option(None, help="Inclusive end date (YYYY-MM-DD); requires --start."),
+):
+    """Show genuine raw historical closes for a selected watchlist stock."""
+    try:
+        explicit = start is not None or end is not None
+        if explicit:
+            try:
+                first, last = date.fromisoformat(start), date.fromisoformat(end)
+                if first.isoformat() != start or last.isoformat() != end:
+                    raise HistoryRangeError()
+            except (TypeError, ValueError):
+                raise HistoryRangeError() from None
+            first, last = resolve_history_range(first, last)
+        _prepare_command()
+        current_watchlist.show_just_tickers()
+        stock_ticker = (typer.prompt("Enter stock ticker")).upper()
+        selected = [stock for stock in current_watchlist.stocks if stock.ticker_symbol == stock_ticker]
+        if not selected:
+            return
+        for stock in selected:
+            require_history_identity(stock)
+        require_api_key(API_KEY)
+        previous_keys = [(stock, stock.API_KEY) for stock in selected]
+        try:
+            for stock, _ in previous_keys:
+                stock.API_KEY = API_KEY
+            if explicit:
+                current_watchlist.graph_stock(stock_ticker, start=first, end=last)
+            else:
+                current_watchlist.graph_stock(stock_ticker)
+        finally:
+            for stock, key in previous_keys:
+                stock.API_KEY = key
+    except ConfigurationError:
+        typer.echo("Unable to configure historical market data. Check FMP_API_KEY.", err=True)
+        raise typer.Exit(code=1) from None
+    except StockTrackerError as error:
+        typer.echo(str(error), err=True)
+        raise typer.Exit(code=1) from None
     
 @app.command()
 def show_stocks():

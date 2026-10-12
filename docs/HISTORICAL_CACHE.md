@@ -5,8 +5,12 @@ SQLite migrations, neutral transfer and database backups. This issue supplies
 explicit-path storage and a historical-only decorator. Issue #91 adds the IO-free
 historical factory and additive Stock.get_price_history capability. Issue #92
 renders observed raw closes as unconnected markers with unknown historical
-currency, range/count labels and a split-price warning. CLI selection and safe
-CLI error handling remain #93. Current-data composition
+currency, range/count labels and a split-price warning. Issue #93 adds paired
+`--start YYYY-MM-DD` / `--end YYYY-MM-DD` options to the existing `graph-stock`
+command, preserving the ticker prompt and default no-argument flow. Invalid
+ranges fail before provider/cache work; selected stocks pass the exact NASDAQ
+identity gate before key checks. Anticipated graph failures render safe messages
+and exit 1 without saving holdings. Current-data composition
 still has history TTL 0.0, quote TTL 0.0 and stale fallback False.
 
 Callers explicitly inject a repository path, UTC clock, receipt loader and

@@ -12,7 +12,8 @@ The **Stock Tracking App** was created as a passion project driven by my interes
 
 Charts use observed raw historical closes for known NASDAQ stocks, with no
 interpolation or currency assumption. Requested/observed ranges and split-price
-warnings are shown; CLI date selection and the combined M4 exit audit remain work.
+warnings are shown. The graph command accepts paired dates; the combined M4 exit
+audit remains work.
 The unfinished personal evaluation method is unavailable. This foundation
 does not certify financial analytics or production readiness.
 
@@ -107,6 +108,24 @@ This prints the existing commands: `add-stock`, `remove-stock`, `show-stocks`,
 Help and saved-data commands do not require a key. The alternate Typer app in
 `daniils_stock_method.py` is covered by the offline help tests; it has no script
 entry point. The unfinished evaluation method raises `NotImplementedError`.
+
+Graph an existing stock with the ticker prompt and optional inclusive dates:
+
+```bash
+python menu_watchlist.py graph-stock --start 2020-01-01 --end 2020-01-06
+```
+
+Supply both dates in exact `YYYY-MM-DD` form or omit both. The default spans five
+calendar years through the prior UTC calendar date, with February 29 clamped to
+February 28 in a non-leap start year. Explicit ranges must be ordered, end before
+today in UTC and contain at most 3,660 calendar days. Missing sessions stay
+missing; charts show available observations within the requested interval.
+Invalid ranges exit with `Historical date range is invalid.` before provider or
+cache work. A selected stock must have a known exchange exactly equal to NASDAQ
+before credential checks. Graphing requires a current runtime provider key and
+does not refresh summaries or save holdings. Missing tickers perform no history
+request. Provider/cache failures exit nonzero with safe messages; cache recovery
+limits are described in [historical cache operations](docs/HISTORICAL_CACHE.md).
 
 Reusable SQLite repositories and [safe neutral import/backup/restore utilities](docs/PERSISTENCE_TRANSFER.md)
 are available. The documented transition requires manual reviewed neutral JSON and

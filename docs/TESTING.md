@@ -726,3 +726,18 @@ Fixed clocks verify one range resolution and matching request/title dates.
 The source and installed-wheel composition probe renders cached raw closes
 without network or state mutation. These checks leave CLI date options and safe
 CLI error handling to #93 and do not claim M4 completion or live entitlement.
+
+## M4 CLI date selection — issue #93
+
+Run `python -m pytest tests/test_history_date_selection.py tests/test_history_charts.py
+tests/test_history_integration.py tests/test_cli_persistence.py tests/test_packaging.py -v`
+for paired exact ISO options, default leap-day selection, real request/cache/chart
+data, unsupported identity before key checks, safe typed errors and unchanged
+SQLite bytes. Fixed clocks and temporary storage keep the tests offline.
+Restored stocks use the current runtime key; temporary key bindings are restored
+after success, anticipated failures and programming errors. Watchlist tests
+preserve ordered duplicates and default no-argument Stock-like callers.
+The source/installed-wheel history probe executes the actual cached CLI graph,
+invalid ISO rejection and help with command preflight denied. Existing help and
+domain isolation probes remain required. These checks do not replace #94's
+combined exit audit or verify live provider entitlement/session completeness.
