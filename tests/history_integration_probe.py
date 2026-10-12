@@ -86,6 +86,7 @@ with ExitStack() as guards:
     guards.enter_context(patch.object(dotenv, "load_dotenv", lambda *a, **kw: False))
     import menu_watchlist as menu
     from typer.testing import CliRunner
+    from click.utils import strip_ansi
     menu.current_watchlist.stocks[:] = [stock]
     menu._watchlist_loaded = True
     guards.enter_context(patch.object(menu, "API_KEY", credential))
@@ -100,8 +101,14 @@ with ExitStack() as guards:
     with patch.object(menu, "_prepare_command", denied):
         invalid = CliRunner().invoke(menu.app, ["graph-stock", "--start", "20200102", "--end", "2020-01-06"])
         assert invalid.exit_code == 1 and invalid.output.strip() == "Historical date range is invalid."
-        help_result = CliRunner().invoke(menu.app, ["graph-stock", "--help"])
-        assert help_result.exit_code == 0 and "--start" in help_result.output and "--end" in help_result.output
+        for force_color in ("0", "1"):
+            with patch.dict(os.environ, {"FORCE_COLOR": force_color, "TERM": "xterm-256color", "NO_COLOR": ""}):
+                help_result = CliRunner().invoke(menu.app, ["graph-stock", "--help"], color=True)
+            assert help_result.exit_code == 0, help_result.exception
+            help_text = strip_ansi(help_result.output)
+            assert "graph-stock" in help_text and "--start" in help_text and "--end" in help_text, repr(help_result.output)
+            if force_color == "1":
+                assert "\x1b[" in help_result.output
     assert not Path("stock_tracker.sqlite3").exists()
     stock.exchange = "NYSE"
     stock.API_KEY = None

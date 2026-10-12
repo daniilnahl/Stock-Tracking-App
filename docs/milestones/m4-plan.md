@@ -214,6 +214,23 @@ hosted checks and Master review. Runtime/test implementation commit is
 only this plan. #94 and M4 completion remain gated by owner merge, main CI and
 combined exit verification.
 
+Initial hosted [Foundation run 38311806709](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/38311806709)
+at `f76d1257b89b77d343ff2375a586dde651c6c594` failed both Python test jobs:
+source and installed-wheel help assertions compared raw Rich ANSI output against
+plain option names (2 failures, 2,167 passes on each runtime). Ruff, configured
+mypy and credential checks passed. The agent reproduced the failure with
+`FORCE_COLOR=1` and `TERM=xterm-256color`: help exited successfully, but styling
+split the `--start` text. The bounded tests-only repair uses existing Click ANSI
+normalization and explicitly exercises both color modes, retaining successful
+help exit, command/option assertions, actual ANSI detection and denied command
+preflight. Production behavior and verification controls are unchanged.
+Post-repair forced-color source/wheel checks passed 3 tests in 30.86 seconds;
+full pytest passed **2,169 tests in 91.20 seconds**. Ruff, configured mypy, pip
+check, diff checks and staged hygiene (8 tests in 10.32 seconds) passed.
+Independent source/integration/wheel repair verification passed 49 tests in
+34.60 seconds with no findings. Fresh exact-head hosted CI remains a gate;
+the failing historical run is retained above rather than represented as passing.
+
 ## Exit mapping and completion gates
 
 | SRS M4 deliverable | Owning issues | Required evidence |
