@@ -1,8 +1,8 @@
 # M4 Historical Market Data implementation plan
 
-Status: **all runtime issues owner-merged and verified; #94 exit-audit PR awaiting owner review**.
+Status: **COMPLETE — all seven required issues and milestone 5 closed**.
 Snapshot: 2026-10-12. Planning baseline: `534a178` (owner-merged M3 audit PR #86).
-Current runtime branch baseline: `41ed11c` (owner-merged CLI date-selection PR #100).
+Completed main: `0e4b505` (owner-merged exit-audit PR #101).
 Parent: [M4 — Historical Market Data](https://github.com/daniilnahl/Stock-Tracking-App/milestone/5).
 Contract: [Accepted ADR-0010](../adr/0010-historical-market-data-contracts.md).
 
@@ -49,7 +49,7 @@ return, benchmark, dividend, FX, risk and transaction semantics remain outside M
 | [#91](https://github.com/daniilnahl/Stock-Tracking-App/issues/91) | Historical composition and facade | Owner-merged and verified | `m4_history_integration`, GPT-6.1 low | [#98](https://github.com/daniilnahl/Stock-Tracking-App/pull/98); `m4_integration_review`, GPT-6.1 low: no findings; local and PR/main CI passed | None |
 | [#92](https://github.com/daniilnahl/Stock-Tracking-App/issues/92) | Genuine-observation chart rendering | Owner-merged and verified | `m4_chart_rendering`, GPT-6.1 low | [#99](https://github.com/daniilnahl/Stock-Tracking-App/pull/99); `m4_chart_review`, GPT-6.1 low: no findings; local and PR/main CI passed | None |
 | [#93](https://github.com/daniilnahl/Stock-Tracking-App/issues/93) | Existing chart command date selection | Owner-merged and verified | `m4_date_selection`, GPT-6.1 low | [#100](https://github.com/daniilnahl/Stock-Tracking-App/pull/100); `m4_date_review`, GPT-6.1 low: no findings; local and final PR/main CI passed | None |
-| [#94](https://github.com/daniilnahl/Stock-Tracking-App/issues/94) | Independent combined exit evidence | Awaiting owner merge on `test/94-history-exit-audit`; #88–93 resolved | `m4_exit_audit`, GPT-6.1 low | [#101](https://github.com/daniilnahl/Stock-Tracking-App/pull/101); `m4_exit_review`, GPT-6.1 low: no findings; local checks passed; hosted checks tracked in PR | Required hosted CI, owner merge, main CI and closure gates |
+| [#94](https://github.com/daniilnahl/Stock-Tracking-App/issues/94) | Independent combined exit evidence | Owner-merged, verified and closed | `m4_exit_audit`, GPT-6.1 low | [#101](https://github.com/daniilnahl/Stock-Tracking-App/pull/101); `m4_exit_review`, GPT-6.1 low: no findings; local and final PR/main CI passed | None |
 
 Queued agent names are assignments for future dispatch, not claims of running
 agents. Two completed read-only audits (`m4_contract_audit`, `m4_chart_audit`)
@@ -261,6 +261,23 @@ hosted checks and Master review. Tested audit implementation commit is
 only this plan and the exit evidence document. No completion is claimed before
 the actual merge/main-CI/closure gates pass.
 
+## Completion review — 2026-10-12
+
+The owner confirmed PR #101 merged as
+`0e4b50583e255406d1f2d8e93abdcdc820c2fcbb`, including final reviewed head
+`e2c16e5671b7b005c95a612e6ce82eb1b40d1c7d`.
+[Final PR Foundation run 38338437390](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/38338437390)
+and [post-merge main run 38339230334](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/38339230334)
+passed all five checks. Audit and merged main share exact Git tree
+`72116bd83bdf83ecec833edf08b103b1daaef6f5`. The independent GPT-6.1 low reviewer
+reran the complete focused command on merged main: **350 passed in 64.65
+seconds**, no failures/skips. All seven required issues #88–94 and PRs #95–101
+are closed; milestone 5 was closed after verification, with zero open and 14
+closed GitHub items. [Exit evidence](m4-exit-evidence.md) records all five M4
+deliverables, the exact closure trace and accepted limits. No blocking or deferred
+M4 requirement remains. This final completion record changes documentation only;
+its own PR checks are distinct from the implementation evidence above.
+
 ## Exit mapping and completion gates
 
 | SRS M4 deliverable | Owning issues | Required evidence |
@@ -277,8 +294,6 @@ FIN-001–003; PERF-001/002; SEC-002/005; ERR-001–003; TEST-001–005;
 FC-060–062/100/101. Persistence requirements apply if accepted cache storage
 introduces persistence behavior, without changing the holdings schema implicitly.
 
-The contract acceptance gate is satisfied. M4 remains **INCOMPLETE** until
-all required issues are closed, reviewed PRs are owner-merged into main, required
-CI and milestone verification pass, each deliverable is evidenced, no blocking
-requirement remains and deferred work has explicit follow-up ownership. Do not
-close the milestone or declare success from a proposal or queued agent schedule.
+The contract acceptance, implementation, review, owner merge, CI, milestone
+verification and closure gates are satisfied. M4 is **COMPLETE**. No completion
+was inferred from a proposal, queued agent schedule or issue closure alone.

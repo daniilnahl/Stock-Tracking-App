@@ -758,6 +758,6 @@ the accepted bounded retries and fails safely without stale chart data or cache/
 holdings replacement. Both CLI namespaces, database bytes/schema version 1 and
 opaque legacy files remain preserved. Existing unit/error/resource matrices and
 domain/M3 preservation probes remain required alongside this combined scenario.
-See [M4 exit evidence](milestones/m4-exit-evidence.md) for actual verification and
-remaining owner-merge/main-CI/closure gates. No live entitlement or session
+See [completed M4 exit evidence](milestones/m4-exit-evidence.md) for actual
+verification and passed owner-merge/main-CI/closure gates. No live entitlement or session
 completeness is inferred from these controlled provider-schema fixtures.
