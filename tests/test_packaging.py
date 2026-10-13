@@ -45,6 +45,7 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
         "stock_tracker/domain/errors.py", "stock_tracker/domain/stock.py",
         "stock_tracker/domain/position.py", "stock_tracker/domain/portfolio.py",
         "stock_tracker/domain/calculations.py",
+        "stock_tracker/domain/analytics.py",
         "stock_tracker/compatibility/__init__.py", "stock_tracker/compatibility/numeric.py",
         "stock_tracker/compatibility/stock_operations.py",
         "stock_tracker/compatibility/history_operations.py",

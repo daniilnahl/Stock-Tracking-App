@@ -54,21 +54,21 @@ verified owner merge of #108. Its implementing agent follows the accepted contra
 
 ## Approval decisions and deferred metrics
 
-The concrete proposal needs owner acceptance of caller-supplied currency evidence,
+The owner accepted caller-supplied currency evidence,
 all-row exact currency checks, positional quote association, unavailable totals
 on any missing price (including zero quantity), empty/zero behavior, numeric
-result/error shapes and the bounded snapshot-only required scope. See ADR-0011
-and the explicitly **not yet normative** financial proposal. Until acceptance,
-existing approved FC definitions remain authoritative.
+result/error shapes and the bounded snapshot-only required scope. See accepted
+ADR-0011 and the normative M5 financial clarification. Existing formulas and
+unrelated open financial conventions remain authoritative.
 
 Daily portfolio change, daily return with zero prior price, historical portfolio
 performance, benchmark comparison, volatility, maximum drawdown, Sharpe, beta,
 correlation, dividends, held-position splits and FX remain blocked on their own
 approved formulas/data conventions. These optional candidates are recorded here
 for future specification work; they are not silently counted as implemented or
-required by this proposed subset. They need explicitly assigned issues if later
-approved as required scope. Do not claim all M5 exit gates passed until the owner
-accepts the subset, all required issues/PRs complete and main CI/evidence pass.
+required by this accepted subset. They need explicitly assigned issues if later
+approved as required scope. Do not claim all M5 exit gates passed until all required
+issues/PRs in the accepted subset complete and main CI/evidence pass.
 
 ## Verification and review
 

@@ -24,6 +24,7 @@ FORBIDDEN = {
     "config", "stock", "watch_list", "menu_watchlist", "daniils_stock_method",
     "utils", "dotenv", "rich", "typer", "matplotlib", "urllib", "socket",
     "sqlite3", "stock_tracker.compatibility", "stock_tracker.providers", "stock_tracker.exceptions",
+    "stock_tracker.persistence",
 }
 
 
@@ -67,6 +68,7 @@ def main(import_root):
         lambda: __import__("stock_operations", {"__package__": "stock_tracker.compatibility"}, level=1),
         lambda: importlib.import_module("stock_tracker.compatibility"),
         lambda: importlib.import_module("stock_tracker.providers"),
+        lambda: importlib.import_module("stock_tracker.persistence"),
         lambda: importlib.import_module("stock_tracker.exceptions"),
         lambda: os.getenv("DOMAIN_ISOLATION_PROBE"),
         lambda: os.environ["DOMAIN_ISOLATION_PROBE"],
@@ -114,6 +116,8 @@ def main(import_root):
         from stock_tracker.domain import (
             DomainValidationError, Portfolio, Position, PositionSnapshot, Stock,
             position_snapshot,
+            PortfolioSnapshot, PositionAllocation, PositionValuationInput, portfolio_snapshot,
+            SnapshotCurrencyMismatchError, SnapshotCurrencyUnavailableError,
         )
 
         stock = Stock("AAPL", exchange="NASDAQ")
@@ -138,8 +142,45 @@ def main(import_root):
         zero = position_snapshot(position.with_owned_data(Decimal("0"), Decimal("100")), Decimal("120"))
         assert dataclasses.astuple(zero) == (Decimal("0"), Decimal("0"), Decimal("0"), None)
         assert position.quantity == Decimal("0.25") and replacement.stock is stock
+        rows = (
+            PositionValuationInput(position, Decimal("120"), "USD", "USD"),
+            PositionValuationInput(replacement, Decimal("3.6"), "USD", "USD"),
+        )
+        aggregate = portfolio_snapshot(rows, currency="USD")
+        assert (aggregate.total_cost_basis, aggregate.total_market_value,
+                aggregate.aggregate_unrealized_pnl, aggregate.aggregate_unrealized_return) == (
+                    Decimal("31"), Decimal("37.2"), Decimal("6.2"), Decimal("0.2"))
+        assert len(aggregate.positions) == 2
+        assert aggregate.positions[0].input is rows[0]
+        assert aggregate.positions[1].input is rows[1]
+        allocation_fixture = portfolio_snapshot((
+            PositionValuationInput(Position(stock, Decimal("10"), Decimal("100")),
+                                   Decimal("120"), "USD", "USD"),
+            PositionValuationInput(Position(stock, Decimal("5"), Decimal("40")),
+                                   Decimal("60"), "USD", "USD"),
+        ), currency="USD")
+        assert tuple(item.weight for item in allocation_fixture.positions) == (
+            Decimal("0.8"), Decimal("0.2"))
+        missing_aggregate = portfolio_snapshot(
+            (rows[0], PositionValuationInput(replacement, None, "USD", "USD")), currency="USD")
+        assert missing_aggregate.total_cost_basis == Decimal("31")
+        assert missing_aggregate.total_market_value is None
+        assert all(item.weight is None for item in missing_aggregate.positions)
+        empty = portfolio_snapshot((), currency="USD")
+        assert empty.total_market_value == Decimal("0") and empty.aggregate_unrealized_return is None
+        for currency, error in ((None, SnapshotCurrencyUnavailableError),
+                                ("EUR", SnapshotCurrencyMismatchError)):
+            try:
+                portfolio_snapshot((PositionValuationInput(position, Decimal("120"), currency, "USD"),),
+                                   currency="USD")
+            except error:
+                pass
+            else:
+                raise AssertionError("Invalid currency evidence was accepted")
         assert issubclass(DomainValidationError, ValueError)
-        for item in (Stock, Position, Portfolio, PositionSnapshot, position_snapshot, DomainValidationError):
+        for item in (Stock, Position, Portfolio, PositionSnapshot, position_snapshot, DomainValidationError,
+                     PortfolioSnapshot, PositionAllocation, PositionValuationInput, portfolio_snapshot,
+                     SnapshotCurrencyMismatchError, SnapshotCurrencyUnavailableError):
             assert Path(sys.modules[item.__module__].__file__).resolve().is_relative_to(root)
         assert all(module is None for name, module in sys.modules.items() if is_forbidden(name))
 
