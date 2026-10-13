@@ -86,7 +86,7 @@ and `Unrealized Return` while preserving values, formatting and arithmetic.
 | --- | --- | --- | --- | --- | --- |
 | [#112](https://github.com/daniilnahl/Stock-Tracking-App/issues/112) | Propose and approve service/CLI contracts and exit criteria | Accepted, owner-merged; closure gates passed | None | `m6_readiness` drafts ADR; Master plan; `m6_contract_review` independent review | [#120](https://github.com/daniilnahl/Stock-Tracking-App/pull/120); technical review PASS; PR/main CI passed |
 | [#113](https://github.com/daniilnahl/Stock-Tracking-App/issues/113) | Correct financial table headings | Owner-merged; review and CI passed | None | `m6_terminology`, isolated `fix/113-financial-table-terminology` | [#119](https://github.com/daniilnahl/Stock-Tracking-App/pull/119), reviewed head `9aa7f026`; merge `11e262c3` |
-| [#114](https://github.com/daniilnahl/Stock-Tracking-App/issues/114) | Local watchlist service boundary | Implementation active | None; #112 gate verified | `m6_readiness` | Pending |
+| [#114](https://github.com/daniilnahl/Stock-Tracking-App/issues/114) | Local watchlist service boundary | PR open; local verification and independent review passed | Owner merge and required PR/main CI | `m6_readiness`, `m6_contract_review` independent review | [#121](https://github.com/daniilnahl/Stock-Tracking-App/pull/121) |
 | [#115](https://github.com/daniilnahl/Stock-Tracking-App/issues/115) | Current-data orchestration service | Blocked | #112 and complete owner-merged #114 | Unassigned | — |
 | [#116](https://github.com/daniilnahl/Stock-Tracking-App/issues/116) | Historical retrieval service | Blocked | #112 and stable owner-merged #114; independent of #115 thereafter | Unassigned | — |
 | [#117](https://github.com/daniilnahl/Stock-Tracking-App/issues/117) | Thin adapters for both maintained CLIs | Blocked | Owner-merged #114–116 with required CI | Unassigned | — |
@@ -228,3 +228,10 @@ both namespaces without legacy content reads or local display writes.
 No required local verification remains outstanding. PR/main CI and owner merge
 remain dependency gates before #115/#116 begin. Passing this local capability
 does not establish the later thin CLI or combined milestone exit.
+
+[PR #121](https://github.com/daniilnahl/Stock-Tracking-App/pull/121) is open;
+initial implementation head is `e0b37f4e7131c67657b78e6295ec482affd5aa97`.
+Independent final technical review passed all 15 task files, with no remaining
+actionable findings. Final branch diff checks passed and the worktree was clean
+before this PR-link status record. Required exact-head hosted CI and owner merge
+remain pending at submission. No agent merge occurred.
