@@ -98,7 +98,7 @@ def test_add_preserves_high_precision_inputs_in_memory_and_saved_state(cli):
 
 @pytest.mark.parametrize("quantity,cost", [("0.25", "100"), ("0", "100"), ("10", "0"), ("0", "0")])
 def test_known_values_and_zero_basis_display_without_mutating_numbers(cli, quantity, cost):
-    module, _, _ = cli
+    module, provider, _ = cli
     assert add(cli, quantity, cost).exit_code == 0
     item = module["current_watchlist"].stocks[0]
     position, snapshot = item._position, item._snapshot
@@ -111,9 +111,17 @@ def test_known_values_and_zero_basis_display_without_mutating_numbers(cli, quant
     else:
         assert snapshot.unrealized_return is None
         assert item.total_return == "-"
+    saved_bytes = module["WATCHLIST_FILE"].read_bytes()
+    provider_calls = list(provider["calls"])
     displayed = CliRunner().invoke(module["app"], ["show-stocks"], terminal_width=300)
     assert displayed.exit_code == 0, displayed.output
     assert "AAPL" in displayed.output
+    assert "Average Cost per Share" in displayed.output
+    assert "Unrealized Return" in displayed.output
+    assert "Cost Basis" not in displayed.output
+    assert "Your Total Return" not in displayed.output
+    assert module["WATCHLIST_FILE"].read_bytes() == saved_bytes
+    assert provider["calls"] == provider_calls
     assert item._position is position and item._snapshot is snapshot
     assert item._position.quantity == Decimal(quantity)
     assert item._position.average_cost == Decimal(cost)
