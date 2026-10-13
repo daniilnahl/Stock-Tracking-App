@@ -1,6 +1,6 @@
 # M4 Historical Market Data implementation plan
 
-Status: **all runtime issues owner-merged and verified; #94 exit audit passed locally**.
+Status: **all runtime issues owner-merged and verified; #94 exit-audit PR awaiting owner review**.
 Snapshot: 2026-10-12. Planning baseline: `534a178` (owner-merged M3 audit PR #86).
 Current runtime branch baseline: `41ed11c` (owner-merged CLI date-selection PR #100).
 Parent: [M4 — Historical Market Data](https://github.com/daniilnahl/Stock-Tracking-App/milestone/5).
@@ -49,7 +49,7 @@ return, benchmark, dividend, FX, risk and transaction semantics remain outside M
 | [#91](https://github.com/daniilnahl/Stock-Tracking-App/issues/91) | Historical composition and facade | Owner-merged and verified | `m4_history_integration`, GPT-6.1 low | [#98](https://github.com/daniilnahl/Stock-Tracking-App/pull/98); `m4_integration_review`, GPT-6.1 low: no findings; local and PR/main CI passed | None |
 | [#92](https://github.com/daniilnahl/Stock-Tracking-App/issues/92) | Genuine-observation chart rendering | Owner-merged and verified | `m4_chart_rendering`, GPT-6.1 low | [#99](https://github.com/daniilnahl/Stock-Tracking-App/pull/99); `m4_chart_review`, GPT-6.1 low: no findings; local and PR/main CI passed | None |
 | [#93](https://github.com/daniilnahl/Stock-Tracking-App/issues/93) | Existing chart command date selection | Owner-merged and verified | `m4_date_selection`, GPT-6.1 low | [#100](https://github.com/daniilnahl/Stock-Tracking-App/pull/100); `m4_date_review`, GPT-6.1 low: no findings; local and final PR/main CI passed | None |
-| [#94](https://github.com/daniilnahl/Stock-Tracking-App/issues/94) | Independent combined exit evidence | Ready for publication on `test/94-history-exit-audit`; #88–93 resolved | `m4_exit_audit`, GPT-6.1 low | `m4_exit_review`, GPT-6.1 low: no findings; local checks passed | Required hosted CI, owner merge, main CI and closure gates |
+| [#94](https://github.com/daniilnahl/Stock-Tracking-App/issues/94) | Independent combined exit evidence | Awaiting owner merge on `test/94-history-exit-audit`; #88–93 resolved | `m4_exit_audit`, GPT-6.1 low | [#101](https://github.com/daniilnahl/Stock-Tracking-App/pull/101); `m4_exit_review`, GPT-6.1 low: no findings; local checks passed; hosted checks tracked in PR | Required hosted CI, owner merge, main CI and closure gates |
 
 Queued agent names are assignments for future dispatch, not claims of running
 agents. Two completed read-only audits (`m4_contract_audit`, `m4_chart_audit`)
@@ -255,6 +255,11 @@ guards. [M4 exit evidence](m4-exit-evidence.md) records the scenario, actual run
 requirements, PR/main ancestry, accepted limits and remaining closure gates.
 No runtime, schema, dependency, toolchain or CI changes are included. Required
 audit PR CI, owner merge, final main CI and #94/milestone closure remain pending.
+[PR #101](https://github.com/daniilnahl/Stock-Tracking-App/pull/101) records exact-head
+hosted checks and Master review. Tested audit implementation commit is
+`0f3d3c7f42d5c1bdcc4e45297393ed3e118e80a4`; the subsequent tracking commit edits
+only this plan and the exit evidence document. No completion is claimed before
+the actual merge/main-CI/closure gates pass.
 
 ## Exit mapping and completion gates
 

@@ -3,7 +3,8 @@
 Audit date: **2026-10-12**. Milestone: [M4 — Historical Market Data](https://github.com/daniilnahl/Stock-Tracking-App/milestone/5).
 Audit issue: [#94](https://github.com/daniilnahl/Stock-Tracking-App/issues/94).
 Runtime baseline: `41ed11c01693a269bdb93bd2c2b11133681e4cb8` (owner-merged PR #100).
-**Status: INCOMPLETE — behavior audit passed locally; publication/merge/closure pending.**
+Audit PR: [#101](https://github.com/daniilnahl/Stock-Tracking-App/pull/101).
+**Status: INCOMPLETE — behavior audit passed; hosted CI/merge/closure pending.**
 Issues #88–93 are closed and their reviewed PRs are owner-merged on main. #94
 and the milestone remain open. This audit cannot declare completion until its
 own reviewed PR is owner-merged, required main CI passes and closure is reconciled.
@@ -102,7 +103,11 @@ Result: **313 passed in 13.13 seconds**. These baseline results do not substitut
 for the new combined audit, full canonical suite or fresh hosted checks.
 Configured mypy covers `config.py` only; it does not certify full application typing.
 
-Final canonical verification on the audit branch used that same environment:
+Final canonical verification at audit implementation commit
+`0f3d3c7f42d5c1bdcc4e45297393ed3e118e80a4` used that same environment.
+The later tracking commit changes only this evidence and the live plan; tested
+runtime/fixture contents remain unchanged. [PR #101](https://github.com/daniilnahl/Stock-Tracking-App/pull/101)
+records final exact-head hosted CI and Master review.
 
 ```text
 python -m pytest tests/test_history_exit.py tests/test_packaging.py
@@ -148,7 +153,7 @@ time; it is not substituted for the final 32.46-second verification.
 | #94 closed and milestone closure reconciled | PENDING |
 
 No blocking runtime defect has been identified in the independent baseline
-review. The remaining gates are audit publication/hosted CI and owner merge
+review. The remaining gates are audit hosted CI and owner merge
 with final main CI/closure, not permission to mark the milestone complete early.
 
 ## Limits and follow-up ownership
