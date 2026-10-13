@@ -2,20 +2,31 @@
 
 ## Status and acceptance gate
 
-**PROPOSED — NOT ACCEPTED.** Prepared on 2026-10-12 for M5 — Portfolio
-Analytics. The owner's request to begin M5 authorizes investigation, decomposition
-and this reviewable proposal; it does not approve new financial semantics.
+**Accepted, 2026-10-12.** After the Master presented complete Option A in
+[PR #108](https://github.com/daniilnahl/Stock-Tracking-App/pull/108) for approval,
+the owner directly instructed **"PR merged, continue work"** in the milestone
+chat. This authorizes proceeding with the reviewed snapshot contract and its
+financial additions. The Master independently verified owner merge
+`dddaeaf681cba6fe218f740e40be0df3b4a9318b`, containing proposal head
+`20e8a8a77985208e4a63efa29fa155c3c0318433`. Its
+[PR Foundation run](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/38343204134)
+passed all five checks. The
+[post-merge main Foundation run](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/38343278997)
+also completed successfully. Acceptance, owner merge and main-CI gates are
+satisfied; #105 may begin under these exact contracts.
+Acceptance does not authorize agent merges or deferred financial conventions.
 
-Runtime implementation is blocked until the owner explicitly accepts this ADR
-and its accompanying proposed financial-specification additions, the owner merges
-the reviewed documentation PR, and required Foundation CI passes on that merged
-`main` revision. Passing PR CI or creating implementation issues does not satisfy
-these gates. Agents must not merge. Record acceptance, merge and main-CI evidence
-here before releasing dependent runtime issues.
+The original proposed decision below is retained to document the reviewed
+choices. The initial request to begin M5 alone did not approve them; the later
+direct instruction to continue the merged proposal supplies that authorization.
 
-This document proposes contracts and edge-case choices. It does not itself make
-new formulas or conventions normative. Existing approved FC definitions remain
-authoritative until the owner accepts the accompanying specification changes.
+Runtime implementation required explicit owner acceptance of this ADR and the
+accompanying financial additions, owner merge of the reviewed proposal and
+passing required main CI. Those gates are now verified above. Passing PR CI,
+issue creation or merge alone would not have established financial acceptance.
+Agents must not merge. Later implementation dependencies retain their own
+owner-merge/CI gates. Only the bounded snapshot choices are accepted; existing
+financial definitions and deferred convention blockers remain authoritative.
 
 ## Context and requirements
 

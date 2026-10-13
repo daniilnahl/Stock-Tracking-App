@@ -1,10 +1,10 @@
 # M5 Portfolio Analytics implementation plan
 
-Status: **STARTED — proposal prepared; runtime blocked on explicit acceptance**.
+Status: **IN PROGRESS — accepted contract; #105 implementation released**.
 Snapshot: 2026-10-12. Baseline: `a0dc9432178e2037b719269b04c758bd142df9db`,
 owner-merged M4 documentation reconciliation PR #103.
 Parent: [M5 — Portfolio Analytics](https://github.com/daniilnahl/Stock-Tracking-App/milestone/6).
-Contract: [PROPOSED ADR-0011](../adr/0011-snapshot-portfolio-analytics.md).
+Contract: [Accepted ADR-0011](../adr/0011-snapshot-portfolio-analytics.md).
 
 The owner requested the supplied Master Engineering workflow for M5, superseding
 the supplied document's M2 placeholders. The Master owns planning and independent
@@ -41,15 +41,16 @@ ledger, quantization or historical performance methodology is introduced.
 
 | Issue | Objective | Status | Dependency / blocker | Agent | PR / review |
 | --- | --- | --- | --- | --- | --- |
-| [#104](https://github.com/daniilnahl/Stock-Tracking-App/issues/104) | Approve proposed snapshot contracts and financial additions | Proposal open | Explicit human acceptance; owner merge and required main CI | `m5_readiness_audit` drafted ADR; Master drafted financial proposal/plan; `m5_contract_review` independent review | [#108](https://github.com/daniilnahl/Stock-Tracking-App/pull/108); no remaining independent review findings; hosted CI pending |
-| [#105](https://github.com/daniilnahl/Stock-Tracking-App/issues/105) | Complete pure totals and ordered allocation | Not started | #104 acceptance/owner-merge/CI gates | Not dispatched | None |
+| [#104](https://github.com/daniilnahl/Stock-Tracking-App/issues/104) | Approve snapshot contracts and financial additions | Accepted and owner-merged; gates passed | None | `m5_readiness_audit` drafted ADR; Master drafted financial proposal/plan; `m5_contract_review` independent review | [#108](https://github.com/daniilnahl/Stock-Tracking-App/pull/108); no remaining independent review findings; PR/main CI passed |
+| [#105](https://github.com/daniilnahl/Stock-Tracking-App/issues/105) | Complete pure totals and ordered allocation | Released for implementation | #104 gates verified | `m5_readiness_audit` | None |
 | [#107](https://github.com/daniilnahl/Stock-Tracking-App/issues/107) | Independent source/wheel isolation, restart and exit evidence | Not started | #104 and owner-merged #105 with required CI | Not dispatched | None |
 
 Initial #106 allocation issue was consolidated into #105 and closed as a duplicate
 during planning. Totals and weights share one small pure function/result contract;
 separate implementations would expose an intermediate result with incorrect
 allocation semantics. The final hierarchy is three bounded issues, with one
-branch/PR per objective. No runtime agent has been dispatched.
+branch/PR per objective. #105 uses `feature/105-snapshot-analytics`, based on the
+verified owner merge of #108. Its implementing agent follows the accepted contract.
 
 ## Approval decisions and deferred metrics
 
@@ -100,5 +101,11 @@ staging/temp-directory attempt was denied before tests could set up; the same
 commands passed under approved execution. Exact proposal PR CI will be recorded
 with submission/review evidence.
 These checks verify the unchanged runtime baseline, not future M5 behavior.
-Explicit acceptance and owner merge remain unresolved; M5 is not
-complete and no runtime metric is introduced by these documentation changes.
+The owner then instructed "PR merged, continue work". Verified owner merge of
+#108 is `dddaeaf681cba6fe218f740e40be0df3b4a9318b`; final PR Foundation
+[38343204134](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/38343204134)
+and post-merge main Foundation
+[38343278997](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/38343278997)
+both completed successfully. This releases #105, without authorizing agent
+merges or undefined metrics. M5 is not complete; runtime implementation and
+independent exit evidence remain required.
