@@ -3,7 +3,7 @@
 Audit date: **2026-10-12**. Parent: [M5 — Portfolio Analytics](https://github.com/daniilnahl/Stock-Tracking-App/milestone/6).
 Audit issue: [#107](https://github.com/daniilnahl/Stock-Tracking-App/issues/107).
 Implementation baseline: owner-merged `9b94c1e68bec37ebb9439d9b3815d44ba2e9b135`.
-**Status: IN PROGRESS — audit PR, independent review, owner merge, required CI
+**Status: IN PROGRESS — audit PR open; independent review passed; owner merge, required CI
 and audit issue closure remain pending. M5 completion is not claimed.**
 
 ## Accepted scope and prerequisite evidence
@@ -23,7 +23,7 @@ conventions retain their existing boundaries.
 | --- | --- | --- |
 | [#104](https://github.com/daniilnahl/Stock-Tracking-App/issues/104) | Contract and financial additions, [PR #108](https://github.com/daniilnahl/Stock-Tracking-App/pull/108), reviewed head `20e8a8a77985208e4a63efa29fa155c3c0318433` | Owner merge `dddaeaf681cba6fe218f740e40be0df3b4a9318b`; required PR/main CI passed as recorded in ADR-0011 |
 | [#105](https://github.com/daniilnahl/Stock-Tracking-App/issues/105) | Complete pure snapshot totals and ordered allocation, [PR #109](https://github.com/daniilnahl/Stock-Tracking-App/pull/109), reviewed head `3f197ec9995edf13d72ec672f80a7ffdaeeac433` | Owner merge `9b94c1e68bec37ebb9439d9b3815d44ba2e9b135`; issue closed; required PR/main CI passed |
-| [#107](https://github.com/daniilnahl/Stock-Tracking-App/issues/107) | Independent combined source/wheel restart, isolation and exit evidence | This audit; review/PR/merge/main-CI/closure gates pending |
+| [#107](https://github.com/daniilnahl/Stock-Tracking-App/issues/107) | Independent combined source/wheel restart, isolation and exit evidence; [PR #110](https://github.com/daniilnahl/Stock-Tracking-App/pull/110) | Independent review passed; required PR CI/owner merge/main CI/closure gates pending |
 
 Allocation issue #106 was consolidated into #105 and closed as a duplicate before
 implementation. It is not a separately missing deliverable. The Master verified
@@ -106,7 +106,9 @@ not independently establish decoded Position spelling. The audit now compares
 all six restored quantity/cost/identity tuples against literal expected values,
 including trailing zeros, signed zero, exponent and long precision. The affected
 source/wheel command and full verification above passed after that correction.
-No runtime defect or runtime patch was needed. Final-head review remains pending.
+No runtime defect or runtime patch was needed. Independent final review of audit
+commit `362492a73af55b243e4455e19225f447c48a48f6` found no remaining actionable
+findings; the reviewer independently passed the strengthened source restart test.
 The test runs used approved execution for pytest temporary-directory access;
 no system software or toolchain change was made.
 Configured mypy checks `config.py` only and does not certify analytics typing.
@@ -114,7 +116,7 @@ No live provider, real user database, credential or current observation is used.
 Runtime implementation, schema, CLI, dependency pins and Python range are unchanged
 by #107; only tests and task-relevant documentation are changed.
 
-Final audit head/PR, independent review, required PR CI, owner merge/main CI,
+Audit PR #110 is open. Required exact PR CI, owner merge/main CI,
 issue closure and milestone completion review remain pending. Agents must not
 merge or substitute prerequisite checks for these final gates.
 

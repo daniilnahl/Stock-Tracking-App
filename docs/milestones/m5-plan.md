@@ -43,7 +43,7 @@ ledger, quantization or historical performance methodology is introduced.
 | --- | --- | --- | --- | --- | --- |
 | [#104](https://github.com/daniilnahl/Stock-Tracking-App/issues/104) | Approve snapshot contracts and financial additions | Accepted and owner-merged; gates passed | None | `m5_readiness_audit` drafted ADR; Master drafted financial proposal/plan; `m5_contract_review` independent review | [#108](https://github.com/daniilnahl/Stock-Tracking-App/pull/108); no remaining independent review findings; PR/main CI passed |
 | [#105](https://github.com/daniilnahl/Stock-Tracking-App/issues/105) | Complete pure totals and ordered allocation | Closed; owner-merged | None; required PR/main CI passed | `m5_readiness_audit`; `m5_contract_review` independent review | [#109](https://github.com/daniilnahl/Stock-Tracking-App/pull/109); reviewed head `3f197ec`; merge `9b94c1e` |
-| [#107](https://github.com/daniilnahl/Stock-Tracking-App/issues/107) | Independent source/wheel isolation, restart and exit evidence | Audit active | Final independent review, PR/main CI, owner merge and closure | `m5_contract_review` | Audit PR pending |
+| [#107](https://github.com/daniilnahl/Stock-Tracking-App/issues/107) | Independent source/wheel isolation, restart and exit evidence | Audit PR open; local verification and independent review passed | Required PR/main CI, owner merge and closure | `m5_contract_review`; `m5_readiness_audit` independent review | [#110](https://github.com/daniilnahl/Stock-Tracking-App/pull/110); no remaining findings; hosted CI pending |
 
 Initial #106 allocation issue was consolidated into #105 and closed as a duplicate
 during planning. Totals and weights share one small pure function/result contract;
