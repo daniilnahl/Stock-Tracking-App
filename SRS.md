@@ -868,6 +868,20 @@ Historical charts use genuine provider market history.
 
 ## Milestone 5 — Portfolio Analytics
 
+**Completion status (2026-10-12; status note only):** M5 is complete under
+AGENTS §10.7. The owner-accepted
+snapshot subset under ADR-0011 is implemented and independently audited at main
+`11f7333abdac830e139dd74354c87b30fe4cd45d`, after owner merges of PR #109/#110.
+Required #104/#105/#107 are closed and exact audit PR/post-merge main CI passed
+all five checks. [M5 exit evidence](docs/milestones/m5-exit-evidence.md) maps every
+implemented metric to normative formulas and known-value/source/wheel tests.
+Independent final review passed; milestone 6 is closed with zero open and seven
+closed items, as recorded in the
+[completion report](https://github.com/daniilnahl/Stock-Tracking-App/issues/107#issuecomment-6139320638).
+No required M5 work was deferred.
+Undefined optional conventions remain blocked. This note changes no requirement,
+candidate list or exit criterion below.
+
 This milestone is BLOCKED until applicable formulas are defined in `docs/FINANCIAL_CALCULATIONS.md`.
 
 Initial metrics may include:

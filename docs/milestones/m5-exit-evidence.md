@@ -3,8 +3,12 @@
 Audit date: **2026-10-12**. Parent: [M5 — Portfolio Analytics](https://github.com/daniilnahl/Stock-Tracking-App/milestone/6).
 Audit issue: [#107](https://github.com/daniilnahl/Stock-Tracking-App/issues/107).
 Implementation baseline: owner-merged `9b94c1e68bec37ebb9439d9b3815d44ba2e9b135`.
-**Status: IN PROGRESS — audit PR open; independent review passed; owner merge, required CI
-and audit issue closure remain pending. M5 completion is not claimed.**
+**Status: COMPLETE — required work is owner-merged, independent completion review
+passed, required issues are closed and exact PR/main CI passed. GitHub milestone
+6 is closed with zero open and seven closed items.**
+Completed implementation main: `11f7333abdac830e139dd74354c87b30fe4cd45d`.
+The earlier audit checks and pending-gate statements below are historical
+snapshots, superseded by the completion review at the end of this record.
 
 ## Accepted scope and prerequisite evidence
 
@@ -23,7 +27,7 @@ conventions retain their existing boundaries.
 | --- | --- | --- |
 | [#104](https://github.com/daniilnahl/Stock-Tracking-App/issues/104) | Contract and financial additions, [PR #108](https://github.com/daniilnahl/Stock-Tracking-App/pull/108), reviewed head `20e8a8a77985208e4a63efa29fa155c3c0318433` | Owner merge `dddaeaf681cba6fe218f740e40be0df3b4a9318b`; required PR/main CI passed as recorded in ADR-0011 |
 | [#105](https://github.com/daniilnahl/Stock-Tracking-App/issues/105) | Complete pure snapshot totals and ordered allocation, [PR #109](https://github.com/daniilnahl/Stock-Tracking-App/pull/109), reviewed head `3f197ec9995edf13d72ec672f80a7ffdaeeac433` | Owner merge `9b94c1e68bec37ebb9439d9b3815d44ba2e9b135`; issue closed; required PR/main CI passed |
-| [#107](https://github.com/daniilnahl/Stock-Tracking-App/issues/107) | Independent combined source/wheel restart, isolation and exit evidence; [PR #110](https://github.com/daniilnahl/Stock-Tracking-App/pull/110) | Independent review passed; required PR CI/owner merge/main CI/closure gates pending |
+| [#107](https://github.com/daniilnahl/Stock-Tracking-App/issues/107) | Independent combined source/wheel restart, isolation and exit evidence; [PR #110](https://github.com/daniilnahl/Stock-Tracking-App/pull/110), reviewed head `1a247b05a786d356ce2fb169b9005ed3d4f2d0c4` | Owner merge `11f7333abdac830e139dd74354c87b30fe4cd45d`; required PR/main CI passed; issue closed completed |
 
 Allocation issue #106 was consolidated into #105 and closed as a duplicate before
 implementation. It is not a separately missing deliverable. The Master verified
@@ -44,7 +48,7 @@ prerequisite evidence, not this audit's future PR/main CI.
 | DATA-008, FC-010, §17 missing-data rules | Explicit matching cost/quote/aggregate currency required on every row; typed unknown/mismatch errors even on missing-price zero-quantity rows; no database-derived currency or implicit USD |
 | ARCH-001/002, TEST-001–005 | Cold domain and combined audit calculations execute under independently proven import/environment/network/SQL/data-IO/output guards in source and installed wheel |
 | PERS-005/007, DOM-004 | Real temporary SQLite repository write/read in separate processes; exact Decimal spelling, order and duplicates preserved; schema version 1, stored rows and database bytes unchanged by calculations |
-| GH-004/005, M5 exit | Bounded #104/#105/#107 trace, independent review, required exact PR/main CI and owner merge gates; audit completion evidence remains pending |
+| GH-004/005, M5 exit | Bounded #104/#105/#107 trace, independent review, passed exact PR/main CI and owner merges; final completion review below |
 
 ## Combined scenario and hand-derived values
 
@@ -87,7 +91,7 @@ existing cold domain probe; ordinary data IO is denied. Byte and exact schema/in
 before and after computation, and again across processes. Existing full CLI,
 schema, persistence and financial unit regressions remain required.
 
-## Verification and unresolved gates
+## Historical audit verification before owner merge
 
 Local verification on canonical `.venv` Python **3.12.10**:
 
@@ -116,8 +120,8 @@ No live provider, real user database, credential or current observation is used.
 Runtime implementation, schema, CLI, dependency pins and Python range are unchanged
 by #107; only tests and task-relevant documentation are changed.
 
-Audit PR #110 is open. Required exact PR CI, owner merge/main CI,
-issue closure and milestone completion review remain pending. Agents must not
+At the pre-merge audit snapshot, PR #110 was open. Required exact PR CI, owner merge/main CI,
+issue closure and milestone completion review remained pending. Agents must not
 merge or substitute prerequisite checks for these final gates.
 
 ## Deferred financial work
@@ -129,3 +133,38 @@ undefined or blocked under financial sections 12–19. SRS lists these as option
 candidates; the owner-approved required subset excludes them. They are not
 counted as completed metrics or required issues. If later approved as required
 work, create explicitly assigned specification/implementation issues first.
+
+## Completion review — 2026-10-12
+
+The owner merged PR #110 and instructed the Master to continue. The final reviewed
+head `1a247b05a786d356ce2fb169b9005ed3d4f2d0c4` and owner-merged main
+`11f7333abdac830e139dd74354c87b30fe4cd45d` have the same Git tree,
+`eba5b822314e4cb87daacadf136889cabc476734`. The Master verified all five jobs
+passed in the [exact audit PR Foundation run 38349919901](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/38349919901)
+and [post-merge main Foundation run 38353960939](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/38353960939).
+The required issues #104, #105 and #107 are closed completed; #106 is closed as
+the pre-implementation allocation duplicate. No required M5 work was deferred
+and no blocking required issue remains open.
+
+The Master reran merged-main focused source/wheel analytics, position, Portfolio
+persistence, domain isolation and packaging checks: **180 passed in 49.10s**.
+Final audit tests retain the literal restored-value fix and prove guard rejection
+and restoration. Every implemented metric maps to the accepted normative formula
+and independent known-value tests above. Database bytes/schema/holding precision,
+ordered duplicates and currency/missing/zero behavior have actual source and
+installed-wheel evidence. Existing CLI/schema/full regression checks passed in
+required CI; this audit adds no CLI command or storage contract.
+
+Independent final accepted-scope review passed with no blocking findings. The
+Master marked the satisfied acceptance criteria on #104/#105/#107 and closed
+[GitHub milestone 6](https://github.com/daniilnahl/Stock-Tracking-App/milestone/6):
+zero open and seven closed items (three required issues, one consolidated
+duplicate and three owner-merged PRs). The
+[persisted completion report](https://github.com/daniilnahl/Stock-Tracking-App/issues/107#issuecomment-6139320638)
+records verified acceptance and closure. M5 is complete under AGENTS §10.7.
+No required M5 work was deferred; optional undefined conventions remain blocked.
+The completion documentation's own checks and
+PR CI must be reported separately from the completed implementation/audit runs.
+Its follow-up documentation PR is not an unmet runtime completion gate.
+This status review changes no SRS requirement, formula, accepted contract or
+undefined optional convention.
