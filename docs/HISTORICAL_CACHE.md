@@ -1,5 +1,9 @@
 # Historical cache operations — issue #90
 
+**M4 complete.** [Verified exit evidence](milestones/m4-exit-evidence.md) records
+all seven required issues closed, owner-merged implementation and passing final
+main CI. The accepted operational contracts below remain unchanged.
+
 The accepted ADR-0010 cache is disposable provider data, separate from holdings,
 SQLite migrations, neutral transfer and database backups. This issue supplies
 explicit-path storage and a historical-only decorator. Issue #91 adds the IO-free
@@ -12,6 +16,18 @@ ranges fail before provider/cache work; selected stocks pass the exact NASDAQ
 identity gate before key checks. Anticipated graph failures render safe messages
 and exit 1 without saving holdings. Current-data composition
 still has history TTL 0.0, quote TTL 0.0 and stale fallback False.
+
+Use the existing menu CLI ticker prompt with both ISO dates or neither:
+
+```text
+python menu_watchlist.py graph-stock --start 2020-01-01 --end 2020-01-06
+```
+
+Explicit ranges are inclusive, ordered, at most 3,660 calendar days and end
+before the current UTC date. The paired ISO options are validated before state
+loading and provider/cache work. Default selection is described below. Available
+observations within the requested interval stay sparse; no boundary/weekend or
+holiday values are invented.
 
 Callers explicitly inject a repository path, UTC clock, receipt loader and
 ProviderPolicy. The historical factory uses the cwd-relative

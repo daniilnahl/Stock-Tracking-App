@@ -845,6 +845,15 @@ Application restart preserves portfolio state without pickle.
 
 ## Milestone 4 — Historical Market Data
 
+**Implementation status (non-normative): COMPLETE.** All five deliverables below
+and the unchanged exit criterion have verified implementation under accepted
+[ADR-0010](docs/adr/0010-historical-market-data-contracts.md). Issues #88–94 and
+PRs #95–101 are closed; [M4 evidence](docs/milestones/m4-exit-evidence.md) records
+source/wheel verification, owner merges, required main CI and milestone closure.
+Raw charts do not establish adjusted/dividend return semantics, historical
+currency, live entitlement or session completeness. This status note changes no
+requirement ID, formula or approved milestone scope.
+
 - Retrieve OHLCV history.
 - Define adjusted/raw price usage.
 - Add historical cache.

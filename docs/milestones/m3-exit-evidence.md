@@ -1,5 +1,10 @@
 # M3 Persistence exit audit
 
+**Subsequent M4 completion:** [M4 evidence](m4-exit-evidence.md) verifies raw
+historical data, charts, cache and date selection while preserving M3 state and
+schema. Historical data listed outside this audit's scope is now completed M4
+work; the original M3 results and accepted limits remain unchanged.
+
 Audit date: **2026-10-06**. Milestone: [M3 — Persistence](https://github.com/daniilnahl/Stock-Tracking-App/milestone/4).
 Audit issue: [#75](https://github.com/daniilnahl/Stock-Tracking-App/issues/75).
 Completed main: `534a178005a5dd5662ec0cb261cadaf3ce5f2888` (owner-merged PR #86).

@@ -55,7 +55,7 @@ are preserved in the [live plan](m4-plan.md); earlier CI is not this audit's CI.
 | Genuine charting; DATA-003; FIN-001–003 | Validated original Decimal observations convert only at rendering; actual sparse dates and unconnected markers, requested/observed labels, no summary/current-quote reconstruction; `test_history_charts.py` |
 | Date selection; ARCH-005; DATA-007; ERR-001–003 | Paired strict ISO CLI options, accepted default/leap handling and 3660-day limit; identity before key/preflight, no save, safe failures and programming-error propagation; `test_history_date_selection.py` |
 | ARCH-001–003/006; SEC-005; TEST-001–005 | Accepted ADR and separated domain/provider/persistence/presentation boundaries; source/wheel/domain probes, temporary fictional storage, controlled clocks, network/pickle guards, safe category diagnostics and staged hygiene |
-| GH-003/004 | Seven bounded issues, one task branch/PR per issue, independent review, exact-head CI and owner-merge gates; GitHub state and ancestry trace above; #94 closure remains pending |
+| GH-003/004 | Seven bounded issues, one task branch/PR per issue, independent review, exact-head CI and owner-merge gates; GitHub state and ancestry trace above; #94 and milestone closure verified |
 
 Provider summary displays and existing holdings arithmetic retain their contracts.
 The sidecar is disposable provider data, separate from SQLite version 1,
@@ -197,3 +197,21 @@ accepted ADR-0010 limits, not unassigned missing M4 deliverables.
 Future analytics/adjustment/dividend/FX decisions belong to their separately
 approved milestones and financial definitions. #94's audit, reviewed owner
 merge and final closure reconciliation are complete.
+
+## Documentation-wide reverification
+
+The owner merged completion-record PR #102 as
+`64286b0698217e5b94932e8003f3de4ac924544b`.
+[Post-merge Foundation run 38341070787](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/38341070787)
+passed all five checks. A fresh independent GPT-6.1 low review of requirements,
+accepted contracts, actual implementation and source/wheel tests confirmed all
+five M4 deliverables and the genuine-history exit. Canonical Python 3.11.9
+focused verification passed **350 tests in 51.32 seconds**; full pytest passed
+**2,170 tests in 87.98 seconds**, without failures or skips. Ruff, configured
+mypy (one source file, `config.py`) and pip check passed.
+
+The repository-wide Markdown review reconciles current operational/SRS status,
+financial discrepancy notes, testing coverage and milestone/ADR snapshots.
+Historical results and accepted contracts remain intact. No runtime or financial
+definition changed; this documentation PR's own hosted checks are recorded
+separately from the completed M4 implementation evidence.

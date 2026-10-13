@@ -12,7 +12,11 @@ its M3 placeholders. All delegated agents use **`gpt-6.1-sol`, reasoning effort
 implementation. Issue creation is not contract acceptance. No agent merge is
 authorized under AGENTS.md; owner merges and required CI remain dependency gates.
 
-## Repository analysis
+## Repository analysis — historical planning baseline
+
+This analysis and the dated issue-stage verification below describe their
+original snapshots. Later pending/future-work statements are historical; the
+current schedule and completion review record the satisfied M4 gates.
 
 Approved SRS §23 M4 requires OHLCV retrieval, explicit adjusted/raw usage,
 historical caching, replacement of synthetic charts and date-range selection.
