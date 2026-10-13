@@ -65,6 +65,9 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
         "stock_tracker/persistence/sqlite_watchlists.py",
         "stock_tracker/persistence/connection.py", "stock_tracker/persistence/migrations.py",
         "stock_tracker/persistence/sqlite_portfolios.py",
+        "stock_tracker/services/__init__.py", "stock_tracker/services/models.py",
+        "stock_tracker/services/protocols.py", "stock_tracker/services/watchlists.py",
+        "stock_tracker/cli/__init__.py", "stock_tracker/cli/storage.py",
     }
 
     installed = tmp_path / "installed"
@@ -82,6 +85,24 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
     assert isolated.returncode == 0, isolated.stderr
     assert isolated.stdout == isolated.stderr == ""
     assert not (tmp_path / "domain-probe").exists()
+
+    service_directory = tmp_path / "installed-service"
+    service_directory.mkdir()
+    for mode in ("isolation", "write", "read"):
+        if mode == "read":
+            (service_directory / "opaque.pkl").write_bytes(b"opaque synthetic legacy; never deserialize")
+            service_before = (service_directory / "service.sqlite3").read_bytes()
+        service_probe = subprocess.run(
+            [sys.executable, "-I", str(ROOT / "tests/watchlist_service_probe.py"), str(installed), mode],
+            cwd=service_directory, env=environment, capture_output=True, text=True,
+        )
+        assert service_probe.returncode == 0, service_probe.stderr
+        assert service_probe.stdout == service_probe.stderr == ""
+        if mode == "isolation":
+            assert not (service_directory / "service.sqlite3").exists()
+        if mode == "read":
+            assert (service_directory / "service.sqlite3").read_bytes() == service_before
+            assert (service_directory / "opaque.pkl").read_bytes() == b"opaque synthetic legacy; never deserialize"
 
     analytics_directory = tmp_path / "installed-analytics-exit"
     analytics_directory.mkdir()

@@ -2,13 +2,26 @@
 
 ## Status and acceptance gate
 
-**PROPOSED — 2026-10-13.** This document is the reviewable proposal for
+**Accepted — 2026-10-13.** The owner directly instructed **"Option A approved,
+pr merged, continue"** after reviewing
+[PR #120](https://github.com/daniilnahl/Stock-Tracking-App/pull/120). This accepts
+the complete Option A service/CLI contracts and exit criteria below. Owner merge
+was independently verified at `96182b6e9b28c743a05a9e8cfb7985b5c8b833f6`,
+containing reviewed proposal head `23169daa36e751c021506dead62b52eaf0c0ff3e`.
+Its exact-head [Foundation run 38442157132](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/38442157132)
+and post-merge [main run 38442587378](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/38442587378)
+passed all five configured checks, including Python 3.11/3.12. Acceptance,
+owner-merge and main-CI prerequisites are satisfied; #114 may begin. Later
+issues retain their own dependency/owner-merge/CI gates. No agent merge,
+unapproved financial convention or expanded command scope is authorized.
+
+The original proposal wording below documents the accepted decision, rather
+than indicating that it remains unapproved. This is the contract for
 [issue #112](https://github.com/daniilnahl/Stock-Tracking-App/issues/112), in
 [M6 — CLI V2](https://github.com/daniilnahl/Stock-Tracking-App/milestone/7).
-No service interface, new product behavior or exit criterion below is accepted
-by publication, issue creation, a passing check or the request to begin M6.
-Runtime work depending on this material architecture decision requires explicit
-owner acceptance, owner merge of the reviewed proposal and passing required CI.
+Publication, issue creation, passing checks and the initial request to begin M6
+did not establish acceptance; the direct owner instruction above does. Runtime
+work depended on explicit acceptance, owner merge and passing required CI.
 Agents must not merge. The independent terminology correction in #113 uses
 already approved financial definitions and does not depend on this decision.
 
@@ -391,7 +404,7 @@ safe errors, exact request order, invalidation, state preservation and aborts.
 Do not weaken/delete tests to hide a changed public behavior. Keep source/wheel
 subprocess probes and root help/save/preflight guard surfaces.
 
-## Proposed exit criteria — not yet approved
+## Accepted exit criteria (original proposal)
 
 1. Both maintained CLI command surfaces delegate local/market/history business
    orchestration to the injected, presentation-independent service contracts.
@@ -409,8 +422,8 @@ subprocess probes and root help/save/preflight guard surfaces.
    merges and required CI are verified, required issues close, and operation/
    milestone evidence documents actual checks and remaining limitations.
 
-These criteria make the SRS objective testable under proposed Option A; they do
-not alter SRS authority until owner acceptance. They certify no REST endpoint,
+These owner-accepted criteria make the SRS objective testable under Option A.
+They certify no REST endpoint,
 new installed CLI contract, portfolio summary provenance or live entitlement.
 
 ## Issue map and dependency ordering

@@ -146,6 +146,27 @@ execute credential loading and requires no credentials or provider transport.
 
 # 3. Determinism
 
+## M6 local application-service boundary — issue #114
+
+Run `python -m pytest tests/test_watchlist_service.py tests/test_service_boundary.py
+tests/test_packaging.py tests/test_sqlite_watchlists.py tests/test_cli_persistence.py -v`.
+The injected local service tests use real domain calculations and temporary
+SQLite state, checking complete input revalidation before IO, exact namespace
+selection, missing/corrupt/future-schema refusal, existence-only legacy protection,
+precise Decimal/None/unowned state, ordered rows and compatible forward-removal
+behavior. Saved percentage/market-cap strings remain opaque display metadata.
+
+`watchlist_service_probe.py` runs in fresh source and offline installed-wheel
+processes. Its boundary phase installs and proves UI/facade/configuration/
+concrete-provider/database/network/environment/legacy-deserialization guards
+before importing services, then executes real local use cases over a neutral
+repository fake. Separate write/read phases use an explicit temporary SQLite
+repository and existence adapter, verifying both namespaces, exact restart state,
+no reads of opaque legacy contents and unchanged database bytes after local
+display. This checks #114's service capability; existing root commands are not
+yet integrated with it. Current-data/history implementations, thin CLI wiring
+and combined M6 exit evidence belong to their later bounded issues.
+
 Tests MUST be deterministic.
 
 ## Time
