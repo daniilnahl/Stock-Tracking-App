@@ -136,6 +136,12 @@ initial check; the SQLite destination is opened in existing-file mode. The reser
 file identity is checked around opening to refuse detected path replacement. This is
 local single-user operation, not a guarantee against hostile filesystem changes.
 
+The completed M4 `stock_tracker.history-cache.json` sidecar is disposable market
+data, separate from SQLite holdings. Neutral transfer and these SQLite backup/
+restore utilities do not include or move it; a restored working directory may
+retrieve history again under the accepted [cache policy](HISTORICAL_CACHE.md).
+This does not change the verified holdings backup contract.
+
 Backup uses SQLite's backup API from one read-only validated snapshot, including
 committed state held in active journals/WAL; copying the bare database bytes is
 insufficient. Schema, SQLite integrity, foreign keys and every Portfolio/watchlist

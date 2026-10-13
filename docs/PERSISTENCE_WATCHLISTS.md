@@ -38,6 +38,12 @@ snapshots/returns are recomputed from authoritative inputs. Runtime keys, client
 configuration and derived returns never enter persisted records. Display metadata
 remains exact string/None without reverse parsing or freshness claims.
 
+Restored/imported non-NASDAQ or unresolved identities remain valid holdings.
+Completed M4 graphing accepts only a known exchange exactly equal to `NASDAQ`,
+before credential/factory/cache access; unsupported entries fail safely without
+changing or removing holdings. Historical bars and cache handles are never
+persisted in these records. See [M4 historical operations](HISTORICAL_CACHE.md).
+
 Run `python -m pytest tests/test_sqlite_watchlists.py tests/test_packaging.py -v`.
 Tests use fictional inputs and isolated temporary SQLite files, check full input
 validation/rollback/corruption/independent namespaces, and restore real facades

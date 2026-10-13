@@ -4,6 +4,12 @@
 records all nine required issues closed, owner merges and passing final main CI.
 The operational contracts and limitations below remain those accepted in ADR-0009.
 
+Completed M4 historical caching uses a separate disposable
+`stock_tracker.history-cache.json` sidecar. It adds no SQLite tables or migration
+and stores no holdings or runtime credentials. Graphing reads restored holdings
+without saving them. See [historical cache operations](HISTORICAL_CACHE.md) and
+[M4 preservation evidence](milestones/m4-exit-evidence.md).
+
 The accepted [ADR-0009](adr/0009-persistence-contracts.md) defines M3's contracts.
 Issue #70 supplies the connection boundary and initial schema. Issue #71 adds
 the Portfolio repository. Merged #72–74 supply the independent watchlist repository,

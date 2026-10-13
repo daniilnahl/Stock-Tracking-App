@@ -195,8 +195,9 @@ The [post-merge Foundation run](https://github.com/daniilnahl/Stock-Tracking-App
 passed all five checks; the [completion evidence](docs/milestones/m2-exit-evidence.md#completion-review--2026-10-05)
 records the six deliverables, boundary exit criterion and final review.
 [M2](https://github.com/daniilnahl/Stock-Tracking-App/milestone/3) is closed at
-100%, with zero open and 20 closed items. This does not implement persistence,
-genuine historical retrieval/charts, FX or broader exchange support.
+100%, with zero open and 20 closed items. M2's evidence alone does not establish
+persistence or historical charts; those are now completed M3/M4 work below.
+FX and broader exchange support remain outside these implemented contracts.
 
 ## Optional provider configuration
 
@@ -224,8 +225,11 @@ values override dotenv values of the same name. `FMP_API_KEY` wins across
 sources; the legacy `MY_API_KEY` fallback applies only when `FMP_API_KEY` is
 absent from both. A present but empty/whitespace canonical value fails validation
 and does not fall back. Remove the empty canonical variable if using the legacy
-name. Missing or blank credentials stop `add-stock`, `refresh` and explicit
-scratch-script requests before network work. Diagnostics omit credential values
+name. Missing or blank credentials stop `add-stock`, `refresh`, graphing a
+selected supported stock, and explicit scratch-script requests before network
+work. Explicit graph dates validate before state/key preflight; selected-stock
+identity is checked before credentials, and resolved ranges validate before
+cache/provider access. Missing tickers perform no history request. Diagnostics omit credential values
 and request URLs.
 
 Previously exposed keys are covered by the
@@ -274,7 +278,28 @@ and both CLI restart preservation, source/wheel offline checks, neutral import
 and checked backup/restore. Local full verification passed 1,850 tests; final
 merged-main persistence verification passed 498 tests. Storage remains cwd-local,
 schema version 1 and last-successful-save; manual legacy reconstruction preserves
-original files. Historical data, analytics and CLI V2 remain later milestones.
+original files. Historical data is now completed M4 work; analytics and CLI V2
+remain later milestones.
+
+## Historical market data and M4 status
+
+**M4 is COMPLETE.** Issues #88–94 and implementation PRs #95–101 are closed,
+and [milestone 5](https://github.com/daniilnahl/Stock-Tracking-App/milestone/5)
+is closed with zero open and 14 closed items. Completed implementation main is
+`0e4b50583e255406d1f2d8e93abdcdc820c2fcbb`; the
+[final main Foundation run](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/38339230334)
+passed all five checks. [Exit evidence](docs/milestones/m4-exit-evidence.md) maps
+all five SRS deliverables to reviewed source/installed-wheel tests and closure.
+
+The accepted raw endpoint feeds actual session observations into charts. A
+separate cwd-local JSON sidecar caches exact historical requests for one hour;
+it is not holdings state or part of SQLite backup/restore. Graphing preserves
+holdings, current quotes and summary metadata. See
+[cache operations](docs/HISTORICAL_CACHE.md) for policy, bounds and safe failures,
+and the date-selection usage above. No synthetic summary-derived chart fallback
+remains. Offline fixtures verify implementation behavior; live entitlement,
+complete sessions, historical currency and adjusted/dividend analytics are not
+certified.
 
 ## Acknowledgments 
 - ### Financial Modeling Prep API

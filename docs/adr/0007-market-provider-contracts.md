@@ -2,6 +2,14 @@
 
 ## Status
 
+**Subsequent historical-data completion (2026-10-12):** [M4 completion evidence](../milestones/m4-exit-evidence.md)
+records historical retrieval, persistent cache and genuine charts under accepted
+[ADR-0010](0010-historical-market-data-contracts.md). Its historical factory
+explicitly supplies history TTL **3600.0 seconds**; the current-data factory
+retains history TTL **0.0**, quote TTL **0.0** and stale fallback **False**.
+The M2 reliability table and future-M4 wording below remain the historical
+accepted decision; ADR-0010 supplies the subsequent history contracts.
+
 **Accepted.** On **2026-10-04**, the repository owner stated **"I approve A"**
 in the Codex milestone chat, accepting the complete proposal at exact commit
 `cf909dfc6c9766c440b1aeaf408d10c1f112e6a4` and retaining the DATA-006

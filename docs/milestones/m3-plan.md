@@ -1,5 +1,9 @@
 # M3 Persistence implementation plan
 
+**Subsequent M4 completion:** [M4 evidence](m4-exit-evidence.md) verifies raw
+historical data, charts, cache and date selection. Later-history references in
+this dated M3 plan describe its original scope, not currently pending M4 work.
+
 Status: **COMPLETE — all nine required issues closed and owner-merged**.
 Snapshot: 2026-10-06. Completed main: 534a178005a5dd5662ec0cb261cadaf3ce5f2888.
 Parent: [M3 — Persistence](https://github.com/daniilnahl/Stock-Tracking-App/milestone/4).

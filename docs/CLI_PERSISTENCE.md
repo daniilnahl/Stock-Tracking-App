@@ -27,6 +27,16 @@ commits only that entrypoint's namespace. Restored facades bind the currently
 configured runtime key, which is never persisted. Local display needs no key;
 add/refresh retain their existing key requirement.
 
+Completed M4 adds paired `--start`/`--end` options to the menu CLI's existing
+`graph-stock` command. Graph execution restores local state lazily, then checks
+the selected stock's exact NASDAQ identity before its runtime-key preflight.
+Missing tickers request no history. History uses a separate disposable JSON
+sidecar; graphing never saves holdings or refreshes current quotes/summaries.
+Invalid dates and anticipated graph/provider/cache errors exit safely with
+unchanged committed storage. See [historical operations](HISTORICAL_CACHE.md)
+and [M4 evidence](milestones/m4-exit-evidence.md); the evaluation CLI has no graph
+command. These additive graph contracts do not alter the M3 storage schema.
+
 The public in-memory `current_watchlist` object stays available for existing
 callers. Lazy restoration updates that object in place. Explicitly supplied
 nonempty in-memory state and its object references are retained; callers may

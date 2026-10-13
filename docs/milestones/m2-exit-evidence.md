@@ -1,5 +1,13 @@
 # M2 market-provider exit evidence
 
+**Subsequent M4 update (2026-10-12):** [M4 completion evidence](m4-exit-evidence.md)
+records genuine raw historical retrieval, persistent caching, date-range selection
+and replacement of synthetic charts under accepted
+[ADR-0010](../adr/0010-historical-market-data-contracts.md). References below to
+future M4 work or approximate charts describe this document's dated milestone
+snapshot. The original acceptance, verification results and later analytics/CLI
+boundaries remain unchanged.
+
 
 **Subsequent M3 update (2026-10-06):** [M3 completion evidence](m3-exit-evidence.md) records
 closed milestone 4 and all nine required issues. Maintained CLIs now restore

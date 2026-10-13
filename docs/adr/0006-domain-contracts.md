@@ -2,6 +2,12 @@
 
 ## Status
 
+**Subsequent historical-data completion (2026-10-12):** [M4 completion evidence](../milestones/m4-exit-evidence.md)
+records the replacement of synthetic charts with genuine raw provider observations
+under accepted [ADR-0010](0010-historical-market-data-contracts.md). References
+below to charts awaiting M4 describe the accepted M1 scope. Domain boundaries,
+holding arithmetic and the original decision record remain unchanged.
+
 **Subsequent persistence completion (2026-10-06):** accepted ADR-0009 expressly
 extends this ADR's M1 legacy filename/pickle-IO preservation for maintained CLI
 storage. [M3 is complete](../milestones/m3-exit-evidence.md): SQLite namespaces

@@ -399,7 +399,8 @@ The existing guarded provider integration probe now exercises raw history in
 both a source subprocess and the offline installed wheel, including receipt
 metadata and public list isolation. These fixtures establish parser behavior,
 not live entitlement, session completeness, adjusted returns or the M4 exit.
-Cache, facade and chart integration remain separate dependent issues.
+Cache, facade, chart and CLI integration are now completed #90–94 work with
+their own coverage below; retrieval tests alone do not establish those contracts.
 
 ---
 
@@ -700,8 +701,8 @@ reuse. Windows without symlink creation privilege exercises the lstat refusal
 boundary with a synthetic symlink mode; privileged/POSIX runs use a real symlink.
 The existing holdings isolation probes retain their provider-free contracts.
 See [cache operations](HISTORICAL_CACHE.md) for bounds and failure behavior.
-This verifies the cache capability, without claiming issue #91 production/graph
-composition or later milestone completion.
+This verifies the cache capability. Production composition and the combined
+exit are completed #91/#94 work with separate evidence below.
 
 ## M4 historical composition — issue #91
 
@@ -712,8 +713,8 @@ and synthetic transport results verify exact production policy, persistent reuse
 default/explicit ranges, the NASDAQ gate, fake-result validation, restored runtime
 keys and unchanged holdings/summary state. `history_integration_probe.py` denies
 network and pickle and checks real composition reuse across write/read processes
-for source and installed wheels. Existing renderer and CLI flow remain #92/#93;
-these checks do not certify their future genuine-history plotting or M4 exit.
+for source and installed wheels. The renderer and CLI are completed #92/#93
+work; the combined #94 audit below verifies their integrated M4 exit.
 
 ## M4 historical charts — issue #92
 
@@ -724,8 +725,9 @@ rendering limits. Every Decimal close is converted before figure creation;
 overflow and positive underflow fail safely while genuine zero remains usable.
 Fixed clocks verify one range resolution and matching request/title dates.
 The source and installed-wheel composition probe renders cached raw closes
-without network or state mutation. These checks leave CLI date options and safe
-CLI error handling to #93 and do not claim M4 completion or live entitlement.
+without network or state mutation. Completed #93 tests verify CLI date options
+and safe error handling; #94 establishes the combined exit. None of these tests
+certify live entitlement.
 
 ## M4 CLI date selection — issue #93
 
@@ -761,3 +763,19 @@ domain/M3 preservation probes remain required alongside this combined scenario.
 See [completed M4 exit evidence](milestones/m4-exit-evidence.md) for actual
 verification and passed owner-merge/main-CI/closure gates. No live entitlement or session
 completeness is inferred from these controlled provider-schema fixtures.
+
+## M4 completion and documentation reconciliation
+
+M4 implementation is complete under accepted ADR-0010. All seven required issues
+and their implementation PRs are closed; the combined audit and post-owner-merge
+main CI passed. PR #102's completion record is also owner-merged. Its
+[main run 38341070787](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/38341070787)
+passed all five configured checks. The user-requested documentation review
+reran the full focused M4 command: **350 passed in 51.32 seconds**, and full
+pytest: **2,170 passed in 87.98 seconds**. Ruff, configured mypy (`config.py`
+only) and pip check passed in canonical Python 3.11.9.
+
+The [completion evidence](milestones/m4-exit-evidence.md) retains earlier audit
+results as dated records. Current operation docs reflect completed graph/date/
+cache behavior; older milestone/ADR snapshots identify their historical scope.
+This reconciliation changes no runtime, tests, dependency, formula or contract.

@@ -506,6 +506,17 @@ positive portfolio value.
 
 # 21. Legacy Discrepancies and Milestone Ownership
 
+**M4 reconciliation (2026-10-12):** [M4 completion evidence](milestones/m4-exit-evidence.md)
+records genuine provider raw OHLCV retrieval and chart replacement under accepted
+[ADR-0010](adr/0010-historical-market-data-contracts.md). Charts use actual observed
+session dates and raw closes as unconnected markers, preserving sparse dates
+without interpolation. Decimal observations stay numeric and exact until the
+plotting boundary converts closes to finite floats; plots identify currency as
+unavailable and warn that splits may appear as discontinuities. The raw mapping
+sets `adjusted_close=None`. No historical return, dividend-reinvestment, FX or
+portfolio metric is computed, and no financial definition or rounding policy
+changes. Earlier future-M4 statements and the table below describe dated snapshots.
+
 **M3 reconciliation (2026-10-06):** structured SQLite state now preserves exact
 Decimal holdings/quotes and zero/missing/unowned distinctions for Portfolio
 and both CLI namespaces. Imported/restored snapshots use the existing domain
@@ -524,8 +535,10 @@ text and identify average cost per share. Missing-price and zero-basis results
 are explicit `None` values, displayed as `-`; display does not mutate domain
 values. See the [M1 completion review](milestones/m1-exit-evidence.md#completion-review--2026-10-04)
 for known-value, precision, recomputation and nonmutation tests on `main`.
-Legacy table labels/provider summaries and approximate charts remain M4/M6 work;
-portfolio aggregation and unapproved conventions remain later M5 work. This
+At the M1 review, legacy table labels/provider summaries and approximate charts
+were assigned to M4/M6; M4 has since replaced approximate charts as recorded above.
+Table-label/CLI V2 work remains M6; portfolio aggregation and unapproved
+conventions remain later M5 work. This
 reconciliation changes no FC definition, rounding policy or open decision.
 
 These observations describe the tracked legacy code at publication. They are
