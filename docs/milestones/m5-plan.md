@@ -1,10 +1,13 @@
 # M5 Portfolio Analytics implementation plan
 
-Status: **IN PROGRESS — #105 owner-merged; #107 independent audit active**.
+Status: **COMPLETE — required issues closed; owner merges, review, CI and milestone closure verified**.
 Snapshot: 2026-10-12. Baseline: `a0dc9432178e2037b719269b04c758bd142df9db`,
 owner-merged M4 documentation reconciliation PR #103.
 Parent: [M5 — Portfolio Analytics](https://github.com/daniilnahl/Stock-Tracking-App/milestone/6).
 Contract: [Accepted ADR-0011](../adr/0011-snapshot-portfolio-analytics.md).
+Completed implementation main: `11f7333abdac830e139dd74354c87b30fe4cd45d`.
+Earlier analysis, dispatch and pending-gate statements remain historical snapshots;
+the completion review below supersedes them.
 
 The owner requested the supplied Master Engineering workflow for M5, superseding
 the supplied document's M2 placeholders. The Master owns planning and independent
@@ -43,7 +46,7 @@ ledger, quantization or historical performance methodology is introduced.
 | --- | --- | --- | --- | --- | --- |
 | [#104](https://github.com/daniilnahl/Stock-Tracking-App/issues/104) | Approve snapshot contracts and financial additions | Accepted and owner-merged; gates passed | None | `m5_readiness_audit` drafted ADR; Master drafted financial proposal/plan; `m5_contract_review` independent review | [#108](https://github.com/daniilnahl/Stock-Tracking-App/pull/108); no remaining independent review findings; PR/main CI passed |
 | [#105](https://github.com/daniilnahl/Stock-Tracking-App/issues/105) | Complete pure totals and ordered allocation | Closed; owner-merged | None; required PR/main CI passed | `m5_readiness_audit`; `m5_contract_review` independent review | [#109](https://github.com/daniilnahl/Stock-Tracking-App/pull/109); reviewed head `3f197ec`; merge `9b94c1e` |
-| [#107](https://github.com/daniilnahl/Stock-Tracking-App/issues/107) | Independent source/wheel isolation, restart and exit evidence | Audit PR open; local verification and independent review passed | Required PR/main CI, owner merge and closure | `m5_contract_review`; `m5_readiness_audit` independent review | [#110](https://github.com/daniilnahl/Stock-Tracking-App/pull/110); no remaining findings; hosted CI pending |
+| [#107](https://github.com/daniilnahl/Stock-Tracking-App/issues/107) | Independent source/wheel isolation, restart and exit evidence | Closed completed; owner-merged | None; required PR/main CI passed | `m5_contract_review`; `m5_readiness_audit` independent review | [#110](https://github.com/daniilnahl/Stock-Tracking-App/pull/110); reviewed head `1a247b05`; merge `11f7333` |
 
 Initial #106 allocation issue was consolidated into #105 and closed as a duplicate
 during planning. Totals and weights share one small pure function/result contract;
@@ -152,3 +155,25 @@ pip check and staged diff checks passed; staged hygiene passed **8 in 8.87s**.
 See [exit evidence](m5-exit-evidence.md) for metric/requirement/fixture mapping.
 Final audit PR/head review, required PR/main CI, owner merge, issue closure and
 milestone completion remain pending.
+
+## Completion review — 2026-10-12
+
+The owner merged audit PR #110 and instructed the Master to continue. Reviewed
+head `1a247b05a786d356ce2fb169b9005ed3d4f2d0c4` and merged main
+`11f7333abdac830e139dd74354c87b30fe4cd45d` share tree
+`eba5b822314e4cb87daacadf136889cabc476734`. All five required jobs passed in
+[audit PR CI 38349919901](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/38349919901)
+and [main CI 38353960939](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/38353960939).
+Required #104/#105/#107 are closed completed; #106 remains a closed duplicate.
+Master merged-main focused verification passed **180 tests in 49.10s**.
+
+The accepted required snapshot subset has normative definitions and independent
+known-value, guarded source/wheel and exact restart evidence. No required M5
+work is deferred. Undefined optional analytics remain blocked as recorded above.
+Independent final accepted-scope review passed. GitHub milestone 6 is closed with
+zero open and seven closed items (three required issues, the #106 duplicate and
+three merged PRs). The
+[persisted completion report](https://github.com/daniilnahl/Stock-Tracking-App/issues/107#issuecomment-6139320638)
+and [M5 exit evidence](m5-exit-evidence.md) record satisfied acceptance criteria,
+exit evidence and closure. This documentation record has separate verification/PR
+checks, not an unmet runtime completion gate, and introduces no requirement change.

@@ -2,6 +2,18 @@
 
 ## Status and acceptance gate
 
+**Implementation status note (2026-10-12; non-normative):** the accepted snapshot
+contract and independent combined audit are owner-merged through PR #109/#110
+on main `11f7333abdac830e139dd74354c87b30fe4cd45d`. Required audit PR and
+post-merge main CI passed all five checks; required #104/#105/#107 are closed.
+[M5 exit evidence](../milestones/m5-exit-evidence.md) maps every implemented metric
+to its accepted definition and source/wheel known-value/restart tests. Independent
+completion review passed; milestone 6 is closed with zero open and seven closed
+items, recorded in the
+[completion report](https://github.com/daniilnahl/Stock-Tracking-App/issues/107#issuecomment-6139320638).
+The original decision
+and approval gates below remain intact; this note approves no deferred metric.
+
 **Accepted, 2026-10-12.** After the Master presented complete Option A in
 [PR #108](https://github.com/daniilnahl/Stock-Tracking-App/pull/108) for approval,
 the owner directly instructed **"PR merged, continue work"** in the milestone

@@ -656,7 +656,15 @@ environment, infrastructure imports and output are denied during computation.
 Exact schema/input rows and database bytes remain unchanged by analytics and
 across restart. No currency or derived metric is persisted. See
 [M5 exit evidence](milestones/m5-exit-evidence.md) for accepted scope, metric/test
-mapping, actual checks and remaining owner-merge/main-CI completion gates.
+mapping and completion evidence. Audit PR #110 is owner-merged on main
+`11f7333abdac830e139dd74354c87b30fe4cd45d`; required exact PR/main CI passed
+all five checks and #107 is closed completed. The Master reran the focused
+merged-main source/wheel audit: **180 passed in 49.10s**. Independent final review
+passed and milestone 6 is closed with zero open/seven closed items, recorded in
+the exit evidence and
+[completion report](https://github.com/daniilnahl/Stock-Tracking-App/issues/107#issuecomment-6139320638).
+Completion-documentation verification is
+separate from these implemented-behavior checks. No testing contract changes.
 
 ## M1 domain isolation — issue #33
 

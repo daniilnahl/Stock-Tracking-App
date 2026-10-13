@@ -278,8 +278,8 @@ and both CLI restart preservation, source/wheel offline checks, neutral import
 and checked backup/restore. Local full verification passed 1,850 tests; final
 merged-main persistence verification passed 498 tests. Storage remains cwd-local,
 schema version 1 and last-successful-save; manual legacy reconstruction preserves
-original files. Historical data is now completed M4 work; analytics and CLI V2
-remain later milestones.
+original files. Historical data is now completed M4 work; snapshot analytics
+is completed M5 work as recorded below, and CLI V2 remains a later milestone.
 
 ## Historical market data and M4 status
 
@@ -301,7 +301,27 @@ remains. Offline fixtures verify implementation behavior; live entitlement,
 complete sessions, historical currency and adjusted/dividend analytics are not
 certified.
 
-## Acknowledgments 
+## Snapshot portfolio analytics and M5 status
+
+The additive `stock_tracker.domain.portfolio_snapshot` API now computes numeric
+cost basis, market value, unrealized P&L/ratio and ordered position allocation
+under [accepted ADR-0011](docs/adr/0011-snapshot-portfolio-analytics.md). Callers
+supply immutable Position/price rows and explicit cost, quote and aggregate
+currency assertions. Calculations validate consistency without fetching prices
+or claiming currency authenticity or observation freshness. Missing inputs and
+undefined zero-denominator metrics remain distinguishable from numeric zero.
+
+The required snapshot implementation and independent audit are owner-merged at
+`11f7333abdac830e139dd74354c87b30fe4cd45d`; all required issues and PR/main CI
+gates passed. **M5 is complete:** independent review passed and milestone 6 is
+closed with zero open and seven closed items. [M5 exit evidence](docs/milestones/m5-exit-evidence.md) records known
+values, actual source/installed-wheel isolation and exact SQLite restart, with
+the [verified completion report](https://github.com/daniilnahl/Stock-Tracking-App/issues/107#issuecomment-6139320638).
+This completes the accepted pure API;
+it adds no CLI command. Optional historical, benchmark, risk, dividend and FX
+metrics remain blocked on approved definitions; CLI V2 remains later work.
+
+## Acknowledgments
 - ### Financial Modeling Prep API
   #### This app utilizes the Financial Modeling Prep API for retrieving stock data.
   #### You can learn more about the API at https://financialmodelingprep.com/developer/docs/.
