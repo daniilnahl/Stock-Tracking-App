@@ -12,8 +12,9 @@ The **Stock Tracking App** was created as a passion project driven by my interes
 
 Charts use observed raw historical closes for known NASDAQ stocks, with no
 interpolation or currency assumption. Requested/observed ranges and split-price
-warnings are shown. The graph command accepts paired dates; the combined M4 exit
-audit remains work.
+warnings are shown. The graph command accepts paired dates. The
+[combined M4 exit audit](docs/milestones/m4-exit-evidence.md) records source/wheel
+verification and the remaining owner-merge, main-CI and closure gates.
 The unfinished personal evaluation method is unavailable. This foundation
 does not certify financial analytics or production readiness.
 

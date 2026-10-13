@@ -741,3 +741,23 @@ The source/installed-wheel history probe executes the actual cached CLI graph,
 invalid ISO rejection and help with command preflight denied. Existing help and
 domain isolation probes remain required. These checks do not replace #94's
 combined exit audit or verify live provider entitlement/session completeness.
+
+## M4 combined exit audit — issue #94
+
+`tests/test_history_exit.py` and the installed-wheel audit in
+`tests/test_packaging.py` launch `history_exit_probe.py` in independent write,
+read and expired processes. Each child sets its own fixed UTC time and temporary
+configuration, verifies network/pickle/legacy-content/outside-write/database
+guards before application imports, and checks source/wheel module origins.
+Only the HTTP opener is synthetic: production request construction, parser,
+factory, persistent cache, SQLite restore, facade, Agg renderer and CLI execute.
+Sparse precise raw closes and a split-like discontinuity reach chart markers;
+current quotes, summary percentages and saved currency cannot supply the chart.
+Fresh restart reuse makes no HTTP request, while exact one-hour expiry performs
+the accepted bounded retries and fails safely without stale chart data or cache/
+holdings replacement. Both CLI namespaces, database bytes/schema version 1 and
+opaque legacy files remain preserved. Existing unit/error/resource matrices and
+domain/M3 preservation probes remain required alongside this combined scenario.
+See [M4 exit evidence](milestones/m4-exit-evidence.md) for actual verification and
+remaining owner-merge/main-CI/closure gates. No live entitlement or session
+completeness is inferred from these controlled provider-schema fixtures.
