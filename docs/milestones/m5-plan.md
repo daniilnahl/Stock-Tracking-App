@@ -41,7 +41,7 @@ ledger, quantization or historical performance methodology is introduced.
 
 | Issue | Objective | Status | Dependency / blocker | Agent | PR / review |
 | --- | --- | --- | --- | --- | --- |
-| [#104](https://github.com/daniilnahl/Stock-Tracking-App/issues/104) | Approve proposed snapshot contracts and financial additions | Proposal prepared | Explicit human acceptance; owner merge and required main CI | `m5_readiness_audit` drafted ADR; Master drafted financial proposal/plan; `m5_contract_review` independent review | Proposal PR pending |
+| [#104](https://github.com/daniilnahl/Stock-Tracking-App/issues/104) | Approve proposed snapshot contracts and financial additions | Proposal open | Explicit human acceptance; owner merge and required main CI | `m5_readiness_audit` drafted ADR; Master drafted financial proposal/plan; `m5_contract_review` independent review | [#108](https://github.com/daniilnahl/Stock-Tracking-App/pull/108); no remaining independent review findings; hosted CI pending |
 | [#105](https://github.com/daniilnahl/Stock-Tracking-App/issues/105) | Complete pure totals and ordered allocation | Not started | #104 acceptance/owner-merge/CI gates | Not dispatched | None |
 | [#107](https://github.com/daniilnahl/Stock-Tracking-App/issues/107) | Independent source/wheel isolation, restart and exit evidence | Not started | #104 and owner-merged #105 with required CI | Not dispatched | None |
 
