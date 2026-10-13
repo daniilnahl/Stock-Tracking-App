@@ -115,7 +115,7 @@ independent exit evidence remain required.
 [PR #109](https://github.com/daniilnahl/Stock-Tracking-App/pull/109) adds the
 accepted immutable input/result records, safe currency errors and pure numeric
 totals/allocation, reusing position_snapshot. No provider/service/CLI/schema,
-dependency or runtime change is introduced. Source and installed-wheel isolation
+dependency or Python-version change is introduced. Source and installed-wheel isolation
 probes exercise actual calculations under infrastructure guards, with explicit
 persistence-import refusal and hand-derived weights. Inputs retain row order,
 duplicates, separate currency assertions and Decimal precision.
