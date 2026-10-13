@@ -504,6 +504,65 @@ positive portfolio value.
 
 ---
 
+# Proposed M5 snapshot clarification — not yet normative
+
+**PROPOSED, 2026-10-12. Requires explicit owner acceptance.** This additive
+proposal accompanies [ADR-0011](adr/0011-snapshot-portfolio-analytics.md) and
+[issue #104](https://github.com/daniilnahl/Stock-Tracking-App/issues/104).
+Existing approved definitions remain authoritative until the owner explicitly
+accepts the complete proposal. Runtime implementation also requires owner merge
+of the reviewed proposal and passing required main CI. No open decision above
+is resolved merely by publishing this section.
+
+The proposed required M5 subset is snapshot cost basis, market value, unrealized
+P&L, aggregate unrealized ratio and ordered allocation. Each input row supplies
+a Position, a Decimal price or None, and separate cost/quote currency assertions.
+The caller also supplies the aggregate currency. Require known, exact matching
+currency on every row, including zero-quantity or missing-price rows; unknown or
+conflicting currency produces the ADR's typed error before arithmetic. Currency
+consistency checks do not establish authenticity, freshness or observation time.
+Do not infer cost currency from quote currency, assume USD, use saved display
+metadata as evidence, perform FX, or combine unlike currencies.
+
+Reuse FC-020/030/040/041 for each position and FC-050/091 for totals. Monetary
+outputs use the explicit single currency; returns and weights are dimensionless
+ratios. Retain every row and its order, including duplicates and unresolved
+exchanges. Inputs bind prices to individual Positions; ticker alone is not a
+global identity or a deduplication key.
+
+If any row price is None, including a zero-quantity row, total market value,
+aggregate P&L, aggregate return and all weights are None. Total cost basis remains
+numeric after successful currency validation. No partial value is published as
+a complete total. With complete valuation, aggregate return is P&L divided by
+total basis only when basis is positive; otherwise it is None. With complete
+positive market value, each weight is its position value divided by total value;
+otherwise every weight is None. A zero-value row has zero weight only when the
+complete total is positive.
+
+Empty input with explicit valid currency has zero basis, market value and P&L,
+undefined aggregate return and no allocation rows. A complete nonempty portfolio
+with zero market value has undefined weights. Zero prices remain valid numeric
+observations and differ from absent prices.
+
+Use Decimal arithmetic under the caller's context, without display rounding,
+quantization, context changes or residual weight adjustment. Arithmetic errors
+remain errors. This snapshot is not historical performance, a total shareholder
+return or an assertion that supplied prices are current.
+
+Hand-derived example: A has Q=10, C=100, P=120; B has Q=5, C=40, P=60.
+In a single explicitly supplied currency, bases are 1000 and 200, values 1200
+and 300, and P&L 200 and 100. Totals are basis=1200, value=1500, P&L=300,
+unrealized ratio=0.25, with ordered weights (0.8, 0.2). Missing B's price leaves
+basis=1200 and aggregate valuation/P&L/ratio/weights unavailable. More zero,
+loss, fractional and precision fixtures are required by ADR-0011.
+
+Daily portfolio change, zero-prior-price daily returns, benchmark comparison,
+historical cash-flow performance, dividends, split-adjusted holdings, FX and
+risk metrics remain blocked under sections 12–19. They are optional candidates
+in SRS M5, not metrics implemented by this proposed subset.
+
+---
+
 # 21. Legacy Discrepancies and Milestone Ownership
 
 **M4 reconciliation (2026-10-12):** [M4 completion evidence](milestones/m4-exit-evidence.md)
