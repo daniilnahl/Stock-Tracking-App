@@ -641,6 +641,23 @@ Before PR creation:
 [ ] Time/randomness are controlled where relevant
 ```
 
+## M5 combined snapshot audit — issue #107
+
+Run `python -m pytest tests/test_analytics_exit.py tests/test_snapshot_analytics.py
+tests/test_position_calculations.py tests/test_sqlite_portfolios.py
+tests/test_domain_isolation.py tests/test_packaging.py -v` for hand-derived
+financial cases, exact SQLite restart and real source/installed-wheel isolation.
+`analytics_exit_probe.py` uses independent write/read/read processes and synthetic
+holdings; quote/currency assertions are supplied explicitly after restoration.
+The actual pure calculation runs under the existing domain probe's reusable
+`isolated_domain()` guards and violation controls. Cold import isolation remains
+independently tested. Network/pickle are denied during storage setup; SQL/data IO,
+environment, infrastructure imports and output are denied during computation.
+Exact schema/input rows and database bytes remain unchanged by analytics and
+across restart. No currency or derived metric is persisted. See
+[M5 exit evidence](milestones/m5-exit-evidence.md) for accepted scope, metric/test
+mapping, actual checks and remaining owner-merge/main-CI completion gates.
+
 ## M1 domain isolation — issue #33
 
 Run the focused source, offline wheel and staged-index security checks with:

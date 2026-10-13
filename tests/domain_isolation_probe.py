@@ -5,7 +5,7 @@ preloads infrastructure stdlib to install guards; no legacy application is loade
 """
 
 import builtins
-from contextlib import ExitStack
+from contextlib import ExitStack, contextmanager
 import dataclasses
 from decimal import Decimal
 import importlib.abc
@@ -51,9 +51,9 @@ class DeniedImports(importlib.abc.MetaPathFinder):
         return None
 
 
-def main(import_root):
-    root = Path(import_root).resolve()
-    sys.path.insert(0, str(root))
+@contextmanager
+def isolated_domain():
+    """Install and prove independent guards before yielding to real calculations."""
     original_import = builtins.__import__
 
     def guarded_import(name, globals=None, locals=None, fromlist=(), level=0):
@@ -113,6 +113,13 @@ def main(import_root):
             else:
                 raise AssertionError("An isolation probe reached prohibited work")
 
+        yield
+
+
+def main(import_root):
+    root = Path(import_root).resolve()
+    sys.path.insert(0, str(root))
+    with isolated_domain():
         from stock_tracker.domain import (
             DomainValidationError, Portfolio, Position, PositionSnapshot, Stock,
             position_snapshot,
