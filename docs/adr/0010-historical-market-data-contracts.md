@@ -2,6 +2,11 @@
 
 ## Status and approval gate
 
+**Implementation completed:** [M4 completion evidence](../milestones/m4-exit-evidence.md)
+records owner-merged PRs #95–101, passing final PR/main CI and closure of all
+seven required issues and milestone 5. The original proposal and acceptance
+wording below remain historical; the accepted contracts are unchanged.
+
 **Accepted, 2026-10-07.** The owner explicitly instructed “Approved and merged.
 Proceed.” after reviewing PR #95 at `e455660774e9c96e8ea8851cdeabc9d63f6e6730`.
 This accepts complete Option A below. PR #95 was owner-merged as
