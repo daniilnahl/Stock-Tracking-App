@@ -12,6 +12,14 @@ Names, ordered entries, duplicate identities, exact ownership inputs, last
 observed quotes and display metadata persist. Saved quotes support offline
 display and do not imply freshness. Portfolios remain separate records.
 
+Both `show-stocks` tables label the per-share ownership input **Average Cost
+per Share** and the position percentage **Unrealized Return**. For quantity 10,
+average cost 100 and price 120, those cells show 100 and 20.0%; position cost
+basis is 1000 under FC-020. The return uses FC-041 and is a snapshot unrealized
+percentage, without dividends or historical cash-flow performance. Missing
+quotes and undefined zero-basis returns retain the `-` marker. These headings
+do not change financial values, formatting or persisted state.
+
 Percentage display metadata may contain empty or nonnumeric text. Empty/missing
 values and the existing dash/N/A sentinels display as `-`. Other nonnumeric
 metadata displays literally, with Rich markup escaped and no percentage suffix
