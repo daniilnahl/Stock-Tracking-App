@@ -1,8 +1,8 @@
 # M4 Historical Market Data implementation plan
 
-Status: **genuine charts owner-merged and verified; #93 CLI date-selection PR awaiting owner review**.
+Status: **all runtime issues owner-merged and verified; #94 exit audit passed locally**.
 Snapshot: 2026-10-12. Planning baseline: `534a178` (owner-merged M3 audit PR #86).
-Current runtime branch baseline: `cd0b828` (owner-merged chart PR #99).
+Current runtime branch baseline: `41ed11c` (owner-merged CLI date-selection PR #100).
 Parent: [M4 — Historical Market Data](https://github.com/daniilnahl/Stock-Tracking-App/milestone/5).
 Contract: [Accepted ADR-0010](../adr/0010-historical-market-data-contracts.md).
 
@@ -48,8 +48,8 @@ return, benchmark, dividend, FX, risk and transaction semantics remain outside M
 | [#90](https://github.com/daniilnahl/Stock-Tracking-App/issues/90) | Bounded historical cache and freshness | Owner-merged and verified | `m4_history_cache`, GPT-6.1 low | [#97](https://github.com/daniilnahl/Stock-Tracking-App/pull/97); `m4_cache_review`, GPT-6.1 low: no findings; local and PR/main CI passed | None |
 | [#91](https://github.com/daniilnahl/Stock-Tracking-App/issues/91) | Historical composition and facade | Owner-merged and verified | `m4_history_integration`, GPT-6.1 low | [#98](https://github.com/daniilnahl/Stock-Tracking-App/pull/98); `m4_integration_review`, GPT-6.1 low: no findings; local and PR/main CI passed | None |
 | [#92](https://github.com/daniilnahl/Stock-Tracking-App/issues/92) | Genuine-observation chart rendering | Owner-merged and verified | `m4_chart_rendering`, GPT-6.1 low | [#99](https://github.com/daniilnahl/Stock-Tracking-App/pull/99); `m4_chart_review`, GPT-6.1 low: no findings; local and PR/main CI passed | None |
-| [#93](https://github.com/daniilnahl/Stock-Tracking-App/issues/93) | Existing chart command date selection | Awaiting owner merge on `feature/93-history-date-selection`; #88/#91/#92 resolved | `m4_date_selection`, GPT-6.1 low | [#100](https://github.com/daniilnahl/Stock-Tracking-App/pull/100); `m4_date_review`, GPT-6.1 low: no findings; local checks passed; hosted checks tracked in PR | Required hosted CI and owner merge |
-| [#94](https://github.com/daniilnahl/Stock-Tracking-App/issues/94) | Independent combined exit evidence | Queued; #88–93 | `m4_exit_audit`, GPT-6.1 low | None | All runtime prerequisites |
+| [#93](https://github.com/daniilnahl/Stock-Tracking-App/issues/93) | Existing chart command date selection | Owner-merged and verified | `m4_date_selection`, GPT-6.1 low | [#100](https://github.com/daniilnahl/Stock-Tracking-App/pull/100); `m4_date_review`, GPT-6.1 low: no findings; local and final PR/main CI passed | None |
+| [#94](https://github.com/daniilnahl/Stock-Tracking-App/issues/94) | Independent combined exit evidence | Ready for publication on `test/94-history-exit-audit`; #88–93 resolved | `m4_exit_audit`, GPT-6.1 low | `m4_exit_review`, GPT-6.1 low: no findings; local checks passed | Required hosted CI, owner merge, main CI and closure gates |
 
 Queued agent names are assignments for future dispatch, not claims of running
 agents. Two completed read-only audits (`m4_contract_audit`, `m4_chart_audit`)
@@ -230,6 +230,31 @@ check, diff checks and staged hygiene (8 tests in 10.32 seconds) passed.
 Independent source/integration/wheel repair verification passed 49 tests in
 34.60 seconds with no findings. Fresh exact-head hosted CI remains a gate;
 the failing historical run is retained above rather than represented as passing.
+
+The owner confirmed PR #100 merged on 2026-10-12. Verified merge
+`41ed11c01693a269bdb93bd2c2b11133681e4cb8` includes final reviewed head
+`ef7d56bae2b3cfe5686dccf1f6c116fbceac4043`.
+[Final PR Foundation run 38312333898](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/38312333898)
+and [main Foundation run 38312997700](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/38312997700)
+passed all five checks. All required runtime issues #88–93 are closed and their
+PRs #95–100 are owner-merged. The independent combined audit and its separate
+review were dispatched after verifying these gates. #94 and the milestone remain
+open; passing runtime checks alone do not establish milestone completion.
+
+Combined exit verification on 2026-10-12 used canonical Python 3.11.9.
+The final focused history/cache/chart/CLI/source/wheel/hygiene suite passed
+350 tests in 51.08 seconds; full pytest passed **2,170 tests in 77.11 seconds**.
+Ruff, configured mypy (one source file), pip check, diff checks and staged hygiene
+(8 tests in 8.28 seconds) passed. Independent review passed 313 baseline cases,
+then the final combined source/wheel checks (3 tests in 32.46 seconds), with no
+actionable findings. The probe exercises independent SQLite restore/cache-hit/
+exact-expiry failure processes and the actual provider/cache/facade/Agg/CLI path.
+An initial delayed font-cache diagnostic failed the quiet-process assertion;
+a narrow probe-only logger capture repaired it without weakening provider or IO
+guards. [M4 exit evidence](m4-exit-evidence.md) records the scenario, actual runs,
+requirements, PR/main ancestry, accepted limits and remaining closure gates.
+No runtime, schema, dependency, toolchain or CI changes are included. Required
+audit PR CI, owner merge, final main CI and #94/milestone closure remain pending.
 
 ## Exit mapping and completion gates
 

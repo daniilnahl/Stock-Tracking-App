@@ -115,6 +115,17 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
         assert composition.returncode == 0, composition.stderr
         assert composition.stdout == composition.stderr == ""
 
+    history_exit_directory = tmp_path / "installed-history-exit"
+    history_exit_directory.mkdir()
+    for mode in ("write", "read", "expired"):
+        history_exit = subprocess.run(
+            [sys.executable, "-I", str(ROOT / "tests/history_exit_probe.py"), str(installed), mode],
+            cwd=history_exit_directory, env=environment, capture_output=True, text=True,
+        )
+        assert history_exit.returncode == 0, history_exit.stderr
+        assert history_exit.stdout == history_exit.stderr == ""
+    assert (history_exit_directory / "watchlist.pkl").read_bytes() == b"opaque synthetic legacy; do not deserialize"
+
     migration_code = """
 import sys
 from contextlib import ExitStack
