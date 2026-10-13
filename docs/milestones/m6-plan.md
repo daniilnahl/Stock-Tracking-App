@@ -77,7 +77,7 @@ and `Unrealized Return` while preserving values, formatting and arithmetic.
 
 | Issue | Objective | Status | Dependency / blocker | Agent | PR / review |
 | --- | --- | --- | --- | --- | --- |
-| [#112](https://github.com/daniilnahl/Stock-Tracking-App/issues/112) | Propose and approve service/CLI contracts and exit criteria | Proposal independently reviewed | Owner acceptance, owner merge, required CI gate downstream runtime | `m6_readiness` drafts ADR; Master plan; `m6_contract_review` independent review | Proposal submission pending |
+| [#112](https://github.com/daniilnahl/Stock-Tracking-App/issues/112) | Propose and approve service/CLI contracts and exit criteria | Proposal PR open; independently reviewed | Owner acceptance, owner merge, required CI gate downstream runtime | `m6_readiness` drafts ADR; Master plan; `m6_contract_review` independent review | [#120](https://github.com/daniilnahl/Stock-Tracking-App/pull/120); technical review PASS; owner decision pending |
 | [#113](https://github.com/daniilnahl/Stock-Tracking-App/issues/113) | Correct financial table headings | PR open; local and hosted checks, Master review passed | Owner merge | `m6_terminology`, isolated `fix/113-financial-table-terminology` | [#119](https://github.com/daniilnahl/Stock-Tracking-App/pull/119), reviewed head `9aa7f026` |
 | [#114](https://github.com/daniilnahl/Stock-Tracking-App/issues/114) | Local watchlist service boundary | Blocked | Accepted/owner-merged #112 and required CI | Unassigned | — |
 | [#115](https://github.com/daniilnahl/Stock-Tracking-App/issues/115) | Current-data orchestration service | Blocked | #112 and complete owner-merged #114 | Unassigned | — |
@@ -155,7 +155,11 @@ display projection contracts were clarified. Final review **PASS**, no remaining
 actionable findings. This review approves the proposal's technical coherence,
 not product/architecture acceptance. Master staged-source hygiene passed
 **8 tests in 6.47s** and reviewed the two-document diff for scope, secrets and
-generated artifacts. Final staging verification follows the reviewed clarifications.
+generated artifacts. Final staged hygiene after the reviewed clarifications
+passed **8 in 6.27s**, and final staged/branch diff checks passed. Proposal
+[PR #120](https://github.com/daniilnahl/Stock-Tracking-App/pull/120) is open for
+explicit owner acceptance; hosted proposal CI is pending. No service runtime
+implementation has been dispatched.
 
 ### Independent terminology task — #113
 
