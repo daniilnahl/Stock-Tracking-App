@@ -1,6 +1,6 @@
 # M5 Portfolio Analytics implementation plan
 
-Status: **IN PROGRESS — accepted contract; #105 implementation released**.
+Status: **IN PROGRESS — #105 owner-merged; #107 independent audit active**.
 Snapshot: 2026-10-12. Baseline: `a0dc9432178e2037b719269b04c758bd142df9db`,
 owner-merged M4 documentation reconciliation PR #103.
 Parent: [M5 — Portfolio Analytics](https://github.com/daniilnahl/Stock-Tracking-App/milestone/6).
@@ -42,8 +42,8 @@ ledger, quantization or historical performance methodology is introduced.
 | Issue | Objective | Status | Dependency / blocker | Agent | PR / review |
 | --- | --- | --- | --- | --- | --- |
 | [#104](https://github.com/daniilnahl/Stock-Tracking-App/issues/104) | Approve snapshot contracts and financial additions | Accepted and owner-merged; gates passed | None | `m5_readiness_audit` drafted ADR; Master drafted financial proposal/plan; `m5_contract_review` independent review | [#108](https://github.com/daniilnahl/Stock-Tracking-App/pull/108); no remaining independent review findings; PR/main CI passed |
-| [#105](https://github.com/daniilnahl/Stock-Tracking-App/issues/105) | Complete pure totals and ordered allocation | Implemented; PR open | Owner merge and required PR/main CI | `m5_readiness_audit`; `m5_contract_review` independent review | [#109](https://github.com/daniilnahl/Stock-Tracking-App/pull/109); local checks passed; no independent findings; hosted CI pending |
-| [#107](https://github.com/daniilnahl/Stock-Tracking-App/issues/107) | Independent source/wheel isolation, restart and exit evidence | Not started | #104 and owner-merged #105 with required CI | Not dispatched | None |
+| [#105](https://github.com/daniilnahl/Stock-Tracking-App/issues/105) | Complete pure totals and ordered allocation | Closed; owner-merged | None; required PR/main CI passed | `m5_readiness_audit`; `m5_contract_review` independent review | [#109](https://github.com/daniilnahl/Stock-Tracking-App/pull/109); reviewed head `3f197ec`; merge `9b94c1e` |
+| [#107](https://github.com/daniilnahl/Stock-Tracking-App/issues/107) | Independent source/wheel isolation, restart and exit evidence | Audit PR open; local verification and independent review passed | Required PR/main CI, owner merge and closure | `m5_contract_review`; `m5_readiness_audit` independent review | [#110](https://github.com/daniilnahl/Stock-Tracking-App/pull/110); no remaining findings; hosted CI pending |
 
 Initial #106 allocation issue was consolidated into #105 and closed as a duplicate
 during planning. Totals and weights share one small pure function/result contract;
@@ -126,5 +126,29 @@ passed **107 tests in 30.73s**; the final implementation full suite passed
 staged diff checks and **8 hygiene tests in 8.66s** passed. Independent review
 passed 72 analytics cases and found no actionable defects, including final probe
 strengthening. These verify #105, not #107's future combined restart/exit audit.
-Required exact PR CI and owner merge/main CI remain dependency gates. No agent
-merge is authorized and milestone completion is not claimed.
+The owner instructed "PR merged, continue work". PR #109's reviewed head is
+`3f197ec9995edf13d72ec672f80a7ffdaeeac433`, owner-merged at
+`9b94c1e68bec37ebb9439d9b3815d44ba2e9b135`. Its required
+[PR Foundation run 38344185574](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/38344185574)
+and [main Foundation run 38347202332](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/38347202332)
+passed all five checks; #105 is closed. #107 was dispatched after these gates
+passed on `test/107-snapshot-exit-audit`. See
+[M5 exit evidence](m5-exit-evidence.md) for the combined audit and remaining gates.
+No agent merge is authorized and milestone completion is not claimed.
+
+## Independent combined audit — issue #107
+
+The audit adds separate source/wheel write/read/read processes using actual
+SQLitePortfolioRepository and portfolio_snapshot, explicit supplied currencies/
+observations and reusable proven domain guards. Exact decoded and stored Decimal
+spellings, duplicate order, values/weights, unavailable/currency cases and database
+bytes/schema are checked. Existing cold import probes and CLI regressions remain.
+No runtime or financial contract is changed.
+
+After the independent review's exact decoded-value assertion correction, focused
+audit/financial/persistence/isolation/packaging tests passed **172 in 33.96s**;
+full pytest passed **2243 in 84.82s** on Python 3.12.10. Ruff, configured mypy,
+pip check and staged diff checks passed; staged hygiene passed **8 in 8.87s**.
+See [exit evidence](m5-exit-evidence.md) for metric/requirement/fixture mapping.
+Final audit PR/head review, required PR/main CI, owner merge, issue closure and
+milestone completion remain pending.

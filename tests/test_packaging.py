@@ -83,6 +83,22 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
     assert isolated.stdout == isolated.stderr == ""
     assert not (tmp_path / "domain-probe").exists()
 
+    analytics_directory = tmp_path / "installed-analytics-exit"
+    analytics_directory.mkdir()
+    analytics_database = analytics_directory / "holdings.sqlite3"
+    analytics_original = None
+    for mode in ("write", "read", "read"):
+        analytics_exit = subprocess.run(
+            [sys.executable, "-I", str(ROOT / "tests/analytics_exit_probe.py"),
+             str(installed), str(analytics_database), mode],
+            cwd=analytics_directory, env=environment, capture_output=True, text=True,
+        )
+        assert analytics_exit.returncode == 0, analytics_exit.stderr
+        assert analytics_exit.stdout == analytics_exit.stderr == ""
+        if analytics_original is None:
+            analytics_original = analytics_database.read_bytes()
+        assert analytics_database.read_bytes() == analytics_original
+
     contracts = subprocess.run(
         [sys.executable, "-I", str(ROOT / "tests" / "provider_contract_probe.py"), str(installed)],
         cwd=tmp_path, env=environment, capture_output=True, text=True,
