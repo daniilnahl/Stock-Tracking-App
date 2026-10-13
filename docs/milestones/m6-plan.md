@@ -1,10 +1,10 @@
 # M6 CLI V2 implementation plan
 
-Status: **IN PROGRESS — contract proposal; service implementation blocked on owner acceptance**.
+Status: **IN PROGRESS — Option A accepted; #114 local service implementation active**.
 Snapshot: 2026-10-13 (America/Los_Angeles).
 Baseline: `11f7333abdac830e139dd74354c87b30fe4cd45d`, owner-merged M5 audit PR #110.
 Parent: [M6 — CLI V2](https://github.com/daniilnahl/Stock-Tracking-App/milestone/7).
-Contract: [Proposed ADR-0012](../adr/0012-cli-application-services.md).
+Contract: [Accepted ADR-0012](../adr/0012-cli-application-services.md).
 
 The owner requested the Master Engineering workflow for M6. The supplied
 master-agent document's old M2 placeholders do not override that request.
@@ -35,7 +35,8 @@ and genuine historical data/cache/chart capabilities exist. The root CLIs still
 orchestrate configuration, restoration, lookup/profile/summary calls, ownership
 input, mutation and persistence. No `services` or `cli` package or installed
 console entrypoint exists. Watchlists remain separate from domain Portfolios.
-The missing architectural component is the maintained shared service layer.
+At that readiness baseline, the missing architectural component was the maintained
+shared service layer. #114 now adds the accepted local boundary and contracts.
 
 Both root interfaces have tested callable compatibility surfaces: `API_KEY`,
 `current_watchlist`, `_watchlist_loaded`, `load_watchlist`, `save_watchlist` and
@@ -44,7 +45,7 @@ duplicates, namespace separation, existence-only legacy protection, offline help
 failure/no-save behavior and genuine history. Extraction must preserve these
 meaningful guarantees, rather than delete tests because they constrain design.
 
-## Proposed scope and owner decision
+## Accepted scope and owner decision
 
 Recommended Option A is compatible thinning of both maintained watchlist CLIs:
 local state, current-data operations and historical retrieval move to injected,
@@ -53,11 +54,17 @@ rendering and safe error mapping. Correct the established financial headings.
 Keep current command names, namespaces, schema, runtime/dependency pins and
 configured mypy scope. Service results must preserve numeric financial values
 and existing legacy display metadata without promoting display text into domain
-values. See the proposed ADR for exact contracts and adapters.
+values. See the accepted ADR for exact contracts and adapters.
 
-This recommendation is **not yet accepted**. The proposal must be independently
-reviewed, explicitly accepted by the owner and owner-merged with required CI
-before #114–117 runtime work begins. Alternative installed entrypoint or new
+The owner directly instructed **"Option A approved, pr merged, continue"** on
+2026-10-13. PR #120's reviewed head `23169daa36e751c021506dead62b52eaf0c0ff3e`
+is owner-merged at `96182b6e9b28c743a05a9e8cfb7985b5c8b833f6`; exact PR
+Foundation [38442157132](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/38442157132)
+and post-merge main Foundation
+[38442587378](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/38442587378)
+passed all five configured checks. The contract prerequisites are satisfied and
+#114 is dispatched on `feature/114-local-watchlist-service` from this merged
+main. #115–117 retain their own dependency merge/CI gates. Alternative installed entrypoint or new
 Portfolio/Position CLI scope requires defined selection/duplicate semantics,
 input provenance and command contracts before issues are expanded or added.
 
@@ -77,9 +84,9 @@ and `Unrealized Return` while preserving values, formatting and arithmetic.
 
 | Issue | Objective | Status | Dependency / blocker | Agent | PR / review |
 | --- | --- | --- | --- | --- | --- |
-| [#112](https://github.com/daniilnahl/Stock-Tracking-App/issues/112) | Propose and approve service/CLI contracts and exit criteria | Proposal PR open; independently reviewed | Owner acceptance, owner merge, required CI gate downstream runtime | `m6_readiness` drafts ADR; Master plan; `m6_contract_review` independent review | [#120](https://github.com/daniilnahl/Stock-Tracking-App/pull/120); technical review PASS; owner decision pending |
-| [#113](https://github.com/daniilnahl/Stock-Tracking-App/issues/113) | Correct financial table headings | PR open; local and hosted checks, Master review passed | Owner merge | `m6_terminology`, isolated `fix/113-financial-table-terminology` | [#119](https://github.com/daniilnahl/Stock-Tracking-App/pull/119), reviewed head `9aa7f026` |
-| [#114](https://github.com/daniilnahl/Stock-Tracking-App/issues/114) | Local watchlist service boundary | Blocked | Accepted/owner-merged #112 and required CI | Unassigned | — |
+| [#112](https://github.com/daniilnahl/Stock-Tracking-App/issues/112) | Propose and approve service/CLI contracts and exit criteria | Accepted, owner-merged; closure gates passed | None | `m6_readiness` drafts ADR; Master plan; `m6_contract_review` independent review | [#120](https://github.com/daniilnahl/Stock-Tracking-App/pull/120); technical review PASS; PR/main CI passed |
+| [#113](https://github.com/daniilnahl/Stock-Tracking-App/issues/113) | Correct financial table headings | Owner-merged; review and CI passed | None | `m6_terminology`, isolated `fix/113-financial-table-terminology` | [#119](https://github.com/daniilnahl/Stock-Tracking-App/pull/119), reviewed head `9aa7f026`; merge `11e262c3` |
+| [#114](https://github.com/daniilnahl/Stock-Tracking-App/issues/114) | Local watchlist service boundary | Implementation active | None; #112 gate verified | `m6_readiness` | Pending |
 | [#115](https://github.com/daniilnahl/Stock-Tracking-App/issues/115) | Current-data orchestration service | Blocked | #112 and complete owner-merged #114 | Unassigned | — |
 | [#116](https://github.com/daniilnahl/Stock-Tracking-App/issues/116) | Historical retrieval service | Blocked | #112 and stable owner-merged #114; independent of #115 thereafter | Unassigned | — |
 | [#117](https://github.com/daniilnahl/Stock-Tracking-App/issues/117) | Thin adapters for both maintained CLIs | Blocked | Owner-merged #114–116 with required CI | Unassigned | — |
@@ -91,9 +98,18 @@ One bounded issue normally owns one branch and PR. #112 uses
 and proposal changes do not mix. #115/#116 may run concurrently only after the
 shared approved boundary stabilizes; no implementation starts on a blocked issue.
 
-## Proposed exit criteria
+During #114 review, distinguish independent neutral row occurrences from repeated
+references to the **same** root facade supplied by an explicit in-memory caller.
+Root facades use object identity; neutral record equality must not substitute for
+that identity. #114 preserves positional deletion and forward skips for structured
+rows and changes no root command. #117 must test and preserve the legacy alias
+case (for example `[same A, same A, B, same A]` removes to `[B, A]`) when adapting
+root in-memory state. This is existing callable compatibility work, not a new
+financial, identity-deduplication or removal-policy decision.
 
-Pending owner acceptance, require:
+## Accepted exit criteria
+
+Under owner-accepted Option A, require:
 
 - Both maintained CLI surfaces delegate application orchestration to shared
   services; service use cases do not depend on prompts, terminal/chart rendering,
@@ -105,8 +121,8 @@ Pending owner acceptance, require:
 - Every required issue is closed, implementation PRs are owner-merged, required
   exact PR/main CI passes and an independent requirement/test/exit audit passes.
 
-The SRS supplies the architectural objective; these observable criteria are a
-proposal for testing it, not an agent-approved specification extension.
+The SRS supplies the architectural objective; the owner-accepted criteria make
+it testable without expanding required command or financial scope.
 
 ## Verification and operational notes
 
@@ -157,9 +173,10 @@ not product/architecture acceptance. Master staged-source hygiene passed
 **8 tests in 6.47s** and reviewed the two-document diff for scope, secrets and
 generated artifacts. Final staged hygiene after the reviewed clarifications
 passed **8 in 6.27s**, and final staged/branch diff checks passed. Proposal
-[PR #120](https://github.com/daniilnahl/Stock-Tracking-App/pull/120) is open for
-explicit owner acceptance; hosted proposal CI is pending. No service runtime
-implementation has been dispatched.
+[PR #120](https://github.com/daniilnahl/Stock-Tracking-App/pull/120) was open for
+explicit owner acceptance; hosted proposal CI was pending. No service runtime
+implementation had been dispatched at that proposal snapshot. The later owner
+acceptance and verified merge/main-CI record above releases #114.
 
 ### Independent terminology task — #113
 
@@ -171,5 +188,43 @@ passed. Master independently reviewed all four files and ran the rendered/both-C
 cases: **58 passed in 3.02s**, no actionable findings. Final head is
 `9aa7f0260a2b52185786f045119ed6cc46c010cd`. Exact-head
 [Foundation run 38441573466](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/38441573466)
-completed successfully. Owner merge remains pending; no agent merge occurred.
+completed successfully. PR #119 is now owner-merged at
+`11e262c391da129250afa8f04d8e82a432cceadb`, included in the passing combined
+main run `38442587378`. No agent merge occurred.
 Its six added cases do not verify future services.
+
+### Local service boundary — #114
+
+The implementation adds injected `WatchlistService.load/save/view/remove`,
+accepted shared neutral records/ports, and the lazy existence-only
+`LegacyFilePresence` composition adapter. Local views use the existing pure
+position calculator; ownership, price and ratios remain Decimal/None. Complete
+candidate revalidation and exact namespace checks precede save dependencies;
+existing corrupt/malformed data is never treated as an empty replacement.
+The explicit wheel package list includes services and CLI storage adapters.
+Current-data/history use cases and root command integration remain #115–117.
+
+Canonical Python **3.12.10** actual verification:
+
+| Command | Result |
+| --- | --- |
+| `python -m pytest tests/test_watchlist_service.py tests/test_service_boundary.py tests/test_packaging.py tests/test_sqlite_watchlists.py tests/test_cli_persistence.py -q --tb=short` | **159 passed in 53.33s**, final probe guards |
+| `python -m pytest -q --tb=short` | **2302 passed in 110.72s** |
+| `python -m ruff check .` | Passed |
+| `python -m mypy` | Passed; `config.py` only |
+| `python -m pip check` | Passed |
+| `python -m pytest tests/test_repository_hygiene.py -q --tb=short` | **8 passed in 8.24s**, task files staged |
+| `git diff --cached --check` | Passed |
+
+Master independently reviewed source/tests and ran local service/source-process
+cases: **53 passed in 2.06s**. After strengthening restart guards before production
+imports, Master reran that source process: **1 passed in 1.47s**. Independent
+review also ran **53 in 2.96s**. Missing frozen optional slots are now rejected
+without substituting absence, and equal-valued independent rows retain the
+correct survivor. Guard controls prove denial before actual service imports;
+separate source/wheel SQLite write/read processes preserve exact state and
+both namespaces without legacy content reads or local display writes.
+
+No required local verification remains outstanding. PR/main CI and owner merge
+remain dependency gates before #115/#116 begin. Passing this local capability
+does not establish the later thin CLI or combined milestone exit.
