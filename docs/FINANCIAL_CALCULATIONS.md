@@ -504,17 +504,20 @@ positive portfolio value.
 
 ---
 
-# Proposed M5 snapshot clarification — not yet normative
+# M5 snapshot clarification — accepted 2026-10-12
 
-**PROPOSED, 2026-10-12. Requires explicit owner acceptance.** This additive
-proposal accompanies [ADR-0011](adr/0011-snapshot-portfolio-analytics.md) and
+**Accepted, 2026-10-12.** The owner instructed "PR merged, continue work" after
+the Master presented complete Option A in
+[PR #108](https://github.com/daniilnahl/Stock-Tracking-App/pull/108) for approval.
+This accepts the additive snapshot choices below and
+[ADR-0011](adr/0011-snapshot-portfolio-analytics.md), tracked by
 [issue #104](https://github.com/daniilnahl/Stock-Tracking-App/issues/104).
-Existing approved definitions remain authoritative until the owner explicitly
-accepts the complete proposal. Runtime implementation also requires owner merge
-of the reviewed proposal and passing required main CI. No open decision above
-is resolved merely by publishing this section.
+Owner merge was independently verified at `dddaeaf681cba6fe218f740e40be0df3b4a9318b`;
+required PR and main Foundation CI passed, as recorded in ADR-0011. The bounded
+snapshot clarification is now normative. Existing formulas and unrelated open
+decisions remain unchanged; publication or merge alone would not approve them.
 
-The proposed required M5 subset is snapshot cost basis, market value, unrealized
+The accepted required M5 subset is snapshot cost basis, market value, unrealized
 P&L, aggregate unrealized ratio and ordered allocation. Each input row supplies
 a Position, a Decimal price or None, and separate cost/quote currency assertions.
 The caller also supplies the aggregate currency. Require known, exact matching
@@ -559,7 +562,7 @@ loss, fractional and precision fixtures are required by ADR-0011.
 Daily portfolio change, zero-prior-price daily returns, benchmark comparison,
 historical cash-flow performance, dividends, split-adjusted holdings, FX and
 risk metrics remain blocked under sections 12–19. They are optional candidates
-in SRS M5, not metrics implemented by this proposed subset.
+in SRS M5, not metrics implemented by this accepted subset.
 
 ---
 
