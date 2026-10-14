@@ -94,16 +94,21 @@ def test_missing_and_blank_keys_allow_cli_import_but_reject_scratch_requests(loa
 
 @pytest.mark.parametrize("script", SCRIPTS[:2])
 def test_cli_passes_canonical_key_to_ticker_validation(script, monkeypatch):
+    from types import SimpleNamespace
+    from stock_tracker.providers import factory
+    from stock_tracker.exceptions import InvalidTickerError
     monkeypatch.setenv("FMP_API_KEY", "synthetic-canonical")
     monkeypatch.setenv("MY_API_KEY", "synthetic-legacy")
     module = runpy.run_path(str(ROOT / script), run_name="configuration_test")
     calls = []
 
-    def check_ticker(ticker, api_key):
-        calls.append((ticker, api_key))
-        return False
+    def acquire(api_key):
+        def resolve(ticker):
+            calls.append((ticker, api_key))
+            raise InvalidTickerError()
+        return SimpleNamespace(resolve_symbol=resolve)
 
-    monkeypatch.setattr(module["utility_module"], "check_ticker", check_ticker)
+    monkeypatch.setattr(factory, "create_market_data_provider", acquire)
     result = CliRunner().invoke(module["app"], ["add-stock"], input="aapl\n")
     assert result.exit_code == 0, result.output
     assert "Invalid ticker. Try again." in result.output

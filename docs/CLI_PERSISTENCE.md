@@ -12,6 +12,22 @@ Names, ordered entries, duplicate identities, exact ownership inputs, last
 observed quotes and display metadata persist. Saved quotes support offline
 display and do not imply freshness. Portfolios remain separate records.
 
+Under accepted ADR-0012, commands now delegate load/save/view/remove to
+`WatchlistService`, add/refresh to `CurrentDataService`, and menu history to
+`HistoryService`. CLI composition owns lazy concrete dependencies and maps
+neutral records to existing facade/list references. Root preflight and save
+shims remain callable. Presentation projects provider display metadata and
+renders the returned numeric views without fetching history again. The menu
+also binds its history-cache path when imported, so a later cwd change moves
+neither its holdings nor its cache.
+
+Quantity zero with the exact cost input `-` remains unowned, represented by a
+missing average cost. Numeric cost zero remains explicitly owned. The owner
+approved this service-contract amendment in issue #117; no formula or schema
+changed. Explicit callers repeating the same facade object retain the legacy
+reference-based removal and sequential refresh behavior; independent equal
+security rows are not treated as aliases.
+
 Both `show-stocks` tables label the per-share ownership input **Average Cost
 per Share** and the position percentage **Unrealized Return**. For quantity 10,
 average cost 100 and price 120, those cells show 100 and 20.0%; position cost

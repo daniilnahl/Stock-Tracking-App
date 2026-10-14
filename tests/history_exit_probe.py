@@ -114,6 +114,9 @@ with ExitStack() as guards:
     from typer.testing import CliRunner
     from click.utils import strip_ansi
 
+    guards.enter_context(patch.object(Stock, "graph_performance", denied))
+    guards.enter_context(patch.object(Watch_list, "graph_stock", denied))
+
     base_time = datetime(2020, 1, 7, 12, tzinfo=timezone.utc)
     now = base_time + timedelta(seconds={"write": 0, "read": 3599, "expired": 3600}[mode])
     guards.enter_context(patch.object(history, "utc_now", lambda: now))
@@ -185,7 +188,8 @@ with ExitStack() as guards:
     assert not menu._watchlist_loaded and not menu.current_watchlist.stocks
     runner = CliRunner()
     arguments = ["graph-stock", "--start", "2020-01-01", "--end", "2020-01-06"]
-    result = runner.invoke(menu.app, arguments, input="aapl\n")
+    with patch.object(Stock, "get_price_history", denied):
+        result = runner.invoke(menu.app, arguments, input="aapl\n")
     if result.exception is not None and not isinstance(result.exception, SystemExit):
         raise result.exception
     stock, other = menu.current_watchlist.stocks
@@ -222,7 +226,8 @@ with ExitStack() as guards:
                                             "Unadjusted prices; splits may appear as discontinuities.")
         figure.canvas.draw()
         presentation.plt.close("all")
-        repeated = runner.invoke(menu.app, arguments, input="aapl\n")
+        with patch.object(Stock, "get_price_history", denied):
+            repeated = runner.invoke(menu.app, arguments, input="aapl\n")
         assert repeated.exit_code == 0, repeated.output
         presentation.plt.close("all")
         assert len(calls) == len(closed) == (1 if mode == "write" else 0) and not delays

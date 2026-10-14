@@ -188,6 +188,28 @@ in fresh source and offline installed-wheel processes. Services never save or
 format market values; display projection and root command integration remain
 issue #117. Existing facade and CLI regressions verify parser compatibility.
 
+## M6 thin CLI adapters — issue #117
+
+Run `python -m pytest tests/test_cli_service_integration.py
+tests/test_cli_ownership.py tests/test_cli_persistence.py
+tests/test_history_date_selection.py tests/test_configuration_security.py
+tests/test_fmp_configuration.py tests/test_packaging.py -v`.
+Both root command surfaces execute the actual application services. Typed fakes
+enter at provider ports rather than facade orchestration, retaining existing
+credential, error, ordering, precision, abort and saved-byte assertions.
+Spies call through the real services to prove delegation; legacy market-data
+methods are denied. Alias cases distinguish independent equal securities from
+repeated references to the same facade, including a later refresh failure.
+
+The owner-approved unowned input maps zero quantity plus exact `-` cost to
+None; explicit numeric zero cost remains owned. Projection checks ordered
+profile/period replay, row association and unchanged numeric inputs. History
+checks retained plotting, current-key restoration, one fetch per request and a
+cache path bound before cwd changes. Guarded source and installed-wheel restart
+processes execute add/refresh/remove/show in both namespaces; historical exit
+probes deny facade graph/fetch orchestration while exercising service/cache/
+transport/render integration. The independent combined M6 exit remains #118.
+
 Tests MUST be deterministic.
 
 ## Time

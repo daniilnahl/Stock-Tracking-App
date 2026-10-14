@@ -27,6 +27,14 @@ already approved financial definitions and does not depend on this decision.
 
 ## Context and authority
 
+**Accepted compatibility amendment — 2026-10-13, issue #117:** the owner
+explicitly approved preserving the existing CLI's unowned input with None.
+`OwnershipInput.average_cost` may be None only when quantity is zero. The exact
+legacy cost input `-` with zero quantity maps to that representation; numeric
+zero cost remains an explicitly owned position. Nonzero quantity with missing
+cost stays invalid. This reconciles the service contract with the protected
+existing CLI behavior without changing storage, formulas or financial meaning.
+
 SRS §23 M6 requires the CLI to become a thin application-service interface.
 Its listed commands are **potential commands**, with neither a mandatory new
 command set nor a detailed exit criterion. ARCH-001/003/004/005 require layer
@@ -112,7 +120,7 @@ class AddPreparation:
 @dataclass(frozen=True, slots=True)
 class OwnershipInput:
     quantity: Decimal
-    average_cost: Decimal
+    average_cost: Decimal | None  # None only for zero-quantity unowned input.
 
 @dataclass(frozen=True, slots=True)
 class EntryUpdate:

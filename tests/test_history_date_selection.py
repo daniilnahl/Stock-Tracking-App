@@ -92,7 +92,7 @@ def test_errors_safe_and_runtime_key_restored(rig, monkeypatch, error_name):
     from stock_tracker import exceptions
     error = ConfigurationError("synthetic-sensitive") if error_name == "ConfigurationError" else (
         RuntimeError("programming failure") if error_name == "RuntimeError" else getattr(exceptions, error_name)())
-    def failed(*a):
+    def failed(*a, **kw):
         raise error
     monkeypatch.setattr(rig.factory, "create_historical_market_data_provider", failed)
     before = dict(rig.stock.__dict__)
@@ -153,3 +153,17 @@ def test_watchlist_order_duplicates_and_stock_like_default(monkeypatch):
     watchlist = Watch_list("explicit", [stock("first"), stock("other", "MSFT"), stock("second")])
     watchlist.graph_stock("AAPL", start=date(2020, 1, 2), end=date(2020, 1, 6))
     assert calls == [(label, {"start": date(2020, 1, 2), "end": date(2020, 1, 6)}) for label in ("first", "second")]
+
+
+def test_cli_cache_path_stays_bound_after_working_directory_changes(rig, monkeypatch, tmp_path):
+    original_cache = rig.module.HISTORY_CACHE_FILE
+    elsewhere = tmp_path / "elsewhere"
+    elsewhere.mkdir()
+    monkeypatch.chdir(elsewhere)
+    for _ in range(2):
+        result = CliRunner().invoke(rig.module.app,
+            ["graph-stock", "--start", "2020-01-02", "--end", "2020-01-06"], input="AAPL\n")
+        assert result.exit_code == 0, result.output
+        rig.plt.close("all")
+    assert original_cache.exists() and len(rig.calls) == 1
+    assert not (elsewhere / "stock_tracker.history-cache.json").exists()

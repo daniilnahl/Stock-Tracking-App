@@ -31,7 +31,9 @@ def create_market_data_provider(api_key: str | None) -> MarketDataProvider:
                                sleep=time.sleep, jitter=lambda upper: random.uniform(0.0, upper))
 
 
-def create_historical_market_data_provider(api_key: str | None) -> HistoricalMarketDataProvider:
+def create_historical_market_data_provider(
+    api_key: str | None, *, cache_path: Path | None = None,
+) -> HistoricalMarketDataProvider:
     """Compose the accepted historical-only capability without reading its sidecar."""
     if api_key is not None and not isinstance(api_key, str):
         raise ConfigurationError("Market-data credential must be a valid header value.")
@@ -51,7 +53,7 @@ def create_historical_market_data_provider(api_key: str | None) -> HistoricalMar
         clock=clock, monotonic=time.monotonic, sleep=time.sleep,
         jitter=lambda upper: random.uniform(0.0, upper),
     )
-    path = Path.cwd() / "stock_tracker.history-cache.json"
+    path = cache_path if cache_path is not None else Path.cwd() / "stock_tracker.history-cache.json"
     return CachedHistoricalMarketDataProvider(
         repository=JsonHistoryCacheRepository(path, clock),
         loader=provider._load_price_history, clock=clock, policy=policy,

@@ -1,6 +1,6 @@
 # M6 CLI V2 implementation plan
 
-Status: **IN PROGRESS — #114/#116 owner-merged; #115 PR open with local verification passed**.
+Status: **IN PROGRESS — #114–116 owner-merged; #117 CLI service adapters locally verified**.
 Snapshot: 2026-10-13 (America/Los_Angeles).
 Baseline: `11f7333abdac830e139dd74354c87b30fe4cd45d`, owner-merged M5 audit PR #110.
 Parent: [M6 — CLI V2](https://github.com/daniilnahl/Stock-Tracking-App/milestone/7).
@@ -87,9 +87,9 @@ and `Unrealized Return` while preserving values, formatting and arithmetic.
 | [#112](https://github.com/daniilnahl/Stock-Tracking-App/issues/112) | Propose and approve service/CLI contracts and exit criteria | Accepted, owner-merged; closure gates passed | None | `m6_readiness` drafts ADR; Master plan; `m6_contract_review` independent review | [#120](https://github.com/daniilnahl/Stock-Tracking-App/pull/120); technical review PASS; PR/main CI passed |
 | [#113](https://github.com/daniilnahl/Stock-Tracking-App/issues/113) | Correct financial table headings | Owner-merged; review and CI passed | None | `m6_terminology`, isolated `fix/113-financial-table-terminology` | [#119](https://github.com/daniilnahl/Stock-Tracking-App/pull/119), reviewed head `9aa7f026`; merge `11e262c3` |
 | [#114](https://github.com/daniilnahl/Stock-Tracking-App/issues/114) | Local watchlist service boundary | Closed; owner-merged, review and required CI passed | None | `m6_readiness`, `m6_contract_review` independent review | [#121](https://github.com/daniilnahl/Stock-Tracking-App/pull/121), merge `aa6ecdd3` |
-| [#115](https://github.com/daniilnahl/Stock-Tracking-App/issues/115) | Current-data orchestration service | PR open; local verification passed | Owner merge and required PR/main CI | `codex/115-current-data-service`, resumed from `m6_readiness` draft | [#123](https://github.com/daniilnahl/Stock-Tracking-App/pull/123) |
+| [#115](https://github.com/daniilnahl/Stock-Tracking-App/issues/115) | Current-data orchestration service | Owner-merged; required PR/main CI passed | None | `codex/115-current-data-service`, resumed from `m6_readiness` draft | [#123](https://github.com/daniilnahl/Stock-Tracking-App/pull/123), merge `6c38eb9d` |
 | [#116](https://github.com/daniilnahl/Stock-Tracking-App/issues/116) | Historical retrieval service | Closed; owner-merged, PR/main CI passed | None | `m6_terminology`, `feature/116-history-service`; `m6_contract_review` independent review | [#122](https://github.com/daniilnahl/Stock-Tracking-App/pull/122), merge `a9739dca` |
-| [#117](https://github.com/daniilnahl/Stock-Tracking-App/issues/117) | Thin adapters for both maintained CLIs | Blocked | Owner-merged #114–116 with required CI | Unassigned | — |
+| [#117](https://github.com/daniilnahl/Stock-Tracking-App/issues/117) | Thin adapters for both maintained CLIs | Local verification passed; PR submission | Owner review/merge and required PR/main CI | `codex/117-cli-service-adapters` | Pending |
 | [#118](https://github.com/daniilnahl/Stock-Tracking-App/issues/118) | Independent combined exit audit and operation docs | Blocked | Approved exit criteria and owner-merged #113–117 | Unassigned | — |
 
 Each issue belongs to GitHub milestone **7**, whose SRS identity is **M6**.
@@ -321,3 +321,66 @@ gate #117, and combined M6 completion is not claimed.
 [PR #123](https://github.com/daniilnahl/Stock-Tracking-App/pull/123) is open from
 `codex/115-current-data-service`. Hosted CI is pending at submission. No agent
 merge occurred; owner merge and post-merge main verification still gate #117.
+
+### CLI service adapters — #117
+
+The owner instructed **"pr merged, continue the work"**. PR #123 is
+owner-merged at `6c38eb9d9b6281d2eeeb2ad89ca50bf4e4b2ef87`; final-head
+[Foundation 38489752648](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/38489752648)
+and post-merge [main Foundation 38491378548](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/38491378548)
+passed all five configured checks. This releases #117. No agent merge occurred.
+
+Plan: retain root prompts/preflight/save shims; compose existing injected
+services lazily; project numeric results at presentation; preserve facade/list
+references and aliases; migrate orchestration mocks to provider ports while
+retaining assertions; verify source/wheel commands and the full canonical suite.
+
+Both maintained CLI surfaces now delegate local state, views, removal and
+current-data orchestration to the approved services. The menu's graph command
+uses HistoryService and renders its returned observations without another fetch.
+The existing chart renderer is shared by legacy direct callers. A backward-
+compatible optional `cache_path` factory argument lets CLI composition bind the
+history sidecar once at import while retaining the legacy factory default.
+No provider/cache policy, dependency, schema or command set changes.
+
+The existing zero-quantity plus exact `-` cost input conflicted with the
+Decimal-only OwnershipInput proposal. The owner explicitly approved None for
+that unowned case; ADR-0012 and regression tests now record that narrow amendment.
+Numeric zero cost remains owned. Alias compatibility stays outside neutral
+services: explicit repeated facade references retain forward removal and observe
+earlier refresh publication, while independent equal rows remain distinct.
+
+Initial targeted CLI/provider/history checks passed **265 in 10.95s** (two
+unowned cases held until owner approval). The next focused service/ownership/
+storage/wheel checks passed **200 in 47.70s**. The initial full run reported
+**4 failed, 2481 passed in 113.29s**: four configuration tests still mocked the
+old facade/utility operations and correctly hit the network-denial guard. Their
+fakes now enter at provider ports with all security/persistence assertions
+retained; related configuration/integration checks passed **215 in 5.06s**.
+Final canonical verification and PR evidence will be recorded below.
+
+The strengthened historical probe initially denied a direct legacy API check
+that the existing audit deliberately executes after its CLI check. Denial now
+applies to CLI invocations, retaining the direct API assertions. A new synthetic
+fixture's inline Stock key argument also triggered the existing bounded hygiene
+scanner; using a named dummy value conforms to the existing fixture convention
+without changing scanner rules. Affected source/wheel/history/hygiene checks
+then passed **11 in 53.28s**. Final Ruff, configured mypy (`config.py` only),
+pip check and staged whitespace checks passed.
+
+Final canonical Python 3.12.10 verification:
+
+| Command | Result |
+| --- | --- |
+| `python -m pytest -q --tb=short` | **2490 passed in 109.57s** |
+| `python -m pytest tests/test_configuration_security.py tests/test_fmp_configuration.py tests/test_cli_service_integration.py tests/test_history_date_selection.py tests/test_current_data_service.py -q --tb=short` | **215 passed in 5.06s** |
+| `python -m pytest tests/test_history_exit.py tests/test_packaging.py tests/test_repository_hygiene.py -q --tb=short` | **11 passed in 53.28s**, including staged hygiene and installed-wheel checks |
+| `python -m ruff check .` | Passed |
+| `python -m mypy` | Passed; `config.py` only |
+| `python -m pip check` | Passed |
+| Staged/final diff whitespace and scope review | Passed |
+
+The final self-review found no unresolved source findings, unrelated dependency/
+toolchain changes, secrets or generated artifacts. Hosted checks, owner review/
+merge and post-merge main verification remain required. Independent combined
+milestone exit is #118; this change does not claim M6 completion or M7/M8 scope.

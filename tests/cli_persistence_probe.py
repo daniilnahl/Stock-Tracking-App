@@ -1,6 +1,7 @@
 """Source/wheel processes execute both CLI namespaces without pickle/network IO."""
 
 from contextlib import ExitStack
+from datetime import datetime, timezone
 from decimal import Decimal
 import importlib
 import os
@@ -8,6 +9,7 @@ from pathlib import Path
 import pickle
 import socket
 import sys
+from types import SimpleNamespace
 import urllib.request
 from unittest.mock import patch
 
@@ -42,6 +44,15 @@ def main():
         from typer.testing import CliRunner
         from stock_tracker.domain import Portfolio
         from stock_tracker.persistence.sqlite_portfolios import SQLitePortfolioRepository
+        from stock_tracker.services.current_data import CurrentDataService
+        from stock_tracker.providers.models import CompanyProfile, InstrumentIdentity, PeriodChanges
+        stamp = datetime(2020, 1, 1, tzinfo=timezone.utc)
+        provider = SimpleNamespace(
+            resolve_symbol=lambda symbol: InstrumentIdentity(symbol, "NASDAQ", None, None),
+            get_company_profile=lambda symbol: CompanyProfile(symbol, "Fictional", "NASDAQ", None, None,
+                None, Decimal(120), None, None, stamp),
+            get_period_changes=lambda symbol: PeriodChanges(symbol, *(None for _ in range(8)), None, stamp),
+        )
         modules = [importlib.import_module(name) for name in ("menu_watchlist", "daniils_stock_method")]
         database = Path.cwd() / "stock_tracker.sqlite3"
         for index, module in enumerate(modules):
@@ -54,15 +65,18 @@ def main():
                     result = CliRunner().invoke(module.app, args)
                     assert result.exit_code == 0, result.output
             if mode == "write":
-                with patch.object(module.utility_module, "check_ticker", lambda *a: True), \
-                        patch.object(Stock, "get_stock_info", lambda stock: (
-                            setattr(stock, "name", "Fictional"), setattr(stock, "exchange", "NASDAQ"),
-                            setattr(stock, "current_price", "120"))), \
-                        patch.object(Stock, "get_price_over_time", lambda stock: None):
+                with patch.object(module, "current_service", lambda *a: CurrentDataService(lambda *a, **kw: provider)), \
+                        patch.object(Stock, "get_stock_info", denied), \
+                        patch.object(Stock, "get_price_over_time", denied):
                     result = CliRunner().invoke(module.app, ["add-stock"],
                                                input="aapl\n0.12345678901234567890123456789\n100\n")
                     assert result.exit_code == 0 and "Succesfully added" in result.output
+                    refreshed = CliRunner().invoke(module.app, ["refresh"])
+                    assert refreshed.exit_code == 0 and "Succesfully updated" in refreshed.output
                 first = module.current_watchlist.stocks[0]
+                module.current_watchlist.stocks.append(Stock("REMOVE", None))
+                removed = CliRunner().invoke(module.app, ["remove-stock"], input="remove\n")
+                assert removed.exit_code == 0 and module.current_watchlist.stocks == [first]
                 module.current_watchlist.name = "Menu" if index == 0 else "Method"
                 module.current_watchlist.stocks.append(first)
                 module.current_watchlist.stocks.append(Stock("UNOWNED", None, current_price=None))

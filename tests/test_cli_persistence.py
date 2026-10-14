@@ -164,16 +164,26 @@ def test_shared_path_distinct_namespaces_and_path_fixed_at_import(tmp_path, monk
 
 @pytest.mark.parametrize("command", ["add-stock", "refresh", "remove-stock"])
 def test_failed_save_is_safe_nonzero_and_never_reports_success(cli, command, monkeypatch):
-    from stock import Stock
+    from datetime import datetime, timezone
+    from decimal import Decimal
+    from types import SimpleNamespace
     from stock_tracker.exceptions import PersistenceError
     from stock_tracker.persistence.sqlite_watchlists import SQLiteWatchlistRepository
+    from stock_tracker.providers.models import CompanyProfile, InstrumentIdentity, PeriodChanges
+    from stock_tracker.services.current_data import CurrentDataService
     module, _ = cli
     module["current_watchlist"].stocks[:] = holdings().stocks[:1]
     module["save_watchlist"](module["current_watchlist"])
     before = module["WATCHLIST_FILE"].read_bytes()
-    monkeypatch.setattr(module["utility_module"], "check_ticker", lambda *a: True)
-    monkeypatch.setattr(Stock, "get_stock_info", lambda stock: None)
-    monkeypatch.setattr(Stock, "get_price_over_time", lambda stock: None)
+    stamp = datetime(2020, 1, 1, tzinfo=timezone.utc)
+    provider = SimpleNamespace(
+        resolve_symbol=lambda symbol: InstrumentIdentity(symbol, "NASDAQ", None, None),
+        get_company_profile=lambda symbol: CompanyProfile(symbol, "Fictional", "NASDAQ", None, None,
+            None, Decimal(120), None, None, stamp),
+        get_period_changes=lambda symbol: PeriodChanges(symbol, *(None for _ in range(8)), None, stamp),
+    )
+    monkeypatch.setitem(module["add_stock"].__globals__, "current_service",
+                        lambda *a: CurrentDataService(lambda *a, **kw: provider))
     def failing(*args):
         raise PersistenceError()
     monkeypatch.setattr(SQLiteWatchlistRepository, "save", failing)
