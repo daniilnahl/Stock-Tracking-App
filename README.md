@@ -323,7 +323,22 @@ values, actual source/installed-wheel isolation and exact SQLite restart, with
 the [verified completion report](https://github.com/daniilnahl/Stock-Tracking-App/issues/107#issuecomment-6139320638).
 This completes the accepted pure API;
 it adds no CLI command. Optional historical, benchmark, risk, dividend and FX
-metrics remain blocked on approved definitions; CLI V2 remains later work.
+metrics remain blocked on approved definitions. CLI service integration and its
+separate exit audit are tracked under M6 below.
+
+## CLI services and M6 audit status
+
+Both maintained root CLIs now use the accepted injected application services
+for local state, current-data operations and menu historical retrieval. Existing
+commands, prompts, namespace separation, offline help/display and precise numeric
+ownership remain supported. The owner-merged implementation is PR #124, with
+passing required PR/main CI.
+
+The combined source/installed-wheel exit audit is tracked by issue #118 and
+[M6 exit evidence](docs/milestones/m6-exit-evidence.md). **M6 remains open** until
+that audit is reviewed, owner-merged and verified on main, required issues close
+and completion evidence is reconciled. This scope adds no installed CLI entrypoint,
+REST API, dashboard, new financial metric or hosted deployment contract.
 
 ## Acknowledgments
 - ### Financial Modeling Prep API

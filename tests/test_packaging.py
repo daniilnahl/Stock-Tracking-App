@@ -97,6 +97,16 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
     assert current_service.returncode == 0, current_service.stderr
     assert current_service.stdout == current_service.stderr == ""
 
+    m6_directory = tmp_path / "installed-m6-exit"
+    m6_directory.mkdir()
+    for mode in ("write", "read", "failures", "read"):
+        m6 = subprocess.run(
+            [sys.executable, "-I", "-B", str(ROOT / "tests/m6_exit_probe.py"), str(installed), mode],
+            cwd=m6_directory, env=environment, capture_output=True, text=True, timeout=45,
+        )
+        assert m6.returncode == 0, m6.stderr
+        assert m6.stdout == m6.stderr == ""
+
     service_directory = tmp_path / "installed-service"
     service_directory.mkdir()
     for mode in ("isolation", "write", "read"):

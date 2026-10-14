@@ -1,6 +1,6 @@
 # M6 CLI V2 implementation plan
 
-Status: **IN PROGRESS — #114–116 owner-merged; #117 CLI service adapters locally verified**.
+Status: **IN PROGRESS — #112–117 closed; #118 combined exit audit locally passed**.
 Snapshot: 2026-10-13 (America/Los_Angeles).
 Baseline: `11f7333abdac830e139dd74354c87b30fe4cd45d`, owner-merged M5 audit PR #110.
 Parent: [M6 — CLI V2](https://github.com/daniilnahl/Stock-Tracking-App/milestone/7).
@@ -89,8 +89,8 @@ and `Unrealized Return` while preserving values, formatting and arithmetic.
 | [#114](https://github.com/daniilnahl/Stock-Tracking-App/issues/114) | Local watchlist service boundary | Closed; owner-merged, review and required CI passed | None | `m6_readiness`, `m6_contract_review` independent review | [#121](https://github.com/daniilnahl/Stock-Tracking-App/pull/121), merge `aa6ecdd3` |
 | [#115](https://github.com/daniilnahl/Stock-Tracking-App/issues/115) | Current-data orchestration service | Owner-merged; required PR/main CI passed | None | `codex/115-current-data-service`, resumed from `m6_readiness` draft | [#123](https://github.com/daniilnahl/Stock-Tracking-App/pull/123), merge `6c38eb9d` |
 | [#116](https://github.com/daniilnahl/Stock-Tracking-App/issues/116) | Historical retrieval service | Closed; owner-merged, PR/main CI passed | None | `m6_terminology`, `feature/116-history-service`; `m6_contract_review` independent review | [#122](https://github.com/daniilnahl/Stock-Tracking-App/pull/122), merge `a9739dca` |
-| [#117](https://github.com/daniilnahl/Stock-Tracking-App/issues/117) | Thin adapters for both maintained CLIs | Local verification passed; PR submission | Owner review/merge and required PR/main CI | `codex/117-cli-service-adapters` | Pending |
-| [#118](https://github.com/daniilnahl/Stock-Tracking-App/issues/118) | Independent combined exit audit and operation docs | Blocked | Approved exit criteria and owner-merged #113–117 | Unassigned | — |
+| [#117](https://github.com/daniilnahl/Stock-Tracking-App/issues/117) | Thin adapters for both maintained CLIs | Closed completed; owner-merged with passing PR/main CI | None | `codex/117-cli-service-adapters` | [#124](https://github.com/daniilnahl/Stock-Tracking-App/pull/124), merge `926171e3` |
+| [#118](https://github.com/daniilnahl/Stock-Tracking-App/issues/118) | Independent combined exit audit and operation docs | Local audit passed; PR submission | Review, owner merge and required PR/main CI | `codex/118-m6-exit-audit` | Pending |
 
 Each issue belongs to GitHub milestone **7**, whose SRS identity is **M6**.
 One bounded issue normally owns one branch and PR. #112 uses
@@ -384,3 +384,41 @@ The final self-review found no unresolved source findings, unrelated dependency/
 toolchain changes, secrets or generated artifacts. Hosted checks, owner review/
 merge and post-merge main verification remain required. Independent combined
 milestone exit is #118; this change does not claim M6 completion or M7/M8 scope.
+
+### Combined exit audit — #118
+
+The owner merged PR #124 at `926171e34b518bea8d09a322f62482f3d54d56bc` and
+instructed continued work, with PR creation through the GitHub website in Codex.
+Exact-head Foundation `38494488364` and main `38494501665` completed successfully.
+The accepted prerequisites release #118. PR #124's unfilled description template
+was reconciled through the website with its implementation, tests, issue link
+and actual CI evidence. Its three acceptance items were verified, checked on
+the website and issue #117 closed completed. The milestone remains open.
+
+Plan: inspect the combined implementation against every accepted exit; add
+bounded architecture checks with controlled violations; execute an independent
+fixture across fresh source/wheel processes; preserve exact temporary state and
+prove failure guards; publish requirement/operation evidence; run all canonical
+checks and create one bounded audit PR. No runtime changes are planned.
+
+`m6_exit_probe.py` now combines actual commands/services/provider parsing,
+temporary SQLite namespaces, a separate Portfolio, exact holdings, invalid/
+duplicate/abort outcomes, refresh failures and fresh/expired historical cache.
+Four phases (write/read/failures/read) execute independently for source and wheel.
+Earlier cold denial probes remain the independent UI/configuration/IO service
+isolation checks. Bounded AST checks cover ordinary imports and orchestration
+calls with positive/negative controls. See [exit evidence](m6-exit-evidence.md)
+for the accepted requirement map, fixture arithmetic and limitations.
+
+Focused audit/architecture/wheel checks passed **19 in 55.63s**. Fixture recovery
+and actual final canonical results are recorded in the exit evidence; no runtime
+behavior or valid assertion was weakened to repair the test harness. Full-suite,
+staged hygiene and submission gates were pending at that focused-check snapshot.
+
+Final Python 3.12.10 full pytest passed **2507 in 129.16s**. Ruff, configured mypy
+(`config.py` only), pip check and staged hygiene (**8 in 9.27s**) passed. Final
+scope/whitespace/secret/generated-artifact review passed. This eight-file change
+contains only tests and documentation. GitHub shows #112–117 closed completed;
+#118 is the only remaining open milestone issue. Its PR/main CI, owner merge and
+completion reconciliation still gate M6 closure. PR creation follows the user's
+requested signed-in GitHub website workflow in Codex.
