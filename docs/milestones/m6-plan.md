@@ -1,6 +1,7 @@
 # M6 CLI V2 implementation plan
 
-Status: **IN PROGRESS — #112–117 closed; #118 combined exit audit locally passed**.
+Status: **REQUIRED IMPLEMENTATION COMPLETE — #112–118 closed; audit owner-merged and PR/main CI passed.**
+Administrative documentation/showcase follow-up: #126.
 Snapshot: 2026-10-13 (America/Los_Angeles).
 Baseline: `11f7333abdac830e139dd74354c87b30fe4cd45d`, owner-merged M5 audit PR #110.
 Parent: [M6 — CLI V2](https://github.com/daniilnahl/Stock-Tracking-App/milestone/7).
@@ -90,7 +91,7 @@ and `Unrealized Return` while preserving values, formatting and arithmetic.
 | [#115](https://github.com/daniilnahl/Stock-Tracking-App/issues/115) | Current-data orchestration service | Owner-merged; required PR/main CI passed | None | `codex/115-current-data-service`, resumed from `m6_readiness` draft | [#123](https://github.com/daniilnahl/Stock-Tracking-App/pull/123), merge `6c38eb9d` |
 | [#116](https://github.com/daniilnahl/Stock-Tracking-App/issues/116) | Historical retrieval service | Closed; owner-merged, PR/main CI passed | None | `m6_terminology`, `feature/116-history-service`; `m6_contract_review` independent review | [#122](https://github.com/daniilnahl/Stock-Tracking-App/pull/122), merge `a9739dca` |
 | [#117](https://github.com/daniilnahl/Stock-Tracking-App/issues/117) | Thin adapters for both maintained CLIs | Closed completed; owner-merged with passing PR/main CI | None | `codex/117-cli-service-adapters` | [#124](https://github.com/daniilnahl/Stock-Tracking-App/pull/124), merge `926171e3` |
-| [#118](https://github.com/daniilnahl/Stock-Tracking-App/issues/118) | Independent combined exit audit and operation docs | Local audit passed; PR open | Review, owner merge and required PR/main CI | `codex/118-m6-exit-audit` | [#125](https://github.com/daniilnahl/Stock-Tracking-App/pull/125) |
+| [#118](https://github.com/daniilnahl/Stock-Tracking-App/issues/118) | Independent combined exit audit and operation docs | Closed completed; audit owner-merged with passing PR/main CI | None | `codex/118-m6-exit-audit` | [#125](https://github.com/daniilnahl/Stock-Tracking-App/pull/125), merge `237c4c5f` |
 
 Each issue belongs to GitHub milestone **7**, whose SRS identity is **M6**.
 One bounded issue normally owns one branch and PR. #112 uses
@@ -427,3 +428,22 @@ requested signed-in GitHub website workflow in Codex.
 through the signed-in GitHub website in Codex with the completed repository PR
 template and `Closes #118`. Required hosted CI is pending at submission; owner
 review/merge and passing post-merge main CI still gate milestone completion.
+
+## Completion reconciliation — 2026-10-13
+
+The owner merged audit PR #125 at `237c4c5f7d9825c284d706d6730bcdf9ed3510f6`.
+Exact-head [Foundation 38496384271](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/38496384271)
+and post-merge [main Foundation 38500809992](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/38500809992)
+passed all five configured checks. All seven required issues #112–118 are closed
+completed. Earlier open/blocked/pending statements above are dated execution
+snapshots, superseded by this completion record. No required runtime work is
+deferred. #126 records administrative documentation and the manual CLI showcase;
+it introduces no runtime, financial, persistence or public-contract change.
+
+See [exit evidence](m6-exit-evidence.md) and [manual CLI showcase](../CLI_SHOWCASE.md).
+
+Manual showcase: **10 real-provider fresh CLI processes passed**, including add,
+credential-free restart/display, duplicate refusal, refresh, real raw historical
+charting, removal and final empty display. A separate 13-process controlled
+failure demonstration passed. See [CLI showcase](../CLI_SHOWCASE.md)
+for the observed data, safe configuration acquisition, exact scope and limitations.

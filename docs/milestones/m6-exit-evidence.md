@@ -1,6 +1,7 @@
 # M6 thin CLI exit evidence
 
-Status: **LOCAL AUDIT PASSED — #118 remains open pending review, owner merge and required CI**.
+Status: **REQUIRED M6 IMPLEMENTATION AND EXIT AUDIT COMPLETE — owner-merged; exact PR/main CI passed; #112–118 closed.**
+Administrative completion documentation/showcase: #126.
 Snapshot: 2026-10-13, America/Los_Angeles.
 Baseline: owner-merged PR #124, `926171e34b518bea8d09a322f62482f3d54d56bc`.
 Parent: [M6 — CLI V2](https://github.com/daniilnahl/Stock-Tracking-App/milestone/7).
@@ -31,15 +32,15 @@ in a fresh `python -I -B` process over one explicit temporary directory.
 | #115 — current-data service | [#123](https://github.com/daniilnahl/Stock-Tracking-App/pull/123), `6c38eb9d` | Exact-head Foundation `38489752648`; main `38491378548` passed |
 | #116 — historical service | [#122](https://github.com/daniilnahl/Stock-Tracking-App/pull/122), `a9739dca` | Exact-head Foundation `38459708966`; main `38489030065` passed |
 | #117 — maintained CLI integration | [#124](https://github.com/daniilnahl/Stock-Tracking-App/pull/124), `926171e3` | [Exact-head Foundation `38494488364`](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/38494488364) and [main `38494501665`](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/38494501665) passed |
-| #118 — this combined audit | [#125](https://github.com/daniilnahl/Stock-Tracking-App/pull/125), open | Local verification below; exact PR/main CI and owner merge remain required |
+| #118 — this combined audit | [#125](https://github.com/daniilnahl/Stock-Tracking-App/pull/125), merge `237c4c5f` | Exact-head Foundation `38496384271`; main `38500809992` passed |
 
 Each passing Foundation run requires tests on Python 3.11/3.12, Ruff, configured
 mypy and credential-pattern checks. #124 was merged with an unfilled PR template;
 its description was completed through the GitHub website using the recorded
 implementation/testing/CI evidence. All three #117 acceptance items were checked
 and the issue closed completed after its owner merge and required CI passed.
-Milestone state observed on GitHub remains open. A merged
-implementation alone does not satisfy the final milestone completion gates.
+The original submission observed an open milestone. The completion review below
+supersedes that snapshot after verifying the owner merge and required main CI.
 
 ## Accepted exit and requirement map
 
@@ -52,7 +53,7 @@ implementation alone does not satisfy the final milestone completion gates.
 | 3. Numeric/unowned/zero/missing/order/alias preservation; FIN-001–005, PERS-005, FC-020/030/040/041 | Combined fixture checks exact precise stored Decimal text, separate unowned/zero-cost/missing-price cases, ordered independent duplicates, untouched Portfolio and saved bytes; `test_cli_service_integration.py` separately checks repeated facade aliases and partial refresh |
 | 3. Historical range/identity/cache/error guarantees; DATA-003/007/008, FC-060–062/100/101, PERF-001/002 | Combined fixture graphs sparse raw observations over explicit dates for both matching AAPL rows with one transport request, verifies fresh cache reuse after offline restoration with an explicit synthetic graph key, and refuses expired-cache 403 without stale fallback; existing history date/integration/exit tests cover identity-before-key, clocks, retries, cache errors and pre-figure conversion guards |
 | 4. Accurate labels and presentation-only formatting | Combined rendered headings and known arithmetic; `test_watchlist_terminology.py`, `test_percentage_metadata_display.py`, projection replay and ownership tests verify raw provider percentage-point formatting, ratio display, escaped literal metadata and unchanged numeric snapshots/state |
-| 5. Independent combined audit, traceability and completion gates; ARCH-006, GH-004/005 | This evidence, standalone fixture, canonical checks, bounded PR linked to #118, verified owner merges and PR/main CI; this audit's owner merge, required CI and issue/milestone completion remain pending |
+| 5. Independent combined audit, traceability and completion gates; ARCH-006, GH-004/005 | This evidence, standalone fixture, canonical checks, bounded PR linked to #118, verified owner merges and PR/main CI; owner merge, exact PR/main CI and required issue closure verified in the completion review |
 
 The static checker detects ordinary literal imports and calls; it does not
 claim to analyze arbitrary dynamic Python. Proven runtime denial probes and
@@ -136,6 +137,33 @@ entitlement, API endpoints, an installed command entrypoint, portfolio input/
 currency acquisition, historical cash-flow/risk/dividend/FX conventions or a
 deployment process. M7/M8 remain separately scoped future work.
 
-M6 remains open until #118 is reviewed, owner-merged, its required exact-head and
-post-merge main CI pass, required issues close and final exit/operation evidence
-is reconciled. No agent merge or early milestone closure is authorized.
+At the audit submission snapshot those gates were pending. The completion
+review below records their resolution. No agent merge occurred.
+
+## Completion review — 2026-10-13
+
+The owner explicitly reported PR #125 merged. GitHub confirms reviewed head
+`daa4c0daa0ebd50096f7155aefe51ac33d42e54e` merged at
+`237c4c5f7d9825c284d706d6730bcdf9ed3510f6`. Exact-head
+[Foundation 38496384271](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/38496384271)
+and post-merge [main Foundation 38500809992](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/38500809992)
+passed Tests (Python 3.11), Tests (Python 3.12), Ruff, Mypy (configuration) and
+Credential patterns. All required issues #112–118 are closed completed.
+Acceptance checklists are reconciled against merged code/tests and the trace
+above. #126 is administrative documentation/showcase follow-up, not deferred
+required runtime work. No unapproved optional command or financial behavior is
+needed to satisfy the accepted exit.
+
+Merged-main recheck: focused architecture/service/source/installed-wheel tests
+passed **34 in 61.69s**. Further current verification and manual demonstration
+results are recorded below and in [CLI showcase](../CLI_SHOWCASE.md).
+
+Current canonical Python 3.12.10 full pytest: **2507 passed in 132.58s**. Ruff,
+configured mypy (`config.py` only) and pip check passed. These are actual
+merged-main reconciliation checks, distinct from the earlier audit run.
+
+Manual showcase: **10 real-provider fresh CLI processes passed**, including add,
+credential-free restart/display, duplicate refusal, refresh, real raw historical
+charting, removal and final empty display. A separate 13-process controlled
+failure demonstration passed. See [CLI showcase](../CLI_SHOWCASE.md)
+for the observed data, safe configuration acquisition, exact scope and limitations.

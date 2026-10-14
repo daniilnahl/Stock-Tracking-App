@@ -907,3 +907,21 @@ before the real service executes with a typed fake. Existing facade/range wrappe
 retain their late-bound clock and list-return surfaces while sharing pure service
 policy. Root command and renderer integration remains separately scoped #117;
 these checks do not certify live entitlement or historical session completeness.
+
+## M6 completion reconciliation and manual showcase — issue #126
+
+Audit PR #125 is owner-merged at `237c4c5f7d9825c284d706d6730bcdf9ed3510f6`.
+Its exact-head Foundation `38496384271` and post-merge main `38500809992` passed
+all five checks, including Python 3.11/3.12. All required issues #112–118 are
+closed completed under accepted ADR-0012 Option A.
+
+Current merged-main Python 3.12.10 verification: combined architecture, service
+boundary, source and installed-wheel command passed **34 in 61.69s**; full pytest
+passed **2507 in 132.58s**. Ruff, configured mypy (`config.py` only) and pip check
+passed. This documentation change adds no runtime behavior or testing contract.
+
+The [manual CLI showcase](CLI_SHOWCASE.md) records actual commands, state isolation
+and provider provenance separately. Live market requests are optional manual
+checks and never become an automated-test dependency or replace deterministic
+known-value fixtures. Manual entitlement failures do not justify weakening
+provider validation, identity checks, credential handling or tests.
