@@ -941,3 +941,16 @@ application credentials, ordinary data IO, concrete storage/providers and UI.
 See [API foundation details](API_FOUNDATION.md) for dependency decisions,
 boundary exceptions, the typed OpenAPI snapshot and the remaining route/launcher
 scope. This check establishes foundation behavior, not M7 completion or rights.
+
+## M7 saved watchlist route - issue #131
+
+Add `tests/test_api_watchlists.py` to the focused API verification above. It
+executes real shared services with temporary SQLite state, verifying exact
+Decimal and zero/null/unowned snapshots, namespace binding and ordered duplicate
+rows. Successful, missing, corrupt and future-schema reads preserve bytes and
+never create missing state; legacy checks inspect existence without pickle reads.
+HTTP rejection precedes service acquisition, and actual route tests enforce
+admission and bounded responses. The unchanged cold source/wheel guards also
+execute both namespaces through the shared service without configuration,
+provider/cache, SQL or ordinary file IO. This remains an injected adapter test,
+not production launcher or historical acquisition certification.

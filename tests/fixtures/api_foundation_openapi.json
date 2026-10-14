@@ -1,6 +1,93 @@
 {
   "components": {
     "schemas": {
+      "EntryResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "average_cost": {
+            "anyOf": [
+              {
+                "description": "Exact finite Decimal text, including scale/exponent; no float conversion.",
+                "examples": [
+                  "120.000",
+                  "0",
+                  "1E-20"
+                ],
+                "pattern": "^[+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)(?:[eE][+-]?[0-9]+)?$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Currency per share; null denotes unowned zero quantity.",
+            "title": "Average Cost"
+          },
+          "current_price": {
+            "anyOf": [
+              {
+                "description": "Exact finite Decimal text, including scale/exponent; no float conversion.",
+                "examples": [
+                  "120.000",
+                  "0",
+                  "1E-20"
+                ],
+                "pattern": "^[+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)(?:[eE][+-]?[0-9]+)?$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Saved currency per share, freshness unknown; zero differs from null.",
+            "title": "Current Price"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/SavedMetadata"
+          },
+          "ordinal": {
+            "description": "Request-local zero-based row, not a permanent identity.",
+            "minimum": 0,
+            "title": "Ordinal",
+            "type": "integer"
+          },
+          "quantity": {
+            "description": "Shares, including fractional shares.",
+            "examples": [
+              "120.000",
+              "0",
+              "1E-20"
+            ],
+            "pattern": "^[+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)(?:[eE][+-]?[0-9]+)?$",
+            "title": "Quantity",
+            "type": "string"
+          },
+          "snapshot": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SnapshotResponse"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "stock": {
+            "$ref": "#/components/schemas/StockResponse"
+          }
+        },
+        "required": [
+          "ordinal",
+          "stock",
+          "quantity",
+          "average_cost",
+          "current_price",
+          "metadata",
+          "snapshot"
+        ],
+        "title": "EntryResponse",
+        "type": "object"
+      },
       "ErrorDetail": {
         "additionalProperties": false,
         "properties": {
@@ -46,6 +133,350 @@
           "status"
         ],
         "title": "HealthResponse",
+        "type": "object"
+      },
+      "SavedMetadata": {
+        "additionalProperties": false,
+        "description": "Opaque saved text; currency cannot establish cost/quote provenance.",
+        "properties": {
+          "country": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Country"
+          },
+          "currency": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Currency"
+          },
+          "market_cap": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Market Cap"
+          },
+          "price_1d": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Price 1D"
+          },
+          "price_1y": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Price 1Y"
+          },
+          "price_30d": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Price 30D"
+          },
+          "price_3m": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Price 3M"
+          },
+          "price_3y": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Price 3Y"
+          },
+          "price_5d": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Price 5D"
+          },
+          "price_5y": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Price 5Y"
+          },
+          "price_6m": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Price 6M"
+          },
+          "sector": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sector"
+          }
+        },
+        "required": [
+          "sector",
+          "country",
+          "currency",
+          "market_cap",
+          "price_1d",
+          "price_5d",
+          "price_30d",
+          "price_3m",
+          "price_6m",
+          "price_1y",
+          "price_3y",
+          "price_5y"
+        ],
+        "title": "SavedMetadata",
+        "type": "object"
+      },
+      "SavedProvenance": {
+        "additionalProperties": false,
+        "properties": {
+          "freshness": {
+            "const": "unknown",
+            "title": "Freshness",
+            "type": "string"
+          },
+          "observed_at": {
+            "title": "Observed At",
+            "type": "null"
+          },
+          "retrieved_at": {
+            "title": "Retrieved At",
+            "type": "null"
+          },
+          "source": {
+            "title": "Source",
+            "type": "null"
+          }
+        },
+        "required": [
+          "source",
+          "observed_at",
+          "retrieved_at",
+          "freshness"
+        ],
+        "title": "SavedProvenance",
+        "type": "object"
+      },
+      "SnapshotResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "cost_basis": {
+            "description": "Currency amount; currency provenance unknown.",
+            "examples": [
+              "120.000",
+              "0",
+              "1E-20"
+            ],
+            "pattern": "^[+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)(?:[eE][+-]?[0-9]+)?$",
+            "title": "Cost Basis",
+            "type": "string"
+          },
+          "market_value": {
+            "anyOf": [
+              {
+                "description": "Exact finite Decimal text, including scale/exponent; no float conversion.",
+                "examples": [
+                  "120.000",
+                  "0",
+                  "1E-20"
+                ],
+                "pattern": "^[+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)(?:[eE][+-]?[0-9]+)?$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Currency amount, unavailable when quote is missing.",
+            "title": "Market Value"
+          },
+          "unrealized_pnl": {
+            "anyOf": [
+              {
+                "description": "Exact finite Decimal text, including scale/exponent; no float conversion.",
+                "examples": [
+                  "120.000",
+                  "0",
+                  "1E-20"
+                ],
+                "pattern": "^[+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)(?:[eE][+-]?[0-9]+)?$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Currency amount, never an inferred USD amount.",
+            "title": "Unrealized Pnl"
+          },
+          "unrealized_return": {
+            "anyOf": [
+              {
+                "description": "Exact finite Decimal text, including scale/exponent; no float conversion.",
+                "examples": [
+                  "120.000",
+                  "0",
+                  "1E-20"
+                ],
+                "pattern": "^[+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)(?:[eE][+-]?[0-9]+)?$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Dimensionless ratio, not percentage points.",
+            "title": "Unrealized Return"
+          }
+        },
+        "required": [
+          "cost_basis",
+          "market_value",
+          "unrealized_pnl",
+          "unrealized_return"
+        ],
+        "title": "SnapshotResponse",
+        "type": "object"
+      },
+      "StockResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "exchange": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Exchange"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "symbol": {
+            "title": "Symbol",
+            "type": "string"
+          }
+        },
+        "required": [
+          "symbol",
+          "name",
+          "exchange"
+        ],
+        "title": "StockResponse",
+        "type": "object"
+      },
+      "WatchlistResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "entries": {
+            "items": {
+              "$ref": "#/components/schemas/EntryResponse"
+            },
+            "title": "Entries",
+            "type": "array"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "namespace": {
+            "enum": [
+              "menu_watchlist",
+              "daniils_stock_method"
+            ],
+            "title": "Namespace",
+            "type": "string"
+          },
+          "observation": {
+            "const": "saved",
+            "title": "Observation",
+            "type": "string"
+          },
+          "provenance": {
+            "$ref": "#/components/schemas/SavedProvenance"
+          }
+        },
+        "required": [
+          "namespace",
+          "name",
+          "observation",
+          "provenance",
+          "entries"
+        ],
+        "title": "WatchlistResponse",
         "type": "object"
       }
     },
@@ -384,6 +815,349 @@
           }
         ],
         "summary": "Authenticated static API schema; no application dependency acquisition."
+      }
+    },
+    "/api/v1/watchlists/{namespace}": {
+      "get": {
+        "operationId": "saved_watchlist_api_v1_watchlists__namespace__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "namespace",
+            "required": true,
+            "schema": {
+              "title": "Namespace",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "entries": [],
+                  "name": "Watchlist",
+                  "namespace": "menu_watchlist",
+                  "observation": "saved",
+                  "provenance": {
+                    "freshness": "unknown"
+                  }
+                },
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "host_invalid": {
+                    "value": {
+                      "error": {
+                        "code": "host_invalid",
+                        "message": "Host is not allowed."
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Fixed safe failure."
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "unauthorized": {
+                    "value": {
+                      "error": {
+                        "code": "unauthorized",
+                        "message": "Authentication is required."
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Fixed safe failure."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "origin_forbidden": {
+                    "value": {
+                      "error": {
+                        "code": "origin_forbidden",
+                        "message": "Browser origins are not allowed."
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Fixed safe failure."
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "not_found": {
+                    "value": {
+                      "error": {
+                        "code": "not_found",
+                        "message": "Resource was not found."
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Fixed safe failure."
+          },
+          "405": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "method_not_allowed": {
+                    "value": {
+                      "error": {
+                        "code": "method_not_allowed",
+                        "message": "Method is not allowed."
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Fixed safe failure."
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "legacy_state_present": {
+                    "value": {
+                      "error": {
+                        "code": "legacy_state_present",
+                        "message": "Legacy state requires an explicit safe transition."
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Fixed safe failure."
+          },
+          "414": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "request_too_large": {
+                    "value": {
+                      "error": {
+                        "code": "request_too_large",
+                        "message": "Request target exceeds the supported size."
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Fixed safe failure."
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "invalid_request": {
+                    "value": {
+                      "error": {
+                        "code": "invalid_request",
+                        "message": "Request input is invalid."
+                      }
+                    }
+                  },
+                  "invalid_ticker": {
+                    "value": {
+                      "error": {
+                        "code": "invalid_ticker",
+                        "message": "Ticker input is invalid."
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Fixed safe failure."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "provider_rate_limited": {
+                    "value": {
+                      "error": {
+                        "code": "provider_rate_limited",
+                        "message": "Market-data rate limit reached."
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Fixed safe failure."
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "internal_error": {
+                    "value": {
+                      "error": {
+                        "code": "internal_error",
+                        "message": "The operation failed."
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Fixed safe failure."
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "provider_response_invalid": {
+                    "value": {
+                      "error": {
+                        "code": "provider_response_invalid",
+                        "message": "Market-data response is invalid."
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Fixed safe failure."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "api_busy": {
+                    "value": {
+                      "error": {
+                        "code": "api_busy",
+                        "message": "API operation capacity is unavailable."
+                      }
+                    }
+                  },
+                  "history_disabled": {
+                    "value": {
+                      "error": {
+                        "code": "history_disabled",
+                        "message": "Historical acquisition is disabled."
+                      }
+                    }
+                  },
+                  "market_data_unavailable": {
+                    "value": {
+                      "error": {
+                        "code": "market_data_unavailable",
+                        "message": "Market data is unavailable."
+                      }
+                    }
+                  },
+                  "provider_unavailable": {
+                    "value": {
+                      "error": {
+                        "code": "provider_unavailable",
+                        "message": "Market-data provider is unavailable."
+                      }
+                    }
+                  },
+                  "response_too_large": {
+                    "value": {
+                      "error": {
+                        "code": "response_too_large",
+                        "message": "Response exceeds the supported size."
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Fixed safe failure."
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "provider_timeout": {
+                    "value": {
+                      "error": {
+                        "code": "provider_timeout",
+                        "message": "Market-data request timed out."
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Fixed safe failure."
+          }
+        },
+        "security": [
+          {
+            "LocalBearer": []
+          }
+        ],
+        "summary": "Saved ordered watchlist observations; freshness and currency provenance unknown."
       }
     },
     "/health": {
