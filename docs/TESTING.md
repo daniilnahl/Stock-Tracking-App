@@ -825,3 +825,23 @@ The [completion evidence](milestones/m4-exit-evidence.md) retains earlier audit
 results as dated records. Current operation docs reflect completed graph/date/
 cache behavior; older milestone/ADR snapshots identify their historical scope.
 This reconciliation changes no runtime, tests, dependency, formula or contract.
+
+## M6 historical retrieval service — issue #116
+
+Run `python -m pytest tests/test_history_service.py tests/test_history_integration.py
+tests/test_history_date_selection.py tests/test_service_boundary.py tests/test_packaging.py -v`.
+The injected `HistoryService` returns the accepted immutable `HistoryView` with
+one resolved request range and exact sparse raw Decimal observations. Fixed-clock
+tests cover NASDAQ identity before provider acquisition, row ordinals, default
+leap-day fallback, inclusive limits, missing/invalid bars, authoritative model
+validation, unchanged error objects and absence of retry or presentation work.
+An injected production historical provider verifies cache reuse and expiry failure
+without stale fallback, cache replacement or SQLite creation.
+
+`history_service_probe.py` runs against fresh source and installed-wheel imports
+with UI, configuration, legacy facades, concrete providers/persistence, network,
+environment, data IO and output denied. Negative controls prove the guards work
+before the real service executes with a typed fake. Existing facade/range wrappers
+retain their late-bound clock and list-return surfaces while sharing pure service
+policy. Root command and renderer integration remains separately scoped #117;
+these checks do not certify live entitlement or historical session completeness.

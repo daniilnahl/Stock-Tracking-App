@@ -67,6 +67,7 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
         "stock_tracker/persistence/sqlite_portfolios.py",
         "stock_tracker/services/__init__.py", "stock_tracker/services/models.py",
         "stock_tracker/services/protocols.py", "stock_tracker/services/watchlists.py",
+        "stock_tracker/services/history.py", "stock_tracker/services/history_policy.py",
         "stock_tracker/cli/__init__.py", "stock_tracker/cli/storage.py",
     }
 
@@ -281,6 +282,12 @@ with ExitStack() as guards:
 
     # -I and an empty cwd keep the checkout out of imports. The built wheel,
     # rather than source files, supplies the modules under verification.
+    history_service = subprocess.run(
+        [sys.executable, "-I", str(ROOT / "tests/history_service_probe.py"), str(installed)],
+        cwd=tmp_path, env=environment, capture_output=True, text=True,
+    )
+    assert history_service.returncode == 0, history_service.stderr
+    assert history_service.stdout == history_service.stderr == ""
     code = """
 import socket
 import sys
