@@ -82,7 +82,8 @@ python -m pip wheel . --no-deps --no-build-isolation --wheel-dir dist
 The wheel includes five flat modules (`stock`, `watch_list`, `menu_watchlist`,
 `daniils_stock_method`, `config`), `utils.utility_module`, and the
 `stock_tracker.domain`, `stock_tracker.compatibility`, `stock_tracker.providers`,
-`stock_tracker.persistence`, `stock_tracker.services` and `stock_tracker.cli`
+`stock_tracker.persistence`, `stock_tracker.services`, `stock_tracker.cli`
+and `stock_tracker.api`
 packages. Local, current-data and historical services, the shared decimal parser
 and CLI storage/provider-acquisition adapters support both maintained root CLIs.
 Commands delegate application work to the injected services; presentation owns
@@ -97,6 +98,17 @@ The [readiness decision](docs/TESTING.md#type-check-readiness-decision--issue-11
 records the historical readiness decision. Completed M1–M3 implementation has
 not expanded configured type checking beyond `config.py`; wider typing remains
 separate follow-up work.
+
+## REST foundation
+
+The accepted M7 foundation supplies an injected `create_app`, public process
+health and authenticated static OpenAPI. It includes exact Decimal wire models,
+safe error/access controls and admission infrastructure. Watchlist/history HTTP
+routes and production configuration/launcher are separate dependent issues;
+this foundation starts no listener and changes no CLI behavior. See
+[API foundation contracts](docs/API_FOUNDATION.md) for the current boundaries,
+dependency rationale and offline verification. The canonical `.[dev]` setup
+above includes the minimal pinned API stack and in-process HTTP test client.
 
 ## CLI help and usage
 

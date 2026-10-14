@@ -1,7 +1,15 @@
 # M7–M10 proposed SRS: conflict and decision report
 
-**Status: PROPOSED — owner acceptance PENDING.** Prepared 2026-10-13
+**Status: PARTIALLY ACCEPTED — M7 under ADR-0013; remaining decisions pending.** Prepared 2026-10-13
 (America/Los_Angeles); repository observations continued on 2026-10-14 UTC.
+**Scoped acceptance update — 2026-10-14:** the owner's direct **"pr merged,
+continue the work"** followed the explicit request to accept relevant M7
+specification and Option A in PR #135. Independently verified owner merge
+e03d116 contains reviewed head 94bde7d. This resolves D1/D2/D4 only for
+accepted ADR-0013's local holdings read-only scope. M8–M10, provider rights,
+research/AI, external hosting and other open gates remain proposed/blocked.
+Earlier pending statements are original proposal snapshots, not a revocation
+of the scoped acceptance recorded here and in SRS/ADR-0013.
 This is a documentation proposal only. No milestone implementation, implementation
 issues, new ADR acceptance, provider activation, subscription, paid model run,
 deployment or agent merge is authorized or performed.
@@ -39,7 +47,9 @@ services, not an installed new CLI command tree or an HTTP client contract.
 
 ## Repository conflicts and gaps requiring decisions
 
-All decisions below are **OPEN**. Recommendations and proposed clarifications
+At the original proposal snapshot all decisions below were **OPEN**. The
+scoped acceptance above now resolves D1/D2/D4 only for ADR-0013 Option A;
+other decisions and broader interpretations remain open. Recommendations and proposed clarifications
 in the SRS are reviewable choices, not owner approval or accepted ADRs.
 
 | Gate / priority | Evidence and conflict | Owner decision / blocking scope |

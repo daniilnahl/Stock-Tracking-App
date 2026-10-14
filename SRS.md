@@ -2,13 +2,26 @@
 
 **Version:** 1.2 proposed (approved baseline: 1.1)
 
-**Status:** PROPOSED — M7–M10 revision not yet owner-approved; existing approved requirements remain authoritative
+**Status:** PARTIALLY ACCEPTED — M7 under ADR-0013; M8–M10 and unresolved decisions remain proposed. Existing approved requirements remain authoritative.
 
 **Primary implementation language:** Python  
 **Current interface:** Typer CLI  
 **Target:** Production-quality portfolio tracking and analytics application
 
 ## Approval record
+
+**M7 scoped acceptance — 2026-10-14:** following the explicit request to accept
+the relevant M7 specification and Option A in PR #135, the owner instructed
+**"pr merged, continue the work"**. Owner merge was verified at
+`e03d116981c8c81b7899f7202040fefb23b9065b`, containing reviewed head
+`94bde7d268bc423b907d89429e1c5d3b76c30c41`. This accepts M7 API701–724 and
+applicable cross-milestone requirements only within accepted ADR-0013 Option A:
+authenticated local holdings read-only views/history using M6 services. Its
+precise endpoints, bounds, unknown provenance and activation gates resolve M7
+D1/D2/D4. M8–M10, other decision gates, provider rights/entitlement, hosted
+deployment, writes and new financial metrics remain unapproved. The proposal
+wording below retains the original review history; it does not invalidate this
+scoped acceptance. See [ADR-0013](docs/adr/0013-local-read-only-rest-api.md).
 
 **M7–M10 proposal, prepared 2026-10-13 (America/Los_Angeles):** owner acceptance
 is **PENDING**. The new §23 cross-milestone and M7–M10 text is a specification
@@ -945,6 +958,11 @@ stocktracker analytics risk
 ```
 
 ## Milestone 7 — REST API
+
+**Current acceptance status — 2026-10-14:** API701–724 and applicable X710–729
+are accepted within ADR-0013 Option A as recorded above. The proposal-status,
+illustrative issue-group and decision-gate wording below retains the original
+review snapshot; unaccepted M8–M10 and out-of-scope decisions remain pending.
 
 ### 23.7.0 Proposal status, interpretation and dependencies
 

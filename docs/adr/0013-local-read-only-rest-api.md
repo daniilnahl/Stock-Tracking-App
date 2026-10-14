@@ -2,7 +2,22 @@
 
 ## Status and acceptance gate
 
-**Proposed — 2026-10-13. Not accepted.** This is the concrete contract proposal
+**Accepted — 2026-10-14.** After the Master requested explicit acceptance of
+the relevant M7 specification and Option A in PR #135, the owner directly
+instructed **"pr merged, continue the work"**. This accepts the reviewed M7
+contract, including its exact local bounds, access, serialization, error and
+activation choices. Independently verified owner merge:
+`e03d116981c8c81b7899f7202040fefb23b9065b`, containing reviewed head
+`94bde7d268bc423b907d89429e1c5d3b76c30c41`. Exact-head
+[Foundation 38523342700](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/38523342700)
+passed. Post-merge
+[main Foundation 38527281579](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/38527281579)
+also completed successfully; acceptance, owner-merge and main-CI prerequisites
+are satisfied. #130 may begin; later issues retain their own dependency gates.
+This does not accept M8–M10, unresolved provider rights or agent merges.
+
+The original proposal and gate wording below records the reviewed decision;
+it does not supersede the acceptance above. This is the concrete contract
 for [#129](https://github.com/daniilnahl/Stock-Tracking-App/issues/129), in
 [M7 — REST API](https://github.com/daniilnahl/Stock-Tracking-App/milestone/8).
 The request to begin M7 authorizes analysis, decomposition and this proposal;

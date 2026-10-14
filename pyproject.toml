@@ -16,6 +16,18 @@ dependencies = [
     "python-dotenv==1.0.1",
     "rich==13.9.4",
     "typer==0.13.0",
+    # Minimal approved REST stack; no standard extras or telemetry dependency.
+    "fastapi==0.141.0",
+    "pydantic==2.11.10",
+    "starlette==1.8.0",
+    "uvicorn==0.54.0",
+    "anyio==4.13.0",
+    "pydantic_core==2.33.2",
+    "typing-inspection==0.4.2",
+    "annotated-doc==0.0.5",
+    "annotated-types==0.8.0",
+    "h11==0.16.0",
+    "idna==3.20",
     # Preserve the existing transitive resolution from reqs.txt.
     "click==8.1.7",
     "colorama==0.4.6",
@@ -48,11 +60,14 @@ dev = [
     # Build smoke checks use the same backend as isolated pip builds.
     "setuptools==75.6.0",
     "wheel==0.45.1",
+    # In-process ASGI tests, never a live listener.
+    "httpx==0.28.1",
+    "httpcore==1.0.9",
 ]
 
 [tool.setuptools]
 py-modules = ["stock", "watch_list", "menu_watchlist", "daniils_stock_method", "config"]
-packages = ["utils", "stock_tracker", "stock_tracker.domain", "stock_tracker.compatibility", "stock_tracker.providers", "stock_tracker.persistence", "stock_tracker.services", "stock_tracker.cli"]
+packages = ["utils", "stock_tracker", "stock_tracker.domain", "stock_tracker.compatibility", "stock_tracker.providers", "stock_tracker.persistence", "stock_tracker.services", "stock_tracker.cli", "stock_tracker.api"]
 package-dir = {stock_tracker = "src/stock_tracker"}
 
 [tool.pytest.ini_options]
