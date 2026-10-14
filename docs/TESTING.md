@@ -167,6 +167,27 @@ display. This checks #114's service capability; existing root commands are not
 yet integrated with it. Current-data/history implementations, thin CLI wiring
 and combined M6 exit evidence belong to their later bounded issues.
 
+## M6 current-data application service — issue #115
+
+Run `python -m pytest tests/test_current_data_service.py
+tests/test_current_service_boundary.py tests/test_stock_facade.py
+tests/test_provider_integration.py tests/test_cli_ownership.py
+tests/test_packaging.py -v`. Typed controlled providers exercise lookup/profile/
+period order, candidate identity validation, exact ownership grammar, repeated
+input without new requests, raw numeric payloads, known snapshots and ordered
+refresh progress. Stage failure matrices preserve error categories, ownership
+and quote/period invalidation. Configuration acquisition callbacks execute once;
+callback programming/application failures propagate without duplicate progress.
+Malformed typed/frozen candidates are revalidated before publication.
+
+The pure decimal parser is shared with the unchanged legacy conversion surface.
+`current_data_service_probe.py` denies and proves UI/facade/configuration/concrete
+provider/database/network/environment/legacy IO boundaries before cold service
+imports, then executes add, ownership validation and refresh under those guards
+in fresh source and offline installed-wheel processes. Services never save or
+format market values; display projection and root command integration remain
+issue #117. Existing facade and CLI regressions verify parser compatibility.
+
 Tests MUST be deterministic.
 
 ## Time
