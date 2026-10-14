@@ -49,8 +49,8 @@ All issues belong to [M7 milestone 8](https://github.com/daniilnahl/Stock-Tracki
 | Issue | Objective | Dependencies | Status / assigned work | PR / review |
 |---|---|---|---|---|
 | [#129](https://github.com/daniilnahl/Stock-Tracking-App/issues/129) | REST contract/acceptance | M6 merged | Accepted; owner merge and PR/main CI passed | [PR #135](https://github.com/daniilnahl/Stock-Tracking-App/pull/135), merged |
-| [#130](https://github.com/daniilnahl/Stock-Tracking-App/issues/130) | Lazy app factory, JSON/error/access foundation | #129 resolved | Implemented; local checks/independent review passed; owner merge pending | [PR #136](https://github.com/daniilnahl/Stock-Tracking-App/pull/136), hosted CI pending |
-| [#131](https://github.com/daniilnahl/Stock-Tracking-App/issues/131) | Saved watchlist views | #130 owner merge/main CI | Blocked; unassigned | None |
+| [#130](https://github.com/daniilnahl/Stock-Tracking-App/issues/130) | Lazy app factory, JSON/error/access foundation | #129 resolved | Closed; owner merge and PR/main CI passed | [PR #136](https://github.com/daniilnahl/Stock-Tracking-App/pull/136), merged |
+| [#131](https://github.com/daniilnahl/Stock-Tracking-App/issues/131) | Saved watchlist views | #130 resolved | Implemented; local verification and independent review passed; owner merge pending | [PR #137](https://github.com/daniilnahl/Stock-Tracking-App/pull/137), hosted CI pending |
 | [#132](https://github.com/daniilnahl/Stock-Tracking-App/issues/132) | Stored-row raw history | #130/#131 owner merge/main CI | Blocked; unassigned | None |
 | [#133](https://github.com/daniilnahl/Stock-Tracking-App/issues/133) | Local composition/launch/operation | #130–132 owner merge/main CI | Blocked; unassigned | None |
 | [#134](https://github.com/daniilnahl/Stock-Tracking-App/issues/134) | Independent source/wheel exit audit | #130–133 owner merge/main CI | Blocked; unassigned | None |
@@ -120,11 +120,16 @@ and cancellation-before-worker-start admission leakage; each has regression
 coverage. The reviewer independently reproduced the cancellation fix, raw ASGI
 access/body/refusal cases and final cold-source probe, then returned PASS with
 no actionable findings. No review conclusion is product acceptance or a merge.
+Final Master audit additionally found the token in Starlette middleware keyword
+argument repr. A private middleware-factory closure removes that diagnostic
+exposure; regression and independent correct/wrong/missing-token probes pass.
+Canonical final reinstall refreshed the completed API package; isolated installed
+import/factory execution passed from site-packages.
 
 Canonical Python 3.12.14 results (commands actually executed):
 
-- `python -m pytest tests/test_api_foundation.py tests/test_api_serialization.py tests/test_api_boundary.py tests/test_packaging.py -q`: **85 passed in 46.78s**.
-- `python -m pytest -q`: **2590 passed in 124.20s**.
+- `python -m pytest tests/test_api_foundation.py tests/test_api_serialization.py tests/test_api_boundary.py tests/test_packaging.py -q`: initial **85 passed in 46.78s**; final repr-repair **86 passed in 47.19s**.
+- `python -m pytest -q`: initial **2590 passed in 124.20s**; final repr-repair/reinstall **2591 passed in 126.12s**.
 - Final fixture-only token indirection: cold-source boundary **1 passed in 1.20s**; no runtime behavior change.
 - `python -m ruff check .`, `python -m mypy` (**config.py only**), `python -m pip check`: passed.
 - Final staged `python -m pytest tests/test_repository_hygiene.py -q`: **8 passed in 13.61s**.
@@ -137,6 +142,57 @@ local 3.11 execution was unavailable and remains a required hosted CI check.
 PR #136 was created through the signed-in website and attached to this chat.
 Hosted PR/main CI, owner merge and #130 closure remain pending. #131–134 stay
 blocked on their respective preceding owner merges/main CI; M7 is incomplete.
+
+## Saved-view continuation — issue #131, 2026-10-14
+
+The owner instructed "pr merged, continue the work" after PR #136. Verified
+owner merge `1994ecea7fa22762d88de1d56b867dcda455a9e3`, reviewed head
+`3e3fff68edbd4f622f7e55108d9dab521a64e23a`, five successful PR Foundation
+checks (run 38530351856) and successful main Foundation 38619991215.
+Issue #130 is closed; #131 may begin on `feature/131-saved-watchlist-api`.
+The merge preceded the final local token-repr repair. Preserve that minimal
+security prerequisite and regression in this branch (commit `3d3405e`);
+the original merged-head results were 85 targeted and 2590 full tests.
+The later 86/2591 results above include that locally reviewed repair, rather
+than the merged head. The PR evidence was corrected to distinguish them.
+
+Plan: delegate the saved-view route over existing load/view/serialization and
+admission, verify both namespaces and unchanged temporary holdings/legacy bytes,
+update real typed OpenAPI and guarded source/wheel evidence, independently review,
+then publish one bounded issue PR. No history route, launcher, dependency,
+financial formula or persistence schema changes. #132–134 await their respective
+owner merges/main CI. M7 remains incomplete.
+
+Implementation delegates only the allowlisted saved-view route to existing
+`WatchlistService.load()`/`view()`, serializer and admission. Response namespace
+must match the request; malformed/swapped dependencies fail safely. Typed actual
+OpenAPI includes the route and restores its specific integer ordinal minimum
+from FastAPI's `0.0` to exact `0`; the financial encoder still rejects floats.
+Temporary SQLite reads preserve bytes across success/absence/corrupt/future
+schema outcomes, and legacy checks never read pickle contents. Cold source/wheel
+probes execute both namespaces with unchanged proven infrastructure denial guards.
+
+Final canonical Python 3.12.14 checks actually run:
+
+- API/source/wheel focused suite: **107 passed in 41.81s**.
+- Final fixture/staged-hygiene/packaging suite: **31 passed in 41.91s**.
+- `python -m pytest -q`: **2612 passed in 96.82s**.
+- Ruff, configured mypy (**config.py only**), pip check and diff check: passed.
+- Independent review: **PASS**; **104 API tests in 2.46s**, **2 packaging tests in 39.04s**, cold-source isolation and separate mismatch/malformed/absent dependency probes passed.
+
+Recovery evidence: initial typed OpenAPI float-bound failures were repaired only
+in schema metadata. Initial full run had **2 failed / 2610 passed in 120.11s**:
+the staged scanner treated a synthetic domain Stock's second positional name as
+the legacy credential pattern, and an unchanged packaging assertion saw transient
+Matplotlib font-cache stderr. Named fixture arguments repaired the scanner match;
+focused packaging and the final full run passed without changing its assertion.
+No guard, financial encoding rule, hygiene check or valid expectation was weakened.
+Hosted CI and owner merge remain required before #132 begins.
+
+Published [PR #137](https://github.com/daniilnahl/Stock-Tracking-App/pull/137)
+through the signed-in GitHub website and attached it to this chat. Final staged
+hygiene passed **8 in 8.41s**; Master scope/whitespace/secret review and final
+Ruff/configured mypy/pip check passed before commit/push. No agent merge.
 
 ## Completion gate
 

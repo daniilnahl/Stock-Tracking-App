@@ -1,4 +1,4 @@
-"""IO-free FastAPI factory; data routes and production launch are later issues."""
+"""IO-free FastAPI factory and shared-service saved watchlist adapter."""
 
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
@@ -8,10 +8,11 @@ from stock_tracker.domain.errors import DomainValidationError
 from stock_tracker.exceptions import StockTrackerError
 
 from .access import AccessBoundary, validate_token
-from .context import Admission, ApiServices
+from .context import Admission, ApiServices, run_data_operation
 from .errors import ApiFailure, ERRORS, error_code, record_failure
 from .json_response import BoundedJSONResponse, error_response
-from .schemas import ErrorResponse, HealthResponse
+from .schemas import ErrorResponse, HealthResponse, WatchlistResponse
+from .serialization import watchlist_payload
 
 
 PROTECTED_OPENAPI = {"security": [{"LocalBearer": []}]}
@@ -43,7 +44,12 @@ def create_app(*, token: str | None = None, services: ApiServices | None = None)
                   redirect_slashes=False, default_response_class=BoundedJSONResponse)
     app.state.api_services = services if services is not None else ApiServices()
     app.state.api_admission = Admission()
-    app.add_middleware(AccessBoundary, token=token)
+    def access_boundary(app):
+        # Starlette includes middleware keyword arguments in its repr. Capture
+        # the credential privately rather than exposing it through diagnostics.
+        return AccessBoundary(app, token=token)
+
+    app.add_middleware(access_boundary)
 
     async def known_failure(request, error):
         code = error_code(error)
@@ -78,10 +84,37 @@ def create_app(*, token: str | None = None, services: ApiServices | None = None)
     async def schema():
         return BoundedJSONResponse(app.openapi())
 
+    @app.get("/api/v1/watchlists/{namespace}", response_model=WatchlistResponse,
+             responses={**error_documents(), 200: {"content": {"application/json": {"example": {
+                 "namespace": "menu_watchlist", "name": "Watchlist", "observation": "saved",
+                 "provenance": {"source": None, "observed_at": None, "retrieved_at": None, "freshness": "unknown"},
+                 "entries": [],
+             }}}}}, openapi_extra=PROTECTED_OPENAPI,
+             summary="Saved ordered watchlist observations; freshness and currency provenance unknown.")
+    async def saved_watchlist(namespace: str):
+        if namespace not in ("menu_watchlist", "daniils_stock_method"):
+            raise ApiFailure("not_found")
+
+        def operation():
+            acquire = app.state.api_services.watchlist
+            if acquire is None:
+                raise ApiFailure("internal_error")
+            service = acquire(namespace)
+            payload = watchlist_payload(service.view(service.load()))
+            if payload["namespace"] != namespace:
+                raise ApiFailure("internal_error")
+            return payload
+
+        return await run_data_operation(app, operation)
+
     default_openapi = app.openapi
 
     def documented_openapi():
         document = default_openapi()
+        # FastAPI's OpenAPI model casts this integer constraint to float 0.0.
+        # Restore the approved exact ordinal bound without permitting floats in
+        # financial payloads or weakening the bounded JSON response encoder.
+        document["components"]["schemas"]["EntryResponse"]["properties"]["ordinal"]["minimum"] = 0
         document.setdefault("components", {}).setdefault("securitySchemes", {})["LocalBearer"] = {
             "type": "http", "scheme": "bearer",
             "description": "Operator-supplied local token; never a provider credential. Exactly one Authorization header.",

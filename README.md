@@ -103,8 +103,11 @@ separate follow-up work.
 
 The accepted M7 foundation supplies an injected `create_app`, public process
 health and authenticated static OpenAPI. It includes exact Decimal wire models,
-safe error/access controls and admission infrastructure. Watchlist/history HTTP
-routes and production configuration/launcher are separate dependent issues;
+safe error/access controls and admission infrastructure. The authenticated
+`GET /api/v1/watchlists/{namespace}` route reads saved views from the injected
+shared service for `menu_watchlist` or `daniils_stock_method`, preserving ordered
+rows and unknown freshness. History HTTP routes and production configuration/
+launcher are separate dependent issues;
 this foundation starts no listener and changes no CLI behavior. See
 [API foundation contracts](docs/API_FOUNDATION.md) for the current boundaries,
 dependency rationale and offline verification. The canonical `.[dev]` setup

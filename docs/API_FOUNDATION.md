@@ -1,11 +1,12 @@
-# REST foundation — issue #130
+# REST foundation and saved views - issues #130-131
 
 Accepted [ADR-0013](adr/0013-local-read-only-rest-api.md) defines the M7
 contract. This foundation implements injectable transport infrastructure,
-serialization and safety boundaries. It registers only GET `/health` and
-GET `/api/v1/openapi.json`. No watchlist/history route, storage composition,
-credential loading, production launcher or externally accessible listener is
-introduced. Those are dependent #131–133 tasks.
+serialization and safety boundaries. It registers GET `/health`,
+GET `/api/v1/openapi.json` and
+GET `/api/v1/watchlists/{namespace}`. Historical routes, storage composition,
+credential loading and the production launcher remain dependent #132-133 tasks.
+This injected adapter starts no listener.
 
 ## Factory and extension contract
 
@@ -23,7 +24,7 @@ declarations. It constructs no dependency. Defaults disable history and claim
 no source/cache provenance. Only an explicit FMP cache declaration qualifies
 `accepted_cache_policy`; a provider name alone does not qualify it.
 
-Later handlers call `run_data_operation(app, operation, history=False)` with a
+Data handlers call `run_data_operation(app, operation, history=False)` with a
 closure containing service acquisition, invocation and explicit serialization.
 Admission happens before the closure executes: at most four active operations,
 one of which may be historical; excess demand immediately raises fixed
@@ -45,7 +46,8 @@ outputs fail instead of manufacturing evidence.
 Later routers can reuse `error_documents()` and `PROTECTED_OPENAPI` from
 `api.app` for typed fixed error examples and the `LocalBearer` security scheme.
 Register only implemented routes. OpenAPI currently documents health's success
-example and the actual protected schema endpoint. Its snapshot is reviewed in
+example, the actual protected schema endpoint and the typed saved-view route.
+Its snapshot is reviewed in
 `tests/fixtures/api_foundation_openapi.json`; route additions must deliberately
 update that contract alongside endpoint tests.
 
@@ -145,3 +147,37 @@ that guard active. Tests explicitly verify denied connect/getaddrinfo afterward;
 no policy replacement or application listener is used. Production plugin loaders
 are unmodified. These tests certify neither live provider rights/entitlement
 nor a complete M7 runtime. Historical activation remains separately gated.
+
+## Saved watchlist requests — issue #131
+
+GET `/api/v1/watchlists/menu_watchlist` and
+GET `/api/v1/watchlists/daniils_stock_method` require the local bearer token
+and accept no query or body. The route acquires the explicitly injected
+WatchlistService only after access checks and admission, calls `load()` then
+`view()`, and projects its neutral result with `watchlist_payload`. The result
+must match the requested namespace. No provider key, provider or cache is
+acquired; no holdings are saved or refreshed. Other namespaces return safe
+404 `not_found` without service acquisition. No history endpoint is registered.
+
+A genuinely absent namespace returns 200 with the existing `Watchlist` empty
+record without creating a database. An absent namespace with its legacy entry
+present returns 409 `legacy_state_present`; only existence is inspected, never
+pickle contents. Existing structured namespaces remain authoritative even when
+legacy entries exist. Corrupt data and unsupported schema return fixed 500
+`internal_error`, retaining the original files. Unconfigured service injection
+also fails safely; production configuration is not supplied by this issue.
+
+Rows retain order, duplicate tickers, exchange distinctions and request-local
+zero-based ordinals. Unowned rows use null average cost/snapshot; numeric zero
+remains numeric text. Existing Position snapshots retain the service's formulas,
+with returns expressed as ratios. Saved current prices
+are observations of unknown freshness. Opaque saved currency/display metadata
+does not establish price or cost currency. No aggregate, timestamps or source
+evidence is invented. The OpenAPI success example is a genuinely empty view;
+the contract tests also exercise precise fractional, loss, zero and missing
+values through real temporary SQLite repositories and source/wheel processes.
+
+FastAPI's generated OpenAPI model represents the integer ordinal minimum as
+`0.0`; the schema adapter restores that specific accepted bound to integer `0`.
+This adjustment applies only to schema metadata. Financial payload floats remain
+unsupported by the bounded encoder; Decimal service observations stay exact text.

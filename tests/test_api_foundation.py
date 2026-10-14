@@ -83,11 +83,11 @@ def authorized_headers():
     return [(b"host", b"127.0.0.1:8000"), (b"authorization", b"Bearer " + credential().encode())]
 
 
-def test_factory_and_health_are_io_free_and_no_data_routes(monkeypatch):
+def test_factory_and_health_are_io_free(monkeypatch):
     def denied(*args, **kwargs):
         raise AssertionError("No service should be acquired")
     app = create_app(services=ApiServices(watchlist=denied))
-    assert {route.path for route in app.routes} == {"/health", "/api/v1/openapi.json"}
+    assert {route.path for route in app.routes} == {"/health", "/api/v1/openapi.json", "/api/v1/watchlists/{namespace}"}
     status, payload, headers, reads = request(app)
     assert (status, payload, reads) == (200, {"status": "ok"}, 1)
     assert headers[b"cache-control"] == b"no-store"
@@ -103,6 +103,17 @@ def test_native_loop_bootstrap_keeps_normal_transport_guards_active():
             candidate.connect(("127.0.0.1", 1))
 
 
+def test_operator_credential_absent_from_normal_application_diagnostics():
+    supplied = credential()
+    app = create_app(token=supplied)
+    assert supplied not in repr(app)
+    assert supplied not in repr(app.user_middleware)
+    result = request(app, scope("/api/v1/openapi.json", headers=authorized_headers()))
+    assert result[0] == 200
+    assert supplied not in repr(app.middleware_stack)
+    assert supplied not in json.dumps(app.openapi())
+
+
 def test_in_process_httpx_schema_snapshot_and_static_no_dependency_work():
     def denied(*args, **kwargs):
         raise AssertionError("No dependency acquisition")
@@ -114,7 +125,10 @@ def test_in_process_httpx_schema_snapshot_and_static_no_dependency_work():
             assert response.status_code == 200
             assert response.headers["cache-control"] == "no-store"
             assert response.json() == json.loads((ROOT / "tests/fixtures/api_foundation_openapi.json").read_text())
-            for path in ("/docs", "/redoc", "/openapi.json", "/health/", "/api/v1/watchlists/menu_watchlist"):
+            ordinal_schema = response.json()["components"]["schemas"]["EntryResponse"]["properties"]["ordinal"]
+            assert ordinal_schema["type"] == "integer"
+            assert ordinal_schema["minimum"] == 0 and type(ordinal_schema["minimum"]) is int
+            for path in ("/docs", "/redoc", "/openapi.json", "/health/", "/api/v1/watchlists/unknown"):
                 response = await client.get(path, headers={"Authorization": "Bearer " + credential()})
                 assert response.status_code == 404
                 assert response.json()["error"]["code"] == "not_found"

@@ -55,8 +55,8 @@ class Admission:
 async def run_data_operation(app, operation: Callable[[], object], *, history: bool = False):
     """Admit before acquiring dependencies; hold until actual worker termination.
 
-    Later handlers supply a closure that acquires a service, invokes it, and
-    returns the explicitly serialized neutral payload. No data route exists here.
+    Data handlers supply a closure that acquires a service, invokes it, and
+    returns the explicitly serialized neutral payload. The factory owns routes.
     """
     if type(history) is not bool or not callable(operation):
         raise ApiFailure("internal_error")
