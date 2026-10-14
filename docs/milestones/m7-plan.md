@@ -2,6 +2,18 @@
 
 ## Authority and current state — 2026-10-13
 
+**Acceptance update — 2026-10-14:** the owner directly instructed **"pr merged,
+continue the work"** after the explicit approval request for M7/Option A in
+PR #135. Owner merge `e03d116981c8c81b7899f7202040fefb23b9065b` and reviewed
+head `94bde7d268bc423b907d89429e1c5d3b76c30c41` were independently verified;
+exact-head Foundation 38523342700 passed. The relevant M7 specification and
+ADR-0013 Option A are accepted; M8–M10 and unresolved rights remain outside
+this approval. Earlier pending statements below are dated execution snapshots.
+Post-merge main Foundation 38527281579 completed successfully; #129 is resolved
+and #130 is unblocked. Master owns this acceptance record; a delegated
+implementation agent owns #130's minimal foundation on
+`feature/130-api-foundation`. Later runtime issues await its owner merge/main CI.
+
 The owner requested the Master Engineering Agent role and beginning M7.
 `master-agent.md` contains stale M2/template placeholders; the direct M7
 request selects SRS §23 M7. Analysis, bounded issues, delegated independent
@@ -36,8 +48,8 @@ All issues belong to [M7 milestone 8](https://github.com/daniilnahl/Stock-Tracki
 
 | Issue | Objective | Dependencies | Status / assigned work | PR / review |
 |---|---|---|---|---|
-| [#129](https://github.com/daniilnahl/Stock-Tracking-App/issues/129) | REST contract/acceptance | M6 merged | Proposal submitted; Master; independent read-only agent review | [PR #135](https://github.com/daniilnahl/Stock-Tracking-App/pull/135); owner acceptance outstanding |
-| [#130](https://github.com/daniilnahl/Stock-Tracking-App/issues/130) | Lazy app factory, JSON/error/access foundation | #129 acceptance, owner merge/main CI | Blocked; unassigned | None |
+| [#129](https://github.com/daniilnahl/Stock-Tracking-App/issues/129) | REST contract/acceptance | M6 merged | Accepted; owner merge and PR/main CI passed | [PR #135](https://github.com/daniilnahl/Stock-Tracking-App/pull/135), merged |
+| [#130](https://github.com/daniilnahl/Stock-Tracking-App/issues/130) | Lazy app factory, JSON/error/access foundation | #129 resolved | In progress; delegated implementation agent | Pending Master review/submission |
 | [#131](https://github.com/daniilnahl/Stock-Tracking-App/issues/131) | Saved watchlist views | #130 owner merge/main CI | Blocked; unassigned | None |
 | [#132](https://github.com/daniilnahl/Stock-Tracking-App/issues/132) | Stored-row raw history | #130/#131 owner merge/main CI | Blocked; unassigned | None |
 | [#133](https://github.com/daniilnahl/Stock-Tracking-App/issues/133) | Local composition/launch/operation | #130–132 owner merge/main CI | Blocked; unassigned | None |
@@ -91,6 +103,41 @@ provenance. [PR #135](https://github.com/daniilnahl/Stock-Tracking-App/pull/135)
 was created through the signed-in GitHub website and attached to this chat.
 Required hosted CI, owner acceptance and owner merge remain outstanding at
 submission. #129 stays open; downstream runtime issues remain blocked.
+
+## Completion gate
+
+## Foundation implementation — issue #130, 2026-10-14
+
+The delegated implementation supplies `stock_tracker.api` with an injected
+factory registering only health and authenticated OpenAPI, typed neutral wire
+schemas/serializers, fixed error envelopes, exact Host/Origin/Bearer ordering,
+bounded bodies/responses and reusable admission. Source and installed-wheel
+probes prove application IO isolation with documented code-loading exceptions.
+Existing pins/Python/tooling, services, financial arithmetic, CLI behavior and
+SQLite schema remain unchanged. No data routes, launcher or production
+configuration are included. See [foundation details](../API_FOUNDATION.md).
+
+Independent Master/read-only agent review repaired malformed snapshot output
+and cancellation-before-worker-start admission leakage; each has regression
+coverage. The reviewer independently reproduced the cancellation fix, raw ASGI
+access/body/refusal cases and final cold-source probe, then returned PASS with
+no actionable findings. No review conclusion is product acceptance or a merge.
+
+Canonical Python 3.12.14 results (commands actually executed):
+
+- `python -m pytest tests/test_api_foundation.py tests/test_api_serialization.py tests/test_api_boundary.py tests/test_packaging.py -q`: **85 passed in 46.78s**.
+- `python -m pytest -q`: **2590 passed in 124.20s**.
+- Final fixture-only token indirection: cold-source boundary **1 passed in 1.20s**; no runtime behavior change.
+- `python -m ruff check .`, `python -m mypy` (**config.py only**), `python -m pip check`: passed.
+- Final staged `python -m pytest tests/test_repository_hygiene.py -q`: **8 passed in 13.61s**.
+- Whitespace/scope/staged-secret/generated-artifact review: passed; only intended source, tests, JSON contract fixture and documentation staged.
+
+Native Windows event-loop control sockets and temporary hard-link tests required
+approved filesystem/socket access; actual application execution retained offline
+guards. Every old/new exact pin resolved in a Python 3.11 Windows-wheel dry run;
+local 3.11 execution was unavailable and remains a required hosted CI check.
+PR/main CI, owner merge and #130 closure are pending publication. #131–134 stay
+blocked on their respective preceding owner merges/main CI; M7 is incomplete.
 
 ## Completion gate
 

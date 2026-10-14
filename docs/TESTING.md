@@ -925,3 +925,19 @@ and provider provenance separately. Live market requests are optional manual
 checks and never become an automated-test dependency or replace deterministic
 known-value fixtures. Manual entitlement failures do not justify weakening
 provider validation, identity checks, credential handling or tests.
+
+## M7 REST foundation — issue #130
+
+Run `python -m pytest tests/test_api_foundation.py tests/test_api_serialization.py
+tests/test_api_boundary.py tests/test_packaging.py -v` for injected health/schema,
+exact neutral serialization, fixed safe failures, access/body/size boundaries,
+admission/actual disconnect and cancellation-before-start regressions, and cold
+source/installed-wheel isolation. In-process ASGI needs no application listener.
+The Windows module-owned event loop bootstraps native control sockets before
+normal per-test network denial; explicit connect/getaddrinfo controls prove
+application transport remains denied. Independent subprocess guards disclose
+their narrowly allowed framework code-metadata/tuning reads while prohibiting
+application credentials, ordinary data IO, concrete storage/providers and UI.
+See [API foundation details](API_FOUNDATION.md) for dependency decisions,
+boundary exceptions, the typed OpenAPI snapshot and the remaining route/launcher
+scope. This check establishes foundation behavior, not M7 completion or rights.
