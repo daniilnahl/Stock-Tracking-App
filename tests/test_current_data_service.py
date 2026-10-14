@@ -382,3 +382,18 @@ def test_profile_candidate_storage_validation_is_inside_stage_invalidation(rig):
     assert len(events) == 1 and events[0].entry.current_price is None
     assert events[0].entry.stock.name == "Old company"
     assert len(rig.calls) == 1
+
+
+def test_approved_unowned_input_is_distinct_from_numeric_zero_cost(rig):
+    from stock_tracker.domain import DomainValidationError
+    from stock_tracker.services.models import OwnershipInput
+    prepared = rig.service.prepare_add(record(), "AAPL")
+    unowned = rig.service.validate_ownership("0.0000", "-")
+    assert unowned.average_cost is None and str(unowned.quantity) == "0.0000"
+    result = rig.service.finish_add(record(), prepared, unowned)
+    assert result.record.entries[0].average_cost is None
+    assert rig.service.validate_ownership("0", "0").average_cost == Decimal(0)
+    with pytest.raises(DomainValidationError):
+        rig.service.validate_ownership("1", "-")
+    with pytest.raises(DomainValidationError):
+        OwnershipInput(Decimal(1), None)

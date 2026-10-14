@@ -118,14 +118,21 @@ def test_cli_help_without_credentials_or_state(cli_module, tmp_path):
 )
 def test_cli_add_stock_validation(cli_module, valid, message, monkeypatch, tmp_path):
     monkeypatch.setattr(cli_module, "API_KEY", "synthetic-validation")
-    cli_module.current_watchlist.add_stock(SimpleNamespace(ticker_symbol="AAPL"))
+    from stock import Stock
+    from stock_tracker.exceptions import InvalidTickerError
+    from stock_tracker.providers.models import InstrumentIdentity
+    from stock_tracker.services.current_data import CurrentDataService
+    cli_module.current_watchlist.add_stock(Stock("AAPL", None))
     calls = []
 
-    def check_ticker(ticker, api_key):
-        calls.append((ticker, api_key))
-        return valid
+    def resolve(ticker):
+        calls.append((ticker, cli_module.API_KEY))
+        if not valid:
+            raise InvalidTickerError()
+        return InstrumentIdentity(ticker, "NASDAQ", None, None)
 
-    monkeypatch.setattr(cli_module.utility_module, "check_ticker", check_ticker)
+    service = CurrentDataService(lambda *a, **kw: SimpleNamespace(resolve_symbol=resolve))
+    monkeypatch.setattr(cli_module, "current_service", lambda *a: service)
     result = CliRunner().invoke(cli_module.app, ["add-stock"], input="aapl\n")
     assert result.exit_code == 0, result.output
     assert message in result.output

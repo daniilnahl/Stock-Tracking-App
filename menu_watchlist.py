@@ -5,23 +5,29 @@ from config import ConfigurationError, load_configuration, require_api_key
 import typer #CLI
 
 #OBJECTS 
-from stock import Stock
+from stock import Stock as Stock
 from stock_tracker.domain import DomainValidationError
 from stock_tracker.exceptions import HistoryRangeError, PersistenceError, StockTrackerError
-from stock_tracker.compatibility.history_operations import require_history_identity, resolve_history_range
+from stock_tracker.compatibility.history_operations import require_history_identity
+from stock_tracker.compatibility.watchlist_persistence import watchlist_to_record
+from stock_tracker.cli.composition import (
+    append_prepared, current_service, history_service, local_service, refresh_watchlist, remove_from_watchlist,
+)
+from stock_tracker.cli.presentation import project_prepared, render_history, render_watchlist
 from stock_tracker.compatibility.cli_persistence import (
     load_cli_watchlist, save_cli_watchlist, storage_error_message,
 )
 from watch_list import Watch_list
 
 #helper functions
-from utils import utility_module
+from utils import utility_module as utility_module
 
 #gets API_KEY from the virtual environment
 API_KEY = load_configuration().api_key
 
 # Select cwd-relative storage once per process; importing does not load state.
 WATCHLIST_FILE = Path.cwd() / "stock_tracker.sqlite3"
+HISTORY_CACHE_FILE = Path.cwd() / "stock_tracker.history-cache.json"
 WATCHLIST_NAMESPACE = "menu_watchlist"
 LEGACY_WATCHLIST_FILE = Path.cwd() / "watchlist.pkl"
 current_watchlist = Watch_list("Watchlist")
@@ -85,28 +91,28 @@ def add_stock():
     _prepare_command(network=True)
     stock_ticker = (typer.prompt("Enter stock ticker")).upper()
     try:
-        stock_valid = utility_module.check_ticker(stock_ticker, API_KEY)
-        if not stock_valid:
+        service = current_service(current_watchlist, API_KEY)
+        record = watchlist_to_record(current_watchlist, WATCHLIST_NAMESPACE)
+        prepared = service.prepare_add(record, stock_ticker)
+        if prepared.status == "invalid":
             typer.echo("Invalid ticker. Try again.")
             return
-        if current_watchlist.check_stock_existance(stock_ticker):
+        if prepared.status == "duplicate":
             typer.echo("Stock already exists in the watchlist.")
             return
-        stock = Stock(stock_ticker, API_KEY)
-        stock.get_stock_info()
-        stock.get_price_over_time()
         while True:
             try:
                 stock_amount = typer.prompt("Enter amount of stocks owned")
                 stock_cb = typer.prompt("Enter average cost per share of owned stocks")
-                stock.set_owned_data(stock_amount, stock_cb)
+                ownership = service.validate_ownership(stock_amount, stock_cb)
                 break
             except DomainValidationError as error:
                 typer.echo(f"Invalid input. {error} Please try again.")
+        candidate = project_prepared(service.finish_add(record, prepared, ownership))
     except (StockTrackerError, ConfigurationError) as error:
         typer.echo(str(error), err=True)
         raise typer.Exit(code=1) from None
-    current_watchlist.add_stock(stock)
+    append_prepared(current_watchlist, candidate, API_KEY)
     _save_current_watchlist()
     typer.echo("Succesfully added stock to watchlist.")
  
@@ -118,7 +124,8 @@ def remove_stock():
     _prepare_command()
     current_watchlist.show_just_tickers()
     stock_ticker = (typer.prompt("Enter stock ticker")).upper()
-    current_watchlist.remove_stock(stock_ticker)#removes the stock
+    remove_from_watchlist(local_service(WATCHLIST_FILE, WATCHLIST_NAMESPACE, LEGACY_WATCHLIST_FILE),
+                          current_watchlist, WATCHLIST_NAMESPACE, stock_ticker)
     current_watchlist.show_just_tickers()
     _save_current_watchlist()#updates the external file
 
@@ -137,24 +144,26 @@ def graph_stock(
                     raise HistoryRangeError()
             except (TypeError, ValueError):
                 raise HistoryRangeError() from None
-            first, last = resolve_history_range(first, last)
+            first, last = history_service(current_watchlist, HISTORY_CACHE_FILE).validate_range(first, last)
         _prepare_command()
         current_watchlist.show_just_tickers()
         stock_ticker = (typer.prompt("Enter stock ticker")).upper()
-        selected = [stock for stock in current_watchlist.stocks if stock.ticker_symbol == stock_ticker]
+        selected = [(ordinal, stock) for ordinal, stock in enumerate(current_watchlist.stocks)
+                    if stock.ticker_symbol == stock_ticker]
         if not selected:
             return
-        for stock in selected:
+        for _, stock in selected:
             require_history_identity(stock)
         require_api_key(API_KEY)
-        previous_keys = [(stock, stock.API_KEY) for stock in selected]
+        previous_keys = [(stock, stock.API_KEY) for _, stock in selected]
         try:
             for stock, _ in previous_keys:
                 stock.API_KEY = API_KEY
-            if explicit:
-                current_watchlist.graph_stock(stock_ticker, start=first, end=last)
-            else:
-                current_watchlist.graph_stock(stock_ticker)
+            record = watchlist_to_record(current_watchlist, WATCHLIST_NAMESPACE)
+            service = history_service(current_watchlist, HISTORY_CACHE_FILE)
+            for ordinal, _ in selected:
+                options = {"start": first, "end": last} if explicit else {}
+                render_history(service.history(record.entries[ordinal].stock, ordinal=ordinal, **options))
         finally:
             for stock, key in previous_keys:
                 stock.API_KEY = key
@@ -171,14 +180,15 @@ def show_stocks():
     display a comprehensive table of the stocks, including relevant financial data.
     """
     _prepare_command()
-    current_watchlist.show_stocks()
+    service = local_service(WATCHLIST_FILE, WATCHLIST_NAMESPACE, LEGACY_WATCHLIST_FILE)
+    render_watchlist(service.view(watchlist_to_record(current_watchlist, WATCHLIST_NAMESPACE)))
 
 @app.command()
 def refresh():
     """update stocks data to ensure accuracy and reflect the most current market information."""
     _prepare_command(network=True)
     try:
-        current_watchlist.refresh_stocks()
+        refresh_watchlist(current_watchlist, WATCHLIST_NAMESPACE, current_service(current_watchlist, API_KEY))
     except (StockTrackerError, ConfigurationError) as error:
         typer.echo(str(error), err=True)
         raise typer.Exit(code=1) from None

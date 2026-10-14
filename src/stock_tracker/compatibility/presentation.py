@@ -6,6 +6,8 @@ from math import isfinite
 
 from stock_tracker.compatibility import history_operations
 from stock_tracker.exceptions import MarketDataUnavailableError
+from stock_tracker.domain import Stock
+from stock_tracker.services.models import HistoryView
 
 import matplotlib.pyplot as plt
 from matplotlib.dates import DateFormatter, DayLocator
@@ -22,6 +24,12 @@ def format_return(ratio: Decimal | None) -> str:
 def graph_performance(self, *, start: date | None = None, end: date | None = None):
     """Plot only validated raw closes on their observed exchange-session dates."""
     start, end, bars = history_operations.get_price_history_with_range(self, start=start, end=end)
+    render_history(HistoryView(Stock(bars[0].symbol), start, end, tuple(bars)))
+
+
+def render_history(view):
+    """Render already retrieved observations; never fetch a second history."""
+    start, end, bars = view.start, view.end, view.bars
     prices = []
     for bar in bars:
         try:

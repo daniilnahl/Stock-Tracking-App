@@ -83,7 +83,9 @@ class CurrentDataService:
         for field, value in (("amount_owned", quantity), ("cost_basis", average_cost)):
             if not isinstance(value, str):
                 raise DomainValidationError(f"{field} must be a finite plain decimal number.")
-        return OwnershipInput(to_decimal(quantity, "amount_owned"), to_decimal(average_cost, "cost_basis"))
+        parsed_quantity = to_decimal(quantity, "amount_owned")
+        parsed_cost = None if parsed_quantity == 0 and average_cost == "-" else to_decimal(average_cost, "cost_basis")
+        return OwnershipInput(parsed_quantity, parsed_cost)
 
     def finish_add(
         self, record: WatchlistRecord, prepared: AddPreparation, ownership: OwnershipInput,

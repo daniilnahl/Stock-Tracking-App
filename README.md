@@ -84,9 +84,9 @@ The wheel includes five flat modules (`stock`, `watch_list`, `menu_watchlist`,
 `stock_tracker.domain`, `stock_tracker.compatibility`, `stock_tracker.providers`,
 `stock_tracker.persistence`, `stock_tracker.services` and `stock_tracker.cli`
 packages. Local, current-data and historical services, the shared decimal parser
-and CLI storage/provider-acquisition adapters are available as injected capabilities;
-existing root commands are not yet wired to
-them (M6 issue #117 owns that integration). It excludes
+and CLI storage/provider-acquisition adapters support both maintained root CLIs.
+Commands delegate application work to the injected services; presentation owns
+numeric formatting and history rendering. The wheel excludes
 tests, scratch scripts, CSV data and local state. No installed console-script entry
 point is configured; the documented direct script commands use the checkout.
 

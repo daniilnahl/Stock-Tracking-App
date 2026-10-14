@@ -73,11 +73,13 @@ class AddPreparation:
 @dataclass(frozen=True, slots=True)
 class OwnershipInput:
     quantity: Decimal
-    average_cost: Decimal
+    average_cost: Decimal | None
 
     def __post_init__(self) -> None:
         for field in ("quantity", "average_cost"):
             value = getattr(self, field)
+            if field == "average_cost" and value is None and self.quantity == 0:
+                continue
             if not isinstance(value, Decimal) or not value.is_finite() or value < 0:
                 raise DomainValidationError(f"{field} must be a finite nonnegative Decimal.")
 

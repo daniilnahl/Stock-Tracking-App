@@ -71,6 +71,7 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
         "stock_tracker/cli/__init__.py", "stock_tracker/cli/storage.py",
         "stock_tracker/services/current_data.py", "stock_tracker/services/numeric.py",
         "stock_tracker/cli/current_data.py",
+        "stock_tracker/cli/composition.py", "stock_tracker/cli/presentation.py",
     }
 
     installed = tmp_path / "installed"

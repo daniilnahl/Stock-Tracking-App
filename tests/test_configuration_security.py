@@ -104,19 +104,28 @@ def test_request_success_is_preserved(monkeypatch):
 
 @pytest.mark.parametrize("script", ["menu_watchlist.py", "daniils_stock_method.py"])
 def test_successful_add_does_not_persist_configuration(script, monkeypatch, tmp_path):
+    from datetime import datetime, timezone
+    from decimal import Decimal
+    from types import SimpleNamespace
     from config import Configuration
     from stock import Stock
+    from stock_tracker.providers import factory
+    from stock_tracker.providers.models import CompanyProfile, InstrumentIdentity, PeriodChanges
 
     monkeypatch.setenv("FMP_API_KEY", "synthetic-secret")
     module = runpy.run_path(str(ROOT / script), run_name="configuration_test")
-    monkeypatch.setattr(module["utility_module"], "check_ticker", lambda *a: True)
-
-    def profile(stock):
-        stock.name = "Fictional company"
-        stock.current_price = "10"
-
-    monkeypatch.setattr(Stock, "get_stock_info", profile)
-    monkeypatch.setattr(Stock, "get_price_over_time", lambda stock: None)
+    stamp = datetime(2020, 1, 1, tzinfo=timezone.utc)
+    provider = SimpleNamespace(
+        resolve_symbol=lambda symbol: InstrumentIdentity(symbol, "NASDAQ", None, None),
+        get_company_profile=lambda symbol: CompanyProfile(symbol, "Fictional company", None, None,
+            None, None, Decimal(10), None, None, stamp),
+        get_period_changes=lambda symbol: PeriodChanges(symbol, *(None for _ in range(8)), None, stamp),
+    )
+    monkeypatch.setattr(factory, "create_market_data_provider", lambda key: provider)
+    def denied(*a):
+        pytest.fail("CLI used facade orchestration")
+    monkeypatch.setattr(Stock, "get_stock_info", denied)
+    monkeypatch.setattr(Stock, "get_price_over_time", denied)
     result = CliRunner().invoke(module["app"], ["add-stock"], input="aapl\n2\n5\n")
     assert result.exit_code == 0, result.output
     saved = module["load_watchlist"]()
