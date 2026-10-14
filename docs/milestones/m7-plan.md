@@ -49,7 +49,7 @@ All issues belong to [M7 milestone 8](https://github.com/daniilnahl/Stock-Tracki
 | Issue | Objective | Dependencies | Status / assigned work | PR / review |
 |---|---|---|---|---|
 | [#129](https://github.com/daniilnahl/Stock-Tracking-App/issues/129) | REST contract/acceptance | M6 merged | Accepted; owner merge and PR/main CI passed | [PR #135](https://github.com/daniilnahl/Stock-Tracking-App/pull/135), merged |
-| [#130](https://github.com/daniilnahl/Stock-Tracking-App/issues/130) | Lazy app factory, JSON/error/access foundation | #129 resolved | In progress; delegated implementation agent | Pending Master review/submission |
+| [#130](https://github.com/daniilnahl/Stock-Tracking-App/issues/130) | Lazy app factory, JSON/error/access foundation | #129 resolved | Implemented; local checks/independent review passed; owner merge pending | [PR #136](https://github.com/daniilnahl/Stock-Tracking-App/pull/136), hosted CI pending |
 | [#131](https://github.com/daniilnahl/Stock-Tracking-App/issues/131) | Saved watchlist views | #130 owner merge/main CI | Blocked; unassigned | None |
 | [#132](https://github.com/daniilnahl/Stock-Tracking-App/issues/132) | Stored-row raw history | #130/#131 owner merge/main CI | Blocked; unassigned | None |
 | [#133](https://github.com/daniilnahl/Stock-Tracking-App/issues/133) | Local composition/launch/operation | #130–132 owner merge/main CI | Blocked; unassigned | None |
@@ -104,8 +104,6 @@ was created through the signed-in GitHub website and attached to this chat.
 Required hosted CI, owner acceptance and owner merge remain outstanding at
 submission. #129 stays open; downstream runtime issues remain blocked.
 
-## Completion gate
-
 ## Foundation implementation — issue #130, 2026-10-14
 
 The delegated implementation supplies `stock_tracker.api` with an injected
@@ -136,7 +134,8 @@ Native Windows event-loop control sockets and temporary hard-link tests required
 approved filesystem/socket access; actual application execution retained offline
 guards. Every old/new exact pin resolved in a Python 3.11 Windows-wheel dry run;
 local 3.11 execution was unavailable and remains a required hosted CI check.
-PR/main CI, owner merge and #130 closure are pending publication. #131–134 stay
+PR #136 was created through the signed-in website and attached to this chat.
+Hosted PR/main CI, owner merge and #130 closure remain pending. #131–134 stay
 blocked on their respective preceding owner merges/main CI; M7 is incomplete.
 
 ## Completion gate
