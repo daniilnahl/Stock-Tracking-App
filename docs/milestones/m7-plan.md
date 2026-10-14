@@ -36,7 +36,7 @@ All issues belong to [M7 milestone 8](https://github.com/daniilnahl/Stock-Tracki
 
 | Issue | Objective | Dependencies | Status / assigned work | PR / review |
 |---|---|---|---|---|
-| [#129](https://github.com/daniilnahl/Stock-Tracking-App/issues/129) | REST contract/acceptance | M6 merged | Proposal in progress; Master; independent read-only agent review | Proposal pending submission; owner acceptance outstanding |
+| [#129](https://github.com/daniilnahl/Stock-Tracking-App/issues/129) | REST contract/acceptance | M6 merged | Proposal submitted; Master; independent read-only agent review | [PR #135](https://github.com/daniilnahl/Stock-Tracking-App/pull/135); owner acceptance outstanding |
 | [#130](https://github.com/daniilnahl/Stock-Tracking-App/issues/130) | Lazy app factory, JSON/error/access foundation | #129 acceptance, owner merge/main CI | Blocked; unassigned | None |
 | [#131](https://github.com/daniilnahl/Stock-Tracking-App/issues/131) | Saved watchlist views | #130 owner merge/main CI | Blocked; unassigned | None |
 | [#132](https://github.com/daniilnahl/Stock-Tracking-App/issues/132) | Stored-row raw history | #130/#131 owner merge/main CI | Blocked; unassigned | None |
@@ -87,7 +87,10 @@ or valid assertion changed. Staged hygiene passed **8 in 13.11s** before final
 proposal reconciliation and **8 in 12.51s** afterward; final Ruff/configured
 mypy/pip check also passed. Final delegated review clarified admission retention
 until disconnected provider work terminates and unknown injected cache
-provenance. PR submission follows; owner acceptance remains outstanding.
+provenance. [PR #135](https://github.com/daniilnahl/Stock-Tracking-App/pull/135)
+was created through the signed-in GitHub website and attached to this chat.
+Required hosted CI, owner acceptance and owner merge remain outstanding at
+submission. #129 stays open; downstream runtime issues remain blocked.
 
 ## Completion gate
 
