@@ -87,7 +87,7 @@ def test_factory_and_health_are_io_free(monkeypatch):
     def denied(*args, **kwargs):
         raise AssertionError("No service should be acquired")
     app = create_app(services=ApiServices(watchlist=denied))
-    assert {route.path for route in app.routes} == {"/health", "/api/v1/openapi.json", "/api/v1/watchlists/{namespace}"}
+    assert {route.path for route in app.routes} == {"/health", "/api/v1/openapi.json", "/api/v1/watchlists/{namespace}", "/api/v1/watchlists/{namespace}/entries/{ordinal}/history"}
     status, payload, headers, reads = request(app)
     assert (status, payload, reads) == (200, {"status": "ok"}, 1)
     assert headers[b"cache-control"] == b"no-store"
