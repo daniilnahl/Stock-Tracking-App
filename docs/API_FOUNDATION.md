@@ -1,11 +1,12 @@
-# REST foundation and saved views - issues #130-131
+# REST foundation, saved views and stored history - issues #130-132
 
 Accepted [ADR-0013](adr/0013-local-read-only-rest-api.md) defines the M7
 contract. This foundation implements injectable transport infrastructure,
 serialization and safety boundaries. It registers GET `/health`,
-GET `/api/v1/openapi.json` and
-GET `/api/v1/watchlists/{namespace}`. Historical routes, storage composition,
-credential loading and the production launcher remain dependent #132-133 tasks.
+GET `/api/v1/openapi.json`,
+GET `/api/v1/watchlists/{namespace}` and
+GET `/api/v1/watchlists/{namespace}/entries/{ordinal}/history`.
+Storage composition, credential loading and the production launcher remain #133.
 This injected adapter starts no listener.
 
 ## Factory and extension contract
@@ -46,7 +47,7 @@ outputs fail instead of manufacturing evidence.
 Later routers can reuse `error_documents()` and `PROTECTED_OPENAPI` from
 `api.app` for typed fixed error examples and the `LocalBearer` security scheme.
 Register only implemented routes. OpenAPI currently documents health's success
-example, the actual protected schema endpoint and the typed saved-view route.
+example, the actual protected schema endpoint and typed saved-view/history routes.
 Its snapshot is reviewed in
 `tests/fixtures/api_foundation_openapi.json`; route additions must deliberately
 update that contract alongside endpoint tests.
@@ -60,13 +61,43 @@ before body processing or dependency acquisition. Authorization requires one
 header with case-insensitive Bearer, one ASCII space and an exact valid token;
 comparison uses constant-time comparison. No CORS or interactive docs exist.
 
-Fixed routes reject all query parameters. Future history handlers own exact
+Fixed routes reject all query parameters. The history handler owns exact
 paired-date validation. Nonempty bodies are refused: positive/malformed/duplicate
 Content-Length fails before reading; undeclared bodies stop at the first nonempty
 ASGI chunk. The full body is never collected. The consumed empty request is
 replayed once, then receive delegates to the actual transport so disconnects
 remain observable. Unsupported methods return safe 405; unknown paths return
 safe 404 without redirects. All responses use `Cache-Control: no-store`.
+
+## Stored-entry historical requests
+
+History selects a freshly loaded row from the same two namespace allowlist.
+The ordinal contains only ASCII decimal digits and denotes a zero-based,
+request-local row, preserving duplicate symbols. An absent row returns 404.
+Unknown namespaces and malformed selectors are rejected before acquisition.
+The handler validates the full loaded record and binds the returned HistoryView
+to the exact selected Stock object; swapped namespaces, identities or malformed
+neutral outputs cannot be published as another row's history.
+
+Query parameters are either absent or exactly one `start` and one `end`, each
+an exact `YYYY-MM-DD` calendar date. Duplicate, unknown, unpaired, empty or invalid
+dates return fixed 422. For example, the injected endpoint accepts
+`/api/v1/watchlists/menu_watchlist/entries/0/history?start=2020-01-02&end=2020-01-06`.
+The existing HistoryService owns UTC defaults, inclusive range limits, NASDAQ
+identity validation and sparse raw-bar validation. No API retry or additional
+clock resolution changes those policies. Raw OHLC values retain exact Decimal
+strings; adjusted_close is null, and integer volume zero differs from null.
+
+Default `ApiServices.history_enabled=False` returns fixed 503 `history_disabled`
+before watchlist/provider/cache acquisition. Explicit synthetic injection can
+enable deterministic tests; it does not grant external display/cache rights.
+Future production activation remains the documented #133 operator gate. The
+history route uses the shared one-history admission slot; cancellation or a
+closed ASGI client cannot release it while provider work continues. Responses
+declare only explicitly injected source/cache provenance, with unknown currency
+and timestamps left null. Fresh-cache restart and exact one-hour expiry use
+the existing cache policy with no stale fallback and leave holdings/legacy bytes
+unchanged. Cache composition remains outside the API adapter graph.
 
 All failures use `{ "error": { "code": "...", "message": "..." } }` with
 constant messages. No request input, raw exception, URL, path, traceback,
@@ -157,7 +188,8 @@ WatchlistService only after access checks and admission, calls `load()` then
 `view()`, and projects its neutral result with `watchlist_payload`. The result
 must match the requested namespace. No provider key, provider or cache is
 acquired; no holdings are saved or refreshed. Other namespaces return safe
-404 `not_found` without service acquisition. No history endpoint is registered.
+404 `not_found` without service acquisition. Stored-entry history is documented
+in the section above and remains disabled by default.
 
 A genuinely absent namespace returns 200 with the existing `Watchlist` empty
 record without creating a database. An absent namespace with its legacy entry

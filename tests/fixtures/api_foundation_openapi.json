@@ -1,6 +1,95 @@
 {
   "components": {
     "schemas": {
+      "BarResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "adjusted_close": {
+            "title": "Adjusted Close",
+            "type": "null"
+          },
+          "close": {
+            "description": "Raw currency per share, currency unknown.",
+            "examples": [
+              "120.000",
+              "0",
+              "1E-20"
+            ],
+            "pattern": "^[+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)(?:[eE][+-]?[0-9]+)?$",
+            "title": "Close",
+            "type": "string"
+          },
+          "date": {
+            "description": "Trading-session label, not a UTC timestamp.",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+            "title": "Date",
+            "type": "string"
+          },
+          "high": {
+            "description": "Raw currency per share, currency unknown.",
+            "examples": [
+              "120.000",
+              "0",
+              "1E-20"
+            ],
+            "pattern": "^[+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)(?:[eE][+-]?[0-9]+)?$",
+            "title": "High",
+            "type": "string"
+          },
+          "low": {
+            "description": "Raw currency per share, currency unknown.",
+            "examples": [
+              "120.000",
+              "0",
+              "1E-20"
+            ],
+            "pattern": "^[+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)(?:[eE][+-]?[0-9]+)?$",
+            "title": "Low",
+            "type": "string"
+          },
+          "open": {
+            "description": "Raw currency per share, currency unknown.",
+            "examples": [
+              "120.000",
+              "0",
+              "1E-20"
+            ],
+            "pattern": "^[+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)(?:[eE][+-]?[0-9]+)?$",
+            "title": "Open",
+            "type": "string"
+          },
+          "symbol": {
+            "title": "Symbol",
+            "type": "string"
+          },
+          "volume": {
+            "anyOf": [
+              {
+                "maximum": 9223372036854775807,
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Shares when available.",
+            "title": "Volume"
+          }
+        },
+        "required": [
+          "symbol",
+          "date",
+          "open",
+          "high",
+          "low",
+          "close",
+          "adjusted_close",
+          "volume"
+        ],
+        "title": "BarResponse",
+        "type": "object"
+      },
       "EntryResponse": {
         "additionalProperties": false,
         "properties": {
@@ -133,6 +222,103 @@
           "status"
         ],
         "title": "HealthResponse",
+        "type": "object"
+      },
+      "HistoryProvenance": {
+        "additionalProperties": false,
+        "properties": {
+          "currency": {
+            "title": "Currency",
+            "type": "null"
+          },
+          "freshness": {
+            "enum": [
+              "accepted_cache_policy",
+              "unknown"
+            ],
+            "title": "Freshness",
+            "type": "string"
+          },
+          "observed_at": {
+            "title": "Observed At",
+            "type": "null"
+          },
+          "retrieved_at": {
+            "title": "Retrieved At",
+            "type": "null"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "const": "fmp",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source"
+          }
+        },
+        "required": [
+          "source",
+          "observed_at",
+          "retrieved_at",
+          "currency",
+          "freshness"
+        ],
+        "title": "HistoryProvenance",
+        "type": "object"
+      },
+      "HistoryResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "bars": {
+            "items": {
+              "$ref": "#/components/schemas/BarResponse"
+            },
+            "title": "Bars",
+            "type": "array"
+          },
+          "end": {
+            "description": "Resolved inclusive requested ISO date.",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+            "title": "End",
+            "type": "string"
+          },
+          "ordinal": {
+            "minimum": 0,
+            "title": "Ordinal",
+            "type": "integer"
+          },
+          "price_basis": {
+            "const": "raw",
+            "title": "Price Basis",
+            "type": "string"
+          },
+          "provenance": {
+            "$ref": "#/components/schemas/HistoryProvenance"
+          },
+          "start": {
+            "description": "Resolved inclusive requested ISO date.",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+            "title": "Start",
+            "type": "string"
+          },
+          "stock": {
+            "$ref": "#/components/schemas/StockResponse"
+          }
+        },
+        "required": [
+          "stock",
+          "ordinal",
+          "start",
+          "end",
+          "price_basis",
+          "provenance",
+          "bars"
+        ],
+        "title": "HistoryResponse",
         "type": "object"
       },
       "SavedMetadata": {
@@ -1158,6 +1344,402 @@
           }
         ],
         "summary": "Saved ordered watchlist observations; freshness and currency provenance unknown."
+      }
+    },
+    "/api/v1/watchlists/{namespace}/entries/{ordinal}/history": {
+      "get": {
+        "operationId": "stored_history_api_v1_watchlists__namespace__entries__ordinal__history_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "namespace",
+            "required": true,
+            "schema": {
+              "enum": [
+                "menu_watchlist",
+                "daniils_stock_method"
+              ],
+              "title": "Namespace",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Nonnegative zero-based request-local stored row; ASCII decimal digits only, preserving duplicates.",
+            "in": "path",
+            "name": "ordinal",
+            "required": true,
+            "schema": {
+              "description": "Nonnegative zero-based request-local stored row; ASCII decimal digits only, preserving duplicates.",
+              "pattern": "^[0-9]+$",
+              "title": "Ordinal",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Inclusive ISO calendar date. Supply exactly one start and one end, or omit both for existing UTC defaults.",
+            "in": "query",
+            "name": "start",
+            "required": false,
+            "schema": {
+              "format": "date",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Inclusive ISO calendar date. Supply exactly one start and one end, or omit both for existing UTC defaults.",
+            "in": "query",
+            "name": "end",
+            "required": false,
+            "schema": {
+              "format": "date",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "bars": [
+                    {
+                      "close": "110.0000000000000000001",
+                      "date": "2020-01-02",
+                      "high": "120",
+                      "low": "99",
+                      "open": "100.00",
+                      "symbol": "AAPL",
+                      "volume": 0
+                    }
+                  ],
+                  "end": "2020-01-06",
+                  "ordinal": 0,
+                  "price_basis": "raw",
+                  "provenance": {
+                    "freshness": "unknown"
+                  },
+                  "start": "2020-01-02",
+                  "stock": {
+                    "exchange": "NASDAQ",
+                    "symbol": "AAPL"
+                  }
+                },
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "host_invalid": {
+                    "value": {
+                      "error": {
+                        "code": "host_invalid",
+                        "message": "Host is not allowed."
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Fixed safe failure."
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "unauthorized": {
+                    "value": {
+                      "error": {
+                        "code": "unauthorized",
+                        "message": "Authentication is required."
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Fixed safe failure."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "origin_forbidden": {
+                    "value": {
+                      "error": {
+                        "code": "origin_forbidden",
+                        "message": "Browser origins are not allowed."
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Fixed safe failure."
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "not_found": {
+                    "value": {
+                      "error": {
+                        "code": "not_found",
+                        "message": "Resource was not found."
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Fixed safe failure."
+          },
+          "405": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "method_not_allowed": {
+                    "value": {
+                      "error": {
+                        "code": "method_not_allowed",
+                        "message": "Method is not allowed."
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Fixed safe failure."
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "legacy_state_present": {
+                    "value": {
+                      "error": {
+                        "code": "legacy_state_present",
+                        "message": "Legacy state requires an explicit safe transition."
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Fixed safe failure."
+          },
+          "414": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "request_too_large": {
+                    "value": {
+                      "error": {
+                        "code": "request_too_large",
+                        "message": "Request target exceeds the supported size."
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Fixed safe failure."
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "invalid_request": {
+                    "value": {
+                      "error": {
+                        "code": "invalid_request",
+                        "message": "Request input is invalid."
+                      }
+                    }
+                  },
+                  "invalid_ticker": {
+                    "value": {
+                      "error": {
+                        "code": "invalid_ticker",
+                        "message": "Ticker input is invalid."
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Fixed safe failure."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "provider_rate_limited": {
+                    "value": {
+                      "error": {
+                        "code": "provider_rate_limited",
+                        "message": "Market-data rate limit reached."
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Fixed safe failure."
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "internal_error": {
+                    "value": {
+                      "error": {
+                        "code": "internal_error",
+                        "message": "The operation failed."
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Fixed safe failure."
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "provider_response_invalid": {
+                    "value": {
+                      "error": {
+                        "code": "provider_response_invalid",
+                        "message": "Market-data response is invalid."
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Fixed safe failure."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "api_busy": {
+                    "value": {
+                      "error": {
+                        "code": "api_busy",
+                        "message": "API operation capacity is unavailable."
+                      }
+                    }
+                  },
+                  "history_disabled": {
+                    "value": {
+                      "error": {
+                        "code": "history_disabled",
+                        "message": "Historical acquisition is disabled."
+                      }
+                    }
+                  },
+                  "market_data_unavailable": {
+                    "value": {
+                      "error": {
+                        "code": "market_data_unavailable",
+                        "message": "Market data is unavailable."
+                      }
+                    }
+                  },
+                  "provider_unavailable": {
+                    "value": {
+                      "error": {
+                        "code": "provider_unavailable",
+                        "message": "Market-data provider is unavailable."
+                      }
+                    }
+                  },
+                  "response_too_large": {
+                    "value": {
+                      "error": {
+                        "code": "response_too_large",
+                        "message": "Response exceeds the supported size."
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Fixed safe failure."
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "provider_timeout": {
+                    "value": {
+                      "error": {
+                        "code": "provider_timeout",
+                        "message": "Market-data request timed out."
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Fixed safe failure."
+          }
+        },
+        "security": [
+          {
+            "LocalBearer": []
+          }
+        ],
+        "summary": "Raw sparse history for a freshly loaded exact stored row; unknown currency and timestamps."
       }
     },
     "/health": {

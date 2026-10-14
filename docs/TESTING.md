@@ -954,3 +954,21 @@ admission and bounded responses. The unchanged cold source/wheel guards also
 execute both namespaces through the shared service without configuration,
 provider/cache, SQL or ordinary file IO. This remains an injected adapter test,
 not production launcher or historical acquisition certification.
+
+## M7 stored-entry history route - issue #132
+
+Add `tests/test_api_history.py` to the focused API command. Real temporary SQLite
+records and the actual HistoryService prove exact duplicate ordinals, namespace
+and Stock association, paired ISO syntax, leap-day UTC defaults, range validation
+and NASDAQ refusal. Sparse precise OHLC values, null adjusted values/volume and
+maximum integer volume cross JSON losslessly. Typed failures and missing/corrupt/
+future state preserve holdings and opaque legacy bytes. A real historical cache
+with a controlled observation loader proves restart reuse, exact TTL expiry and
+no stale fallback. Access/disabled checks prohibit dependency acquisition.
+Actual-route cancellation and closed ASGI delivery keep admission until provider
+termination, with deterministic worker completion rather than timing polls.
+Cold source and installed-wheel foundation probes now invoke stored history via
+the real shared service under independently proven network, configuration,
+ordinary IO, concrete infrastructure and UI import guards. The reviewed schema
+snapshot documents unique typed request parameters and exact integer limits.
+Production composition, launcher, live rights and combined M7 exit remain #133–134.

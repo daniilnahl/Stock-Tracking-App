@@ -106,8 +106,13 @@ health and authenticated static OpenAPI. It includes exact Decimal wire models,
 safe error/access controls and admission infrastructure. The authenticated
 `GET /api/v1/watchlists/{namespace}` route reads saved views from the injected
 shared service for `menu_watchlist` or `daniils_stock_method`, preserving ordered
-rows and unknown freshness. History HTTP routes and production configuration/
-launcher are separate dependent issues;
+rows and unknown freshness. Authenticated
+`GET /api/v1/watchlists/{namespace}/entries/{ordinal}/history` selects an exact
+stored row and delegates paired ISO dates or UTC defaults to the shared history
+service, preserving raw Decimal values and existing cache policy. History is
+disabled by default before state/provider/cache acquisition; explicit synthetic
+test injection does not establish external display/cache rights. Production
+configuration/launcher remains a separate dependent issue;
 this foundation starts no listener and changes no CLI behavior. See
 [API foundation contracts](docs/API_FOUNDATION.md) for the current boundaries,
 dependency rationale and offline verification. The canonical `.[dev]` setup

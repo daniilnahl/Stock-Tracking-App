@@ -55,25 +55,39 @@ class DeniedOutput:
 async def exercise(create_app):
     synthetic_credential = "synthetic_" * 4
     from decimal import Decimal
+    from datetime import date, datetime, timezone
     from stock_tracker.api import ApiServices
     from stock_tracker.domain import Stock
     from stock_tracker.persistence.models import WatchlistRecord, WatchlistEntry
     from stock_tracker.services.watchlists import WatchlistService
+    from stock_tracker.services.history import HistoryService
+    from stock_tracker.providers.models import PriceBar
     calls = []
     class Repository:
         def get(self, namespace):
             calls.append(namespace)
-            row = WatchlistEntry(Stock("AAPL", exchange=None), Decimal("10.00"), Decimal("100"), Decimal("120"),
+            row = WatchlistEntry(Stock("AAPL", exchange="NASDAQ"), Decimal("10.00"), Decimal("100"), Decimal("120"),
                                  *(None for _ in range(12)))
             return WatchlistRecord(namespace, "Saved", (row, row))
         save = denied
     def acquire(namespace):
         return WatchlistService(Repository(), namespace=namespace, legacy_present=denied)
-    instance = create_app(token=synthetic_credential, services=ApiServices(watchlist=acquire))
-    assert {route.path for route in instance.routes} == {"/health", "/api/v1/openapi.json", "/api/v1/watchlists/{namespace}"}
+    history_calls = []
+    class Provider:
+        def get_price_history(self, symbol, start, end):
+            history_calls.append((symbol, start, end))
+            return [PriceBar(symbol, date(2020, 2, 29), Decimal("100.00"), Decimal("120"), Decimal("99"),
+                             Decimal("110.0000000000000000001"), None, 9223372036854775807)]
+    def history_source(ordinal):
+        assert ordinal == 1
+        return Provider()
+    instance = create_app(token=synthetic_credential, services=ApiServices(watchlist=acquire,
+        history=HistoryService(history_source, clock=lambda: datetime(2020, 3, 1, tzinfo=timezone.utc)), history_enabled=True))
+    assert {route.path for route in instance.routes} == {"/health", "/api/v1/openapi.json", "/api/v1/watchlists/{namespace}", "/api/v1/watchlists/{namespace}/entries/{ordinal}/history"}
     for path, authorization in (("/health", []), ("/api/v1/openapi.json", [(b"authorization", b"Bearer " + synthetic_credential.encode())]),
                                 ("/api/v1/watchlists/menu_watchlist", [(b"authorization", b"Bearer " + synthetic_credential.encode())]),
-                                ("/api/v1/watchlists/daniils_stock_method", [(b"authorization", b"Bearer " + synthetic_credential.encode())])):
+                                ("/api/v1/watchlists/daniils_stock_method", [(b"authorization", b"Bearer " + synthetic_credential.encode())]),
+                                ("/api/v1/watchlists/menu_watchlist/entries/1/history", [(b"authorization", b"Bearer " + synthetic_credential.encode())])):
         scope = {"type": "http", "asgi": {"version": "3.0"}, "http_version": "1.1", "method": "GET",
                  "scheme": "http", "path": path, "raw_path": path.encode(), "query_string": b"",
                  "headers": [(b"host", b"127.0.0.1:8000"), *authorization], "root_path": "",
@@ -90,13 +104,20 @@ async def exercise(create_app):
         if path == "/health":
             assert payload == {"status": "ok"} and calls == []
         elif path.endswith("openapi.json"):
-            assert payload["paths"].keys() == {"/health", "/api/v1/openapi.json", "/api/v1/watchlists/{namespace}"} and calls == []
+            assert payload["paths"].keys() == {"/health", "/api/v1/openapi.json", "/api/v1/watchlists/{namespace}", "/api/v1/watchlists/{namespace}/entries/{ordinal}/history"} and calls == []
+        elif path.endswith("/history"):
+            assert payload["ordinal"] == 1 and payload["start"] == "2015-02-28" and payload["end"] == "2020-02-29"
+            assert payload["bars"][0]["close"] == "110.0000000000000000001"
+            assert payload["bars"][0]["volume"] == 9223372036854775807
+            assert payload["bars"][0]["adjusted_close"] is None
+            assert payload["provenance"]["source"] is None and payload["provenance"]["freshness"] == "unknown"
         else:
             assert payload["namespace"] == path.rsplit("/", 1)[1]
             assert [row["ordinal"] for row in payload["entries"]] == [0, 1]
             assert payload["entries"][0]["quantity"] == "10.00"
             assert payload["entries"][0]["snapshot"]["unrealized_return"] == "0.2"
-    assert calls == ["menu_watchlist", "daniils_stock_method"]
+    assert calls == ["menu_watchlist", "daniils_stock_method", "menu_watchlist"]
+    assert history_calls == [("AAPL", date(2015, 2, 28), date(2020, 2, 29))]
 
 
 def main(root):

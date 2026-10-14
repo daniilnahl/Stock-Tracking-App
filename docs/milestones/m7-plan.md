@@ -50,8 +50,8 @@ All issues belong to [M7 milestone 8](https://github.com/daniilnahl/Stock-Tracki
 |---|---|---|---|---|
 | [#129](https://github.com/daniilnahl/Stock-Tracking-App/issues/129) | REST contract/acceptance | M6 merged | Accepted; owner merge and PR/main CI passed | [PR #135](https://github.com/daniilnahl/Stock-Tracking-App/pull/135), merged |
 | [#130](https://github.com/daniilnahl/Stock-Tracking-App/issues/130) | Lazy app factory, JSON/error/access foundation | #129 resolved | Closed; owner merge and PR/main CI passed | [PR #136](https://github.com/daniilnahl/Stock-Tracking-App/pull/136), merged |
-| [#131](https://github.com/daniilnahl/Stock-Tracking-App/issues/131) | Saved watchlist views | #130 resolved | Implemented; local verification and independent review passed; owner merge pending | [PR #137](https://github.com/daniilnahl/Stock-Tracking-App/pull/137), hosted CI pending |
-| [#132](https://github.com/daniilnahl/Stock-Tracking-App/issues/132) | Stored-row raw history | #130/#131 owner merge/main CI | Blocked; unassigned | None |
+| [#131](https://github.com/daniilnahl/Stock-Tracking-App/issues/131) | Saved watchlist views | #130 resolved | Closed; owner merge and PR/main CI passed | [PR #137](https://github.com/daniilnahl/Stock-Tracking-App/pull/137), merged |
+| [#132](https://github.com/daniilnahl/Stock-Tracking-App/issues/132) | Stored-row raw history | #130/#131 resolved | Implemented; local verification and independent review passed | PR publication pending |
 | [#133](https://github.com/daniilnahl/Stock-Tracking-App/issues/133) | Local composition/launch/operation | #130–132 owner merge/main CI | Blocked; unassigned | None |
 | [#134](https://github.com/daniilnahl/Stock-Tracking-App/issues/134) | Independent source/wheel exit audit | #130–133 owner merge/main CI | Blocked; unassigned | None |
 
@@ -193,6 +193,55 @@ Published [PR #137](https://github.com/daniilnahl/Stock-Tracking-App/pull/137)
 through the signed-in GitHub website and attached it to this chat. Final staged
 hygiene passed **8 in 8.41s**; Master scope/whitespace/secret review and final
 Ruff/configured mypy/pip check passed before commit/push. No agent merge.
+
+## Stored-entry history continuation — issue #132, 2026-10-14
+
+The owner instructed "merged, continue the work" after PR #137. Verified owner
+merge `090a6aafa5576802efa379b46c3a2721bfe350d1`, reviewed final head
+`e75c7632acd4182a09eb0eb494d47b45692af056`, five successful exact-head PR
+Foundation checks (38622318673) and five successful main checks (38626243824).
+Issue #131 is closed; #132 is unblocked on `feature/132-stored-entry-history-api`.
+The implementation agent analyzed only while main CI was pending and began
+editing after all dependency checks passed. A separate read-only agent reviews
+contracts, isolation, precision, row association and read/cache integrity.
+
+Plan: add only the accepted stored-row history route using existing load/history
+services, raw serializer and history admission; validate transport selectors and
+dates, preserve disabled activation before IO, exact integer schema bounds,
+unknown provenance and fixed safe errors. Verify duplicate identity, UTC/range/
+NASDAQ policy, temporary holdings/legacy bytes, cache restart/exact expiry/no
+stale fallback, actual disconnect retention and guarded source/wheel execution.
+No production launcher, dependency, persistence schema, provider policy, financial
+formula or CLI changes. #133–134 retain their owner-merge/main-CI gates. M7 remains
+incomplete; live provider rights and activation remain separate.
+
+Implemented only that route with strict namespace/ASCII ordinal and paired ISO
+query validation through the framework request interface. Full loaded records
+and exact selected Stock identity are revalidated before publication; defaults,
+NASDAQ scope, ranges and raw bars remain owned by HistoryService. Disabled
+history refuses before state/provider/cache acquisition. Typed OpenAPI has four
+unique input parameters and exact approved integer ordinal/volume bounds;
+financial floats remain forbidden. Closed-client and cancellation tests retain
+history admission until the actual worker terminates. Existing guarded source
+and installed-wheel probes execute real services with synthetic provider ports;
+separate temporary SQLite/cache tests prove restart, exact expiry, no stale
+fallback and unchanged holdings/legacy bytes.
+
+Final canonical Python 3.12.14 results actually executed:
+
+- `python -m pytest tests/test_api_history.py -q`: **63 passed in 2.23s**.
+- Five API paths (history, foundation, boundary, serialization, saved views): **168 passed in 4.90s**.
+- Those paths plus the authoritative market-provider boundary: **181 passed in 5.21s**.
+- `python -m pytest -q`: **2675 passed in 104.61s**, including fresh source/wheel probes.
+- Ruff, configured mypy (**config.py only**), pip check and diff check: passed.
+- Independent review: **PASS**; separately proved 13 invalid query cases refuse before acquisition and two plain/encoded valid queries preserve exact row/zero/null values under network denial.
+
+Initial full run: **1 failed / 2674 passed in 114.72s**. The existing architecture
+check rejected a direct `urllib.parse` import. Replacing it with the framework
+query interface retained strict raw-segment/date/duplicate validation and passed
+the unchanged boundary check and adversarial probes. No test, guard, policy or
+assertion was weakened. Staged hygiene, hosted CI and owner merge remain required
+before #133 begins. M7 remains incomplete.
 
 ## Completion gate
 
