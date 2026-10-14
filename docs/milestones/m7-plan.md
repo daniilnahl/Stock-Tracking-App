@@ -51,7 +51,7 @@ All issues belong to [M7 milestone 8](https://github.com/daniilnahl/Stock-Tracki
 | [#129](https://github.com/daniilnahl/Stock-Tracking-App/issues/129) | REST contract/acceptance | M6 merged | Accepted; owner merge and PR/main CI passed | [PR #135](https://github.com/daniilnahl/Stock-Tracking-App/pull/135), merged |
 | [#130](https://github.com/daniilnahl/Stock-Tracking-App/issues/130) | Lazy app factory, JSON/error/access foundation | #129 resolved | Closed; owner merge and PR/main CI passed | [PR #136](https://github.com/daniilnahl/Stock-Tracking-App/pull/136), merged |
 | [#131](https://github.com/daniilnahl/Stock-Tracking-App/issues/131) | Saved watchlist views | #130 resolved | Closed; owner merge and PR/main CI passed | [PR #137](https://github.com/daniilnahl/Stock-Tracking-App/pull/137), merged |
-| [#132](https://github.com/daniilnahl/Stock-Tracking-App/issues/132) | Stored-row raw history | #130/#131 resolved | Implemented; local verification and independent review passed | PR publication pending |
+| [#132](https://github.com/daniilnahl/Stock-Tracking-App/issues/132) | Stored-row raw history | #130/#131 resolved | Implemented; local verification and independent review passed; owner merge pending | [PR #138](https://github.com/daniilnahl/Stock-Tracking-App/pull/138), hosted CI pending at submission |
 | [#133](https://github.com/daniilnahl/Stock-Tracking-App/issues/133) | Local composition/launch/operation | #130–132 owner merge/main CI | Blocked; unassigned | None |
 | [#134](https://github.com/daniilnahl/Stock-Tracking-App/issues/134) | Independent source/wheel exit audit | #130–133 owner merge/main CI | Blocked; unassigned | None |
 
@@ -242,6 +242,11 @@ query interface retained strict raw-segment/date/duplicate validation and passed
 the unchanged boundary check and adversarial probes. No test, guard, policy or
 assertion was weakened. Staged hygiene, hosted CI and owner merge remain required
 before #133 begins. M7 remains incomplete.
+
+Published [PR #138](https://github.com/daniilnahl/Stock-Tracking-App/pull/138)
+through the signed-in GitHub website and attached it to this chat. Final staged
+hygiene passed **8 in 8.16s**; Master scope/whitespace/secret review and final
+Ruff/configured mypy/pip check passed before commit/push. No agent merge.
 
 ## Completion gate
 
