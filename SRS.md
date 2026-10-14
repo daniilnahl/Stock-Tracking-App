@@ -909,6 +909,15 @@ Every implemented metric has a normative formula and known-value tests.
 
 ## Milestone 6 — CLI V2
 
+**Implementation status (non-normative): COMPLETE under accepted ADR-0012
+Option A.** Required issues #112–118 are closed; owner-merged audit PR #125 at
+`237c4c5f7d9825c284d706d6730bcdf9ed3510f6` passed exact-head and post-merge
+main CI. [M6 exit evidence](docs/milestones/m6-exit-evidence.md) maps the accepted
+use cases and boundaries to source/installed-wheel verification. Administrative
+completion documentation/showcase is tracked in #126. This note changes no
+requirement, approved command contract or financial definition; the commands
+below remain potential examples.
+
 CLI becomes a thin application-service interface.
 
 Potential commands:

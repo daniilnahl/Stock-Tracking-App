@@ -25,6 +25,12 @@ work depended on explicit acceptance, owner merge and passing required CI.
 Agents must not merge. The independent terminology correction in #113 uses
 already approved financial definitions and does not depend on this decision.
 
+Implementation status (non-normative): the accepted Option A is owner-merged
+through audit PR #125, with exact PR/main CI passing and required #112–118
+closed. See [completion evidence](../milestones/m6-exit-evidence.md). Proposal
+phrasing and dependency tables below retain the accepted decision history;
+they do not mean implementation remains blocked. No contract is amended here.
+
 ## Context and authority
 
 **Accepted compatibility amendment — 2026-10-13, issue #117:** the owner

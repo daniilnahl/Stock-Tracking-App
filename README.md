@@ -326,7 +326,7 @@ it adds no CLI command. Optional historical, benchmark, risk, dividend and FX
 metrics remain blocked on approved definitions. CLI service integration and its
 separate exit audit are tracked under M6 below.
 
-## CLI services and M6 audit status
+## CLI services and M6 completion
 
 Both maintained root CLIs now use the accepted injected application services
 for local state, current-data operations and menu historical retrieval. Existing
@@ -334,10 +334,17 @@ commands, prompts, namespace separation, offline help/display and precise numeri
 ownership remain supported. The owner-merged implementation is PR #124, with
 passing required PR/main CI.
 
-The combined source/installed-wheel exit audit is tracked by issue #118 and
-[M6 exit evidence](docs/milestones/m6-exit-evidence.md). **M6 remains open** until
-that audit is reviewed, owner-merged and verified on main, required issues close
-and completion evidence is reconciled. This scope adds no installed CLI entrypoint,
+The combined source/installed-wheel audit PR #125 is owner-merged at
+`237c4c5f7d9825c284d706d6730bcdf9ed3510f6`. All seven required issues #112–118
+are closed completed, and exact audit PR/main CI passed all five checks.
+**The accepted M6 implementation and exit audit are complete.**
+[M6 exit evidence](docs/milestones/m6-exit-evidence.md) records the completion
+review. The milestone is closed (zero open/nine closed items); administrative
+#126 is complete, with [documentation PR #127](https://github.com/daniilnahl/Stock-Tracking-App/pull/127)
+awaiting owner review/merge.
+See the [manual CLI showcase](docs/CLI_SHOWCASE.md) for actual commands,
+isolated state and the distinction between demo responses and live market data.
+This scope adds no installed CLI entrypoint,
 REST API, dashboard, new financial metric or hosted deployment contract.
 
 ## Acknowledgments
