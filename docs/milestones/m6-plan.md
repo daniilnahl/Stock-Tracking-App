@@ -1,6 +1,6 @@
 # M6 CLI V2 implementation plan
 
-Status: **IN PROGRESS — Option A accepted; #114 local service implementation active**.
+Status: **IN PROGRESS — #114/#116 owner-merged; #115 PR open with local verification passed**.
 Snapshot: 2026-10-13 (America/Los_Angeles).
 Baseline: `11f7333abdac830e139dd74354c87b30fe4cd45d`, owner-merged M5 audit PR #110.
 Parent: [M6 — CLI V2](https://github.com/daniilnahl/Stock-Tracking-App/milestone/7).
@@ -86,9 +86,9 @@ and `Unrealized Return` while preserving values, formatting and arithmetic.
 | --- | --- | --- | --- | --- | --- |
 | [#112](https://github.com/daniilnahl/Stock-Tracking-App/issues/112) | Propose and approve service/CLI contracts and exit criteria | Accepted, owner-merged; closure gates passed | None | `m6_readiness` drafts ADR; Master plan; `m6_contract_review` independent review | [#120](https://github.com/daniilnahl/Stock-Tracking-App/pull/120); technical review PASS; PR/main CI passed |
 | [#113](https://github.com/daniilnahl/Stock-Tracking-App/issues/113) | Correct financial table headings | Owner-merged; review and CI passed | None | `m6_terminology`, isolated `fix/113-financial-table-terminology` | [#119](https://github.com/daniilnahl/Stock-Tracking-App/pull/119), reviewed head `9aa7f026`; merge `11e262c3` |
-| [#114](https://github.com/daniilnahl/Stock-Tracking-App/issues/114) | Local watchlist service boundary | PR open; local verification and independent review passed | Owner merge and required PR/main CI | `m6_readiness`, `m6_contract_review` independent review | [#121](https://github.com/daniilnahl/Stock-Tracking-App/pull/121) |
-| [#115](https://github.com/daniilnahl/Stock-Tracking-App/issues/115) | Current-data orchestration service | Blocked | #112 and complete owner-merged #114 | Unassigned | — |
-| [#116](https://github.com/daniilnahl/Stock-Tracking-App/issues/116) | Historical retrieval service | Blocked | #112 and stable owner-merged #114; independent of #115 thereafter | Unassigned | — |
+| [#114](https://github.com/daniilnahl/Stock-Tracking-App/issues/114) | Local watchlist service boundary | Closed; owner-merged, review and required CI passed | None | `m6_readiness`, `m6_contract_review` independent review | [#121](https://github.com/daniilnahl/Stock-Tracking-App/pull/121), merge `aa6ecdd3` |
+| [#115](https://github.com/daniilnahl/Stock-Tracking-App/issues/115) | Current-data orchestration service | PR open; local verification passed | Owner merge and required PR/main CI | `codex/115-current-data-service`, resumed from `m6_readiness` draft | [#123](https://github.com/daniilnahl/Stock-Tracking-App/pull/123) |
+| [#116](https://github.com/daniilnahl/Stock-Tracking-App/issues/116) | Historical retrieval service | Closed; owner-merged, PR/main CI passed | None | `m6_terminology`, `feature/116-history-service`; `m6_contract_review` independent review | [#122](https://github.com/daniilnahl/Stock-Tracking-App/pull/122), merge `a9739dca` |
 | [#117](https://github.com/daniilnahl/Stock-Tracking-App/issues/117) | Thin adapters for both maintained CLIs | Blocked | Owner-merged #114–116 with required CI | Unassigned | — |
 | [#118](https://github.com/daniilnahl/Stock-Tracking-App/issues/118) | Independent combined exit audit and operation docs | Blocked | Approved exit criteria and owner-merged #113–117 | Unassigned | — |
 
@@ -235,3 +235,89 @@ Independent final technical review passed all 15 task files, with no remaining
 actionable findings. Final branch diff checks passed and the worktree was clean
 before this PR-link status record. Required exact-head hosted CI and owner merge
 remain pending at submission. No agent merge occurred.
+
+#### Owner merge and next service wave
+
+The owner instructed **"pr, merged, continue the work"**. PR #121's final head
+`02cc10ac7a51dd073057a5e95d7dc5d85a655311` is owner-merged at
+`aa6ecdd34b132ce4e987a7150bf4eae86c7a086e`. Exact-head
+[Foundation 38457696127](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/38457696127)
+and post-merge [main Foundation 38457958438](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/38457958438)
+passed all five configured checks. Issue #114 is closed completed. No agent merge
+was performed. This releases #115 and #116 from the stable accepted contracts.
+
+Both start from merged main `aa6ecdd3`. #115 owns current-data service, pure
+numeric parser reuse and external configuration acquisition; #116 owns historical
+service and pure range/observation policy reuse. They use separate source/test
+helpers and isolated branches. Package test inventory additions may require
+mechanical reconciliation when owner merges both; no shared service interfaces
+are redesigned in parallel. #117 remains blocked by both reviewed owner merges
+and required main CI. Source/wheel service checks do not establish thin CLI or
+combined M6 completion.
+
+### Historical service — #116
+
+The isolated branch adds injected HistoryService and a shared pure range/raw-bar
+policy, with compatibility wrappers preserving late-bound clocks, acquisition
+order and list returns. Exact NASDAQ identity precedes acquisition; each request
+carries one resolved UTC date range and sparse numeric raw bars. Authoritative
+Stock/PriceBar validators reject malformed typed subclasses. Existing factory/
+parser/cache behavior remains unchanged. No root command or renderer integration
+is included. The eight-file change has independent technical review **PASS**.
+
+Canonical Python 3.12.10 from that isolated checkout: focused history service,
+integration/date-selection/source-boundary/packaging command passed
+**143 in 52.04s**; full pytest passed **2364 in 135.21s**. Ruff, configured mypy
+(`config.py` only), pip check and staged diff checks passed. Master independently
+ran the 62 new history cases: **62 passed in 1.41s**; independent reviewer ran
+**140 new/existing history cases**, all passing. Separate source/wheel denial
+probes and injected production cache reuse/expiry checks verify this capability.
+Staged hygiene, PR creation and hosted CI are recorded once complete below;
+owner merge/main CI remain required before #117.
+
+Staged hygiene passed **8 in 8.41s**; staged/final branch diff checks passed.
+The clean isolated branch is pushed at `922610fa69db8010495aea123c93382d1113f5a4`;
+[PR #122](https://github.com/daniilnahl/Stock-Tracking-App/pull/122) was open at
+submission. It is now owner-merged at `a9739dcaefb0a062ae4d1b09081f7773180230f6`.
+Exact-head [Foundation 38459708966](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/38459708966)
+and post-merge [main Foundation 38489030065](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/38489030065)
+both completed successfully. Issue #116 is closed completed. No agent merge.
+
+### Current-data service — #115
+
+The current-data branch adds injected CurrentDataService, a pure shared decimal
+parser with the legacy conversion function re-exported, and an external lazy
+configuration-acquisition adapter. Lookup/duplicate/profile/period sequencing,
+precise ownership, typed identity checks and per-row progress are retained.
+Callbacks publish outside provider-error catches; configuration invalidation
+attempts are tracked so a callback exception cannot create duplicate invalidation.
+Typed models and complete candidates are revalidated before publication.
+Raw market-cap and period values remain numeric for later presentation projection.
+No root command wiring, persistence, provider policy or financial rule changes.
+
+The unfinished #115 draft and its recorded prior review were preserved from the
+earlier M6 worktree. Continuation uses `codex/115-current-data-service` based on
+the owner-merged #116 main, leaving the original draft untouched. Wheel inventory
+assertions include both service additions. The following results are from this
+continuation in the existing canonical Python 3.12.10 environment:
+
+| Check | Result |
+| --- | --- |
+| `python -m pytest tests/test_current_data_service.py tests/test_current_service_boundary.py tests/test_packaging.py tests/test_provider_integration.py tests/test_cli_ownership.py tests/test_stock_facade.py -q --tb=short` | **362 passed in 47.47s** |
+| `python -m pytest -q --tb=short` | **2474 passed in 113.39s**, combined with merged history service |
+| Ruff, configured mypy (`config.py` only), pip check | Passed |
+| `python -m pytest tests/test_repository_hygiene.py -q --tb=short` | **8 passed in 8.84s**, task files staged |
+| Staged/final diff whitespace checks | Passed |
+
+The preserved draft records prior independent review of the final 109 current
+service cases with no actionable findings; this is prior-draft evidence, not a
+new independent review of the combined continuation. Cold source/
+wheel processes deny UI, configuration, concrete providers/storage, environment,
+network, output and deserialization, prove guards and exercise real service use
+cases with controlled typed providers. Record publication, callback failure and
+raw numeric unit boundaries are tested. Owner merge and required PR/main CI still
+gate #117, and combined M6 completion is not claimed.
+
+[PR #123](https://github.com/daniilnahl/Stock-Tracking-App/pull/123) is open from
+`codex/115-current-data-service`. Hosted CI is pending at submission. No agent
+merge occurred; owner merge and post-merge main verification still gate #117.
