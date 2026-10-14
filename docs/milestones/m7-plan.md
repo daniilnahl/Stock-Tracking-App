@@ -50,7 +50,7 @@ All issues belong to [M7 milestone 8](https://github.com/daniilnahl/Stock-Tracki
 |---|---|---|---|---|
 | [#129](https://github.com/daniilnahl/Stock-Tracking-App/issues/129) | REST contract/acceptance | M6 merged | Accepted; owner merge and PR/main CI passed | [PR #135](https://github.com/daniilnahl/Stock-Tracking-App/pull/135), merged |
 | [#130](https://github.com/daniilnahl/Stock-Tracking-App/issues/130) | Lazy app factory, JSON/error/access foundation | #129 resolved | Closed; owner merge and PR/main CI passed | [PR #136](https://github.com/daniilnahl/Stock-Tracking-App/pull/136), merged |
-| [#131](https://github.com/daniilnahl/Stock-Tracking-App/issues/131) | Saved watchlist views | #130 resolved | Implemented; local verification and independent review passed | PR publication pending |
+| [#131](https://github.com/daniilnahl/Stock-Tracking-App/issues/131) | Saved watchlist views | #130 resolved | Implemented; local verification and independent review passed; owner merge pending | [PR #137](https://github.com/daniilnahl/Stock-Tracking-App/pull/137), hosted CI pending |
 | [#132](https://github.com/daniilnahl/Stock-Tracking-App/issues/132) | Stored-row raw history | #130/#131 owner merge/main CI | Blocked; unassigned | None |
 | [#133](https://github.com/daniilnahl/Stock-Tracking-App/issues/133) | Local composition/launch/operation | #130–132 owner merge/main CI | Blocked; unassigned | None |
 | [#134](https://github.com/daniilnahl/Stock-Tracking-App/issues/134) | Independent source/wheel exit audit | #130–133 owner merge/main CI | Blocked; unassigned | None |
@@ -188,6 +188,11 @@ Matplotlib font-cache stderr. Named fixture arguments repaired the scanner match
 focused packaging and the final full run passed without changing its assertion.
 No guard, financial encoding rule, hygiene check or valid expectation was weakened.
 Hosted CI and owner merge remain required before #132 begins.
+
+Published [PR #137](https://github.com/daniilnahl/Stock-Tracking-App/pull/137)
+through the signed-in GitHub website and attached it to this chat. Final staged
+hygiene passed **8 in 8.41s**; Master scope/whitespace/secret review and final
+Ruff/configured mypy/pip check passed before commit/push. No agent merge.
 
 ## Completion gate
 
