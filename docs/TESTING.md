@@ -210,6 +210,25 @@ processes execute add/refresh/remove/show in both namespaces; historical exit
 probes deny facade graph/fetch orchestration while exercising service/cache/
 transport/render integration. The independent combined M6 exit remains #118.
 
+## M6 combined independent-process exit audit — issue #118
+
+Run `python -m pytest tests/test_cli_architecture.py tests/test_m6_exit.py
+tests/test_packaging.py -v`. The bounded AST checker inspects actual service
+dependencies and root command orchestration with controlled violations and safe
+controls. Existing cold source/wheel probes remain the runtime isolation checks.
+
+`m6_exit_probe.py` provides a standalone fixture independent of earlier test
+helpers. Four fresh source and installed-wheel phases (write/read/failures/read)
+combine actual commands and services, controlled transport with the real provider
+parser, exact temporary SQLite state in both namespaces, a separate Portfolio,
+unowned/zero/missing inputs, ordered duplicates, safe profile/period/programming
+failures, offline help/display and cached raw historical graphing. Network,
+pickle, legacy-content and explicit-database guards precede application imports
+and are proved by controls. Spies call through real services; legacy market-data
+orchestration is denied. Terminal-style EOF and subprocess deadlines bound abort
+tests. See [M6 exit evidence](milestones/m6-exit-evidence.md) for the requirement
+map, hand-derived fixture values, actual results and remaining completion gates.
+
 Tests MUST be deterministic.
 
 ## Time
