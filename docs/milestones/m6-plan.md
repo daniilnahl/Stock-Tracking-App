@@ -1,6 +1,6 @@
 # M6 CLI V2 implementation plan
 
-Status: **IN PROGRESS — #114/#116 owner-merged; #115 locally verified for PR submission**.
+Status: **IN PROGRESS — #114/#116 owner-merged; #115 PR open with local verification passed**.
 Snapshot: 2026-10-13 (America/Los_Angeles).
 Baseline: `11f7333abdac830e139dd74354c87b30fe4cd45d`, owner-merged M5 audit PR #110.
 Parent: [M6 — CLI V2](https://github.com/daniilnahl/Stock-Tracking-App/milestone/7).
@@ -87,7 +87,7 @@ and `Unrealized Return` while preserving values, formatting and arithmetic.
 | [#112](https://github.com/daniilnahl/Stock-Tracking-App/issues/112) | Propose and approve service/CLI contracts and exit criteria | Accepted, owner-merged; closure gates passed | None | `m6_readiness` drafts ADR; Master plan; `m6_contract_review` independent review | [#120](https://github.com/daniilnahl/Stock-Tracking-App/pull/120); technical review PASS; PR/main CI passed |
 | [#113](https://github.com/daniilnahl/Stock-Tracking-App/issues/113) | Correct financial table headings | Owner-merged; review and CI passed | None | `m6_terminology`, isolated `fix/113-financial-table-terminology` | [#119](https://github.com/daniilnahl/Stock-Tracking-App/pull/119), reviewed head `9aa7f026`; merge `11e262c3` |
 | [#114](https://github.com/daniilnahl/Stock-Tracking-App/issues/114) | Local watchlist service boundary | Closed; owner-merged, review and required CI passed | None | `m6_readiness`, `m6_contract_review` independent review | [#121](https://github.com/daniilnahl/Stock-Tracking-App/pull/121), merge `aa6ecdd3` |
-| [#115](https://github.com/daniilnahl/Stock-Tracking-App/issues/115) | Current-data orchestration service | Local verification passed; PR submission | Owner merge and required PR/main CI | `codex/115-current-data-service`, resumed from `m6_readiness` draft | Pending |
+| [#115](https://github.com/daniilnahl/Stock-Tracking-App/issues/115) | Current-data orchestration service | PR open; local verification passed | Owner merge and required PR/main CI | `codex/115-current-data-service`, resumed from `m6_readiness` draft | [#123](https://github.com/daniilnahl/Stock-Tracking-App/pull/123) |
 | [#116](https://github.com/daniilnahl/Stock-Tracking-App/issues/116) | Historical retrieval service | Closed; owner-merged, PR/main CI passed | None | `m6_terminology`, `feature/116-history-service`; `m6_contract_review` independent review | [#122](https://github.com/daniilnahl/Stock-Tracking-App/pull/122), merge `a9739dca` |
 | [#117](https://github.com/daniilnahl/Stock-Tracking-App/issues/117) | Thin adapters for both maintained CLIs | Blocked | Owner-merged #114–116 with required CI | Unassigned | — |
 | [#118](https://github.com/daniilnahl/Stock-Tracking-App/issues/118) | Independent combined exit audit and operation docs | Blocked | Approved exit criteria and owner-merged #113–117 | Unassigned | — |
@@ -317,3 +317,7 @@ network, output and deserialization, prove guards and exercise real service use
 cases with controlled typed providers. Record publication, callback failure and
 raw numeric unit boundaries are tested. Owner merge and required PR/main CI still
 gate #117, and combined M6 completion is not claimed.
+
+[PR #123](https://github.com/daniilnahl/Stock-Tracking-App/pull/123) is open from
+`codex/115-current-data-service`. Hosted CI is pending at submission. No agent
+merge occurred; owner merge and post-merge main verification still gate #117.
