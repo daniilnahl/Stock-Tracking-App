@@ -103,6 +103,17 @@ def test_native_loop_bootstrap_keeps_normal_transport_guards_active():
             candidate.connect(("127.0.0.1", 1))
 
 
+def test_operator_credential_absent_from_normal_application_diagnostics():
+    supplied = credential()
+    app = create_app(token=supplied)
+    assert supplied not in repr(app)
+    assert supplied not in repr(app.user_middleware)
+    result = request(app, scope("/api/v1/openapi.json", headers=authorized_headers()))
+    assert result[0] == 200
+    assert supplied not in repr(app.middleware_stack)
+    assert supplied not in json.dumps(app.openapi())
+
+
 def test_in_process_httpx_schema_snapshot_and_static_no_dependency_work():
     def denied(*args, **kwargs):
         raise AssertionError("No dependency acquisition")

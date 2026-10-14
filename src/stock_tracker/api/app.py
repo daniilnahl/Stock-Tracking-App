@@ -43,7 +43,12 @@ def create_app(*, token: str | None = None, services: ApiServices | None = None)
                   redirect_slashes=False, default_response_class=BoundedJSONResponse)
     app.state.api_services = services if services is not None else ApiServices()
     app.state.api_admission = Admission()
-    app.add_middleware(AccessBoundary, token=token)
+    def access_boundary(app):
+        # Starlette includes middleware keyword arguments in its repr. Capture
+        # the credential privately rather than exposing it through diagnostics.
+        return AccessBoundary(app, token=token)
+
+    app.add_middleware(access_boundary)
 
     async def known_failure(request, error):
         code = error_code(error)

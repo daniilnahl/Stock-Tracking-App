@@ -120,11 +120,16 @@ and cancellation-before-worker-start admission leakage; each has regression
 coverage. The reviewer independently reproduced the cancellation fix, raw ASGI
 access/body/refusal cases and final cold-source probe, then returned PASS with
 no actionable findings. No review conclusion is product acceptance or a merge.
+Final Master audit additionally found the token in Starlette middleware keyword
+argument repr. A private middleware-factory closure removes that diagnostic
+exposure; regression and independent correct/wrong/missing-token probes pass.
+Canonical final reinstall refreshed the completed API package; isolated installed
+import/factory execution passed from site-packages.
 
 Canonical Python 3.12.14 results (commands actually executed):
 
-- `python -m pytest tests/test_api_foundation.py tests/test_api_serialization.py tests/test_api_boundary.py tests/test_packaging.py -q`: **85 passed in 46.78s**.
-- `python -m pytest -q`: **2590 passed in 124.20s**.
+- `python -m pytest tests/test_api_foundation.py tests/test_api_serialization.py tests/test_api_boundary.py tests/test_packaging.py -q`: initial **85 passed in 46.78s**; final repr-repair **86 passed in 47.19s**.
+- `python -m pytest -q`: initial **2590 passed in 124.20s**; final repr-repair/reinstall **2591 passed in 126.12s**.
 - Final fixture-only token indirection: cold-source boundary **1 passed in 1.20s**; no runtime behavior change.
 - `python -m ruff check .`, `python -m mypy` (**config.py only**), `python -m pip check`: passed.
 - Final staged `python -m pytest tests/test_repository_hygiene.py -q`: **8 passed in 13.61s**.
