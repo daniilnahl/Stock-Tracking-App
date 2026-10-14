@@ -90,7 +90,7 @@ and `Unrealized Return` while preserving values, formatting and arithmetic.
 | [#115](https://github.com/daniilnahl/Stock-Tracking-App/issues/115) | Current-data orchestration service | Owner-merged; required PR/main CI passed | None | `codex/115-current-data-service`, resumed from `m6_readiness` draft | [#123](https://github.com/daniilnahl/Stock-Tracking-App/pull/123), merge `6c38eb9d` |
 | [#116](https://github.com/daniilnahl/Stock-Tracking-App/issues/116) | Historical retrieval service | Closed; owner-merged, PR/main CI passed | None | `m6_terminology`, `feature/116-history-service`; `m6_contract_review` independent review | [#122](https://github.com/daniilnahl/Stock-Tracking-App/pull/122), merge `a9739dca` |
 | [#117](https://github.com/daniilnahl/Stock-Tracking-App/issues/117) | Thin adapters for both maintained CLIs | Closed completed; owner-merged with passing PR/main CI | None | `codex/117-cli-service-adapters` | [#124](https://github.com/daniilnahl/Stock-Tracking-App/pull/124), merge `926171e3` |
-| [#118](https://github.com/daniilnahl/Stock-Tracking-App/issues/118) | Independent combined exit audit and operation docs | Local audit passed; PR submission | Review, owner merge and required PR/main CI | `codex/118-m6-exit-audit` | Pending |
+| [#118](https://github.com/daniilnahl/Stock-Tracking-App/issues/118) | Independent combined exit audit and operation docs | Local audit passed; PR open | Review, owner merge and required PR/main CI | `codex/118-m6-exit-audit` | [#125](https://github.com/daniilnahl/Stock-Tracking-App/pull/125) |
 
 Each issue belongs to GitHub milestone **7**, whose SRS identity is **M6**.
 One bounded issue normally owns one branch and PR. #112 uses
@@ -422,3 +422,8 @@ contains only tests and documentation. GitHub shows #112–117 closed completed;
 #118 is the only remaining open milestone issue. Its PR/main CI, owner merge and
 completion reconciliation still gate M6 closure. PR creation follows the user's
 requested signed-in GitHub website workflow in Codex.
+
+[PR #125](https://github.com/daniilnahl/Stock-Tracking-App/pull/125) was created
+through the signed-in GitHub website in Codex with the completed repository PR
+template and `Closes #118`. Required hosted CI is pending at submission; owner
+review/merge and passing post-merge main CI still gate milestone completion.
