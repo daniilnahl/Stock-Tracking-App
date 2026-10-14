@@ -339,7 +339,9 @@ The combined source/installed-wheel audit PR #125 is owner-merged at
 are closed completed, and exact audit PR/main CI passed all five checks.
 **The accepted M6 implementation and exit audit are complete.**
 [M6 exit evidence](docs/milestones/m6-exit-evidence.md) records the completion
-review; administrative documentation/showcase follow-up is #126.
+review. The milestone is closed (zero open/nine closed items); administrative
+#126 is complete, with [documentation PR #127](https://github.com/daniilnahl/Stock-Tracking-App/pull/127)
+awaiting owner review/merge.
 See the [manual CLI showcase](docs/CLI_SHOWCASE.md) for actual commands,
 isolated state and the distinction between demo responses and live market data.
 This scope adds no installed CLI entrypoint,

@@ -1,7 +1,7 @@
 # M6 thin CLI exit evidence
 
 Status: **REQUIRED M6 IMPLEMENTATION AND EXIT AUDIT COMPLETE — owner-merged; exact PR/main CI passed; #112–118 closed.**
-Administrative completion documentation/showcase: #126.
+Administrative #126 is closed completed; documentation PR #127 awaits owner review.
 Snapshot: 2026-10-13, America/Los_Angeles.
 Baseline: owner-merged PR #124, `926171e34b518bea8d09a322f62482f3d54d56bc`.
 Parent: [M6 — CLI V2](https://github.com/daniilnahl/Stock-Tracking-App/milestone/7).
@@ -167,3 +167,17 @@ credential-free restart/display, duplicate refusal, refresh, real raw historical
 charting, removal and final empty display. A separate 13-process controlled
 failure demonstration passed. See [CLI showcase](../CLI_SHOWCASE.md)
 for the observed data, safe configuration acquisition, exact scope and limitations.
+
+## Milestone closure
+
+Milestone [M6 — CLI V2](https://github.com/daniilnahl/Stock-Tracking-App/milestone/7)
+is now closed at 100%, with zero open and nine closed milestone items. All seven
+required implementation issues #112–118 and administrative #126 are closed
+completed. [Documentation PR #127](https://github.com/daniilnahl/Stock-Tracking-App/pull/127)
+remains open for owner review/merge; it changes no runtime behavior. Initial
+documentation-head Foundation `38502303947` passed all five checks. No agent
+merge occurred.
+
+Staged documentation hygiene passed **8 in 8.91s** before initial submission;
+final scope/whitespace/secret review passed. Exact configured-key scanning found
+no leak into task docs, local demo artifacts, temporary SQLite or history cache.
