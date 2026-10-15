@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, DataTable, EmptyState, SettingsField } from "../components/primitives";
+import { Button, DataTable, SettingsField } from "../components/primitives";
 import type { Column } from "../components/primitives";
 import { isTheme, themes } from "../themes/theme";
 import type { ThemePreference } from "../themes/theme";
@@ -28,7 +28,7 @@ export function SavedObservations() {
     <div className="panel-heading"><div><p className="eyebrow">Saved observations</p><h2 id="saved-title">Menu watchlist</h2></div></div>
     <SearchDisclosure />
     <DataTable caption="Saved observations - not loaded" columns={columns} rows={[]} rowKey={row => row.id}
-      emptyMessage="No saved entries loaded. Configuring a connection does not load observations." />
+      emptyMessage="Open Watchlists to explicitly read saved entries. This overview does not display holdings." />
     <p className="footnote">Both saved namespaces and duplicate rows remain distinct. Currency and freshness require explicit evidence.</p>
   </section>;
 }
@@ -42,15 +42,12 @@ export function OverviewPage() {
         <h2 id="taurus-title">Taurus Agents Menu</h2><p>Reserved for future agent controls. No agents are configured or running.</p></section>
     </div>
     <div className="cards" aria-label="Workspace status">
-      <section className="card"><h2 className="eyebrow">Connection</h2><p className="value">{connectionLabel(snapshot)}</p><p>{snapshot.connection === "connected" ? "Authentication is not verified." : "No local API connection is configured in this page."}</p></section>
-      <section className="card"><h2 className="eyebrow">Saved entries</h2><p className="value">Not loaded</p><p>Available after an authenticated read.</p></section>
+      <section className="card"><h2 className="eyebrow">Connection</h2><p className="value">{connectionLabel(snapshot)}</p><p>{snapshot.connection === "connected" ? "Configuration alone does not verify authentication." : "No local API connection is configured in this page."}</p></section>
+      <section className="card"><h2 className="eyebrow">Saved entries</h2><p className="value">Open Watchlists</p><p>Read saved entries explicitly on the Watchlists page.</p></section>
       <section className="card"><h2 className="eyebrow">Observation status</h2><p className="value">Unknown</p><p>Saved prices do not establish freshness.</p></section>
     </div>
     <SavedObservations />
   </>;
-}
-export function WatchlistsPage() {
-  return <><EmptyState title="Saved entries not loaded" message="These connection controls do not read watchlists. No private data is requested by this page yet." /><SavedObservations /></>;
 }
 export function SettingsPage({ preference }: { preference: ThemePreference }) {
   return <><section className="panel" aria-labelledby="appearance-title"><h2 id="appearance-title">Appearance</h2>

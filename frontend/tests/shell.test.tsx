@@ -39,7 +39,7 @@ describe("typed navigation and approved shell", () => {
     expect(taurus.compareDocumentPosition(cards) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(within(cards).getAllByRole("heading")).toHaveLength(3);
     expect(screen.getAllByText("Placeholder / unavailable")).toHaveLength(2);
-    expect(screen.getByText("Not loaded")).toBeTruthy();
+    expect(screen.getByText("Open Watchlists")).toBeTruthy();
     expect(screen.queryByText("110.0000000000000000001")).toBeNull();
     expect(screen.queryByRole("textbox")).toBeNull();
     expect(fetch).not.toHaveBeenCalled();

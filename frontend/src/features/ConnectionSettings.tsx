@@ -46,7 +46,7 @@ export function ConnectionSettings() {
     <h2 id="connection-title">Local API connection</h2>
     <div className="connection-status" role="status" aria-live="polite" aria-atomic="true">
       <p className="state-title">{connectionLabel(snapshot)}</p>
-      <p>{configured ? "Authentication is not verified. Configuring this page does not request or load private data." :
+      <p>{configured ? "Configuration alone does not verify authentication. Configuring this page does not request or load private data." :
         snapshot.connection === "unsupported" ? "This page cannot use the local API. Use a supported browser on the local API page, then configure again." :
           "No local API token is held by this page."}</p>
     </div>

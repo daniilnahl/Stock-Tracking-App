@@ -2,7 +2,8 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { resolveRoute, routeHref, routes } from "./app/routes";
 import { Button, EmptyState, Navigation, PageLayout } from "./components/primitives";
 import { ClientFoundation } from "./features/ClientFoundation";
-import { OverviewPage, SettingsPage, WatchlistsPage } from "./features/ShellPages";
+import { OverviewPage, SettingsPage } from "./features/ShellPages";
+import { WatchlistsPage } from "./features/Watchlists";
 import { useThemePreference } from "./themes/theme";
 import { SessionContext, connectionLabel } from "./app/session";
 import { ApiClient } from "./services/client";
@@ -50,7 +51,7 @@ export function App({ createClient = createApiClient }: { createClient?: () => A
     </header>
     {preference.notice && <p className="storage-notice" role="status">{preference.notice}</p>}
     <PageLayout title={title} headingRef={heading} description={route === "client-foundation" ? "A separately labeled synthetic client check." : "Saved observations with their limits in view."}>
-      {route !== "client-foundation" && <div className="notice">Dashboard shell / {connectionLabel(snapshot).toLowerCase()}{snapshot.connection === "connected" ? "; authentication not verified" : ""}. No holdings or market figures are loaded.</div>}
+      {route !== "client-foundation" && <div className="notice">Local session / {connectionLabel(snapshot).toLowerCase()}. Configuration alone does not verify authentication. Saved observations are not current quotes.</div>}
       {route === "overview" && <OverviewPage />}
       {route === "watchlists" && <WatchlistsPage />}
       {route === "settings" && <SettingsPage preference={preference} />}
