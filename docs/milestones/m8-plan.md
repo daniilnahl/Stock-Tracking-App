@@ -1,5 +1,26 @@
 # M8 — Web Dashboard execution plan
 
+## Acceptance update — 2026-10-14
+
+The owner's **“approved continue work”** accepts revised ADR-0014 Option A and
+the scoped M8 requirements/design. Owner merge of PR #149 is independently
+verified at `dd7e9d52cb596f608bdb70c534407ae60d461be2`, containing reviewed head
+`edeced0fe1d63ff3cf4a758b1f8e1d0ee72fe673`. Exact-head Foundation `38690737794`
+passed all five checks. Post-merge main Foundation `38691698230` also passed
+all five checks; runtime #142/#143 are unblocked. The Master
+owns this acceptance record; delegated `m8_analysis` is implementing #142 on
+`codex/142-local-dashboard-hosting`. Independent #143 is assigned to delegated
+`frontend_plan` on `codex/143-frontend-api-client` in managed worktree
+`m8-api-client`, based on the same owner-merged contract. It owns only frontend
+scaffold/client contracts and a labeled synthetic client demo; it does not alter
+#142's API/runtime graph. Other implementation issues retain their
+predecessor gates. The earlier proposal snapshots below are review history.
+
+Approved design: original local pixel font for all actual text, same monochrome
+light/dark themes, two unavailable layout panels and an explanatory search/add
+entry point linked to the backend/frontend checklist. No write, research/AI or
+live-provider activation is implied. No agent merge is authorized.
+
 Planning started 2026-10-14 at main `26a44a7c9fcf3131d5ed56dcacc63420d192b0a9`.
 The user selected M8 and requested a visual frontend demo for each completed
 issue. The role document's M2/template placeholders do not select scope.
@@ -18,9 +39,9 @@ Parent: [M8 milestone 9](https://github.com/daniilnahl/Stock-Tracking-App/milest
 
 | Objective | Dependencies | Status |
 |---|---|---|
-| [#141](https://github.com/daniilnahl/Stock-Tracking-App/issues/141) Technology/browser/capability contract | M7 implementation merged | Proposal in this PR; owner decision pending |
-| [#142](https://github.com/daniilnahl/Stock-Tracking-App/issues/142) Opt-in static hosting/browser boundary | Accepted contract | Blocked |
-| [#143](https://github.com/daniilnahl/Stock-Tracking-App/issues/143) Frontend scaffold/precise typed client | Accepted contract | Blocked |
+| [#141](https://github.com/daniilnahl/Stock-Tracking-App/issues/141) Technology/browser/capability contract | Owner merge and main CI verified | Closed completed; PR #149 merged |
+| [#142](https://github.com/daniilnahl/Stock-Tracking-App/issues/142) Opt-in static hosting/browser boundary | Accepted contract | In progress; m8_analysis; codex/142-local-dashboard-hosting |
+| [#143](https://github.com/daniilnahl/Stock-Tracking-App/issues/143) Frontend scaffold/precise typed client | Accepted contract | Unblocked |
 | [#144](https://github.com/daniilnahl/Stock-Tracking-App/issues/144) Shared shell/themes/component guide | Scaffold/client | Blocked |
 | [#145](https://github.com/daniilnahl/Stock-Tracking-App/issues/145) Both saved watchlists | Hosting, client, shell | Blocked |
 | [#146](https://github.com/daniilnahl/Stock-Tracking-App/issues/146) Exact stored-row detail/raw history | Watchlists | Blocked |
@@ -29,7 +50,7 @@ Parent: [M8 milestone 9](https://github.com/daniilnahl/Stock-Tracking-App/milest
 
 Assignment/review: #141 is owned by the Master for proposal and independently
 reviewed by delegated `m8_analysis`; no blocking finding remains after selection
-invalidation clarification. Its PR is pending publication. #142–148 are unassigned,
+invalidation clarification. PR #149 is owner-merged. At the original proposal snapshot #142–148 were unassigned,
 have no implementation PR or review, and are blocked by the acceptance and
 predecessor gates in the table. No issue is claimed complete.
 
@@ -155,3 +176,36 @@ Ruff passed; configured mypy passed (one source file, `config.py`); `pip check`
 passed. Full tests used approved native temporary hard-link access and isolated
 test state, no live credentials/provider or real user database. Final hosted CI
 must pass on the pushed repair; no milestone/issue completion is inferred.
+
+## Local hosting implementation — issue #142
+
+The accepted contract now has an opt-in `--dashboard` launcher/configuration
+path. Exact packaged static GET routes serve a clearly labeled pixel-styled
+hosting foundation using external local CSS/script/font/license. Matching local
+Origin/Host pairs are accepted only in opt-in mode; API authentication, safe
+failures and the default M7 access/schema contracts remain intact. Rejected
+paths/methods/query/body/origins cannot acquire assets or application state.
+Restrictive CSP, no-referrer, nosniff and framing denial apply in dashboard mode.
+No current/historical data requests, credential entry or persistent preference
+exist on this foundation page; those remain subsequent frontend issues.
+
+Independent Master review checked the actual source, tests, callers, fixed
+package-data list, source/installed-wheel resource serving and cold no-IO probes.
+Manual real-launcher verification used four isolated temporary paths and an
+unprinted synthetic token: root/assets returned successfully; matching Origin
+passed, foreign Origin failed, unauthenticated API failed, encoded asset aliases
+failed and no holdings/cache/legacy state was created. Headless Edge rendered
+the actual loopback-served page with the local pixel font; the screenshot is a
+chat artifact, not a committed diagnostic file. Demo process was stopped.
+
+Python 3.12.14 targeted dashboard/foundation/launcher/packaging verification:
+**186 passed in 39.63s**. Full canonical pytest: **2794 passed in 121.32s**.
+Ruff/configured mypy (`config.py` only)/pip check/diff check passed. Native Windows
+control-socket and hard-link execution required approved sandbox escalation;
+application network guards remained active. The first wheel probe correctly
+emitted safe rejection logs; the final probe captures and asserts exact safe
+category messages rather than suppressing failures. No unresolved review
+finding, dependency addition or CLI/financial/persistence behavior change.
+
+Implementation PR publication/hosted CI/owner merge remain separate gates.
+The live readiness demo verifies #142 hosting only, not M8 completion.

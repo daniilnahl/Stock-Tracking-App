@@ -70,6 +70,9 @@ py-modules = ["stock", "watch_list", "menu_watchlist", "daniils_stock_method", "
 packages = ["utils", "stock_tracker", "stock_tracker.domain", "stock_tracker.compatibility", "stock_tracker.providers", "stock_tracker.persistence", "stock_tracker.services", "stock_tracker.cli", "stock_tracker.api"]
 package-dir = {stock_tracker = "src/stock_tracker"}
 
+[tool.setuptools.package-data]
+"stock_tracker.api" = ["dashboard_assets/index.html", "dashboard_assets/hosting.css", "dashboard_assets/hosting.js", "dashboard_assets/stock-pixel.ttf", "dashboard_assets/LICENSE.txt"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]

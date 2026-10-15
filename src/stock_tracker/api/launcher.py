@@ -6,7 +6,7 @@ from .configuration import ApiConfigurationError, load_api_configuration
 
 
 HELP = """Usage: python -m stock_tracker.api --database FILE --history-cache FILE
-       --menu-legacy FILE --evaluation-legacy FILE [--enable-history]
+       --menu-legacy FILE --evaluation-legacy FILE [--enable-history] [--dashboard]
 
 Authenticated local holdings read-only API at 127.0.0.1:8000.
 Four explicit distinct file paths are required; no parents are created.
@@ -17,6 +17,7 @@ Options:
   --history-cache FILE      Explicit historical cache file path
   --menu-legacy FILE        Corresponding menu legacy file path
   --evaluation-legacy FILE  Corresponding evaluation legacy file path
+  --dashboard              Serve packaged dashboard hosting foundation at /
   --enable-history         Enable only after owner-confirmed local display/cache
                            rights are recorded in docs/API_OPERATIONS.md
   -h, --help               Show this help without configuration or data access
@@ -25,18 +26,21 @@ Options:
 
 def parse_arguments(argv):
     # Static English help avoids argparse/gettext's locale files, language
-    # environment and terminal-size reads. Only these five launch flags exist.
+    # environment and terminal-size reads. Only these six launch flags exist.
     if "--help" in argv or "-h" in argv:
         sys.stdout.write(HELP)
         raise SystemExit(0)
     names = {"--" + name.replace("_", "-"): name for name in
              ("database", "history_cache", "menu_legacy", "evaluation_legacy")}
-    values, enabled = {}, False
+    values, enabled, dashboard = {}, False, False
     index = 0
     while index < len(argv):
         option = argv[index]
         if option == "--enable-history" and not enabled:
             enabled = True
+            index += 1
+        elif option == "--dashboard" and not dashboard:
+            dashboard = True
             index += 1
         elif option in names and names[option] not in values and index + 1 < len(argv) and not argv[index + 1].startswith("--"):
             values[names[option]] = argv[index + 1]
@@ -46,7 +50,7 @@ def parse_arguments(argv):
     if index != len(argv) or len(values) != 4:
         sys.stderr.write("Local API arguments are invalid. Use --help for the four required file options.\n")
         raise SystemExit(2)
-    return {**values, "enable_history": enabled}
+    return {**values, "enable_history": enabled, "enable_dashboard": dashboard}
 
 
 def main(argv=None):

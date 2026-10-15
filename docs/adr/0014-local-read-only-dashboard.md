@@ -2,7 +2,22 @@
 
 ## Status
 
-**Proposed — owner acceptance required.** Prepared 2026-10-14 in response to
+**Accepted — 2026-10-14.** Following review of the all-text pixel preview,
+requested placeholders and backend/frontend TO-DO LIST, and the successful CI
+repair, the owner explicitly instructed **“approved continue work”**. This
+accepts scoped SRS §23.8 and Option A below, including the revised all-text
+pixel design and layout-only unavailable panels. PR #149 was independently
+verified owner-merged at `dd7e9d52cb596f608bdb70c534407ae60d461be2`, containing
+reviewed head `edeced0fe1d63ff3cf4a758b1f8e1d0ee72fe673`. Exact-head
+Foundation `38690737794` passed all five jobs. Post-merge main Foundation
+`38691698230` passed all five jobs; runtime #142/#143 are unblocked. No agent
+merge, mutation, new metric, live provider-rights activation, research/AI or
+externally hosted operation is authorized. Issue-specific predecessor gates still apply.
+
+The original proposal wording below is retained as review history and is
+superseded by this scoped acceptance record.
+
+Originally **proposed — owner acceptance required.** Prepared 2026-10-14 in response to
 the request to start M8. This request authorizes planning; it does not select
 previously unresolved D3 architecture. SRS §23.8/UI801–829 remains proposed.
 ADR-0013 accepts M7 only. This proposal does not modify that acceptance.

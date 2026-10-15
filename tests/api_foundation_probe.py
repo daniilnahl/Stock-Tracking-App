@@ -118,6 +118,19 @@ async def exercise(create_app):
             assert payload["entries"][0]["snapshot"]["unrealized_return"] == "0.2"
     assert calls == ["menu_watchlist", "daniils_stock_method", "menu_watchlist"]
     assert history_calls == [("AAPL", date(2015, 2, 28), date(2020, 2, 29))]
+    # Opt-in construction/health/schema also run under all original cold IO
+    # guards. Registering assets must not inspect or open their resources.
+    dashboard = create_app(token=synthetic_credential, dashboard=True)
+    for path in ("/health", "/api/v1/openapi.json", "/dashboard-assets/unknown"):
+        scope["path"] = path
+        scope["raw_path"] = path.encode()
+        scope["headers"] = [(b"host", b"127.0.0.1:8000"),
+            (b"authorization", b"Bearer " + synthetic_credential.encode()),
+            (b"origin", b"http://127.0.0.1:8000")]
+        sent = []
+        await dashboard(scope, receive, send)
+        assert sent[0]["status"] == (404 if path.endswith("unknown") else 200)
+        assert b"content-security-policy" in dict(sent[0]["headers"])
 
 
 def main(root, exercise_api=exercise):

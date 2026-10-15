@@ -24,6 +24,7 @@ class ApiConfiguration:
     evaluation_legacy: Path
     token: str = field(repr=False)
     enable_history: bool = False
+    enable_dashboard: bool = False
     _seal: object = field(repr=False)
     _issued_paths: tuple[Path, ...] = field(repr=False)
 
@@ -42,6 +43,8 @@ def require_validated_configuration(configuration):
         if len({os.path.normcase(str(path)) for path in paths}) != 4 or type(configuration.enable_history) is not bool:
             raise ApiConfigurationError()
         if configuration.token is None:
+            raise ApiConfigurationError()
+        if type(configuration.enable_dashboard) is not bool:
             raise ApiConfigurationError()
         validate_token(configuration.token)
     except (AttributeError, TypeError, ValueError):
@@ -93,10 +96,11 @@ def _resolved_file(value: str) -> Path:
 
 
 def load_api_configuration(*, database: str, history_cache: str, menu_legacy: str,
-                           evaluation_legacy: str, enable_history: bool = False) -> ApiConfiguration:
+                           evaluation_legacy: str, enable_history: bool = False,
+                           enable_dashboard: bool = False) -> ApiConfiguration:
     """Resolve each explicit file once; process environment supplies only token."""
     try:
-        if type(enable_history) is not bool:
+        if type(enable_history) is not bool or type(enable_dashboard) is not bool:
             raise ApiConfigurationError()
         token = os.environ.get("STOCK_TRACKER_API_TOKEN")
         if token is None:
@@ -118,7 +122,8 @@ def load_api_configuration(*, database: str, history_cache: str, menu_legacy: st
         configuration = object.__new__(ApiConfiguration)
         for name, value in zip(("database", "history_cache", "menu_legacy", "evaluation_legacy"), paths):
             object.__setattr__(configuration, name, value)
-        for name, value in (("token", token), ("enable_history", enable_history), ("_seal", _ISSUED), ("_issued_paths", paths)):
+        for name, value in (("token", token), ("enable_history", enable_history),
+                            ("enable_dashboard", enable_dashboard), ("_seal", _ISSUED), ("_issued_paths", paths)):
             object.__setattr__(configuration, name, value)
         require_validated_configuration(configuration)
         return configuration

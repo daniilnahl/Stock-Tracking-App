@@ -20,7 +20,7 @@ from api_foundation_probe import denied, DeniedEnvironment, DeniedOutput, forbid
 _configuration = None
 
 
-def guarded_launch_configuration():
+def guarded_launch_configuration(*, dashboard=False):
     """Only synthetic process-token lookup and native path metadata may occur."""
     from stock_tracker.api.configuration import load_api_configuration
     original_import = builtins.__import__
@@ -65,7 +65,7 @@ def guarded_launch_configuration():
                 pass
             else:
                 raise AssertionError("A launch configuration denial control failed")
-        return load_api_configuration(**{name: str(Path.cwd() / name) for name in
+        return load_api_configuration(enable_dashboard=dashboard, **{name: str(Path.cwd() / name) for name in
             ("database", "history_cache", "menu_legacy", "evaluation_legacy")})
 
 
@@ -85,7 +85,7 @@ async def help_exercise(create_app):
         else:
             raise AssertionError("Help did not exit")
     help_text = output.getvalue()
-    assert all(option in help_text for option in ("--database", "--history-cache", "--menu-legacy", "--evaluation-legacy", "--enable-history"))
+    assert all(option in help_text for option in ("--database", "--history-cache", "--menu-legacy", "--evaluation-legacy", "--enable-history", "--dashboard"))
     assert "127.0.0.1:8000" in help_text
 
 
@@ -127,4 +127,6 @@ if __name__ == "__main__":
     # Prove the smaller launch exception itself: no real process credentials,
     # content IO or infrastructure are available during metadata validation.
     _configuration = guarded_launch_configuration()
+    main(sys.argv[1], composition_exercise)
+    _configuration = guarded_launch_configuration(dashboard=True)
     main(sys.argv[1], composition_exercise)

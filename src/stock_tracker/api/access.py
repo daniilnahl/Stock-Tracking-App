@@ -10,6 +10,12 @@ from .json_response import error_response
 TOKEN = re.compile(r"[A-Za-z0-9_-]{32,256}\Z", re.ASCII)
 MAX_TARGET_BYTES = 2048
 ALLOWED_HOSTS = (b"127.0.0.1:8000", b"localhost:8000")
+DASHBOARD_HEADERS = (
+    (b"content-security-policy", b"default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; connect-src 'self'; img-src 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'none'"),
+    (b"referrer-policy", b"no-referrer"),
+    (b"x-content-type-options", b"nosniff"),
+    (b"x-frame-options", b"DENY"),
+)
 
 
 def validate_token(value: str | None) -> None:
@@ -18,8 +24,9 @@ def validate_token(value: str | None) -> None:
 
 
 class AccessBoundary:
-    def __init__(self, app, *, token: str | None):
+    def __init__(self, app, *, token: str | None, dashboard: bool = False):
         self.app, self._token = app, token
+        self._dashboard = dashboard
 
     async def __call__(self, scope, receive, send):
         if scope["type"] != "http":
@@ -38,6 +45,8 @@ class AccessBoundary:
                 headers = [(key, value) for key, value in message.get("headers", [])
                            if key.lower() != b"cache-control"]
                 message["headers"] = [*headers, (b"cache-control", b"no-store")]
+                if self._dashboard:
+                    message["headers"].extend(DASHBOARD_HEADERS)
             await send(message)
 
         try:
@@ -53,9 +62,15 @@ class AccessBoundary:
             host = values(b"host")
             if len(host) != 1 or host[0] not in ALLOWED_HOSTS:
                 raise ApiFailure("host_invalid")
-            if values(b"origin"):
+            origins = values(b"origin")
+            if origins and (not self._dashboard or origins != [b"http://" + host[0]]):
                 raise ApiFailure("origin_forbidden")
             path = scope["path"]
+            if self._dashboard and (path == "/" or path.startswith("/dashboard-assets/")):
+                # Refuse encoded aliases even when the ASGI server decoded them
+                # into an otherwise allowlisted path. Never normalize filenames.
+                if target != path.encode("ascii", errors="replace"):
+                    raise ApiFailure("not_found")
             if path == "/api/v1" or path.startswith("/api/v1/"):
                 authorization = values(b"authorization")
                 if len(authorization) != 1 or self._token is None:

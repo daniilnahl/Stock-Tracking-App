@@ -53,7 +53,7 @@ def create_local_app(configuration: ApiConfiguration):
         except ConfigurationError:
             raise ApiFailure("provider_unavailable") from None
 
-    return create_app(token=configuration.token, services=ApiServices(
+    return create_app(token=configuration.token, dashboard=configuration.enable_dashboard, services=ApiServices(
         watchlist=watchlist,
         history=HistoryService(historical_provider, clock=lambda: datetime.now(timezone.utc)),
         history_enabled=configuration.enable_history, history_source="fmp", history_cache_policy=True,

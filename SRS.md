@@ -2,13 +2,28 @@
 
 **Version:** 1.2 proposed (approved baseline: 1.1)
 
-**Status:** PARTIALLY ACCEPTED — M7 under ADR-0013; M8–M10 and unresolved decisions remain proposed. Existing approved requirements remain authoritative.
+**Status:** PARTIALLY ACCEPTED — M7 under ADR-0013; M8 under ADR-0014's read-only scope and approved design revisions. M9–M10 and out-of-scope decisions remain proposed. Existing approved requirements remain authoritative.
 
 **Primary implementation language:** Python  
 **Current interface:** Typer CLI  
 **Target:** Production-quality portfolio tracking and analytics application
 
 ## Approval record
+
+**M8 scoped acceptance — 2026-10-14:** after reviewing PR #149's revised
+all-text retro pixel preview, requested unavailable placeholders, backend/
+frontend TO-DO LIST and CI repair, the owner instructed **“approved continue
+work”**. Owner merge was independently verified at
+`dd7e9d52cb596f608bdb70c534407ae60d461be2`, containing reviewed head
+`edeced0fe1d63ff3cf4a758b1f8e1d0ee72fe673`. This accepts §23.8/UI801–829 and
+applicable cross-milestone requirements only within ADR-0014 Option A: local
+opt-in same-origin read-only dashboard, exact M7 data, all-text original pixel
+font, monochrome light/dark themes, memory-only access token and layout-only
+unavailable future panels. D3 is resolved within that scope. Mutations, new
+metrics, research/AI functionality, provider rights and external hosting remain
+unapproved. Earlier proposal/M7-only records below retain their dated history;
+they do not invalidate this scoped acceptance. See
+[ADR-0014](docs/adr/0014-local-read-only-dashboard.md).
 
 **M7 scoped acceptance — 2026-10-14:** following the explicit request to accept
 the relevant M7 specification and Option A in PR #135, the owner instructed
