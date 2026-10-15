@@ -7,6 +7,11 @@ the request to start M8. This request authorizes planning; it does not select
 previously unresolved D3 architecture. SRS §23.8/UI801–829 remains proposed.
 ADR-0013 accepts M7 only. This proposal does not modify that acceptance.
 
+**Owner design feedback:** after reviewing PR #149, the owner said everything
+looks good and requested retro pixel typography and UI components while
+maintaining the established theme. This revision incorporates that direction.
+Proposal merge/main CI and implementation verification remain separate gates.
+
 ## Decision requested: Option A
 
 Accept SRS §23.8 within this explicitly read-only capability subset and the
@@ -25,6 +30,17 @@ applicable cross-milestone requirements. Approve the following D3 decisions:
 - Light monochrome default, dark alternative, semantic CSS tokens, tabular
   numbers, explicit text/sign gain/loss, WCAG 2.2 AA target and reduced motion.
   Persist only theme preference locally. No copied reference artwork.
+- Retro pixel presentation within those same monochrome themes: original
+  pixel display lettering for branding/headings, readable monospace text for
+  controls and data, square corners, stepped details and hard offset shadows.
+  Keep generous whitespace and semantic theme tokens. Avoid scanlines, flicker,
+  tiny bitmap body text or decorative effects that obscure values. Pixel
+  lettering retains accessible text and scales without clipping. Production
+  headings remain real text using a locally packaged licensed or original pixel
+  font, honoring user font/text-spacing overrides; do not replace headings with
+  SVG images of text. The illustrative preview's vector lettering demonstrates
+  appearance only, not WCAG conformance. No runtime font CDN or new font
+  dependency is required.
 
 ### Browser security and distribution
 

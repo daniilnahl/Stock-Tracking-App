@@ -3,6 +3,10 @@
 Planning started 2026-10-14 at main `26a44a7c9fcf3131d5ed56dcacc63420d192b0a9`.
 The user selected M8 and requested a visual frontend demo for each completed
 issue. The role document's M2/template placeholders do not select scope.
+Following review of PR #149, the owner requested retro pixel text and UI while
+preserving the established theme. The preview and ADR now specify pixel display
+headings, readable monospace data, square controls and hard shadows within the
+same monochrome light/dark tokens. No runtime feature or financial rule changes.
 
 SRS §23.8 is proposed and D3 unresolved. [ADR-0014](../adr/0014-local-read-only-dashboard.md)
 provides a concrete acceptance choice. No runtime implementation is authorized
@@ -71,3 +75,14 @@ Canonical pytest/Ruff/mypy/pip check and actual browser/theme rendering were
 not verified: supported Python was unavailable and browser initialization timed
 out. No check is claimed from those unavailable tools. Full runtime verification
 and screenshot demonstrations remain required for implementation issues.
+
+Retro design revision checks: Node controlled-DOM execution verified original
+vector glyph output for every heading, preserved accessible text, decorative
+glyph hiding and both theme-toggle states. `git diff --check` passed. This
+verifies script behavior only; browser rendering, contrast and responsive
+accessibility are not certified by the controlled DOM. No Playwright package
+is installed in this checkout; no dependency was added for this preview.
+Independent static review confirmed palette/scope/accessibility-text retention
+and identified the preview's SVG lettering as an images-of-text concern for
+production. ADR now requires actual text with a local pixel font in production;
+this illustrative rendering does not certify WCAG AA.
