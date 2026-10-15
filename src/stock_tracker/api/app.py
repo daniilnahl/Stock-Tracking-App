@@ -35,13 +35,16 @@ def error_documents():
     return responses
 
 
-def create_app(*, token: str | None = None, services: ApiServices | None = None) -> FastAPI:
+def create_app(*, token: str | None = None, services: ApiServices | None = None, dashboard: bool = False) -> FastAPI:
     """Construct an injectable app without credentials, state or provider IO.
 
-    An absent token permits only public health; every API request fails auth.
+    An absent token permits public health and opt-in static resources only;
+    every API request fails auth.
     Later production configuration must require a valid operator token at launch.
     """
     validate_token(token)
+    if type(dashboard) is not bool:
+        raise ValueError("Dashboard configuration is invalid.")
     if services is not None and not isinstance(services, ApiServices):
         raise ValueError("Invalid API service dependencies.")
     app = FastAPI(title="Stock Tracking App local API", version="1.0.0",
@@ -52,7 +55,7 @@ def create_app(*, token: str | None = None, services: ApiServices | None = None)
     def access_boundary(app):
         # Starlette includes middleware keyword arguments in its repr. Capture
         # the credential privately rather than exposing it through diagnostics.
-        return AccessBoundary(app, token=token)
+        return AccessBoundary(app, token=token, dashboard=dashboard)
 
     app.add_middleware(access_boundary)
 
@@ -191,5 +194,10 @@ def create_app(*, token: str | None = None, services: ApiServices | None = None)
         return document
 
     app.openapi = documented_openapi
+
+    if dashboard:
+        from .dashboard import register_dashboard
+
+        register_dashboard(app)
 
     return app

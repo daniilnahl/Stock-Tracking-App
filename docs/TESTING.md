@@ -10,6 +10,21 @@ The goal is to make tests deterministic, meaningful, isolated, and suitable for 
 
 # 1. Test Layers
 
+## M8 opt-in hosting — issue #142
+
+Run `python -m pytest tests/test_dashboard_hosting.py tests/test_api_foundation.py
+tests/test_api_launcher.py tests/test_packaging.py -v` for source and installed
+dashboard resources, exact Origin/Host matching, unchanged default refusals,
+authentication, static path/method/query/body boundaries, safe missing assets,
+headers and loader-issued configuration. These are offline ASGI tests without
+a real listener. The installed-wheel probe serves actual packaged bytes and
+checks the complete intended asset set; cold foundation/launcher probes also
+construct opt-in apps and exercise health/schema under existing IO denial.
+The font/license bytes are checked against the original source artifacts.
+No Node/browser dependency is introduced. Actual browser layout, font loading
+and visual demonstration are separate manual verification, not implied by ASGI
+success. The readiness page does not implement watchlists or an API client.
+
 ## Unit tests
 
 Unit tests cover isolated behavior such as:

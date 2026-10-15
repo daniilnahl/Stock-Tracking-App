@@ -78,6 +78,12 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
         "stock_tracker/api/schemas.py", "stock_tracker/api/serialization.py",
         "stock_tracker/api/configuration.py", "stock_tracker/api/composition.py",
         "stock_tracker/api/launcher.py", "stock_tracker/api/__main__.py",
+        "stock_tracker/api/dashboard.py",
+        "stock_tracker/api/dashboard_assets/index.html",
+        "stock_tracker/api/dashboard_assets/hosting.css",
+        "stock_tracker/api/dashboard_assets/hosting.js",
+        "stock_tracker/api/dashboard_assets/stock-pixel.ttf",
+        "stock_tracker/api/dashboard_assets/LICENSE.txt",
     }
 
     installed = tmp_path / "installed"
@@ -117,6 +123,13 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
     )
     assert api_launcher.returncode == 0, api_launcher.stderr
     assert api_launcher.stdout == api_launcher.stderr == ""
+
+    dashboard_hosting = subprocess.run(
+        [sys.executable, "-I", "-B", str(ROOT / "tests/dashboard_hosting_probe.py"), str(installed)],
+        cwd=tmp_path, env=environment, capture_output=True, text=True, timeout=30,
+    )
+    assert dashboard_hosting.returncode == 0, dashboard_hosting.stderr
+    assert dashboard_hosting.stdout == dashboard_hosting.stderr == ""
 
     m7_directory = tmp_path / "installed-m7-exit"
     m7_directory.mkdir()

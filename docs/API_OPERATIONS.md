@@ -1,10 +1,48 @@
 # Local REST operation — issue #133
 
+## Optional dashboard hosting foundation — issue #142
+
+Append `--dashboard` to the existing four-path invocation to serve the packaged
+hosting readiness page at `http://127.0.0.1:8000/`. The required process token,
+four distinct paths and fixed listener settings remain unchanged. This page is
+a hosting demonstration: no credential entry, API requests, holdings or market
+figures. Its theme switch previews monochrome light/dark without persistence.
+Frontend client, navigation and data views are separately scoped work.
+
+Without this flag, the original API route set and rejection of every Origin
+remain unchanged. Dashboard mode additionally accepts one exact matching pair:
+Host `127.0.0.1:8000` with Origin `http://127.0.0.1:8000`, or Host
+`localhost:8000` with Origin `http://localhost:8000`. Absent Origin remains
+valid; null, duplicate, mismatched and other origins are rejected before IO.
+Every API operation still requires its bearer token. There is no cross-origin
+CORS permission or development proxy exception; exact same-origin headers are
+accepted only in this opt-in mode. No asset embeds or substitutes the token.
+
+Only `/` and `/dashboard-assets/hosting.css`, `hosting.js`, `stock-pixel.ttf`
+and `LICENSE.txt` are public static resources. Assets accept exact GET paths
+without queries or bodies; encoded aliases, directory discovery, arbitrary
+files, SPA fallbacks and source maps are unavailable. Missing resources fail
+with the fixed safe error contract. Static routes do not alter OpenAPI.
+All dashboard-mode responses carry a restrictive CSP, framing denial,
+no-referrer and nosniff. Scripts/styles/fonts are local external assets;
+inline code, remote assets, framing and forms are prohibited. API no-store
+responses remain unchanged. No service worker or runtime build/download exists.
+
+The wheel includes an explicit asset list. Python install/import/help does not
+require Node or read assets; resource reads occur only on valid static GETs.
+The original font is distributed with the repository MIT license, served as
+`LICENSE.txt`. Its editable glyphs and deterministic generator remain in
+`docs/previews/assets/` in the source repository. Browser screenshots use this
+readiness page without tokens or real state; they do not certify data workflows.
+
+The following original M7 operation instructions describe default API mode;
+the opt-in Origin/static exception above applies only with `--dashboard`.
+
 Use the canonical Python 3.11/3.12 `pip install ".[dev]"` setup. The accepted
 [ADR-0013](adr/0013-local-read-only-rest-api.md) permits one local single-user
 process. This is holdings read-only operation: no endpoint saves, refreshes,
 migrates or removes holdings. Historical requests, when separately enabled,
-may maintain the existing historical cache. Hosting and additional users
+may maintain the existing historical cache. External hosting and additional users
 require separate approval. M7 completion still requires the #134 combined audit.
 
 ## Configuration and start

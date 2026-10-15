@@ -83,7 +83,7 @@ def test_configuration_cannot_bypass_loader_and_composition_guard_is_pure(tmp_pa
     monkeypatch.setattr(Path, "stat", lambda *a, **k: pytest.fail("Composition repeated metadata checks"))
     monkeypatch.setattr(Path, "resolve", lambda *a, **k: pytest.fail("Composition repeated resolution"))
     create_local_app(configuration)
-    for name, bad in (("token", None), ("enable_history", "true"), ("database", configuration.history_cache)):
+    for name, bad in (("token", None), ("enable_history", "true"), ("enable_dashboard", "true"), ("database", configuration.history_cache)):
         previous = getattr(configuration, name)
         object.__setattr__(configuration, name, bad)
         with pytest.raises(ApiConfigurationError):
@@ -389,6 +389,26 @@ def test_launcher_fixed_server_options_no_real_listener(tmp_path, monkeypatch):
     assert len(calls) == 1 and calls[0][1] == {"host": "127.0.0.1", "port": 8000, "workers": 1, "reload": False,
         "proxy_headers": False, "forwarded_allow_ips": "", "access_log": False, "log_config": None, "log_level": "critical"}
     assert not list(tmp_path.iterdir())
+
+
+def test_dashboard_option_is_explicit_and_loader_validated(tmp_path, monkeypatch):
+    assert configured(tmp_path, monkeypatch).enable_dashboard is False
+    assert configured(tmp_path, monkeypatch, enable_dashboard=True).enable_dashboard is True
+    for bad in (None, 1, "true"):
+        with pytest.raises(ApiConfigurationError):
+            configured(tmp_path, monkeypatch, enable_dashboard=bad)
+        from stock_tracker.api import create_app
+        with pytest.raises(ValueError, match="Dashboard configuration is invalid"):
+            create_app(dashboard=bad)
+    parsed = launcher.parse_arguments([*arguments(tmp_path), "--dashboard"])
+    assert parsed["enable_dashboard"] is True
+    import uvicorn
+    calls = []
+    monkeypatch.setattr(uvicorn, "run", lambda app, **kwargs: calls.append(app))
+    assert launcher.main([*arguments(tmp_path), "--dashboard"]) == 0
+    assert "/" in {route.path for route in calls[0].routes}
+    with pytest.raises(SystemExit):
+        launcher.parse_arguments([*arguments(tmp_path), "--dashboard", "--dashboard"])
 
 
 @pytest.mark.parametrize("error", [RuntimeError("synthetic private token/path"), SystemExit(1)])
