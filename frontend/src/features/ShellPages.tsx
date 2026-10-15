@@ -3,6 +3,8 @@ import { Button, DataTable, EmptyState, SettingsField } from "../components/prim
 import type { Column } from "../components/primitives";
 import { isTheme, themes } from "../themes/theme";
 import type { ThemePreference } from "../themes/theme";
+import { connectionLabel, useLocalSession } from "../app/session";
+import { ConnectionSettings } from "./ConnectionSettings";
 
 const todoURL = "https://github.com/daniilnahl/Stock-Tracking-App/blob/main/docs/TO-DO-LIST.md";
 export function SearchDisclosure() {
@@ -25,12 +27,13 @@ export function SavedObservations() {
   return <section className="panel" aria-labelledby="saved-title">
     <div className="panel-heading"><div><p className="eyebrow">Saved observations</p><h2 id="saved-title">Menu watchlist</h2></div></div>
     <SearchDisclosure />
-    <DataTable caption="Saved observations - not connected" columns={columns} rows={[]} rowKey={row => row.id}
-      emptyMessage="Connect to read saved entries. No sample prices are presented as live data." />
+    <DataTable caption="Saved observations - not loaded" columns={columns} rows={[]} rowKey={row => row.id}
+      emptyMessage="No saved entries loaded. Configuring a connection does not load observations." />
     <p className="footnote">Both saved namespaces and duplicate rows remain distinct. Currency and freshness require explicit evidence.</p>
   </section>;
 }
 export function OverviewPage() {
+  const { snapshot } = useLocalSession();
   return <>
     <div className="feature-placeholders">
       <section className="panel" aria-labelledby="recommend-title"><p className="eyebrow">Placeholder / unavailable</p>
@@ -39,7 +42,7 @@ export function OverviewPage() {
         <h2 id="taurus-title">Taurus Agents Menu</h2><p>Reserved for future agent controls. No agents are configured or running.</p></section>
     </div>
     <div className="cards" aria-label="Workspace status">
-      <section className="card"><h2 className="eyebrow">Connection</h2><p className="value">Disconnected</p><p>No local API connection is configured in this shell.</p></section>
+      <section className="card"><h2 className="eyebrow">Connection</h2><p className="value">{connectionLabel(snapshot)}</p><p>{snapshot.connection === "connected" ? "Authentication is not verified." : "No local API connection is configured in this page."}</p></section>
       <section className="card"><h2 className="eyebrow">Saved entries</h2><p className="value">Not loaded</p><p>Available after an authenticated read.</p></section>
       <section className="card"><h2 className="eyebrow">Observation status</h2><p className="value">Unknown</p><p>Saved prices do not establish freshness.</p></section>
     </div>
@@ -47,7 +50,7 @@ export function OverviewPage() {
   </>;
 }
 export function WatchlistsPage() {
-  return <><EmptyState title="Not connected" message="Saved watchlist loading follows in the watchlist module. This shell makes no API requests." /><SavedObservations /></>;
+  return <><EmptyState title="Saved entries not loaded" message="These connection controls do not read watchlists. No private data is requested by this page yet." /><SavedObservations /></>;
 }
 export function SettingsPage({ preference }: { preference: ThemePreference }) {
   return <><section className="panel" aria-labelledby="appearance-title"><h2 id="appearance-title">Appearance</h2>
@@ -57,6 +60,5 @@ export function SettingsPage({ preference }: { preference: ThemePreference }) {
       }}>{Object.entries(themes).map(([id, theme]) => <option key={id} value={id}>{theme.name}</option>)}</select>}
     </SettingsField>
     <p>Pixel lettering applies to headings, body text, navigation, tables and controls.</p>
-  </section><section className="panel" aria-labelledby="connection-title"><h2 id="connection-title">Local API connection</h2>
-    <EmptyState title="Not connected" message="Connection and token entry follow in the settings module. No token is collected or saved by this shell." /></section></>;
+  </section><ConnectionSettings /></>;
 }

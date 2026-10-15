@@ -2,7 +2,7 @@ import { useState } from "react";
 import { decode, supportsExactJSON } from "../services/validation";
 
 // This foundation screen makes no HTTP calls and accepts no credentials.
-// Saved watchlist/connection flows belong to separately reviewed modules.
+// This isolated check does not describe the shared session's connection state.
 const sample = '{"stock":{"symbol":"DEMO","name":"Synthetic example","exchange":"NASDAQ"},"ordinal":0,"start":"2020-01-02","end":"2020-01-02","price_basis":"raw","provenance":{"source":null,"observed_at":null,"retrieved_at":null,"currency":null,"freshness":"unknown"},"bars":[{"symbol":"DEMO","date":"2020-01-02","open":"110.0000000000000000001","high":"120","low":"100","close":"110.0000000000000000001","adjusted_close":null,"volume":9223372036854775807}]}';
 export function ClientFoundation() {
   const [state, setState] = useState<"idle" | "success" | "error">("idle");
@@ -15,7 +15,7 @@ export function ClientFoundation() {
     <p className="intro">The typed API client is ready for the dashboard modules. This isolated demonstration reads a built-in test document. It never connects to a service.</p>
     <section aria-labelledby="connection-title" className="panel">
       <h2 id="connection-title">Client connection</h2>
-      <p>Disconnected. No saved observations are loaded.</p>
+      <p>Synthetic check only. No saved observations are loaded.</p>
       <p role="status">{exact ? "Exact JSON decoding is supported by this browser." : "This browser cannot decode exact API numbers. Use a current supported browser."}</p>
     </section>
     <section aria-labelledby="precision-title" className="panel">
@@ -36,6 +36,6 @@ export function ClientFoundation() {
         </dl>}
       </div>
     </section>
-    <p className="footnote">This is the synthetic client foundation for issue #143. Saved data and token entry follow in their own modules. History remains disabled in production pending its separate rights gate.</p>
+    <p className="footnote">This is the synthetic client foundation for issue #143. Connection controls are available in Settings; saved-data views follow separately. History remains disabled in production pending its separate rights gate.</p>
   </div>;
 }
