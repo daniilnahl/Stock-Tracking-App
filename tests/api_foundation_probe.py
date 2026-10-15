@@ -120,7 +120,7 @@ async def exercise(create_app):
     assert history_calls == [("AAPL", date(2015, 2, 28), date(2020, 2, 29))]
 
 
-def main(root):
+def main(root, exercise_api=exercise):
     import_root = Path(root).resolve()
     sys.path.insert(0, str(import_root))
     # Native Windows loop bootstrap owns internal control sockets only, before
@@ -195,7 +195,7 @@ def main(root):
             from stock_tracker.api import app, serialization, schemas
             for module in (app, serialization, schemas):
                 assert Path(module.__file__).resolve().is_relative_to(import_root)
-            loop.run_until_complete(exercise(create_app))
+            loop.run_until_complete(exercise_api(create_app))
     finally:
         loop.run_until_complete(loop.shutdown_asyncgens())
         loop.run_until_complete(loop.shutdown_default_executor())

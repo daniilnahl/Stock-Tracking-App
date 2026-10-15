@@ -972,3 +972,31 @@ the real shared service under independently proven network, configuration,
 ordinary IO, concrete infrastructure and UI import guards. The reviewed schema
 snapshot documents unique typed request parameters and exact integer limits.
 Production composition, launcher, live rights and combined M7 exit remain #133–134.
+
+## M7 local composition and launcher — issue #133
+
+Add `tests/test_api_launcher.py` to the focused API command. It verifies the
+required process-only token, fixed safe parser/startup failures, four resolved
+distinct paths, actual temporary hard links, native Windows ambiguous namespace
+aliases, native junction/reparse-point handling and symlink handling. Tests
+exercise real temporary junctions on Windows and synthetic non-symlink reparse
+metadata on all platforms. Tests attempt real symlink creation; Windows
+without privilege uses synthetic metadata/resolution refusal fixtures instead
+of changing system settings. Loader-only configuration issuance prevents an
+unchecked constructor from bypassing alias validation, while composition
+validates its provenance without repeating filesystem resolution.
+
+Actual shared WatchlistService/SQLite views preserve both namespaces, duplicate
+rows, holdings and opaque legacy bytes. Typed fake historical factories verify
+lazy existing configuration, explicit cache path, accepted provenance and safe
+upstream configuration errors; invalid identity/range/row requests acquire no
+provider configuration. Uvicorn is replaced only at its run boundary to verify
+fixed loopback/worker/log/proxy settings without a listener. Cold source and
+installed-wheel `api_launcher_probe.py` imports/help run under the independently
+proven foundation guards before a separately disclosed synthetic-token/metadata
+launch preflight. No-IO health/schema/disabled-history then use the issued
+production configuration. Safe category logs are captured explicitly; ordinary
+output, credentials, providers, SQL, network and data contents remain denied.
+The static help/parser avoids locale and terminal environment/file discovery.
+See [local API operation](API_OPERATIONS.md). Live rights and the combined M7
+exit audit remain independent gates.

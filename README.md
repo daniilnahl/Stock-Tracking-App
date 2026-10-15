@@ -111,9 +111,13 @@ rows and unknown freshness. Authenticated
 stored row and delegates paired ISO dates or UTC defaults to the shared history
 service, preserving raw Decimal values and existing cache policy. History is
 disabled by default before state/provider/cache acquisition; explicit synthetic
-test injection does not establish external display/cache rights. Production
-configuration/launcher remains a separate dependent issue;
-this foundation starts no listener and changes no CLI behavior. See
+test injection does not establish external display/cache rights.
+`python -m stock_tracker.api --help` documents the separate local launcher.
+It requires four distinct explicit file paths and the process-only
+`STOCK_TRACKER_API_TOKEN`, binds only 127.0.0.1:8000 and defaults to saved local
+views with historical acquisition disabled. See [API operation](docs/API_OPERATIONS.md)
+for start/stop, safe startup recovery and the historical rights activation gate.
+The injected factory starts no listener and changes no CLI behavior. See
 [API foundation contracts](docs/API_FOUNDATION.md) for the current boundaries,
 dependency rationale and offline verification. The canonical `.[dev]` setup
 above includes the minimal pinned API stack and in-process HTTP test client.

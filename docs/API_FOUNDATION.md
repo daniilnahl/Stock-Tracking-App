@@ -6,16 +6,16 @@ serialization and safety boundaries. It registers GET `/health`,
 GET `/api/v1/openapi.json`,
 GET `/api/v1/watchlists/{namespace}` and
 GET `/api/v1/watchlists/{namespace}/entries/{ordinal}/history`.
-Storage composition, credential loading and the production launcher remain #133.
-This injected adapter starts no listener.
+The independent local composition and launcher are supplied by #133; see
+[API operation](API_OPERATIONS.md). This injected adapter starts no listener.
 
 ## Factory and extension contract
 
 `stock_tracker.api.create_app(*, token=None, services=None)` constructs a
 FastAPI instance without application configuration, credential, database,
 provider or cache acquisition. A missing token permits process health;
-all `/api/v1` requests fail authentication. The future production launcher
-must require the operator token. Supplied tokens match
+all `/api/v1` requests fail authentication. The separate production launcher
+requires the operator token. Supplied tokens match
 `[A-Za-z0-9_-]{32,256}`; invalid configuration raises a fixed ValueError.
 The token never becomes a Pydantic response, schema example or repr field.
 

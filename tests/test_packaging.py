@@ -76,6 +76,8 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
         "stock_tracker/api/access.py", "stock_tracker/api/context.py",
         "stock_tracker/api/errors.py", "stock_tracker/api/json_response.py",
         "stock_tracker/api/schemas.py", "stock_tracker/api/serialization.py",
+        "stock_tracker/api/configuration.py", "stock_tracker/api/composition.py",
+        "stock_tracker/api/launcher.py", "stock_tracker/api/__main__.py",
     }
 
     installed = tmp_path / "installed"
@@ -108,6 +110,13 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
     assert api_foundation.returncode == 0, api_foundation.stderr
     assert api_foundation.stdout == api_foundation.stderr == ""
     assert not (tmp_path / "api-foundation-probe").exists()
+
+    api_launcher = subprocess.run(
+        [sys.executable, "-I", "-B", str(ROOT / "tests/api_launcher_probe.py"), str(installed)],
+        cwd=tmp_path, env=environment, capture_output=True, text=True, timeout=30,
+    )
+    assert api_launcher.returncode == 0, api_launcher.stderr
+    assert api_launcher.stdout == api_launcher.stderr == ""
 
     m6_directory = tmp_path / "installed-m6-exit"
     m6_directory.mkdir()
