@@ -51,8 +51,8 @@ All issues belong to [M7 milestone 8](https://github.com/daniilnahl/Stock-Tracki
 | [#129](https://github.com/daniilnahl/Stock-Tracking-App/issues/129) | REST contract/acceptance | M6 merged | Accepted; owner merge and PR/main CI passed | [PR #135](https://github.com/daniilnahl/Stock-Tracking-App/pull/135), merged |
 | [#130](https://github.com/daniilnahl/Stock-Tracking-App/issues/130) | Lazy app factory, JSON/error/access foundation | #129 resolved | Closed; owner merge and PR/main CI passed | [PR #136](https://github.com/daniilnahl/Stock-Tracking-App/pull/136), merged |
 | [#131](https://github.com/daniilnahl/Stock-Tracking-App/issues/131) | Saved watchlist views | #130 resolved | Closed; owner merge and PR/main CI passed | [PR #137](https://github.com/daniilnahl/Stock-Tracking-App/pull/137), merged |
-| [#132](https://github.com/daniilnahl/Stock-Tracking-App/issues/132) | Stored-row raw history | #130/#131 resolved | Implemented; local verification and independent review passed; owner merge pending | [PR #138](https://github.com/daniilnahl/Stock-Tracking-App/pull/138), hosted CI pending at submission |
-| [#133](https://github.com/daniilnahl/Stock-Tracking-App/issues/133) | Local composition/launch/operation | #130–132 owner merge/main CI | Blocked; unassigned | None |
+| [#132](https://github.com/daniilnahl/Stock-Tracking-App/issues/132) | Stored-row raw history | #130/#131 resolved | Closed; owner merge and PR/main CI passed | [PR #138](https://github.com/daniilnahl/Stock-Tracking-App/pull/138), merged |
+| [#133](https://github.com/daniilnahl/Stock-Tracking-App/issues/133) | Local composition/launch/operation | #130–132 resolved | Implemented; canonical checks and independent review passed; hosted CI pending at submission | [PR #139](https://github.com/daniilnahl/Stock-Tracking-App/pull/139), open |
 | [#134](https://github.com/daniilnahl/Stock-Tracking-App/issues/134) | Independent source/wheel exit audit | #130–133 owner merge/main CI | Blocked; unassigned | None |
 
 One issue, branch and PR per objective. Delegate runtime only after contracts
@@ -247,6 +247,59 @@ Published [PR #138](https://github.com/daniilnahl/Stock-Tracking-App/pull/138)
 through the signed-in GitHub website and attached it to this chat. Final staged
 hygiene passed **8 in 8.16s**; Master scope/whitespace/secret review and final
 Ruff/configured mypy/pip check passed before commit/push. No agent merge.
+
+## Local operation continuation — issue #133, 2026-10-14
+
+The owner instructed "pr merged, continue the work" after PR #138. Verified
+owner merge `f5c91da49f5e774381420b772ad475cc36055da0`, reviewed head
+`20541993d4f4bf2bea74843ed585c76564564837`, successful exact-head Foundation
+38628310335 and successful main Foundation 38631256087. Issue #132 is closed;
+#133 is unblocked on `feature/133-local-api-launcher`. The implementation agent
+performed analysis only while main CI was pending and began after it passed.
+A separate read-only agent reviews path aliases, token safety, lazy composition,
+launcher bounds and source/wheel evidence.
+
+Plan: implement independent configuration/composition and the fixed loopback
+launcher. Require four explicit pairwise distinct paths with metadata-only
+startup validation and an environment-only operator token. Help/import/health
+remain IO-free; saved views never acquire provider credentials/cache. Enabled
+history reuses the existing lazy configuration/provider factory and UTC service
+policy. Document the separate owner-confirmed rights precondition for the opt-in
+flag; no rights were supplied and no live provider/listener/user state is used.
+Verify safe failures, aliases, rejected access, temporary state and source/wheel
+packaging. No dependency, schema, financial or CLI changes. #134 retains its owner
+merge/main-CI gate; M7 is incomplete.
+
+Implemented independent API configuration/composition and the module launcher.
+Configuration requires a valid process-only token and four explicit distinct
+paths, rejects native aliases and unresolved symlink/reparse entries using
+metadata only, and issues immutable validated configuration without repeated
+resolution during composition. The server runner is fixed to loopback port
+8000, one worker, no reload/proxy trust/access logs. Shared services retain
+lazy infrastructure acquisition and accepted UTC/provider/cache policies.
+Static help avoids locale/terminal configuration reads. Operations docs record
+the unsupplied rights gate and disabled-by-default historical capability.
+
+Final focused verification after the junction repair passed **255 in 46.84s**
+across all API tests and source/installed-wheel packaging. Independent review
+passed with no remaining findings; its actual native Windows junction and
+synthetic reparse regressions passed **2 in 0.69s**. Staged-index hygiene passed
+**8 in 9.70s**. Master independently inspected source, tests, probes and docs;
+Ruff, configured mypy (**config.py only**), pip check and diff check passed.
+Earlier review repairs covered unchecked configuration construction, ambiguous
+Windows path spellings, cold-help guard placement, startup metadata/token-only
+guard evidence and dangling junction parents. No guard or policy was weakened.
+Final canonical Python 3.12.14 `python -m pytest -q` passed **2760 in 111.81s**
+with no skips or failures, including fresh source/installed-wheel checks.
+Hosted CI remains pending at submission. No live listener, provider call, real
+credential or user state was used. #134 remains gated on owner merge and passing
+main CI; M7 remains incomplete.
+
+Published [PR #139](https://github.com/daniilnahl/Stock-Tracking-App/pull/139)
+through the signed-in GitHub website and attached it to this chat. Final staged
+hygiene passed **8 in 8.43s** before the implementation commit. This publication
+record changes documentation only. Final-revision hosted CI and Master review
+are recorded on the PR; no agent merge.
 
 ## Completion gate
 
