@@ -1,66 +1,111 @@
 <!doctype html>
-<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>M8 — Illustrative dashboard design</title>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>M8 — Retro pixel dashboard preview</title>
 <style>
-:root{color-scheme:light dark;--bg:#fafafa;--surface:#fff;--fg:#202020;--muted:#616161;--line:#d3d3d3}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,sans-serif}header,main{max-width:1120px;margin:auto;padding:28px}header{display:flex;align-items:center;gap:32px;border-bottom:1px solid var(--line)}nav{display:flex;gap:22px;flex:1}a{color:inherit;text-underline-offset:7px}button{background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:5px;padding:10px 15px;font:inherit;cursor:pointer}:focus-visible{outline:3px solid var(--fg);outline-offset:4px}.label{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}h1{font-size:38px;font-weight:500;letter-spacing:-.04em;margin:14px 0 5px}h2{font-size:19px;font-weight:500}p{color:var(--muted)}.notice{border:1px dashed var(--muted);padding:14px 18px;margin-bottom:32px}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:30px 0}.card,.panel{border:1px solid var(--line);background:var(--surface);padding:24px;border-radius:6px}.value{font-size:26px;margin-top:12px;font-variant-numeric:tabular-nums}.tablewrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:550px;text-align:left}th,td{padding:17px 8px;border-bottom:1px solid var(--line)}th{font-size:12px;color:var(--muted);font-weight:500}td{font-variant-numeric:tabular-nums}.placeholder{text-align:center;padding:48px 16px}.foot{margin-top:25px;font-size:13px}body.dark{--bg:#171717;--surface:#202020;--fg:#f5f5f5;--muted:#b5b5b5;--line:#555} @media(max-width:700px){header{flex-wrap:wrap;gap:14px;padding:20px}nav{order:3;flex-basis:100%;overflow:auto}.cards{grid-template-columns:1fr}main{padding:20px}h1{font-size:30px}}
-</style>
-<style>
-/* Retro geometry uses the established light/dark palette. No remote fonts. */
-:root{--font-data:'Courier New',Courier,monospace;--shadow:4px 4px 0 var(--line)}
-body{font-family:var(--font-data);line-height:1.65}
-header{border-bottom:2px solid var(--fg)}
-header>strong{font-size:14px;letter-spacing:.04em}
-button{border:2px solid var(--fg);border-radius:0;box-shadow:3px 3px 0 var(--fg);font-size:14px;font-weight:700}
+@font-face{font-family:'Stock Pixel';src:url('assets/stock-pixel.ttf') format('truetype');font-style:normal;font-weight:400;font-display:swap}
+:root{color-scheme:light;--bg:#fafafa;--surface:#fff;--fg:#202020;--muted:#616161;--line:#d3d3d3;--font-ui:'Stock Pixel',monospace;--shadow:4px 4px 0 var(--line)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:20px/1.7 var(--font-ui)}
+body.dark{color-scheme:dark;--bg:#171717;--surface:#202020;--fg:#f5f5f5;--muted:#b5b5b5;--line:#555}
+button,input,select,textarea{font:inherit}
+header,main{max-width:1120px;margin:auto;padding:28px}
+header{display:flex;align-items:center;gap:28px;border-bottom:2px solid var(--fg)}
+header>strong{font-size:20px;white-space:nowrap;font-weight:400}
+nav{display:flex;gap:22px;flex:1}
+a{color:inherit;text-underline-offset:7px;text-decoration-thickness:2px}
+button{background:var(--surface);color:var(--fg);border:2px solid var(--fg);border-radius:0;box-shadow:3px 3px 0 var(--fg);padding:10px 14px;cursor:pointer}
 button:hover{background:var(--fg);color:var(--surface)}
 button:active{transform:translate(3px,3px);box-shadow:none}
-nav a{font-size:14px;text-decoration-thickness:2px}
-.label{font-size:12px;font-weight:700;letter-spacing:.06em}
-.notice{border:2px dashed var(--muted);font-size:14px}
-.card,.panel{border:2px solid var(--line);border-radius:0;box-shadow:var(--shadow)}
-.card{position:relative;padding-top:30px}
+:focus-visible{outline:3px solid var(--fg);outline-offset:5px}
+.label{font-size:20px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+h1{font-size:40px;line-height:1.5;font-weight:400;margin:22px 0 5px}
+h2{font-size:30px;line-height:1.5;font-weight:400;margin:10px 0 18px;overflow-wrap:anywhere}
+p{color:var(--muted);margin:14px 0}
+strong{font-weight:400}
+.notice{border:2px dashed var(--muted);padding:16px 20px;margin-bottom:32px}
+.feature-placeholders{display:grid;gap:24px;margin:28px 0}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;margin:30px 0}
+.card,.panel{min-width:0;border:2px solid var(--line);background:var(--surface);padding:24px;border-radius:0;box-shadow:var(--shadow)}
+.card{position:relative;padding-top:34px}
 .card:before{content:'';position:absolute;left:24px;top:16px;width:6px;height:6px;background:var(--muted);box-shadow:9px 0 var(--muted),18px 0 var(--muted)}
-h1{font-size:30px;line-height:1.6;letter-spacing:0;margin-top:22px}
-h2{font-size:18px;line-height:1.8;letter-spacing:0}
-.pixel-word{display:inline-block;vertical-align:middle;margin-right:.6em;max-width:100%}
-.pixel-word svg{display:block;height:1em;width:auto;max-width:100%;fill:currentColor;shape-rendering:crispEdges}
-.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-.value{font-size:24px;font-weight:700}
-th{font-weight:700}th,td{border-bottom-style:dashed}
-.placeholder{background:var(--bg)}
-@media(max-width:700px){h1{font-size:23px}h2{font-size:16px}.value{font-size:22px}header{gap:18px}header>strong{flex:1}.cards{gap:22px}}
+.value{font-size:30px;margin-top:12px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.panel-heading{display:flex;gap:24px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.tablewrap{overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:620px;text-align:left}
+th,td{padding:17px 8px;border-bottom:1px dashed var(--line);font-size:20px;font-weight:400;font-variant-numeric:tabular-nums}
+th{color:var(--muted)}
+.placeholder{text-align:center;padding:48px 16px;background:var(--bg)}
+.foot{margin-top:25px}
+.search-note{margin-top:24px;padding:20px;border:2px dashed var(--muted);background:var(--bg)}
+[hidden]{display:none!important}
+@media(max-width:760px){header{flex-wrap:wrap;gap:20px;padding:20px}nav{order:3;flex-basis:100%;flex-wrap:wrap}.cards{grid-template-columns:1fr}main{padding:20px}h1{font-size:30px}h2{font-size:25px}.panel,.card{padding:20px}.card{padding-top:34px}}
 </style>
-<header><strong>stock / tracker</strong><nav aria-label="Design preview navigation"><a href="#overview">Overview</a><a href="#watchlists">Watchlists</a><a href="#settings">Settings</a></nav><button id="theme" type="button" aria-pressed="false">Dark theme</button></header>
-<main><div class="notice"><strong>Illustrative design preview · proposal only</strong><br>No API connection, holdings or market figures. This is a visual direction for review.</div><section id="overview"><div class="label">Local workspace</div><h1>Your watchlists, clearly.</h1><p>Saved observations with their limits in view.</p><div class="cards"><div class="card"><div class="label">Connection</div><div class="value">Disconnected</div><p>Token entry belongs in the approved app.</p></div><div class="card"><div class="label">Saved entries</div><div class="value">—</div><p>Available after an authenticated read.</p></div><div class="card"><div class="label">Observation status</div><div class="value">Unknown</div><p>Saved prices do not establish freshness.</p></div></div></section><section class="panel" id="watchlists"><div class="label">Saved observations</div><h2>Menu watchlist</h2><div class="tablewrap" role="region" aria-label="Watchlist design preview; horizontally scrollable" tabindex="0"><table><thead><tr><th scope="col">Security</th><th scope="col">Quantity · shares</th><th scope="col">Saved price</th><th scope="col">Observation</th></tr></thead><tbody><tr><td colspan="4" class="placeholder">Connect to read saved entries.<br><span class="label">No illustrative prices presented as live data</span></td></tr></tbody></table></div><p class="foot">Both saved namespaces and duplicate rows remain distinct. Currency and freshness require explicit evidence.</p></section><section id="settings"><h2>Appearance</h2><p>The theme control previews the light and dark design direction. Production persistence and connection controls await the approved implementation.</p></section></main>
+</head>
+<body>
+<header>
+ <strong>stock / tracker</strong>
+ <nav aria-label="Preview navigation"><a href="#overview">Overview</a><a href="#watchlists">Watchlists</a><a href="#settings">Settings</a></nav>
+ <button id="theme" type="button" aria-pressed="false">Dark theme</button>
+</header>
+<main>
+ <div class="notice"><strong>Illustrative design preview · proposal only</strong><br>No API connection, holdings or market figures. All text uses an original local pixel font.</div>
+ <section id="overview" aria-labelledby="overview-title">
+  <div class="label">Local workspace</div>
+  <h1 id="overview-title">Your watchlists, clearly.</h1>
+  <p>Saved observations with their limits in view.</p>
+  <div class="feature-placeholders">
+   <section class="panel" aria-labelledby="recommend-title">
+    <div class="label">Placeholder · unavailable</div>
+    <h2 id="recommend-title">Recommend stock of the day</h2>
+    <p>Reserved for future research. No recommendation service is connected.</p>
+   </section>
+   <section class="panel" aria-labelledby="taurus-title">
+    <div class="label">Placeholder · unavailable</div>
+    <h2 id="taurus-title">Taurus Agents Menu</h2>
+    <p>Reserved for future agent controls. No agents are configured or running.</p>
+   </section>
+  </div>
+  <div class="cards">
+   <div class="card"><div class="label">Connection</div><div class="value">Disconnected</div><p>Token entry belongs in the approved app.</p></div>
+   <div class="card"><div class="label">Saved entries</div><div class="value">—</div><p>Available after an authenticated read.</p></div>
+   <div class="card"><div class="label">Observation status</div><div class="value">Unknown</div><p>Saved prices do not establish freshness.</p></div>
+  </div>
+ </section>
+ <section class="panel" id="watchlists" aria-labelledby="watchlist-title">
+  <div class="panel-heading">
+   <div><div class="label">Saved observations</div><h2 id="watchlist-title">Menu watchlist</h2></div>
+   <button id="search-add" type="button" aria-expanded="false" aria-controls="search-note">Search / add stock</button>
+  </div>
+  <div id="search-note" class="search-note" hidden>
+   <strong>Unavailable — backend search/add is not implemented.</strong>
+   <p>This is where stock search and add will open once the backend supports them. No search or save request is sent by this preview.</p>
+   <a href="../TO-DO-LIST.md">Read the backend and frontend TO-DO LIST</a>
+  </div>
+  <div class="tablewrap" role="region" aria-label="Watchlist preview; horizontally scrollable" tabindex="0">
+   <table><thead><tr><th scope="col">Security</th><th scope="col">Quantity · shares</th><th scope="col">Saved price</th><th scope="col">Observation</th></tr></thead>
+   <tbody><tr><td colspan="4" class="placeholder">Connect to read saved entries.<br><span class="label">No sample prices presented as live data</span></td></tr></tbody></table>
+  </div>
+  <p class="foot">Both saved namespaces and duplicate rows remain distinct. Currency and freshness require explicit evidence.</p>
+ </section>
+ <section id="settings" aria-labelledby="appearance-title"><h2 id="appearance-title">Appearance</h2><p>The theme control previews light and dark. Pixel lettering applies to headings, body text, navigation, tables and buttons. Production persistence and connection controls await implementation.</p></section>
+</main>
 <script>
-// Original 5x7 vector glyphs, used only for display headings. Accessible text
-// remains in the document; controls, financial tables and body text stay text.
-const glyphs = {
-A:'01110/10001/10001/11111/10001/10001/10001',B:'11110/10001/10001/11110/10001/10001/11110',
-C:'01111/10000/10000/10000/10000/10000/01111',D:'11110/10001/10001/10001/10001/10001/11110',
-E:'11111/10000/10000/11110/10000/10000/11111',F:'11111/10000/10000/11110/10000/10000/10000',
-G:'01111/10000/10000/10111/10001/10001/01111',H:'10001/10001/10001/11111/10001/10001/10001',
-I:'11111/00100/00100/00100/00100/00100/11111',J:'00111/00010/00010/00010/10010/10010/01100',
-K:'10001/10010/10100/11000/10100/10010/10001',L:'10000/10000/10000/10000/10000/10000/11111',
-M:'10001/11011/10101/10101/10001/10001/10001',N:'10001/11001/10101/10011/10001/10001/10001',
-O:'01110/10001/10001/10001/10001/10001/01110',P:'11110/10001/10001/11110/10000/10000/10000',
-Q:'01110/10001/10001/10001/10101/10010/01101',R:'11110/10001/10001/11110/10100/10010/10001',
-S:'01111/10000/10000/01110/00001/00001/11110',T:'11111/00100/00100/00100/00100/00100/00100',
-U:'10001/10001/10001/10001/10001/10001/01110',V:'10001/10001/10001/10001/10001/01010/00100',
-W:'10001/10001/10001/10101/10101/11011/10001',X:'10001/10001/01010/00100/01010/10001/10001',
-Y:'10001/10001/01010/00100/00100/00100/00100',Z:'11111/00001/00010/00100/01000/10000/11111',
-'.':'00000/00000/00000/00000/00000/00110/00110',',':'00000/00000/00000/00000/00110/00100/01000',
-'/':'00001/00010/00010/00100/01000/01000/10000'
-};
-const svgNS='http://www.w3.org/2000/svg';
-for(const heading of document.querySelectorAll('h1,h2,header>strong')){
- const text=heading.textContent;
- const accessible=document.createElement('span');accessible.className='sr-only';accessible.textContent=text;
- heading.replaceChildren(accessible);
- for(const word of text.toUpperCase().split(' ')){
-  const wrapper=document.createElement('span');wrapper.className='pixel-word';wrapper.setAttribute('aria-hidden','true');
-  const svg=document.createElementNS(svgNS,'svg');svg.setAttribute('viewBox',`0 0 ${word.length*6-1} 7`);svg.setAttribute('width',String((word.length*6-1)*3));svg.setAttribute('height','21');svg.setAttribute('focusable','false');
-  [...word].forEach((letter,index)=>{(glyphs[letter]||glyphs['.']).split('/').forEach((row,y)=>{[...row].forEach((bit,x)=>{if(bit==='1'){const pixel=document.createElementNS(svgNS,'rect');pixel.setAttribute('x',String(index*6+x));pixel.setAttribute('y',String(y));pixel.setAttribute('width','1');pixel.setAttribute('height','1');svg.append(pixel);}});});});
-  wrapper.append(svg);heading.append(wrapper);
- }
-}
-const button=document.getElementById('theme');button.addEventListener('click',()=>{const dark=document.body.classList.toggle('dark');button.setAttribute('aria-pressed',String(dark));button.textContent=dark?'Light theme':'Dark theme';});
-</script></html>
+const themeButton=document.getElementById('theme');
+themeButton.addEventListener('click',()=>{
+ const dark=document.body.classList.toggle('dark');
+ themeButton.setAttribute('aria-pressed',String(dark));
+ themeButton.textContent=dark?'Light theme':'Dark theme';
+});
+const searchButton=document.getElementById('search-add');
+const searchNote=document.getElementById('search-note');
+searchButton.addEventListener('click',()=>{
+ const expanded=searchButton.getAttribute('aria-expanded')!=='true';
+ searchButton.setAttribute('aria-expanded',String(expanded));
+ searchNote.hidden=!expanded;
+});
+</script>
+</body>
+</html>

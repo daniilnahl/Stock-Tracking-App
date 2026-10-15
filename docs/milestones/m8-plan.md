@@ -86,3 +86,44 @@ Independent static review confirmed palette/scope/accessibility-text retention
 and identified the preview's SVG lettering as an images-of-text concern for
 production. ADR now requires actual text with a local pixel font in production;
 this illustrative rendering does not certify WCAG AA.
+
+## All-text pixel and placeholder revision
+
+The owner requested pixel styling for **all** text, an obvious stock search/add
+entry point plus a backend/frontend gap checklist, and two rectangles above
+the three status cards titled “Recommend stock of the day” and “Taurus Agents
+Menu”. The preview now uses the local original Stock Pixel TrueType font for
+all real HTML text, including tables, body copy and controls; the earlier SVG
+heading renderer is removed. Original glyph source, a deterministic Node-only
+generator and license notes accompany the required font asset. Existing
+monochrome light/dark theme tokens remain unchanged.
+
+Both requested panels are visibly unavailable placeholders. Search / add stock
+only toggles an explanation and a link to [TO-DO LIST](../TO-DO-LIST.md). The
+checklist identifies actual existing CLI/shared-service behavior, missing HTTP
+lookup/mutation support, backend approval/contracts/concurrency/security/tests
+and frontend request/commit/error states. No backend or future agent/research
+functionality is implemented or implied.
+
+Current verification supersedes the earlier SVG checks: Node controlled-DOM
+checks pass for theme toggles and search disclosure expand/collapse; static
+checks verify every preview text character has a pixel glyph, the global font,
+both exact titles/order/unavailable labels and local links. Font rebuild hashes
+match; TrueType cmap/table/checksum checks pass; Windows private-font loading
+recognizes Stock Pixel without installation. An isolated headless Edge desktop
+capture at 1440×1900 was visually inspected and confirms the local pixel font,
+panel order and visible search/add control. No real data or credentials were
+used. Independent static review found no blocker after clarifying uncertain
+post-commit outcomes. Canonical Python checks remain unavailable as previously
+recorded; no production functionality or full accessibility audit is claimed.
+
+A second isolated Edge test copy programmatically activated dark mode and
+expanded search/add. Its capture with content constrained to 390px was visually
+inspected: navigation/text/panels wrap and status cards stack; the data table
+retains its intentional horizontal scroll region. Edge's minimum headless window
+width exceeded the requested 390px, so the check used a 500px capture with an
+explicit 390px body rather than claiming true mobile-device emulation. Test
+copies/profiles/captures remain outside the repository. Actual browser rendering
+is now verified for these bounded previews, superseding the earlier timeout;
+full browser E2E, screen-reader/contrast auditing and canonical Python checks
+remain outside this revision's verification.

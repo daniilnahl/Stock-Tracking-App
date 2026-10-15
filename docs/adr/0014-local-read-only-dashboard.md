@@ -30,17 +30,26 @@ applicable cross-milestone requirements. Approve the following D3 decisions:
 - Light monochrome default, dark alternative, semantic CSS tokens, tabular
   numbers, explicit text/sign gain/loss, WCAG 2.2 AA target and reduced motion.
   Persist only theme preference locally. No copied reference artwork.
-- Retro pixel presentation within those same monochrome themes: original
-  pixel display lettering for branding/headings, readable monospace text for
-  controls and data, square corners, stepped details and hard offset shadows.
+- Retro pixel presentation within those same monochrome themes: **all text**,
+  including headings, body copy, navigation, tables and controls uses the local
+  original pixel font. Keep readable sizes, square corners, stepped details and
+  hard offset shadows.
   Keep generous whitespace and semantic theme tokens. Avoid scanlines, flicker,
   tiny bitmap body text or decorative effects that obscure values. Pixel
   lettering retains accessible text and scales without clipping. Production
   headings remain real text using a locally packaged licensed or original pixel
   font, honoring user font/text-spacing overrides; do not replace headings with
-  SVG images of text. The illustrative preview's vector lettering demonstrates
-  appearance only, not WCAG conformance. No runtime font CDN or new font
-  dependency is required.
+  SVG images of text. The preview now uses a real original local TrueType font
+  with source glyphs and a dependency-free generator; it demonstrates appearance,
+  not WCAG conformance. No runtime font CDN or new font dependency is required.
+
+The owner's subsequent preview revision explicitly requests two layout-only
+panels above the status cards: “Recommend stock of the day” and “Taurus Agents
+Menu”. Keep both marked unavailable placeholders; this does not enable M9/M10
+or define agent/recommendation semantics. An obvious Search / add stock control
+explains the unsupported backend capability without making requests or offering
+a save action. [TO-DO LIST](../TO-DO-LIST.md) records backend/frontend scope and
+approval/test prerequisites. No mutation or future service is implemented here.
 
 ### Browser security and distribution
 
