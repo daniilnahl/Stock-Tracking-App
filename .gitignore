@@ -35,3 +35,9 @@ env/
 /test
 stock_tracker.history-cache.json
 .history-cache-*
+
+# Local frontend dependencies and verification artifacts.
+frontend/node_modules/
+frontend/playwright-report/
+frontend/test-results/
+frontend/.cache/

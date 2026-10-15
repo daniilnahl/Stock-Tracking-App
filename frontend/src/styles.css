@@ -1,0 +1,46 @@
+@font-face {
+  font-family: "Stock Pixel";
+  src: url("./stock-pixel.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+:root {
+  font-family: "Stock Pixel", monospace;
+  font-synthesis: none;
+  font-variant-numeric: tabular-nums;
+  --text: #202020;
+  --background: #fafafa;
+  --surface: #fff;
+  --muted: #616161;
+  --border: #d3d3d3;
+  --focus: #202020;
+  color: var(--text);
+  background: var(--background);
+  font-size: 20px;
+  line-height: 1.65;
+}
+* { box-sizing: border-box; }
+body { margin: 0; }
+button { font: inherit; color: inherit; }
+main { max-width: 1140px; padding: 2.5rem 2rem 4rem; margin: auto; }
+h1, h2 { font-weight: 400; }
+h1 { font-size: clamp(2rem, 5vw, 3.6rem); line-height: 1.15; margin: 2rem 0 1rem; }
+h2 { font-size: 1.3rem; margin: 0 0 .75rem; }
+p { margin: .65rem 0; }
+.eyebrow, .footnote { color: var(--muted); }
+.demo-label { display: inline-block; border: 2px solid var(--text); padding: .3rem .7rem; background: var(--surface); }
+.intro { max-width: 48rem; margin-bottom: 2rem; }
+.panel { background: var(--surface); border: 2px solid var(--border); padding: 1.4rem; margin: 1.5rem 0; box-shadow: 5px 5px 0 var(--border); }
+.actions { display: flex; flex-wrap: wrap; gap: .75rem; margin: 1rem 0 1.5rem; }
+button { background: var(--surface); border: 2px solid var(--text); border-radius: 0; padding: .45rem .8rem; cursor: pointer; }
+button:hover { background: var(--text); color: var(--surface); }
+button:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; }
+button:disabled { opacity: .6; cursor: default; }
+dl { margin: 1.5rem 0 0; }
+dl > div { border-top: 1px solid var(--border); padding: .6rem 0; }
+dt { color: var(--muted); }
+dd { margin: .3rem 0; overflow-wrap: anywhere; }
+.footnote { margin-top: 2.5rem; }
+@media (max-width: 600px) { main { padding: 1.2rem .9rem 2rem; } .panel { padding: .9rem; } button { width: 100%; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto; } }
