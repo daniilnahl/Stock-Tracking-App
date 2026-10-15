@@ -71,6 +71,13 @@ Optional packaging verification uses
 
 Agents must not claim a command passed unless it was actually executed.
 
+Repository credential-pattern checks scan staged blobs, including binary assets.
+Only blob content uses UTF-8 `surrogateescape` to preserve undecodable bytes
+while retaining ASCII assignment/URL detection; other Git output stays strict.
+No binary extension is skipped. The isolated binary regression verifies clean
+data, synthetic credential patterns and an unstaged cleanup that must not hide
+staged findings. Diagnostics report paths/line numbers, never credential values.
+
 `pytest` and `ruff check .` are equivalent console-script invocations in the
 activated environment. Pytest is
 configured to collect `test_*.py` under `tests/`; root-level `test.py` is a
