@@ -53,7 +53,7 @@ All issues belong to [M7 milestone 8](https://github.com/daniilnahl/Stock-Tracki
 | [#131](https://github.com/daniilnahl/Stock-Tracking-App/issues/131) | Saved watchlist views | #130 resolved | Closed; owner merge and PR/main CI passed | [PR #137](https://github.com/daniilnahl/Stock-Tracking-App/pull/137), merged |
 | [#132](https://github.com/daniilnahl/Stock-Tracking-App/issues/132) | Stored-row raw history | #130/#131 resolved | Closed; owner merge and PR/main CI passed | [PR #138](https://github.com/daniilnahl/Stock-Tracking-App/pull/138), merged |
 | [#133](https://github.com/daniilnahl/Stock-Tracking-App/issues/133) | Local composition/launch/operation | #130–132 resolved | Closed; owner merge and PR/main CI passed | [PR #139](https://github.com/daniilnahl/Stock-Tracking-App/pull/139), merged |
-| [#134](https://github.com/daniilnahl/Stock-Tracking-App/issues/134) | Independent source/wheel exit audit | #130–133 resolved | Implemented; canonical checks and independent review passed; publication pending | Pending |
+| [#134](https://github.com/daniilnahl/Stock-Tracking-App/issues/134) | Independent source/wheel exit audit | #130–133 resolved | Implemented; canonical checks and independent review passed; hosted CI pending at submission | [PR #140](https://github.com/daniilnahl/Stock-Tracking-App/pull/140), open |
 
 One issue, branch and PR per objective. Delegate runtime only after contracts
 and dependency gates pass. Stable factory/serializers precede route work;
@@ -343,6 +343,13 @@ only**) and pip check successfully. Final canonical Python 3.12.14 full pytest
 passed **2761 in 122.98s**. Hosted CI is pending at submission; no milestone
 completion is claimed. #134's own owner merge, passing main CI and closure
 remain required.
+
+Published [PR #140](https://github.com/daniilnahl/Stock-Tracking-App/pull/140)
+through the signed-in GitHub website and attached it to this chat. Final staged
+hygiene passed **8 in 8.80s**; Master diff/secret/artifact review and canonical
+static checks passed before commit/push. This publication record changes docs
+only; final-revision hosted CI and Master review are recorded on the PR.
+No agent merge and no premature milestone completion.
 
 ## Completion gate
 
