@@ -1000,3 +1000,23 @@ output, credentials, providers, SQL, network and data contents remain denied.
 The static help/parser avoids locale and terminal environment/file discovery.
 See [local API operation](API_OPERATIONS.md). Live rights and the combined M7
 exit audit remain independent gates.
+
+## M7 combined REST exit audit — issue #134
+
+Run `python -m pytest tests/test_m7_exit.py tests/test_api_foundation.py
+tests/test_api_serialization.py tests/test_api_boundary.py tests/test_api_watchlists.py
+tests/test_api_history.py tests/test_api_launcher.py tests/test_packaging.py -v`.
+The source and installed-wheel `m7_exit_probe.py` children execute real local API
+composition, shared services, temporary SQLite, production factory/FMP parser and
+JSON cache behind a synthetic HTTP opener. Independent write/read/expired
+processes prove exact values, namespace-specific duplicate selection, saved-view
+zero/null/unowned distinctions, restart reuse and exact one-hour expiry without
+stale fallback or holdings/legacy changes. Proven network, pickle, legacy-content,
+outside-write/atomic-move and explicit-database guards include a denial ledger;
+safe HTTP errors cannot hide violations. Native Windows event-loop control
+sockets bootstrap before network denial. Import/framework and installed TLS CA
+reads remain possible; dotenv discovery is disabled and all credentials are
+synthetic. Existing cold import/help probes and broad access/cancellation/error
+matrices remain independently required. See [M7 exit evidence](milestones/m7-exit-evidence.md)
+for guard exceptions, requirement mapping and pending owner-merge/main-CI gates.
+This audit does not certify live entitlement or milestone completion.

@@ -118,6 +118,16 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
     assert api_launcher.returncode == 0, api_launcher.stderr
     assert api_launcher.stdout == api_launcher.stderr == ""
 
+    m7_directory = tmp_path / "installed-m7-exit"
+    m7_directory.mkdir()
+    for mode in ("write", "read", "expired"):
+        m7_exit = subprocess.run(
+            [sys.executable, "-I", "-B", str(ROOT / "tests/m7_exit_probe.py"), str(installed), mode],
+            cwd=m7_directory, env=environment, capture_output=True, text=True, timeout=60,
+        )
+        assert m7_exit.returncode == 0, m7_exit.stderr
+        assert m7_exit.stdout == m7_exit.stderr == ""
+
     m6_directory = tmp_path / "installed-m6-exit"
     m6_directory.mkdir()
     for mode in ("write", "read", "failures", "read"):

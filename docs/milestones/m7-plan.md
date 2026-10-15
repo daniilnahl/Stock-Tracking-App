@@ -52,8 +52,8 @@ All issues belong to [M7 milestone 8](https://github.com/daniilnahl/Stock-Tracki
 | [#130](https://github.com/daniilnahl/Stock-Tracking-App/issues/130) | Lazy app factory, JSON/error/access foundation | #129 resolved | Closed; owner merge and PR/main CI passed | [PR #136](https://github.com/daniilnahl/Stock-Tracking-App/pull/136), merged |
 | [#131](https://github.com/daniilnahl/Stock-Tracking-App/issues/131) | Saved watchlist views | #130 resolved | Closed; owner merge and PR/main CI passed | [PR #137](https://github.com/daniilnahl/Stock-Tracking-App/pull/137), merged |
 | [#132](https://github.com/daniilnahl/Stock-Tracking-App/issues/132) | Stored-row raw history | #130/#131 resolved | Closed; owner merge and PR/main CI passed | [PR #138](https://github.com/daniilnahl/Stock-Tracking-App/pull/138), merged |
-| [#133](https://github.com/daniilnahl/Stock-Tracking-App/issues/133) | Local composition/launch/operation | #130–132 resolved | Implemented; canonical checks and independent review passed; hosted CI pending at submission | [PR #139](https://github.com/daniilnahl/Stock-Tracking-App/pull/139), open |
-| [#134](https://github.com/daniilnahl/Stock-Tracking-App/issues/134) | Independent source/wheel exit audit | #130–133 owner merge/main CI | Blocked; unassigned | None |
+| [#133](https://github.com/daniilnahl/Stock-Tracking-App/issues/133) | Local composition/launch/operation | #130–132 resolved | Closed; owner merge and PR/main CI passed | [PR #139](https://github.com/daniilnahl/Stock-Tracking-App/pull/139), merged |
+| [#134](https://github.com/daniilnahl/Stock-Tracking-App/issues/134) | Independent source/wheel exit audit | #130–133 resolved | Implemented; canonical checks and independent review passed; publication pending | Pending |
 
 One issue, branch and PR per objective. Delegate runtime only after contracts
 and dependency gates pass. Stable factory/serializers precede route work;
@@ -300,6 +300,49 @@ through the signed-in GitHub website and attached it to this chat. Final staged
 hygiene passed **8 in 8.43s** before the implementation commit. This publication
 record changes documentation only. Final-revision hosted CI and Master review
 are recorded on the PR; no agent merge.
+
+## Combined audit continuation — issue #134, 2026-10-14
+
+The owner instructed "merged, continue the work" after PR #139. Verified owner
+merge `65efe21f5d6432e0e4e19d29f76d30d66b1c00be`, reviewed final head
+`101315b69bdc5d7455c6c04d8930a9895b1ad192`, successful exact-head Foundation
+38659586967 and successful main Foundation 38668340633, each with all five
+checks. Issue #133 is closed. #134 is unblocked on
+`test/134-rest-api-exit-audit`, based on that owner merge. The delegated audit
+agent performed analysis only while main CI was pending; a separate read-only
+agent reviews audit coverage, guard evidence and requirement traceability.
+
+Plan: add one combined offline probe for source and installed-wheel processes,
+using the real local API configuration/composition, shared services, SQLite,
+provider factory/parser and historical cache. Replace only the external HTTP
+seam and clocks with controlled fixtures. Prove network, legacy-content and
+outside-write guards before executing application paths. Verify both namespaces,
+ordered duplicates, precise numbers/nulls, safe errors/access, cache restart,
+exact expiry/no stale fallback, and unchanged holdings/legacy bytes. Reuse the
+existing wheel build and canonical verification commands. Record exit evidence
+and limits without claiming milestone completion before this audit PR's owner
+merge, main CI and issue closure. No runtime feature, dependency, schema,
+financial, CLI, rights or hosting changes; no live operation or user state.
+
+Implemented only a standalone combined audit, its source wrapper, reuse of the
+existing installed-wheel build, testing instructions and requirement/exit
+evidence. Production API configuration/composition, service calculations,
+provider factory/transport/FMP parser, SQLite and JSON cache remain real. The
+external opener and clocks are controlled. Distinct namespace/duplicate markers,
+exact raw numbers/nulls, 3599-second restart reuse, exact 3600-second expiry,
+accepted provider retries and unchanged holdings/legacy/cache-failure bytes are
+asserted under proven Python IO guards. A denial ledger prevents safe HTTP
+errors from hiding forbidden IO. Bootstrap, TLS/code reads and fixture-only
+legacy opener exceptions are disclosed in [exit evidence](m7-exit-evidence.md).
+
+Focused M7/API/source-wheel verification passed **256 in 49.33s**. Independent
+read-only review passed with no remaining findings; its separate source audit
+passed **1 in 3.29s**. Initial staged-index hygiene passed **8 in 9.22s**. Master
+inspected the diff and independently ran Ruff, configured mypy (**config.py
+only**) and pip check successfully. Final canonical Python 3.12.14 full pytest
+passed **2761 in 122.98s**. Hosted CI is pending at submission; no milestone
+completion is claimed. #134's own owner merge, passing main CI and closure
+remain required.
 
 ## Completion gate
 
