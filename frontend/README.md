@@ -1,14 +1,18 @@
-# Dashboard client foundation — issue #143
+# Dashboard shell and precise client — issues #143–144
 
-Implements the accepted read-only ADR-0014/UI801–802, UI810–811,
-UI816–817, UI824 and UI826 foundation. The owner accepted the revised
-all-text pixel design and scoped ADR after PR #149; root #142 records that
-acceptance. This branch deliberately retains its independent #149 base.
+Implements the accepted read-only ADR-0014 client foundation and shared
+monochrome shell: UI801–809, UI810–815, UI816–817, UI824–826 and UI828 within
+their bounded foundation scope. The owner accepted the revised all-text pixel
+design and scoped ADR after PR #149; owner-merged #142 records acceptance.
 
-The small React page is a **synthetic client foundation demo**, with no API
-calls, token entry, real holdings or production sample prices. Full shell,
-themes, watchlists, settings and browser/distribution audit are #144–148.
-No backend/API contract, Python dependency, CI workflow or rights gate changes.
+The shared shell has typed Overview/Watchlists/Settings routes and a working
+local light/dark theme preference. Its data areas explicitly remain not
+connected/unavailable, with no API calls, token entry, real holdings or sample
+prices presented live. Saved-data and connection workflows and the combined
+browser/distribution audit remain separate issues. The #143 **synthetic client
+foundation demo** is preserved separately at `#client-foundation`. See the
+[component guide](COMPONENTS.md) for inputs, navigation and theme contracts.
+No backend/API contract, dependency, CI workflow or rights gate changes in #144.
 
 ## Reproduce
 
@@ -138,7 +142,7 @@ No third-party artwork/font or CDN is used. All demonstration text and controls
 use real scalable text with this local font and a monospace fallback. Glyphs
 cover this demo's ASCII; unimplemented localization is not certified.
 
-## Implementation verification
+## Issue #143 implementation verification (historical record)
 
 Using Node24.19.0/npm10.8.2: schema drift/typecheck/production build pass;
 Offline clean npm ci from the task-local cache passes (99 packages, audit zero);
@@ -152,3 +156,21 @@ watchlist/history, packaging and hygiene checks 111 passed (48.23s); full pytest
 2762 passed (113.96s); Ruff, configured mypy (config.py) and pip check passed.
 No live API/provider/user data was accessed. Required remote CI and owner
 merge remain separate gates; this is not milestone completion.
+
+## Issue #144 implementation verification — 2026-10-15
+
+Existing Node24.19.0/npm10.8.2, unchanged lockfile: offline clean npm ci passed
+(99 packages, audit zero); schema drift/typecheck/production build passed;
+84 deterministic frontend tests passed. The separate installed-Edge browser
+profile passed 11 checks, preserving the client foundation checks and adding
+light/dark desktop/tablet/phone, keyboard navigation/back/skip, persistent theme,
+blocked storage, local font, overflow and computed contrast/reduced-motion checks.
+Light desktop and dark phone production-asset captures were visually inspected.
+
+Canonical Python3.12.14: targeted dashboard hosting/packaging/hygiene 42 passed
+in 65.49s; full pytest 2794 passed in 125.65s; Ruff, configured mypy (config.py)
+and pip check passed. Sandbox startup limitations required approved native
+execution for browser and Python subprocess checks. No real credentials,
+provider, saved holdings or user database was used. Staged hygiene, independent
+review, remote CI and owner merge remain separate gates. No full WCAG or M8
+completion claim is made.

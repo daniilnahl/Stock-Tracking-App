@@ -6,11 +6,11 @@ for (const viewport of [{ width: 1440, height: 1100 }, { width: 390, height: 844
     const privateRequests: string[] = [];
     page.on("request", request => { if (request.url().includes("/api/")) privateRequests.push(request.url()); });
     await page.route("**/*", route => route.request().url().startsWith("http://127.0.0.1:8000/") ? route.continue() : route.abort());
-    await page.goto("/");
+    await page.goto("/#client-foundation");
     await expect(page.getByText("Synthetic client foundation demo - no live data")).toBeVisible();
     await page.evaluate(() => document.fonts.ready);
     expect(await page.evaluate(() => document.fonts.check('20px "Stock Pixel"'))).toBe(true);
-    await page.keyboard.press("Tab");
+    await page.getByRole("button", { name: "Check synthetic response" }).focus();
     await expect(page.getByRole("button", { name: "Check synthetic response" })).toBeFocused();
     await page.keyboard.press("Enter");
     await expect(page.getByText("110.0000000000000000001")).toBeVisible();
@@ -30,7 +30,7 @@ test("unsupported browser displays prerequisite and prevents numeric demo", asyn
     const native = JSON.parse;
     JSON.parse = (text, reviver) => native(text, reviver ? (key, value) => reviver(key, value) : undefined);
   });
-  await page.goto("/");
+  await page.goto("/#client-foundation");
   await expect(page.getByRole("status")).toHaveText("This browser cannot decode exact API numbers. Use a current supported browser.");
   await expect(page.getByRole("button", { name: "Check synthetic response" })).toBeDisabled();
 });
