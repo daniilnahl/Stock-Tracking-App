@@ -1,5 +1,58 @@
 # M8 — Web Dashboard execution plan
 
+## Continuation — 2026-10-15
+
+The owner instructed **“prs merged, continue the work”**. Independently verified
+PR #151 merge `1d0328c326561c7db30dfcc2bf241d0df060773a` contains reviewed
+client head `63cb4d624ae9a8f35ef4ec6813b0fed5edfa3753`; PR #150 merge
+`a2de2695f25b6d4c47c07af3ac91b9f1f4efac1b` contains reviewed hosting head
+`d2f396b832e8c5fb662b10e4e87f33142d86ea47` and the client merge. Post-merge
+main Foundation `38735781899` and `38735810019` passed all five jobs. Required
+issues #142/#143 are closed through owner merges, with their actual visual
+demos delivered in chat. There is no agent merge or scope expansion.
+
+Issue #144 is now delegated to `frontend_plan` on
+`codex/144-shell-themes`, based on combined main `a2de2695`. It owns the shared
+typed navigation/layout, reusable presentation primitives, original pixel
+typography, semantic monochrome tokens, accessible persistent local theme and
+component guide. It does not fetch data or add credential entry, new metrics or
+backend functionality. The synthetic #143 demonstration remains a separate
+utility route. Main navigation retains Overview/Watchlists/Settings and the
+approved unavailable future panels/search explanation.
+
+#152 extracts memory-only connection controls from #147 to remove a dependency
+cycle: #145 needs a connection, while #147 needs #145's saved-entry counts.
+#152 waits for #144's owner merge and main CI; #145 then waits for #152.
+#147 reuses the existing theme/connection lifecycle and adds supported overview
+counts/status only after #145. #146 waits for watchlists; #148 audits the
+completed integrated dashboard. This changes issue ordering, not approved
+product or API scope. A real browser demonstration is required for each issue.
+The dated execution snapshots below are retained as traceability history.
+
+### #144 implementation and review
+
+Shared frontend shell supplies three typed primary routes, one main/heading,
+keyboard skip/route focus and browser history; local light/dark theme persistence
+with blocked-storage and cross-tab area handling; reusable semantic primitives
+and `frontend/COMPONENTS.md`. All actual text uses the original local pixel font.
+The approved unavailable panels and search disclosure are preserved. No API
+request, token entry, backend/CI/dependency change or financial metric is added.
+
+Independent `m8_analysis` reviewed the final source, guide and browser checks
+with no unresolved finding. Master review corrected storage-area isolation,
+theme action-button semantics and a visible horizontal-scroll hint. Actual
+production-asset Edge captures at 1440/768/390 pixels in both themes were made;
+Master visually inspected the light desktop and dark phone captures. This
+isolated no-API fixture is not the final packaged dashboard integration.
+
+Local verification: pinned offline npm ci (99 packages, audit zero), schema
+drift/type/production build, 84 frontend tests and 11 installed-Edge browser
+checks passed. Python 3.12.14 canonical environment: targeted hosting/packaging/
+hygiene 42 passed; full pytest 2794 passed; Ruff, configured mypy (config.py)
+and pip check passed. Windows native browser/async process checks required the
+approved sandbox escalation; no application/provider network was used.
+Exact-head hosted checks and owner merge remain separate gates.
+
 ## Acceptance update — 2026-10-14
 
 The owner's **“approved continue work”** accepts revised ADR-0014 Option A and
@@ -40,10 +93,11 @@ Parent: [M8 milestone 9](https://github.com/daniilnahl/Stock-Tracking-App/milest
 | Objective | Dependencies | Status |
 |---|---|---|
 | [#141](https://github.com/daniilnahl/Stock-Tracking-App/issues/141) Technology/browser/capability contract | Owner merge and main CI verified | Closed completed; PR #149 merged |
-| [#142](https://github.com/daniilnahl/Stock-Tracking-App/issues/142) Opt-in static hosting/browser boundary | Accepted contract | In progress; m8_analysis; codex/142-local-dashboard-hosting |
-| [#143](https://github.com/daniilnahl/Stock-Tracking-App/issues/143) Frontend scaffold/precise typed client | Accepted contract | Unblocked |
-| [#144](https://github.com/daniilnahl/Stock-Tracking-App/issues/144) Shared shell/themes/component guide | Scaffold/client | Blocked |
-| [#145](https://github.com/daniilnahl/Stock-Tracking-App/issues/145) Both saved watchlists | Hosting, client, shell | Blocked |
+| [#142](https://github.com/daniilnahl/Stock-Tracking-App/issues/142) Opt-in static hosting/browser boundary | Accepted contract | Closed completed; owner merged PR #150; main CI passed |
+| [#143](https://github.com/daniilnahl/Stock-Tracking-App/issues/143) Frontend scaffold/precise typed client | Accepted contract | Closed completed; owner merged PR #151; main CI passed |
+| [#144](https://github.com/daniilnahl/Stock-Tracking-App/issues/144) Shared shell/themes/component guide | Scaffold/client merged, main CI passed | Implementation/review; frontend_plan; codex/144-shell-themes |
+| [#152](https://github.com/daniilnahl/Stock-Tracking-App/issues/152) Memory-only local API connection controls | Hosting, client, shell | Blocked by #144 owner merge/main CI; extracted from #147 |
+| [#145](https://github.com/daniilnahl/Stock-Tracking-App/issues/145) Both saved watchlists | Hosting, client, shell, connection #152 | Blocked |
 | [#146](https://github.com/daniilnahl/Stock-Tracking-App/issues/146) Exact stored-row detail/raw history | Watchlists | Blocked |
 | [#147](https://github.com/daniilnahl/Stock-Tracking-App/issues/147) Supported overview/settings | Watchlists, shell | Blocked |
 | [#148](https://github.com/daniilnahl/Stock-Tracking-App/issues/148) Independent browser/distribution exit audit | All implementations merged | Blocked |

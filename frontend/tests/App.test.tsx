@@ -5,6 +5,7 @@ import { App } from "../src/App";
 
 afterEach(cleanup);
 it("labels synthetic disconnected state and demonstrates exact values without HTTP", () => {
+  window.location.hash = "#client-foundation";
   render(<App />);
   expect(screen.getByText("Synthetic client foundation demo - no live data")).toBeTruthy();
   expect(screen.getByText("Disconnected. No saved observations are loaded.")).toBeTruthy();
