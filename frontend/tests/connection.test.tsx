@@ -47,7 +47,7 @@ describe("masked memory-only connection controls", () => {
     expect(field().value.length === 0).toBe(true);
     expect(client.getSnapshot().connection).toBe("connected");
     expect(screen.getByText("Configured")).toBeTruthy();
-    expect(screen.getByText("Authentication is not verified. Configuring this page does not request or load private data.")).toBeTruthy();
+    expect(screen.getByText("Configuration alone does not verify authentication. Configuring this page does not request or load private data.")).toBeTruthy();
     expect(screen.getByRole("button", { name: "Replace connection" })).toBeTruthy();
     expect(document.body.textContent?.includes(transient)).toBe(false);
     expect(document.documentElement.outerHTML.includes(transient)).toBe(false);
@@ -90,7 +90,7 @@ describe("masked memory-only connection controls", () => {
     fireEvent.input(field(), { target: { value: credential(1) } });
     navigate("#overview");
     expect(screen.getByText("Configured")).toBeTruthy();
-    expect(screen.getByText("Authentication is not verified.")).toBeTruthy();
+    expect(screen.getByText("Configuration alone does not verify authentication.")).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "Dark theme" }));
     navigate("#settings");
     expect(field().value.length === 0).toBe(true);

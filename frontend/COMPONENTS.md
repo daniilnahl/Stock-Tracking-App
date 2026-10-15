@@ -36,7 +36,8 @@ Number or format unknown currency as USD. Present gains/losses with text and
 signs as well as any future semantic colors. No new metric/sorting/filtering
 policy is defined by these generic primitives.
 
-The shell shows only truthful configured/disconnected/not-loaded/unavailable states. Exact research
+The shell shows truthful session/status limits; Watchlists displays explicit
+saved-read results and their safe lifecycle states. Exact research
 and agent placeholder titles remain above the three status cards; their labels
 do not enable a service. Search/add toggles an explanation and a fixed safe
 GitHub source-document link. It issues no request and offers no save operation.
@@ -66,11 +67,19 @@ and shared memory snapshot. The native password field is uncontrolled; the whole
 password-field draft is transferred to strict client validation and cleared on every submit,
 disconnect, route unmount and pagehide. No trim/truncation or stored React value
 is used. Context changes to disconnected clear replacement drafts before paint.
-`connected` in the client means configured only: the control explicitly announces
-that authentication is not verified, and sends no verification/read request.
-Future protected views must use this same client and its safe lifecycle rather
+`connected` in the client means configured only: the control explains that
+configuration alone does not verify authentication, and sends no verification/read request.
+Protected views use this same client and its safe lifecycle rather
 than creating a second session. App unmount/reload or pagehide/restoration clears
 the session; only theme can survive. See the README's #152 privacy/test contract.
+
+Issue #145 composes the existing SettingsField, Button, DataTable, EmptyState
+and ErrorState primitives on Watchlists. Its exact namespace selector is local
+UI state; only explicit Read/Reload calls the shared client. Ordered duplicate
+rows expose response-local ordinals and exact Decimal strings. Cancellation
+restores focus to Read. Overview keeps its reserved panels and structural table;
+saved holdings and counts are not duplicated there. Search/add stays a truthful
+unsupported disclosure. The README records read/error/precision boundaries.
 
 ## Verification boundaries
 

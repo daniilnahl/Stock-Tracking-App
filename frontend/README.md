@@ -1,19 +1,20 @@
-# Dashboard shell, precise client and memory-only connection — issues #143–144/#152
+# Dashboard shell, precise client and saved watchlists — issues #143–145/#152
 
 Implements the accepted read-only ADR-0014 client foundation and shared
-monochrome shell: UI801–809, UI810–815, UI816–818, UI824–826, UI828 and X718 within
+monochrome shell: UI801–809, UI810–815, UI816–818, UI820, UI824–826, UI828 and X718 within
 their bounded foundation scope. The owner accepted the revised all-text pixel
 design and scoped ADR after PR #149; owner-merged #142 records acceptance.
 
 The shared shell has typed Overview/Watchlists/Settings routes, a working
 local light/dark theme preference and masked memory-only local API configuration.
-Configuration does not verify authentication or make a request. Its data areas
-explicitly remain not loaded/unavailable, with no real holdings or sample prices
-presented live. Saved-data workflows and the combined browser/distribution audit
-remain separate issues. The #143 **synthetic client
+Configuration does not verify authentication or make a request. Watchlists
+supports explicit read/reload of both saved namespaces through that same session;
+saved observations never claim live-price freshness. Detail/history, overview
+aggregates and the combined browser/distribution audit remain separate issues.
+The #143 **synthetic client
 foundation demo** is preserved separately at `#client-foundation`. See the
 [component guide](COMPONENTS.md) for inputs, navigation and theme contracts.
-No backend/API contract, dependency, CI workflow or rights gate changes in #144/#152.
+No backend/API contract, dependency, CI workflow or rights gate changes in #144–145/#152.
 
 ## Reproduce
 
@@ -119,9 +120,10 @@ App creates one client and subscribes through useSyncExternalStore; session
 context shares that exact client/snapshot across routes. The production entry
 point has no injected client or global session handle; the optional App factory
 is an isolated unit-test seam. The existing client's internal `connected` state
-means configured, not authenticated. UI labels it **Configured / authentication
-not verified**. A future actual protected read must establish authentication
-evidence in #145; this control sends no verification request or implicit read.
+means configured, not authenticated. UI labels it **Configured** and explains
+that configuration alone does not verify authentication. A completed protected
+saved read is reported in Watchlists; configuration sends no verification or
+implicit read request and does not become a permanent authentication claim.
 
 Settings uses an uncontrolled native password input: no credential React state,
 echo, URL, storage, export, bundle substitution or logging. Each submission passes
@@ -140,14 +142,43 @@ Reload starts with a new empty client and field. Only theme persists. Browser
 extensions/password managers and other same-user processes remain outside this
 local trust boundary, as documented by ADR-0014.
 
-The new lifecycle tests inject controlled existing client reads solely to verify
-abort/generation/401 clearing through the shared session; no production watchlist
-read, list rendering, authentication probe or backend change is added. Browser
-checks configure/replace/disconnect/reload and safe failure without private reads.
+The #152 lifecycle tests inject controlled client reads to verify
+abort/generation/401 clearing through the shared session. Its connection controls
+still make no read or authentication probe. Browser connection checks configure,
+replace, disconnect and reload without private reads.
 Synthetic credentials are generated at runtime, with browser generation entirely
 inside the page rather than credential-bearing Playwright arguments. Password
 empty checks and sensitive diagnostic assertions report booleans; recordings are
 off. Manual demo screenshots are taken only after the field is verified empty.
+
+## Saved watchlists — issue #145
+
+Watchlists offers only `menu_watchlist` and `daniils_stock_method`. Read and
+Reload are explicit saved GET operations: no automatic request on configuration,
+navigation or namespace selection, quote acquisition or holdings mutation.
+Reload clears the prior table while pending; failed/offline/incompatible reads
+never restore stale rows. Cancel and namespace/route changes abort this view's
+consumer; existing client generation/controller checks suppress late responses.
+Disconnect/replacement/page lifecycle and HTTP401 clear private state. Data
+remains only in the shared memory snapshot, with no local persistence.
+
+Rows retain response order and use namespace plus response-local ordinal as
+their React key. Visible ordinals distinguish identical duplicate rows without
+claiming cross-request identity. Quantity, average cost and saved price display
+exact Decimal strings, including scale/exponents, without numeric conversion.
+Null average cost denotes unowned; explicit zero cost/quantity remains owned.
+Null saved price is unavailable, never zero. Costs/prices are per share with
+unknown currency. Source, times and freshness remain unknown even when opaque
+saved metadata contains a currency-like label. No snapshot metrics, arithmetic,
+totals, sorting, detail/history or new API contract is introduced.
+
+Safe disconnected, unsupported, loading, cancelled, empty, success, network,
+schema, legacy-state and authentication failures preserve usable explicit
+recovery. Cancellation restores keyboard focus to Read. Component tests cover
+these states and ignored late transport results. Separate browser checks
+intercept only the two existing same-origin saved paths with synthetic payloads;
+captures contain a conspicuous test-inserted synthetic/no-live-data banner.
+No sample figures or browser-test mode ships in production assets.
 
 ## Separate browser demonstration
 
@@ -167,8 +198,9 @@ Default Python tests and npm unit/component tests do not start this fixture,
 require a browser or access the network.
 
 The profile verifies desktop/phone layouts, actual local pixel-font loading,
-keyboard activation, exact displayed strings, safe error/clear behavior, no
-private API request and the unsupported-parser warning. Screenshots are in
+keyboard activation, exact displayed strings, safe error/clear behavior,
+no implicit private API request and the unsupported-parser warning. Explicit
+watchlist workflows use intercepted synthetic responses only. Screenshots are in
 ignored test-results. This is bounded foundation evidence, not a full WCAG,
 theme, production API or installed-wheel browser audit.
 
@@ -236,3 +268,21 @@ failure rather than hiding it or weakening verification.
 No backend, Python dependency, CI, rights gate or user state changed. Staged
 hygiene, independent review, remote CI and owner merge remain separate gates;
 this does not establish M8 completion or live backend authentication.
+
+## Issue #145 implementation verification — 2026-10-15
+
+Existing Node24.19.0/npm10.8.2 with unchanged dependencies/lockfile: final schema
+drift/typecheck/production build passed; 117 deterministic frontend tests passed
+in 5.50s; separate installed-Edge browser profile passed 19 checks in 18.2s.
+Browser coverage includes explicit namespace reads, duplicate/exact/null/zero
+display, horizontal keyboard access, cancellation focus, retry focus, failed
+reload recovery and shared-session 401 clearing. Captures of Menu desktop-light
+and both namespaces on phone-dark show conspicuous synthetic/no-live-data labels
+and contain no password field, real token or private holdings.
+
+Canonical Python3.12.14: focused hosting/packaging/hygiene command passed 42 in
+76.43s; full pytest passed 2794 in 175.69s. Ruff, configured mypy (config.py)
+and pip check passed. Browser and Python suites ran sequentially. No backend,
+Python/dependency, CI, distribution or user-state changes were required. Staged
+hygiene, remote CI and owner merge remain separate gates; these checks do not
+certify live API operation, full WCAG compliance or M8 completion.

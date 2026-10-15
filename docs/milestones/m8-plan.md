@@ -1,5 +1,65 @@
 # M8 — Web Dashboard execution plan
 
+## Saved watchlists — 2026-10-15
+
+The owner instructed **“pr merged, continue the work”**. PR #154 is verified
+owner-merged at `502c1feacf1dd98f0d4251c30832509f2f1be7ee`, containing reviewed
+connection head `e2c2ae764378386521e5b654a8a8ae0cad1d9fee`. Exact-head Foundation
+`38809385901` and post-merge main Foundation `38810779189` passed all five jobs.
+#152 is closed through the owner merge, with its actual frontend demo delivered.
+
+#145 is delegated to `frontend_plan` on `codex/145-saved-watchlists` from combined
+main `502c1fe`. It reuses the single memory-only session and existing API client
+for both saved namespaces, preserving request-local ordinals, duplicate order,
+exact Decimal text and distinct unowned/zero/missing states. Prices retain
+unknown currency/freshness labels; opaque metadata is not provenance. Reads and
+reloads reread saved observations, never request current market quotes.
+Independent review is assigned to `m8_analysis`. No endpoint, calculation,
+mutation, detail/history, aggregate overview, dependency, backend, CI or hosting
+change is included. #146/#147 remain blocked until #145 owner merge/main CI.
+#155 separately integrates the completed production frontend into the Python
+package/launcher after those views merge; #148 independently audits that actual
+installed integration. The current Python host still serves its readiness
+assets, so a standalone frontend fixture is not claimed to complete UI827.
+This decomposes already accepted distribution work rather than expanding its
+architecture or hiding implementation inside the final audit. Earlier snapshots follow.
+
+### #145 implementation and review
+
+The Watchlists route now uses the shared client for explicit saved reads,
+reloads, cancellation and retry. Selecting a namespace or configuring a token
+makes no request. Tables preserve response order/duplicates and show the actual
+request-local ordinal, exact quantity/cost/price strings, ownership and distinct
+unavailable states. Average-cost null follows the accepted unowned contract;
+owned zero quantity/cost remains numeric. Currency/source/times/freshness remain
+unknown; saved metadata never establishes provenance. No totals or new metrics
+are calculated. Snapshot namespace and request cancellation gate all rendering.
+
+Review refinements keep namespace text in the pixel font, display ordinals,
+restore stable keyboard focus after Cancel/retry, distinguish user cancellation
+from session resets, and bind browser fixture labels to each held request.
+Shared header/settings copy describes configuration without falsely claiming
+that successful saved reads are unverified or that no observations were loaded.
+Overview keeps its approved layout and directs reads to Watchlists; aggregate
+overview integration remains #147. Browser captures use a conspicuous test-only
+synthetic banner, with no fixture mode or sample holdings in production code.
+
+Independent `m8_analysis` and Master source/test review found no unresolved
+runtime or test issue. Master visually inspected actual production-asset Menu
+desktop and right-scrolled dark-phone saved-price captures: synthetic labeling,
+pixel typography, separate duplicate rows and horizontal data access are visible.
+These controlled responses are not live data or final installed integration.
+Canonical Python 3.12.14 verification passed: targeted hosting/packaging/hygiene
+42 tests and full pytest 2794 tests, with unchanged quiet packaging probes.
+Final frontend verification passed: schema drift/TypeScript/production build,
+117 unit/component tests and 19 separate installed-Edge browser checks. Ruff,
+configured mypy (config.py) and pip check passed. Suites ran sequentially in
+the existing approved environments with native-process sandbox escalation.
+Master additionally inspected the Method dark-phone capture, confirming both
+namespace demos are present. No real credentials, holdings, user database or
+provider traffic was used. Final staged hygiene, exact-head hosted CI and owner
+merge remain separate gates; successor implementation is still blocked.
+
 ## Connection prerequisite — 2026-10-15
 
 The owner instructed **“pr merged, continue the work”**. PR #153 is verified
@@ -155,10 +215,11 @@ Parent: [M8 milestone 9](https://github.com/daniilnahl/Stock-Tracking-App/milest
 | [#142](https://github.com/daniilnahl/Stock-Tracking-App/issues/142) Opt-in static hosting/browser boundary | Accepted contract | Closed completed; owner merged PR #150; main CI passed |
 | [#143](https://github.com/daniilnahl/Stock-Tracking-App/issues/143) Frontend scaffold/precise typed client | Accepted contract | Closed completed; owner merged PR #151; main CI passed |
 | [#144](https://github.com/daniilnahl/Stock-Tracking-App/issues/144) Shared shell/themes/component guide | Scaffold/client merged, main CI passed | Closed completed; owner merged PR #153; main CI passed |
-| [#152](https://github.com/daniilnahl/Stock-Tracking-App/issues/152) Memory-only local API connection controls | Hosting, client, shell merged; main CI passed | In progress; frontend_plan; codex/152-memory-only-connection |
-| [#145](https://github.com/daniilnahl/Stock-Tracking-App/issues/145) Both saved watchlists | Hosting, client, shell, connection #152 | Blocked |
+| [#152](https://github.com/daniilnahl/Stock-Tracking-App/issues/152) Memory-only local API connection controls | Hosting, client, shell merged; main CI passed | Closed completed; owner merged PR #154; main CI passed |
+| [#145](https://github.com/daniilnahl/Stock-Tracking-App/issues/145) Both saved watchlists | Hosting, client, shell, connection #152 merged; main CI passed | In progress; frontend_plan; codex/145-saved-watchlists |
 | [#146](https://github.com/daniilnahl/Stock-Tracking-App/issues/146) Exact stored-row detail/raw history | Watchlists | Blocked |
 | [#147](https://github.com/daniilnahl/Stock-Tracking-App/issues/147) Supported overview/settings | Watchlists, shell | Blocked |
+| [#155](https://github.com/daniilnahl/Stock-Tracking-App/issues/155) Package dashboard assets and actual local-launcher integration | Completed views #145/#146/#147 | Blocked; required bridge before exit audit |
 | [#148](https://github.com/daniilnahl/Stock-Tracking-App/issues/148) Independent browser/distribution exit audit | All implementations merged | Blocked |
 
 Assignment/review: #141 is owned by the Master for proposal and independently

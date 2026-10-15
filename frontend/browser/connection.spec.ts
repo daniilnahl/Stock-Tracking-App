@@ -31,7 +31,7 @@ for (const scenario of [{ theme: "light", width: 1440, height: 1100 }, { theme: 
     await page.keyboard.press("Enter");
     await expectEmpty(input);
     await expect(page.getByText("Configured", { exact: true })).toBeVisible();
-    await expect(page.getByText("Authentication is not verified. Configuring this page does not request or load private data.")).toBeVisible();
+    await expect(page.getByText("Configuration alone does not verify authentication. Configuring this page does not request or load private data.")).toBeVisible();
     expect(apiRequests).toBe(0);
     expect(await page.evaluate(() => Object.keys(localStorage))).toEqual(["stock-tracker.theme"]);
     expect(await page.evaluate(() => Object.keys(sessionStorage))).toEqual([]);
