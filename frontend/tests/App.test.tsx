@@ -8,7 +8,7 @@ it("labels synthetic disconnected state and demonstrates exact values without HT
   window.location.hash = "#client-foundation";
   render(<App />);
   expect(screen.getByText("Synthetic client foundation demo - no live data")).toBeTruthy();
-  expect(screen.getByText("Disconnected. No saved observations are loaded.")).toBeTruthy();
+  expect(screen.getByText("Synthetic check only. No saved observations are loaded.")).toBeTruthy();
   fireEvent.click(screen.getByRole("button", { name: "Check synthetic response" }));
   expect(screen.getByText("110.0000000000000000001")).toBeTruthy();
   expect(screen.getByText("9223372036854775807")).toBeTruthy();

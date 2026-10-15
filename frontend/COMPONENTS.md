@@ -36,7 +36,7 @@ Number or format unknown currency as USD. Present gains/losses with text and
 signs as well as any future semantic colors. No new metric/sorting/filtering
 policy is defined by these generic primitives.
 
-The shell shows only truthful not-connected/unavailable states. Exact research
+The shell shows only truthful configured/disconnected/not-loaded/unavailable states. Exact research
 and agent placeholder titles remain above the three status cards; their labels
 do not enable a service. Search/add toggles an explanation and a fixed safe
 GitHub source-document link. It issues no request and offers no save operation.
@@ -60,6 +60,17 @@ Blocked reads/writes keep a usable page theme and announce that persistence
 is unavailable. Only localStorage events can sync the preference across tabs;
 sessionStorage/other keys are ignored. No token/private response or route is
 persisted. Appearance controls do not claim to configure any server behavior.
+
+Issue #152 adds a separate masked connection form, backed by one App-owned client
+and shared memory snapshot. The native password field is uncontrolled; the whole
+password-field draft is transferred to strict client validation and cleared on every submit,
+disconnect, route unmount and pagehide. No trim/truncation or stored React value
+is used. Context changes to disconnected clear replacement drafts before paint.
+`connected` in the client means configured only: the control explicitly announces
+that authentication is not verified, and sends no verification/read request.
+Future protected views must use this same client and its safe lifecycle rather
+than creating a second session. App unmount/reload or pagehide/restoration clears
+the session; only theme can survive. See the README's #152 privacy/test contract.
 
 ## Verification boundaries
 

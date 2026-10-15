@@ -53,7 +53,7 @@ for (const viewport of [{ width: 1440, height: 1100 }, { width: 768, height: 102
       await page.getByRole("button", { name: "Search / add stock" }).click();
       await expect(page.getByText("Unavailable - backend search/add is not implemented.")).toBeVisible();
       await expect(page.getByRole("link", { name: "Read the backend and frontend TO-DO LIST" })).toHaveAttribute("rel", "noopener noreferrer");
-      const tableRegion = page.getByRole("region", { name: "Saved observations - not connected" });
+      const tableRegion = page.getByRole("region", { name: "Saved observations - not loaded" });
       await tableRegion.focus();
       await expect(tableRegion).toBeFocused();
       if (viewport.width === 390) {

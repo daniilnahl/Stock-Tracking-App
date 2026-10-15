@@ -1,18 +1,19 @@
-# Dashboard shell and precise client — issues #143–144
+# Dashboard shell, precise client and memory-only connection — issues #143–144/#152
 
 Implements the accepted read-only ADR-0014 client foundation and shared
-monochrome shell: UI801–809, UI810–815, UI816–817, UI824–826 and UI828 within
+monochrome shell: UI801–809, UI810–815, UI816–818, UI824–826, UI828 and X718 within
 their bounded foundation scope. The owner accepted the revised all-text pixel
 design and scoped ADR after PR #149; owner-merged #142 records acceptance.
 
-The shared shell has typed Overview/Watchlists/Settings routes and a working
-local light/dark theme preference. Its data areas explicitly remain not
-connected/unavailable, with no API calls, token entry, real holdings or sample
-prices presented live. Saved-data and connection workflows and the combined
-browser/distribution audit remain separate issues. The #143 **synthetic client
+The shared shell has typed Overview/Watchlists/Settings routes, a working
+local light/dark theme preference and masked memory-only local API configuration.
+Configuration does not verify authentication or make a request. Its data areas
+explicitly remain not loaded/unavailable, with no real holdings or sample prices
+presented live. Saved-data workflows and the combined browser/distribution audit
+remain separate issues. The #143 **synthetic client
 foundation demo** is preserved separately at `#client-foundation`. See the
 [component guide](COMPONENTS.md) for inputs, navigation and theme contracts.
-No backend/API contract, dependency, CI workflow or rights gate changes in #144.
+No backend/API contract, dependency, CI workflow or rights gate changes in #144/#152.
 
 ## Reproduce
 
@@ -87,8 +88,10 @@ This validates the approved wire contract without duplicating domain arithmetic.
 loadWatchlist, selectRow and loadHistory. Features consume this single layer.
 `connect` accepts only the existing API token grammar and exact fixed local
 origins; the token remains in a private field and Authorization headers.
-Do not put it in a URL, DOM, storage, log, fixture capture or build asset.
-Use only synthetic credentials in tests. Token-entry UI is reserved for #147.
+Outside its transient masked entry field, do not put it in DOM text/attributes,
+React state, a URL, storage, log, fixture capture or build asset.
+Use only synthetic credentials in tests. The #152 Settings control configures
+this same client in memory without an implicit verification/read request.
 
 Requests are relative same-origin GETs with no-store, omitted cookies,
 redirect rejection and no-referrer. Responses are bounded to M7's 4MiB limit,
@@ -109,6 +112,42 @@ choice. Selection objects belong only to that client/list revision; history
 refuses copied/stale selections. A list reload always discards detail/history.
 Identical duplicates have no stable cross-request identity: later features must
 label details as a returned request-local selection, not a permanent holding ID.
+
+## Memory-only connection controls — issue #152
+
+App creates one client and subscribes through useSyncExternalStore; session
+context shares that exact client/snapshot across routes. The production entry
+point has no injected client or global session handle; the optional App factory
+is an isolated unit-test seam. The existing client's internal `connected` state
+means configured, not authenticated. UI labels it **Configured / authentication
+not verified**. A future actual protected read must establish authentication
+evidence in #145; this control sends no verification request or implicit read.
+
+Settings uses an uncontrolled native password input: no credential React state,
+echo, URL, storage, export, bundle substitution or logging. Each submission passes
+the whole password-field value directly to the strict client and immediately clears the DOM
+field, including failed attempts. Native validation/truncation does not silently
+truncate an overlength value or trim padding. Normal native password-field
+normalization still applies. Only fixed ClientError diagnostics appear.
+Retries require a new explicit entry. Replacement resets the old client session
+and aborts/invalidates obsolete work under the existing client contract.
+
+Disconnect clears the field/error/session and focuses the empty input. External
+disconnect/authentication failure clears replacement drafts before painting the
+disconnected state. Navigating away discards an unsubmitted draft while keeping
+the page session; pagehide, cached-page restoration and App unmount disconnect.
+Reload starts with a new empty client and field. Only theme persists. Browser
+extensions/password managers and other same-user processes remain outside this
+local trust boundary, as documented by ADR-0014.
+
+The new lifecycle tests inject controlled existing client reads solely to verify
+abort/generation/401 clearing through the shared session; no production watchlist
+read, list rendering, authentication probe or backend change is added. Browser
+checks configure/replace/disconnect/reload and safe failure without private reads.
+Synthetic credentials are generated at runtime, with browser generation entirely
+inside the page rather than credential-bearing Playwright arguments. Password
+empty checks and sensitive diagnostic assertions report booleans; recordings are
+off. Manual demo screenshots are taken only after the field is verified empty.
 
 ## Separate browser demonstration
 
@@ -174,3 +213,26 @@ execution for browser and Python subprocess checks. No real credentials,
 provider, saved holdings or user database was used. Staged hygiene, independent
 review, remote CI and owner merge remain separate gates. No full WCAG or M8
 completion claim is made.
+
+## Issue #152 implementation verification — 2026-10-15
+
+Existing Node24.19.0/npm10.8.2 and unchanged dependencies/lockfile: final schema
+drift/typecheck/production build passed; 102 deterministic frontend tests passed
+in 2.66s; separate installed-Edge browser profile passed 15 checks in 12.2s.
+Configured/disconnected desktop-light and phone-dark captures contain empty
+password fields, no real credential or private observations, and were visually
+inspected. Controls make no authentication verification/read request.
+
+Canonical Python3.12.14: initial focused run had 41 passes and one existing
+installed-wheel M6 audit failure when a cold Matplotlib font scan emitted
+`Matplotlib is building the font cache; this may take a moment.` The installed
+library emits this warning if enumeration exceeds five seconds. No Python,
+cache policy or quiet-output assertion was changed. The unchanged isolated test
+then passed in 60.73s; sequential targeted dashboard-hosting/packaging/hygiene
+rerun passed 42 in 70.06s; full pytest passed 2794 in 176.56s. Ruff, configured
+mypy (config.py) and pip check passed. This records the observed Windows timing
+failure rather than hiding it or weakening verification.
+
+No backend, Python dependency, CI, rights gate or user state changed. Staged
+hygiene, independent review, remote CI and owner merge remain separate gates;
+this does not establish M8 completion or live backend authentication.

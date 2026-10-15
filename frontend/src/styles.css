@@ -92,6 +92,8 @@ th { color: var(--muted); }
 .state-title { color: var(--text); }
 .settings-field { display: grid; gap: var(--space-xs); margin: var(--space-md) 0; }
 input, select, textarea { max-width: 100%; min-height: 44px; background: var(--surface); color: var(--text); border: 2px solid var(--control-border); border-radius: var(--radius); padding: .5rem; }
+input[type="password"] { width: 100%; }
+.connection-status { border-left: 3px solid var(--muted); padding-left: var(--space-md); }
 .filter-panel { border: 2px solid var(--control-border); padding: var(--space-md); }
 .filter-panel legend { padding: 0 var(--space-xs); }
 .chart-placeholder { border: 2px dashed var(--muted); padding: var(--space-lg); margin: var(--space-md) 0; background: var(--background); }

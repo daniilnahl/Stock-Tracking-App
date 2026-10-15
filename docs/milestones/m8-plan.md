@@ -1,5 +1,64 @@
 # M8 — Web Dashboard execution plan
 
+## Connection prerequisite — 2026-10-15
+
+The owner instructed **“pr merged, continue the work”**. PR #153 is verified
+owner-merged at `bd11a0c85209ee487d1287fb17712fa5f1f4da35`, containing reviewed
+shell head `e4b9e089406b277eaaef483ccf2fbe30d5bea85f`. Exact-head Foundation
+`38737993534` and post-merge main Foundation `38806969664` passed all five jobs.
+#144 is closed through its owner merge; production-asset visual demos were
+delivered. No agent merge occurred.
+
+#152 is delegated to `frontend_plan` on `codex/152-memory-only-connection`,
+based on main `bd11a0c`. One App-owned client/snapshot will drive a masked
+Settings input, configuration/disconnect state and private-state invalidation.
+Only theme persists. Configuring a token makes no request and cannot establish
+verified authentication; protected reads remain #145 work. Route changes keep
+the shared client but discard unsubmitted input; reload/disconnect/page exit
+discard credentials/private state. No watchlist rendering, metrics, endpoint,
+hosting, dependency, backend or CI changes are included.
+
+#145 waits for #152's owner merge/main CI. #146/#147 wait for saved watchlists;
+#148 remains the final integrated/distribution audit. The earlier snapshots
+below retain implementation and review history.
+
+### #152 implementation and review
+
+One stable App-owned `ApiClient` and `useSyncExternalStore` snapshot now drive
+the Settings controls and configuration labels across routes. The native masked
+field is uncontrolled; submission validates its complete value without trimming
+or truncation, clears the field, and sends no request. Only the theme persists.
+Replacement/disconnect/reload/page exit and external authentication-reset paths
+discard private state and drafts through the existing client lifecycle.
+The interface explicitly states that configured credentials are not verified
+authentication; saved-data rendering/reads remain #145 work.
+
+Independent `m8_analysis` reviewed source and regression coverage. Review repairs
+removed native truncation, cleared replacement drafts on external disconnect/401,
+kept fixed errors useful, prevented credential values in test diagnostics and
+clarified the isolated synthetic demo's status. No unresolved runtime finding
+remains. Master visually inspected actual production-asset light desktop
+configured and dark phone disconnected captures, with empty credential fields.
+These isolated no-API browser captures do not establish installed-dashboard
+integration, live authentication or milestone completion.
+
+Final frontend verification passed: schema drift/TypeScript/production build,
+102 deterministic unit/component tests and 15 separate installed-Edge browser
+checks. Browser trace/video/automatic screenshots are explicitly disabled;
+manual captures happen only after boolean empty-field checks. Test credentials
+are generated at runtime, with credential-sensitive failure diagnostics limited
+to booleans/counts. A pre-existing installed M6 packaging probe first failed on
+Matplotlib's font-cache warning (emitted after five seconds of fresh font
+enumeration); the unchanged isolated test passed on rerun. No probe assertion,
+cache isolation, Python source or dependency was changed to obtain that result.
+
+Canonical Python 3.12.14 final verification: targeted hosting/packaging/hygiene
+42 passed; full pytest 2794 passed; Ruff, configured mypy (config.py) and pip
+check passed. Existing pinned Node 24.19.0/npm 10.8.2 and Python environments
+were reused without dependency changes. Windows native browser/process checks
+required approved sandbox escalation. Final staged hygiene, exact-head hosted
+CI and owner merge remain separate gates before successor implementation.
+
 ## Continuation — 2026-10-15
 
 The owner instructed **“prs merged, continue the work”**. Independently verified
@@ -95,8 +154,8 @@ Parent: [M8 milestone 9](https://github.com/daniilnahl/Stock-Tracking-App/milest
 | [#141](https://github.com/daniilnahl/Stock-Tracking-App/issues/141) Technology/browser/capability contract | Owner merge and main CI verified | Closed completed; PR #149 merged |
 | [#142](https://github.com/daniilnahl/Stock-Tracking-App/issues/142) Opt-in static hosting/browser boundary | Accepted contract | Closed completed; owner merged PR #150; main CI passed |
 | [#143](https://github.com/daniilnahl/Stock-Tracking-App/issues/143) Frontend scaffold/precise typed client | Accepted contract | Closed completed; owner merged PR #151; main CI passed |
-| [#144](https://github.com/daniilnahl/Stock-Tracking-App/issues/144) Shared shell/themes/component guide | Scaffold/client merged, main CI passed | Implementation/review; frontend_plan; codex/144-shell-themes |
-| [#152](https://github.com/daniilnahl/Stock-Tracking-App/issues/152) Memory-only local API connection controls | Hosting, client, shell | Blocked by #144 owner merge/main CI; extracted from #147 |
+| [#144](https://github.com/daniilnahl/Stock-Tracking-App/issues/144) Shared shell/themes/component guide | Scaffold/client merged, main CI passed | Closed completed; owner merged PR #153; main CI passed |
+| [#152](https://github.com/daniilnahl/Stock-Tracking-App/issues/152) Memory-only local API connection controls | Hosting, client, shell merged; main CI passed | In progress; frontend_plan; codex/152-memory-only-connection |
 | [#145](https://github.com/daniilnahl/Stock-Tracking-App/issues/145) Both saved watchlists | Hosting, client, shell, connection #152 | Blocked |
 | [#146](https://github.com/daniilnahl/Stock-Tracking-App/issues/146) Exact stored-row detail/raw history | Watchlists | Blocked |
 | [#147](https://github.com/daniilnahl/Stock-Tracking-App/issues/147) Supported overview/settings | Watchlists, shell | Blocked |

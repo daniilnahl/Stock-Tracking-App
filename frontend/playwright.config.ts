@@ -8,6 +8,9 @@ export default defineConfig({
   use: {
     baseURL: "http://127.0.0.1:8000",
     headless: true,
+    trace: "off",
+    video: "off",
+    screenshot: "off",
     reducedMotion: "reduce",
     ...(process.env.PLAYWRIGHT_CHANNEL ? { channel: process.env.PLAYWRIGHT_CHANNEL } : {}),
   },
