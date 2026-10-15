@@ -51,16 +51,43 @@ def credential_lines(text, python_source=False):
     return sorted(findings)
 
 
-def git(*args, cwd=ROOT, input=None):
+def git(*args, cwd=ROOT, input=None, decode_errors="strict"):
     # Binary stdin prevents Windows from adding CR characters to Git path lists.
     result = subprocess.run(
         ["git", *args], cwd=cwd, input=input.encode("utf-8") if input is not None else None,
         capture_output=True, check=True,
     )
-    return result.stdout.decode("utf-8")
+    return result.stdout.decode("utf-8", errors=decode_errors)
+
+
+def staged_credential_lines(name, cwd=ROOT):
+    # Preserve undecodable bytes rather than skipping binary assets or dropping
+    # bytes that might surround credential patterns. ASCII patterns still match.
+    content = git("show", f":{name}", cwd=cwd, decode_errors="surrogateescape")
+    return credential_lines(content, Path(name).suffix == ".py")
 
 
 class CredentialScannerTests(unittest.TestCase):
+    def test_binary_index_scan_preserves_credential_detection(self):
+        with tempfile.TemporaryDirectory() as directory:
+            git("init", "--quiet", cwd=directory)
+            asset = Path(directory) / "asset.ttf"
+            clean = b"\x00\x01\xff\x80\nfont-data\x00"
+            asset.write_bytes(clean)
+            git("add", "--", asset.name, cwd=directory)
+            self.assertEqual(staged_credential_lines(asset.name, directory), [])
+
+            # Synthetic data only; never include source/credential bytes in an
+            # assertion message. Test both assignment and URL patterns.
+            asset.write_bytes(clean + b"\nFMP_API_KEY=synthetic-dummy-not-a-real-key\n"
+                              b"\xffhttps://example.invalid/quote?" +
+                              b"apikey=synthetic-dummy-not-a-real-key\n")
+            git("add", "--", asset.name, cwd=directory)
+            self.assertEqual(staged_credential_lines(asset.name, directory), [3, 4])
+            # An unstaged cleanup must not conceal the staged binary finding.
+            asset.write_bytes(clean)
+            self.assertEqual(staged_credential_lines(asset.name, directory), [3, 4])
+
     def test_detects_synthetic_literal_patterns(self):
         dummy = "synthetic-dummy-not-a-real-key"
         cases = [
@@ -94,10 +121,8 @@ class RepositoryHygieneTests(unittest.TestCase):
         for name in git("ls-files", "-z").split("\0"):
             if not name:
                 continue
-            path = ROOT / name
             # Scan the index so an unstaged cleanup cannot hide a staged secret.
-            content = git("show", f":{name}")
-            for line in credential_lines(content, path.suffix == ".py"):
+            for line in staged_credential_lines(name):
                 findings.append(f"{name}:{line}: [REDACTED credential pattern]")
         self.assertEqual(findings, [], "\n".join(findings))
 

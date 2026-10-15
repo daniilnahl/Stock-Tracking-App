@@ -127,3 +127,31 @@ copies/profiles/captures remain outside the repository. Actual browser rendering
 is now verified for these bounded previews, superseding the earlier timeout;
 full browser E2E, screen-reader/contrast auditing and canonical Python checks
 remain outside this revision's verification.
+
+## PR #149 CI repair — binary credential scanning
+
+Foundation run `38689231682` failed Credential patterns and both Python jobs
+at the same `UnicodeDecodeError`: the scanner decoded the newly tracked
+`stock-pixel.ttf` as strict UTF-8. Both Python runs otherwise passed 2725 cases
+with 35 platform-specific skips; Ruff/configured mypy passed.
+
+The repair scans staged blob contents using loss-preserving `surrogateescape`,
+retaining strict decoding for other Git output. Binary assets are not skipped;
+ASCII credential patterns still match. An isolated staged-binary regression
+covers clean bytes, synthetic assignment/URL findings and an unstaged cleanup
+that cannot conceal staged findings. No workflow, dependencies, font, preview,
+application runtime or financial behavior changes. Independent review passed.
+
+The bundled runtime discovery supplied Python 3.12.14, superseding the earlier
+local-runtime limitation. A worktree `.venv` uses the canonical pinned
+`pip install ".[dev]"`. Initial sandbox TEMP/DNS restrictions were resolved by
+an ignored worktree TEMP and approved network installation; no system software
+or supported-version change. One unittest attempt without the worktree TEMP
+failed on sandbox temporary-directory permissions; no assertion was weakened.
+
+Actual canonical verification: `python -m pytest tests/test_repository_hygiene.py
+-v` **9 passed in 12.72s**; full `python -m pytest` **2762 passed in 111.52s**;
+Ruff passed; configured mypy passed (one source file, `config.py`); `pip check`
+passed. Full tests used approved native temporary hard-link access and isolated
+test state, no live credentials/provider or real user database. Final hosted CI
+must pass on the pushed repair; no milestone/issue completion is inferred.
