@@ -52,7 +52,7 @@ All issues belong to [M7 milestone 8](https://github.com/daniilnahl/Stock-Tracki
 | [#130](https://github.com/daniilnahl/Stock-Tracking-App/issues/130) | Lazy app factory, JSON/error/access foundation | #129 resolved | Closed; owner merge and PR/main CI passed | [PR #136](https://github.com/daniilnahl/Stock-Tracking-App/pull/136), merged |
 | [#131](https://github.com/daniilnahl/Stock-Tracking-App/issues/131) | Saved watchlist views | #130 resolved | Closed; owner merge and PR/main CI passed | [PR #137](https://github.com/daniilnahl/Stock-Tracking-App/pull/137), merged |
 | [#132](https://github.com/daniilnahl/Stock-Tracking-App/issues/132) | Stored-row raw history | #130/#131 resolved | Closed; owner merge and PR/main CI passed | [PR #138](https://github.com/daniilnahl/Stock-Tracking-App/pull/138), merged |
-| [#133](https://github.com/daniilnahl/Stock-Tracking-App/issues/133) | Local composition/launch/operation | #130–132 resolved | Implemented; canonical checks and independent review passed; publication pending | Pending |
+| [#133](https://github.com/daniilnahl/Stock-Tracking-App/issues/133) | Local composition/launch/operation | #130–132 resolved | Implemented; canonical checks and independent review passed; hosted CI pending at submission | [PR #139](https://github.com/daniilnahl/Stock-Tracking-App/pull/139), open |
 | [#134](https://github.com/daniilnahl/Stock-Tracking-App/issues/134) | Independent source/wheel exit audit | #130–133 owner merge/main CI | Blocked; unassigned | None |
 
 One issue, branch and PR per objective. Delegate runtime only after contracts
@@ -294,6 +294,12 @@ with no skips or failures, including fresh source/installed-wheel checks.
 Hosted CI remains pending at submission. No live listener, provider call, real
 credential or user state was used. #134 remains gated on owner merge and passing
 main CI; M7 remains incomplete.
+
+Published [PR #139](https://github.com/daniilnahl/Stock-Tracking-App/pull/139)
+through the signed-in GitHub website and attached it to this chat. Final staged
+hygiene passed **8 in 8.43s** before the implementation commit. This publication
+record changes documentation only. Final-revision hosted CI and Master review
+are recorded on the PR; no agent merge.
 
 ## Completion gate
 
