@@ -84,6 +84,7 @@ export class ApiClient {
     }
     this.#publish({ ...this.#snapshot, selection: null, history: idle });
   }
+  clearSelection(): void { this.#invalidateSelection(); }
   #consume<T>(pending: Pending, signal?: AbortSignal): Promise<T> {
     const id = Symbol();
     pending.consumers.add(id);

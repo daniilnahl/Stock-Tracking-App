@@ -156,6 +156,23 @@ describe("request lifecycle", () => {
   });
 });
 describe("request-local selection and history", () => {
+  it("clears selection/history without disconnecting and aborts ignored late history on explicit close", async () => {
+    const fetcher = vi.fn(async (_url: string, _init: RequestInit) => response(watchlist()));
+    const client = new ApiClient({ fetch: fetcher, origin: "http://127.0.0.1:8000" });
+    client.connect(Array.from({ length: 48 }, (_, index) => String.fromCharCode(65 + index * 7 % 26)).join(""));
+    const selected = await client.selectRow("menu_watchlist", 0, stock);
+    const pending = deferred<Response>();
+    fetcher.mockImplementationOnce(() => pending.promise);
+    const reading = client.loadHistory(selected);
+    const cancelled = expect(reading).rejects.toMatchObject({ code: "cancelled" });
+    await turn(); client.clearSelection(); await cancelled;
+    pending.resolve(response(history())); await turn();
+    expect(client.getSnapshot().connection).toBe("connected");
+    expect(client.getSnapshot().watchlist.status).toBe("success");
+    expect(client.getSnapshot().selection).toBeNull();
+    expect(client.getSnapshot().history.status).toBe("idle");
+    expect(() => client.loadHistory(selected)).toThrowError(ClientError);
+  });
   it("re-reads ordered list before selection and exact history; reload invalidates selection", async () => {
     const { client, fetcher } = create();
     await client.loadWatchlist("menu_watchlist");

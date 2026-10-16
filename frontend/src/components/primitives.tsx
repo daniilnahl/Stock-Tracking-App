@@ -54,8 +54,8 @@ export function SettingsField({ label, hint, children }: {
   return <div className="settings-field"><label htmlFor={id}>{label}</label>
     {children({ id, "aria-describedby": `${id}-hint` })}<p id={`${id}-hint`} className="field-hint">{hint}</p></div>;
 }
-// Shape/semantics only. Price rendering and an exact-value table belong to #146.
-export function Chart({ title }: { title: string }) {
+// The feature owns projection, provenance and its accompanying exact-value table.
+export function Chart({ title, children }: { title: string; children?: ReactNode }) {
   return <figure className="chart-placeholder"><figcaption>{title}</figcaption>
-    <p>Unavailable. No historical series is loaded.</p></figure>;
+    {children ?? <p>Unavailable. No historical series is loaded.</p>}</figure>;
 }
