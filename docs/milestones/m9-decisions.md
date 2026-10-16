@@ -6,6 +6,13 @@ This brief narrows the questions that block SRS §23.9. It does not approve a
 screen, financial formula, provider use, calendar, quota or persistence design.
 See [the execution plan](m9-plan.md) for capability evidence and dependencies.
 
+**Owner source-direction update — 2026-10-16:** the owner selected “first use
+FMP then use finviz” and requested a native-metric gap comparison. Source priority
+is selected: FMP first, optional FINVIZ enrichment. See the
+[sourced coverage report](m9-provider-coverage.md) for candidate gaps, overlapping
+capabilities and unresolved API/rights evidence. This does not select a financial
+preset, approve unknown entitlement or accept the whole M9 specification.
+
 ## Recommended scope boundary
 
 Use the existing local single-user Python service/API/dashboard architecture.
@@ -53,8 +60,9 @@ remain M10 gates. D5 rights must still cover any proposed non-AI report use.
    delegate isolated branches and independently review tested PRs. Owner merges
    remain required. Approval of one contract does not unlock unrelated gates.
 
-The first immediate human decision is the **research question and source/universe
-direction**, together with whether the recommended informational boundary is
-acceptable. A broad instruction to start M9 cannot safely choose these product
+Source priority is now selected. Remaining immediate human decisions are the
+**research question and exact universe**, together with acceptance of the
+informational boundary and sanitized account/field-use evidence. A broad
+instruction to start M9 cannot safely choose these product
 semantics. Planning is reviewable now; runtime implementation remains blocked by
 the relevant SRS and AGENTS requirements rather than an agent-imposed approval step.

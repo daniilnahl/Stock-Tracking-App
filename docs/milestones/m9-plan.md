@@ -14,6 +14,13 @@ financial definition, connector activation or new dependency is introduced.
 The [decision brief](m9-decisions.md) records the human inputs needed next.
 Do not mark the SRS or an ADR accepted from this plan, CI or a PR merge alone.
 
+**Source research update — 2026-10-16:** the owner selected FMP first, then
+FINVIZ enrichment, and requested native-metric gap research. The
+[provider coverage report](m9-provider-coverage.md) records official-source
+findings and conditional routing: documented FMP capabilities stay with FMP;
+FINVIZ is considered for verified native/semantic gaps only. This resolves source
+priority, not authenticated schemas, actual entitlement, metrics or activation.
+
 Baseline is owner-merged main `4d7720446ab299344ec98b1a28169143d7a9202a`.
 PR #162's final M8 audit is merged at `9a6a41449d1f483b7e2218eabc8db1867e05d497`;
 README PR #163 is merged at baseline. GitHub reports both post-merge Foundation
