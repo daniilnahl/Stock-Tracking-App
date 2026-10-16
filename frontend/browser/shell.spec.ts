@@ -53,13 +53,9 @@ for (const viewport of [{ width: 1440, height: 1100 }, { width: 768, height: 102
       await page.getByRole("button", { name: "Search / add stock" }).click();
       await expect(page.getByText("Unavailable - backend search/add is not implemented.")).toBeVisible();
       await expect(page.getByRole("link", { name: "Read the backend and frontend TO-DO LIST" })).toHaveAttribute("rel", "noopener noreferrer");
-      const tableRegion = page.getByRole("region", { name: "Saved observations - not loaded" });
-      await tableRegion.focus();
-      await expect(tableRegion).toBeFocused();
-      if (viewport.width === 390) {
-        expect(await tableRegion.evaluate(element => element.scrollWidth > element.clientWidth)).toBe(true);
-        await expect(page.getByText("Scroll horizontally if the table extends beyond the screen.")).toBeVisible();
-      }
+      await expect(page.getByRole("heading", { name: "Saved watchlist access" })).toBeVisible();
+      await expect(page.getByRole("link", { name: "Browse saved watchlists" })).toHaveAttribute("href", "#watchlists");
+      await expect(page.getByRole("table")).toHaveCount(0); // Overview never duplicates holdings rows.
       expect(requests).toEqual([]);
     });
   }
@@ -102,8 +98,8 @@ test("blocked storage switches only the page theme and announces failure honestl
   });
   await page.goto("/");
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
-  await expect(page.getByRole("status")).toContainText("Theme preference storage is unavailable");
+  await expect(page.getByText("Theme preference storage is unavailable. Changes apply to this page only.")).toHaveAttribute("role", "status");
   await page.getByRole("button", { name: "Dark theme" }).click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
-  await expect(page.getByRole("status")).toContainText("could not be saved");
+  await expect(page.getByText("Theme preference could not be saved. Changes apply to this page only.")).toHaveAttribute("role", "status");
 });

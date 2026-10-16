@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Button, DataTable, SettingsField } from "../components/primitives";
-import type { Column } from "../components/primitives";
+import { Button, SettingsField } from "../components/primitives";
 import { isTheme, themes } from "../themes/theme";
 import type { ThemePreference } from "../themes/theme";
-import { connectionLabel, useLocalSession } from "../app/session";
+import { OverviewSummary, loadedOverviewList } from "./OverviewSummary";
+import { useLocalSession } from "../app/session";
+import { routeHref } from "../app/routes";
 import { ConnectionSettings } from "./ConnectionSettings";
 
 const todoURL = "https://github.com/daniilnahl/Stock-Tracking-App/blob/main/docs/TO-DO-LIST.md";
@@ -16,24 +17,23 @@ export function SearchDisclosure() {
       <a href={todoURL} target="_blank" rel="noopener noreferrer">Read the backend and frontend TO-DO LIST</a>
     </div></>;
 }
-type EmptyRow = { id: number; security: string; quantity: string; price: string; observation: string };
-const columns: readonly Column<EmptyRow>[] = [
-  { id: "security", header: "Security", render: row => row.security },
-  { id: "quantity", header: "Quantity / shares", render: row => row.quantity, numeric: true },
-  { id: "price", header: "Saved price", render: row => row.price, numeric: true },
-  { id: "observation", header: "Observation", render: row => row.observation },
-];
 export function SavedObservations() {
-  return <section className="panel" aria-labelledby="saved-title">
-    <div className="panel-heading"><div><p className="eyebrow">Saved observations</p><h2 id="saved-title">Menu watchlist</h2></div></div>
+  const { snapshot } = useLocalSession();
+  const loaded = loadedOverviewList(snapshot);
+  return <section className="panel overview-observations" aria-labelledby="saved-title">
+    <div className="panel-heading"><div><p className="eyebrow">Saved observations</p><h2 id="saved-title">Saved watchlist access</h2></div></div>
     <SearchDisclosure />
-    <DataTable caption="Saved observations - not loaded" columns={columns} rows={[]} rowKey={row => row.id}
-      emptyMessage="Open Watchlists to explicitly read saved entries. This overview does not display holdings." />
-    <p className="footnote">Both saved namespaces and duplicate rows remain distinct. Currency and freshness require explicit evidence.</p>
+    {loaded ? <><p>Loaded namespace: <span>{loaded.namespace}</span>.</p>
+      <p>Saved list name: {loaded.name}</p>
+      <p>This count covers only the loaded namespace. Overview makes no additional requests.</p></> :
+      <p>No successful saved list is available for a count. Unavailable does not mean an empty list.</p>}
+    <p>This overview does not duplicate holdings rows.</p>
+    <a href={routeHref("watchlists")}>Browse saved watchlists</a>
+    <p className="footnote">Source, observation time and retrieval time: unknown. Currency and freshness: unknown.</p>
+    <p className="footnote">Both saved namespaces and duplicate rows remain distinct. Saved metadata does not establish currency or provenance.</p>
   </section>;
 }
 export function OverviewPage() {
-  const { snapshot } = useLocalSession();
   return <>
     <div className="feature-placeholders">
       <section className="panel" aria-labelledby="recommend-title"><p className="eyebrow">Placeholder / unavailable</p>
@@ -41,11 +41,7 @@ export function OverviewPage() {
       <section className="panel" aria-labelledby="taurus-title"><p className="eyebrow">Placeholder / unavailable</p>
         <h2 id="taurus-title">Taurus Agents Menu</h2><p>Reserved for future agent controls. No agents are configured or running.</p></section>
     </div>
-    <div className="cards" aria-label="Workspace status">
-      <section className="card"><h2 className="eyebrow">Connection</h2><p className="value">{connectionLabel(snapshot)}</p><p>{snapshot.connection === "connected" ? "Configuration alone does not verify authentication." : "No local API connection is configured in this page."}</p></section>
-      <section className="card"><h2 className="eyebrow">Saved entries</h2><p className="value">Open Watchlists</p><p>Read saved entries explicitly on the Watchlists page.</p></section>
-      <section className="card"><h2 className="eyebrow">Observation status</h2><p className="value">Unknown</p><p>Saved prices do not establish freshness.</p></section>
-    </div>
+    <OverviewSummary />
     <SavedObservations />
   </>;
 }

@@ -113,14 +113,14 @@ describe("only the validated local theme persists", () => {
     vi.spyOn(Storage.prototype, "getItem").mockImplementation(() => { throw new DOMException("Blocked", "SecurityError"); });
     render(<App />);
     expect(document.documentElement.dataset.theme).toBe("light");
-    expect(screen.getByRole("status").textContent).toContain("Theme preference storage is unavailable");
+    expect(screen.getByText(/Theme preference storage is unavailable/).getAttribute("role")).toBe("status");
   });
   it("blocked writes still switch themes without claiming persistence", () => {
     vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => { throw new DOMException("Quota", "QuotaExceededError"); });
     render(<App />);
     fireEvent.click(screen.getByRole("button", { name: "Dark theme" }));
     expect(document.documentElement.dataset.theme).toBe("dark");
-    expect(screen.getByRole("status").textContent).toContain("could not be saved");
+    expect(screen.getByText(/Theme preference could not be saved/).getAttribute("role")).toBe("status");
   });
   it("accepts local-storage updates, ignores session storage and resets cleared/invalid preferences", () => {
     render(<App />);
