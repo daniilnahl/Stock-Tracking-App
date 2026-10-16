@@ -17,7 +17,7 @@ Options:
   --history-cache FILE      Explicit historical cache file path
   --menu-legacy FILE        Corresponding menu legacy file path
   --evaluation-legacy FILE  Corresponding evaluation legacy file path
-  --dashboard              Serve packaged dashboard hosting foundation at /
+  --dashboard              Serve the packaged local read-only dashboard at /
   --enable-history         Enable only after owner-confirmed local display/cache
                            rights are recorded in docs/API_OPERATIONS.md
   -h, --help               Show this help without configuration or data access

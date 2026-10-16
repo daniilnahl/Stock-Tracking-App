@@ -36,6 +36,11 @@ async def exercise(root):
     directory = root / "stock_tracker/api/dashboard_assets"
     assert {file.name for file in directory.iterdir()} == {name for name, _ in resources.values()}
     expected = {name: (directory / name).read_bytes() for name, _ in resources.values()}
+    assert b'<div id="root"></div>' in expected["index.html"]
+    assert b'/dashboard-assets/hosting.js' in expected["index.html"]
+    assert b'/api/v1/watchlists/' in expected["hosting.js"]
+    for name in (b"react 19.3.1 / MIT", b"react-dom 19.3.1 / MIT", b"scheduler 0.28.0 / MIT", b"vite 8.3.4 / MIT"):
+        assert name in expected["LICENSE.txt"]
     app = create_app(dashboard=True)
     reads = []
     def allowed_asset(name):

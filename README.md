@@ -122,6 +122,13 @@ The injected factory starts no listener and changes no CLI behavior. See
 dependency rationale and offline verification. The canonical `.[dev]` setup
 above includes the minimal pinned API stack and in-process HTTP test client.
 
+Append `--dashboard` to that same four-path launcher command for the packaged
+local React dashboard. Its masked token stays in page memory; saved reads are
+explicit and historical acquisition remains disabled. Installed users need no
+Node/browser build tools. Maintainers deliberately regenerate the closed asset
+set with `npm --prefix frontend run package:dashboard` before packaging; see the
+[dashboard distribution and integration guide](frontend/README.md).
+
 ## CLI help and usage
 
 In a fresh checkout, before creating local credentials or watchlist files:

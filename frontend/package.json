@@ -10,8 +10,11 @@
     "schema:check": "node scripts/generate-contracts.mjs --check",
     "typecheck": "tsc --noEmit",
     "build": "npm run schema:check && npm run typecheck && vite build",
+    "package:dashboard": "npm run build && node scripts/package-dashboard.mjs",
+    "package:check": "node scripts/package-dashboard.mjs --check",
     "test": "vitest run",
-    "test:browser": "playwright test"
+    "test:browser": "playwright test",
+    "test:integration": "playwright test --config playwright.integration.config.ts"
   },
   "dependencies": { "react": "19.3.1", "react-dom": "19.3.1" },
   "devDependencies": {

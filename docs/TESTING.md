@@ -10,7 +10,7 @@ The goal is to make tests deterministic, meaningful, isolated, and suitable for 
 
 # 1. Test Layers
 
-## M8 opt-in hosting — issue #142
+## M8 opt-in hosting and packaged dashboard — issues #142/#155
 
 Run `python -m pytest tests/test_dashboard_hosting.py tests/test_api_foundation.py
 tests/test_api_launcher.py tests/test_packaging.py -v` for source and installed
@@ -20,10 +20,21 @@ headers and loader-issued configuration. These are offline ASGI tests without
 a real listener. The installed-wheel probe serves actual packaged bytes and
 checks the complete intended asset set; cold foundation/launcher probes also
 construct opt-in apps and exercise health/schema under existing IO denial.
-The font/license bytes are checked against the original source artifacts.
+The original font and project/production dependency license notices are checked.
+An isolated Git checkout-index regression enables core.autocrlf=true and verifies
+LF-pinned generated text remains byte-identical on Windows checkout. The wheel
+archive's complete five-resource byte set must match the reviewed source package.
 No Node/browser dependency is introduced. Actual browser layout, font loading
 and visual demonstration are separate manual verification, not implied by ASGI
-success. The readiness page does not implement watchlists or an API client.
+success. The deliberate `frontend` command `npm run package:dashboard` builds and
+copies only reviewed stable filenames; `npm run package:check` detects drift without
+writes. No Python build hook invokes Node. See the frontend README for offline
+fixture tests and separate actual source/wheel integration via `npm run test:integration`.
+That profile launches the production loopback entry point with temporary synthetic
+SQLite, process-only random credentials, disabled history and no API-route mocks.
+It verifies asset/CSP/font parity, both namespaces, detail, overview and disabled
+history while preserving SQLite bytes and absent cache/legacy paths. Browser and
+canonical Python heavy suites run sequentially. Default pytest never starts a listener.
 
 ## Unit tests
 

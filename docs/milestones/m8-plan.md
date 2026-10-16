@@ -1,5 +1,61 @@
 # M8 — Web Dashboard execution plan
 
+## Production distribution — 2026-10-15
+
+The owner instructed **“Pr merged continue the work”**. PR #157 is verified
+owner-merged at `bcd83f4909abebe4d1b3ed6345f13e433dc1791e`; PR #158 at
+`15f73b14a36c8db60c0a40d117eda391acf5cc00`. The combined main Foundation
+`38845989101` passed all five jobs. Issues #146 and #147 are closed by their
+owner merges. Their exact-head checks and independent reviews also passed;
+synthetic frontend demos were delivered for both.
+
+#155 is delegated to `frontend_plan` on `codex/155-dashboard-distribution`
+from that combined main in the primary worktree. The Master owns this plan
+and publication; `m8_review` will independently review the implementation.
+The scope is a deliberate reproducible build-to-package step, reviewed closed
+static routes, source/installed-wheel asset parity and actual launcher/browser
+integration over isolated synthetic SQLite. No broad static mount, runtime
+discovery, Python import-time Node/build/download, new dependency, CI change,
+endpoint, financial behavior or live rights activation is included. Heavy
+native suites are serialized. All credential-bearing artifacts are prohibited;
+visual demos use labeled synthetic state with masked controls absent.
+
+#148 remains blocked until #155 is reviewed, owner-merged and main CI passes.
+M8 is not complete; earlier sections retain their dated implementation history.
+
+### #155 implementation and review
+
+The deliberate frontend package bridge now builds stable flat files for the
+existing five Python routes, refusing extra files/maps/chunks and linked output
+directories. It checks the original font and bundles project/font and pinned
+React/ReactDOM/scheduler and Vite runtime-helper MIT notices. A no-write check detects exact byte drift;
+scoped LF attributes and an actual autocrlf checkout regression preserve Windows
+bytes. The existing Python static allowlist/package data, CSP, Origin/Host,
+authentication and no-store controls remain unchanged. Python startup, import,
+help and installation never invoke the frontend toolchain.
+
+The separate actual-launcher browser profile runs source and an offline-installed
+wheel over temporary synthetic SQLite without API mocks. Both verify every asset
+byte, local font/CSP, authenticated saved namespaces/duplicates/exact values,
+detail, overview and HTTP503 disabled history. Database hashes remain unchanged;
+cache and legacy paths remain absent. Only the owned child is terminated and an
+occupied port is refused. Runtime random credentials are absent from captured
+DOM, fields and diagnostics; automatic trace/video/screenshots and failure ARIA
+snapshots are disabled. An explicit negative probe verified that failure output
+contains no such artifacts. It is separate from passing application checks.
+
+Master inspected the actual synthetic desktop overview and installed-wheel
+dark-phone overview/disabled-history captures, with readable pixel text and
+unavailable panels preserved. Frontend tests 164, schema/type/build and package
+byte check, existing browser regressions 27 and final source/wheel integration 2
+passed. Repeated production builds produced identical hashes for all five assets.
+Final targeted Python verification passed 197 in 76.52s; the original full-suite
+session completed successfully with 2795 passed in 157.12s and was recovered after
+an account-usage interruption, without a duplicate full run. Independent final
+source/test/docs review, including the Vite helper notice, found no actionable
+issue. Ruff, configured mypy (config.py), pip check and the final package byte
+check passed. Staged hygiene, hosted CI and owner merge remain publication gates.
+
 ## Detail/history and overview — 2026-10-15
 
 The owner instructed **“pr merged, continue the work”**. PR #156 is verified

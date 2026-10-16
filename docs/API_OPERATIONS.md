@@ -1,13 +1,15 @@
 # Local REST operation — issue #133
 
-## Optional dashboard hosting foundation — issue #142
+## Optional packaged dashboard — issues #142/#155
 
 Append `--dashboard` to the existing four-path invocation to serve the packaged
-hosting readiness page at `http://127.0.0.1:8000/`. The required process token,
-four distinct paths and fixed listener settings remain unchanged. This page is
-a hosting demonstration: no credential entry, API requests, holdings or market
-figures. Its theme switch previews monochrome light/dark without persistence.
-Frontend client, navigation and data views are separately scoped work.
+production React dashboard at `http://127.0.0.1:8000/`. The required process token,
+four distinct paths and fixed listener settings remain unchanged. Settings accepts
+the existing token into a masked memory-only field; configuration makes no request.
+Explicit Watchlists reads reuse the authenticated local API. Overview counts only
+the last validated saved namespace; detail re-reads its request-local row. Theme
+alone persists. Saved prices/currency/freshness retain their documented limitations.
+Historical acquisition remains disabled without the separate rights approval below.
 
 Without this flag, the original API route set and rejection of every Origin
 remain unchanged. Dashboard mode additionally accepts one exact matching pair:
@@ -30,10 +32,13 @@ responses remain unchanged. No service worker or runtime build/download exists.
 
 The wheel includes an explicit asset list. Python install/import/help does not
 require Node or read assets; resource reads occur only on valid static GETs.
-The original font is distributed with the repository MIT license, served as
-`LICENSE.txt`. Its editable glyphs and deterministic generator remain in
-`docs/previews/assets/` in the source repository. Browser screenshots use this
-readiness page without tokens or real state; they do not certify data workflows.
+The original font is distributed with the repository MIT license. `LICENSE.txt`
+also includes the bundled React19.3.1, ReactDOM19.3.1, scheduler0.28.0 and emitted
+Vite8.3.4 modulepreload-helper core MIT notices (not Vite's dev-tool bundled notices).
+Editable font glyphs/generator remain in `docs/previews/assets/`. Deliberate asset
+generation and source/installed-wheel browser verification are documented in
+[frontend/README.md](../frontend/README.md). Runtime startup does not discover assets,
+run Node or download/build anything. Installed users need no frontend toolchain.
 
 The following original M7 operation instructions describe default API mode;
 the opt-in Origin/static exception above applies only with `--dashboard`.

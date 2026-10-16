@@ -3,6 +3,7 @@
 import asyncio
 import json
 from pathlib import Path
+import subprocess
 
 import httpx
 import pytest
@@ -16,6 +17,28 @@ from stock_tracker.api.composition import create_local_app
 
 
 _loop = None
+
+
+def test_distribution_text_bytes_survive_windows_autocrlf_checkout(tmp_path):
+    root = Path(__file__).resolve().parents[1]
+    names = ["frontend/index.html", *["src/stock_tracker/api/dashboard_assets/" + name for name in
+             ("index.html", "hosting.js", "hosting.css", "LICENSE.txt")]]
+    (tmp_path / ".gitattributes").write_bytes((root / ".gitattributes").read_bytes())
+    for name in names:
+        target = tmp_path / name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes((root / name).read_bytes())
+    def git(*args):
+        subprocess.run(["git", "-c", "core.autocrlf=true", *args], cwd=tmp_path,
+                       check=True, capture_output=True)
+    git("init", "--quiet")
+    git("add", ".gitattributes", *names)
+    destination = tmp_path / "checkout"
+    git("checkout-index", "--all", "--prefix=" + destination.as_posix() + "/")
+    for name in names:
+        original = (root / name).read_bytes()
+        assert b"\r\n" not in original
+        assert (destination / name).read_bytes() == original
 
 
 @pytest.fixture(scope="module", autouse=True)
@@ -68,13 +91,19 @@ def test_packaged_resources_exact_content_and_headers_without_application_work(t
     assert reads == [name for name, _ in dashboard.ASSETS.values()]
     assert not list(tmp_path.iterdir())
     html = original("index.html").decode()
-    assert '<script src="/dashboard-assets/hosting.js" defer>' in html
+    assert 'src="/dashboard-assets/hosting.js"' in html and 'type="module"' in html
     assert '<style' not in html and 'style=' not in html
-    assert "Hosting readiness demo" in html and '<input' not in html
-    assert 'fetch(' not in original("hosting.js").decode()
+    assert '<div id="root"></div>' in html and "Hosting readiness demo" not in html
+    assert "/api/v1/watchlists/" in original("hosting.js").decode()
     root = Path(__file__).resolve().parents[1]
     assert original("stock-pixel.ttf") == (root / "docs/previews/assets/stock-pixel.ttf").read_bytes()
-    assert original("LICENSE.txt") == (root / "LICENSE").read_bytes()
+    license_text = original("LICENSE.txt").decode()
+    assert (root / "LICENSE").read_text(encoding="utf-8").strip() in license_text
+    for package in ("react 19.3.1", "react-dom 19.3.1", "scheduler 0.28.0", "vite 8.3.4"):
+        assert package + " / MIT" in license_text
+    assert "Copyright (c) Meta Platforms, Inc. and affiliates." in license_text
+    assert "Copyright (c) 2019-present, VoidZero Inc. and Vite contributors" in license_text
+    assert "# Licenses of bundled dependencies" not in license_text
 
 
 @pytest.mark.parametrize("host", [b"localhost:8000", b"127.0.0.1:8000"])

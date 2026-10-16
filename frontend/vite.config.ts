@@ -3,6 +3,11 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
-  // Production assets only: no API proxy or extra listener is part of this task.
-  build: { sourcemap: false, assetsInlineLimit: 0 },
+  base: "/dashboard-assets/",
+  // These names match the deliberately closed Python route/package allowlist.
+  build: { sourcemap: false, assetsInlineLimit: 0, rolldownOptions: { output: {
+    entryFileNames: "hosting.js",
+    chunkFileNames: "unexpected-[name].js",
+    assetFileNames: asset => asset.names.some(name => name.endsWith(".css")) ? "hosting.css" : "[name][extname]",
+  } } },
 });
