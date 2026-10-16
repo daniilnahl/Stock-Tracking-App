@@ -1,36 +1,34 @@
 # Stock Tracking App
 
-## Introduction
-The **Stock Tracking App** was created as a passion project driven by my interest in stocks and Python. The app allows the user to track stocks.
+A Python stock tracker with a CLI, an authenticated local REST API and a retro
+pixel dashboard in monochrome light and dark themes.
 
-## Features
-- Add stocks.
-- Remove stocks.
-- Show stocks.
-- Refresh stocks' data to be up-to-date.
-- Graph a stock's performance.
+## What you can do
 
-Charts use observed raw historical closes for known NASDAQ stocks, with no
-interpolation or currency assumption. Requested/observed ranges and split-price
-warnings are shown. The graph command accepts paired dates. The
-[completed M4 exit audit](docs/milestones/m4-exit-evidence.md) records source/wheel
-verification, owner merges, passing final main CI and milestone closure.
-The unfinished personal evaluation method is unavailable. This foundation
-does not certify financial analytics or production readiness.
+| Interface | Supported capabilities |
+|---|---|
+| CLI | Add, remove, show and refresh saved stocks; graph observed raw historical closes for supported NASDAQ stocks. |
+| Dashboard | Read both saved watchlists, open stored-row details, see the selected list's entry count and choose a theme. |
+| Local API | Read saved watchlists and the typed OpenAPI contract; historical requests have a separate, disabled-by-default rights gate. |
+
+The dashboard and API are read-only. Saved prices have unknown freshness and do
+not establish current quotes or currency. Search/add, recommendations and Taurus
+Agents are explicitly unavailable; their [follow-up scope](docs/TO-DO-LIST.md)
+is documented. Live dashboard/API history remains disabled until the separate
+rights requirements in [API operations](docs/API_OPERATIONS.md#historical-activation-gate)
+are satisfied.
 
 ## Canonical setup
 
-Use Git and **Python 3.11 or 3.12** (`>=3.11,<3.13` in `pyproject.toml`).
-No provider key, `.env` or saved watchlist is needed for installation, tests or
-help in a fresh checkout. Installation needs package-index access; automated
-verification blocks market-provider transport and isolates temporary state.
+Use Git and **Python 3.11 or 3.12** (`>=3.11,<3.13`). No provider key, `.env`,
+saved watchlist or frontend toolchain is needed for Python installation or help.
 
 ```bash
 git clone https://github.com/daniilnahl/Stock-Tracking-App.git
 cd Stock-Tracking-App
 ```
 
-Create and activate a fresh virtual environment. On Windows PowerShell:
+Create and activate a virtual environment. On Windows PowerShell:
 
 ```powershell
 py -3.11 -m venv .venv
@@ -44,11 +42,107 @@ python3.11 -m venv .venv
 source .venv/bin/activate
 ```
 
-For Python 3.12, substitute `-3.12` or `python3.12` in the creation command.
-Use `python` after activation so all commands use that environment.
+For Python 3.12, substitute `-3.12` or `python3.12`. After activation, install and
+check the available commands:
 
-From the checkout, install the application and pinned development tools, then
-run the canonical checks from [docs/TESTING.md](docs/TESTING.md):
+```bash
+python -m pip install .
+python menu_watchlist.py --help
+python -m stock_tracker.api --help
+```
+
+Installation needs package-index access. For development and tests, use the
+pinned [development setup](#development-and-verification) below.
+
+## Run the dashboard or API
+
+Before starting, set `STOCK_TRACKER_API_TOKEN` in the process environment through
+your protected secret-management mechanism. Use your own token containing
+32–256 ASCII letters, digits, underscores or hyphens. Keep it out of source,
+URLs, command arguments and logs. This local token is separate from an FMP key;
+saved reads need no provider credential.
+
+From the checkout, with the environment activated:
+
+```bash
+python -m stock_tracker.api --database ./stock_tracker.sqlite3 --history-cache ./stock_tracker.history-cache.json --menu-legacy ./watchlist.pkl --evaluation-legacy ./daniils_stock_methodd.pkl --dashboard
+```
+
+These four explicit paths use the CLI's working-directory locations. Choose
+them deliberately; their parent directories must already exist and the files
+must be distinct. A missing database can be read as empty without creating it.
+Existing legacy files are protected by the transition rules linked below.
+
+Open **http://127.0.0.1:8000/**. In Settings, enter the same token into the masked
+field, then choose Watchlists and **Read saved entries**. Configuration alone
+makes no request. Reloading the page or disconnecting clears credentials and
+private views; only theme preference persists. Stop the server with **Ctrl+C**.
+
+Omit `--dashboard` for API-only operation. `/health` is public;
+`/api/v1/openapi.json` and saved-data routes require bearer authentication.
+The listener is fixed to loopback port 8000. Default API mode rejects every
+Origin header; dashboard mode accepts only its exact matching local Origin/Host
+pair. See [API operations](docs/API_OPERATIONS.md) for path validation, request
+contracts, startup recovery and the history gate. External hosting is outside
+the accepted scope.
+
+The wheel already contains the production dashboard. Running it requires no
+Node, browser build tools, runtime build or asset download.
+
+## CLI help and usage
+
+Run the maintained CLI from the checkout:
+
+```bash
+python menu_watchlist.py show-stocks
+python menu_watchlist.py add-stock
+python menu_watchlist.py refresh
+python menu_watchlist.py remove-stock
+python menu_watchlist.py graph-stock --start 2020-01-01 --end 2020-01-06
+```
+
+Interactive commands prompt for their inputs. Saved display and removal work
+without a provider key; add, refresh and supported history retrieval require
+provider configuration. Graph dates must be supplied together or both omitted.
+Charts show raw observed closes with missing sessions preserved and no inferred
+currency or adjusted returns. See [CLI usage and showcase](docs/CLI_SHOWCASE.md)
+and [historical cache operations](docs/HISTORICAL_CACHE.md) for detailed behavior.
+
+The alternate Typer app in `daniils_stock_method.py` uses a separate watchlist
+namespace and has no direct script entry point. Its unfinished personal
+evaluation method remains unavailable. No installed CLI console script is
+configured; the API uses the supported `python -m stock_tracker.api` entry point.
+
+## Optional provider configuration
+
+Configure your own `FMP_API_KEY` in the environment or an untracked local `.env`.
+The empty [.env.example](.env.example) is a template; copy it only when `.env`
+does not already exist. Never commit credentials or overwrite an existing file
+during setup.
+
+Process values override dotenv values for the same name. `FMP_API_KEY` takes
+precedence over the legacy `MY_API_KEY` fallback; a present empty canonical
+value fails validation. Provider keys remain server-side. API/dashboard history
+has its own rights gate even when a provider key is configured.
+
+## Saved data
+
+The CLI uses cwd-local `stock_tracker.sqlite3`, with independent
+`menu_watchlist` and `daniils_stock_method` namespaces. Numeric values preserve
+Decimal precision; missing, unowned and numeric-zero states remain distinct.
+The separate historical JSON cache is not holdings state.
+
+Legacy `watchlist.pkl` and `daniils_stock_methodd.pkl` contents are never loaded
+by application storage. If a legacy entry exists while its SQLite namespace is
+absent, the app refuses the operation and directs you to a reviewed neutral
+transition. Preserve original files. Read [CLI storage](docs/CLI_PERSISTENCE.md),
+[persistence operations](docs/PERSISTENCE.md) and
+[import/backup/restore](docs/PERSISTENCE_TRANSFER.md) before moving existing data.
+
+## Development and verification
+
+`pyproject.toml` is the canonical Python dependency file with exact runtime,
+development and build pins. From the activated checkout:
 
 ```bash
 python -m pip install ".[dev]"
@@ -59,336 +153,35 @@ python -m ruff check .
 python -m mypy
 ```
 
-The targeted checks verify both Typer help surfaces in empty temporary working
-directories, offline wheel packaging, dependency pins, Git ignore behavior and
-redacted tracked-source credential patterns. Full pytest collects only `tests/`;
-`test.py` is a manual live-provider scratch script, outside collection.
+Mypy checks **config.py only**, as configured. Default pytest uses isolated
+offline fixtures; `test.py` is a manual live-provider scratch script outside
+collection. The Foundation workflow runs Python 3.11/3.12 tests, Ruff,
+configuration Mypy and credential-pattern checks without provider secrets.
+See [testing policy](docs/TESTING.md) for the full contract and scanner limits.
 
-`pyproject.toml` is the single master dependency file. Runtime, development,
-transitive and build-backend versions use exact pins; there is no separately
-maintained `reqs.txt` or second lockfile. Repeat
-`python -m pip install ".[dev]"` and the checks in the same environment to verify
-that installed dependency versions stay pinned. Repeat the fresh environment
-walkthrough on each supported Python version when changing pins. Pins provide
-version resolution, not artifact hashes or byte-identical builds across platforms.
-Runtime-only installation uses `python -m pip install .`.
+Frontend maintainers use the existing Node 24/npm setup and committed lockfile
+described in [frontend/README.md](frontend/README.md). Run the deliberate
+`npm --prefix frontend run package:dashboard` command after UI source changes,
+review generated assets and check `npm --prefix frontend run package:check`
+before the normal Python wheel build. Unit, fixture-browser and real source/wheel
+browser profiles are separate; no development proxy bypasses the local API.
 
-Optional wheel build, using the installed pinned backend:
+## Design and project evidence
 
-```bash
-python -m pip wheel . --no-deps --no-build-isolation --wheel-dir dist
-```
+- [Approved SRS](SRS.md) and [architecture decisions](docs/adr/).
+- [Financial calculation definitions](docs/FINANCIAL_CALCULATIONS.md).
+- [Dashboard component guide](frontend/COMPONENTS.md) and [M8 execution plan](docs/milestones/m8-plan.md).
+- [Milestone verification records](docs/milestones/) and the [final M8 audit PR](https://github.com/daniilnahl/Stock-Tracking-App/pull/162).
+- [Contribution and agent policy](AGENTS.md).
 
-The wheel includes five flat modules (`stock`, `watch_list`, `menu_watchlist`,
-`daniils_stock_method`, `config`), `utils.utility_module`, and the
-`stock_tracker.domain`, `stock_tracker.compatibility`, `stock_tracker.providers`,
-`stock_tracker.persistence`, `stock_tracker.services`, `stock_tracker.cli`
-and `stock_tracker.api`
-packages. Local, current-data and historical services, the shared decimal parser
-and CLI storage/provider-acquisition adapters support both maintained root CLIs.
-Commands delegate application work to the injected services; presentation owns
-numeric formatting and history rendering. The wheel excludes
-tests, scratch scripts, CSV data and local state. No installed console-script entry
-point is configured; the documented direct script commands use the checkout.
+The final M8 audit and README follow-up require owner merge and passing main CI
+before milestone closure. Research/AI services, mutations in the browser,
+additional analytics and hosted deployment are outside the accepted dashboard
+scope.
 
-Ruff checks application code, tests and the scratch script using `E4`, `E7`,
-`E9` and `F`. Mypy runs in strict mode on **`config.py` only**, using the file
-scope in `pyproject.toml`; `mypy src/` is not the configured verification command.
-The [readiness decision](docs/TESTING.md#type-check-readiness-decision--issue-11)
-records the historical readiness decision. Completed M1–M3 implementation has
-not expanded configured type checking beyond `config.py`; wider typing remains
-separate follow-up work.
+## License and acknowledgments
 
-## REST foundation
-
-The accepted M7 foundation supplies an injected `create_app`, public process
-health and authenticated static OpenAPI. It includes exact Decimal wire models,
-safe error/access controls and admission infrastructure. The authenticated
-`GET /api/v1/watchlists/{namespace}` route reads saved views from the injected
-shared service for `menu_watchlist` or `daniils_stock_method`, preserving ordered
-rows and unknown freshness. Authenticated
-`GET /api/v1/watchlists/{namespace}/entries/{ordinal}/history` selects an exact
-stored row and delegates paired ISO dates or UTC defaults to the shared history
-service, preserving raw Decimal values and existing cache policy. History is
-disabled by default before state/provider/cache acquisition; explicit synthetic
-test injection does not establish external display/cache rights.
-`python -m stock_tracker.api --help` documents the separate local launcher.
-It requires four distinct explicit file paths and the process-only
-`STOCK_TRACKER_API_TOKEN`, binds only 127.0.0.1:8000 and defaults to saved local
-views with historical acquisition disabled. See [API operation](docs/API_OPERATIONS.md)
-for start/stop, safe startup recovery and the historical rights activation gate.
-The injected factory starts no listener and changes no CLI behavior. See
-[API foundation contracts](docs/API_FOUNDATION.md) for the current boundaries,
-dependency rationale and offline verification. The canonical `.[dev]` setup
-above includes the minimal pinned API stack and in-process HTTP test client.
-
-Append `--dashboard` to that same four-path launcher command for the packaged
-local React dashboard. Its masked token stays in page memory; saved reads are
-explicit and historical acquisition remains disabled. Installed users need no
-Node/browser build tools. Maintainers deliberately regenerate the closed asset
-set with `npm --prefix frontend run package:dashboard` before packaging; see the
-[dashboard distribution and integration guide](frontend/README.md).
-
-## CLI help and usage
-
-In a fresh checkout, before creating local credentials or watchlist files:
-
-```bash
-python menu_watchlist.py --help
-```
-
-This prints the existing commands: `add-stock`, `remove-stock`, `show-stocks`,
-`refresh` and `graph-stock`. Run a command from the checkout using
-`python menu_watchlist.py <command>`; add/remove commands prompt for input.
-`add-stock` and `refresh` require a provider credential before network work.
-Help and saved-data commands do not require a key. The alternate Typer app in
-`daniils_stock_method.py` is covered by the offline help tests; it has no script
-entry point. The unfinished evaluation method raises `NotImplementedError`.
-
-Graph an existing stock with the ticker prompt and optional inclusive dates:
-
-```bash
-python menu_watchlist.py graph-stock --start 2020-01-01 --end 2020-01-06
-```
-
-Supply both dates in exact `YYYY-MM-DD` form or omit both. The default spans five
-calendar years through the prior UTC calendar date, with February 29 clamped to
-February 28 in a non-leap start year. Explicit ranges must be ordered, end before
-today in UTC and contain at most 3,660 calendar days. Missing sessions stay
-missing; charts show available observations within the requested interval.
-Invalid ranges exit with `Historical date range is invalid.` before provider or
-cache work. A selected stock must have a known exchange exactly equal to NASDAQ
-before credential checks. Graphing requires a current runtime provider key and
-does not refresh summaries or save holdings. Missing tickers perform no history
-request. Provider/cache failures exit nonzero with safe messages; cache recovery
-limits are described in [historical cache operations](docs/HISTORICAL_CACHE.md).
-
-Reusable SQLite repositories and [safe neutral import/backup/restore utilities](docs/PERSISTENCE_TRANSFER.md)
-are available. The documented transition requires manual reviewed neutral JSON and
-preserves original files; it provides no pickle extraction. Both CLIs now use
-one cwd-relative `stock_tracker.sqlite3`, with independent namespaces and lazy
-restoration. Imports and root/subcommand help do not load state. Offline saved
-display needs no provider key; runtime credentials are never persisted.
-
-**Existing-state transition:** if a SQLite namespace is absent and its original
-`watchlist.pkl` or `daniils_stock_methodd.pkl` directory entry exists, load/save
-refuses with guidance to preserve it and follow the documented manual neutral
-transition. Only existence is inspected; legacy contents are never deserialized,
-deleted or overwritten. An existing namespace is authoritative after an explicit
-reviewed import. Do not inspect or mutate real user files during setup/testing.
-See [CLI storage](docs/CLI_PERSISTENCE.md), [persistence operations](docs/PERSISTENCE.md)
-and [M3 audit evidence](docs/milestones/m3-exit-evidence.md) for behavior and closure
-status. Trusted synthetic facade compatibility retains isolated pickle tests;
-application storage and transfer do not use pickle.
-Explicit legacy CSV helpers use paths relative to the
-working directory. Ticker validation does not read or change CSV hints: it
-requires a unique exact NASDAQ provider match each time. A completed valid
-search without that match reports the new candidate as invalid and rejects it
-without adding or saving; existing holdings stay unchanged. This scoped rule
-can reject real instruments when search is incomplete or truncated and does
-not claim global nonexistence. Provider failures remain separate errors.
-Both CLIs render safe provider/configuration failures with exit code 1 and do
-not save a failed add or refresh. A failed profile/quote invalidates the current
-price in memory while preserving known metadata and holdings; a failed summary
-invalidates all summary fields. Earlier entries may already have refreshed when
-a later entry fails, but committed SQLite state stays unchanged. Explicit null prices
-are successful missing data, with unavailable return values rather than zero.
-
-## Domain boundary and M1 status
-
-The installed `stock_tracker.domain` package exposes immutable security identity
-and ownership, a Portfolio with an owned Position list, and pure Decimal position
-snapshots. It imports and runs independently of credentials, HTTP, databases and
-terminal/chart libraries. Root `stock.Stock` is a compatibility facade; existing
-CLI commands retain their names and ownership prompts preserve decimal text.
-Snapshot inputs use one currency; missing quotes and undefined zero-basis returns
-stay distinct from zero. Advanced metrics and transaction conventions remain
-blocked by the financial specification.
-
-M1 is achieved as of 2026-10-04: owner-merged
-[PR #46](https://github.com/daniilnahl/Stock-Tracking-App/pull/46) includes the
-reviewed implementation on `main` at `788d3c4`; all nine required M1 issues
-are closed and the [post-merge Foundation run](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/37214866386)
-passed all five checks. The [M1 completion review](docs/milestones/m1-exit-evidence.md#completion-review--2026-10-04)
-records source, tests, issue/PR reconciliation and local verification.
-GitHub's milestone container remains open with zero open issues at the review.
-M3 implements structured storage separately; real historical charts and CLI V2
-remain later milestones.
-
-## Market data layer and M2 status
-
-M2 is implemented and achieved as of 2026-10-05 on `main` at
-`5eccf3b24edbe03a6f01e86b9dfcffb80a1ad0c7`. It supplies immutable typed provider
-models/interfaces, FMP quote/profile/period/identity operations, approved HTTP
-timeout/retry/rate-limit behavior, scoped ticker rejection and offline mocked
-verification. Maintained application paths delegate through the provider boundary;
-successful no-match rejects only a new candidate, while provider failures stay
-distinct and existing holdings remain untouched.
-
-All ten required M2 issues are closed after human merges of PR #57–65 and #67.
-The [post-merge Foundation run](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/37346059176)
-passed all five checks; the [completion evidence](docs/milestones/m2-exit-evidence.md#completion-review--2026-10-05)
-records the six deliverables, boundary exit criterion and final review.
-[M2](https://github.com/daniilnahl/Stock-Tracking-App/milestone/3) is closed at
-100%, with zero open and 20 closed items. M2's evidence alone does not establish
-persistence or historical charts; those are now completed M3/M4 work below.
-FX and broader exchange support remain outside these implemented contracts.
-
-## Optional provider configuration
-
-Obtain your own key through [Financial Modeling Prep](https://site.financialmodelingprep.com/developer/docs).
-Keep it outside source control in the process environment, or copy the empty
-[.env.example](.env.example) to a local `.env` **only if `.env` does not exist**.
-On PowerShell:
-
-```powershell
-if (-not (Test-Path -LiteralPath .env)) { Copy-Item -LiteralPath .env.example -Destination .env }
-```
-
-On macOS/Linux:
-
-```bash
-[ -e .env ] || cp .env.example .env
-```
-
-Edit only the local file to set `FMP_API_KEY`. `.env` and local overrides are
-ignored by Git; `.env.example` deliberately contains an empty value. Never
-paste a credential into source, tests, command examples, logs or PR text.
-
-[config.py](config.py) loads optional dotenv configuration. Process environment
-values override dotenv values of the same name. `FMP_API_KEY` wins across
-sources; the legacy `MY_API_KEY` fallback applies only when `FMP_API_KEY` is
-absent from both. A present but empty/whitespace canonical value fails validation
-and does not fall back. Remove the empty canonical variable if using the legacy
-name. Missing or blank credentials stop `add-stock`, `refresh`, graphing a
-selected supported stock, and explicit scratch-script requests before network
-work. Explicit graph dates validate before state/key preflight; selected-stock
-identity is checked before credentials, and resolved ranges validate before
-cache/provider access. Missing tickers perform no history request. Diagnostics omit credential values
-and request URLs.
-
-Previously exposed keys are covered by the
-[owner rotation attestation](docs/security/issue-3-credential-rotation.md).
-This is owner-confirmed revocation/replacement, not an agent live-key test.
-Tracked-source scanning covers known literal credential and URL patterns with
-redacted findings; it does not certify arbitrary secret formats or Git history.
-
-## Contributing and foundation status
-
-Read the approved [SRS](SRS.md), [agent operating policy](AGENTS.md),
-[testing policy](docs/TESTING.md), [financial calculation specification](docs/FINANCIAL_CALCULATIONS.md)
-and [accepted dependency ADR](docs/adr/0005-canonical-python-dependencies.md).
-Implement a bounded issue on a task branch, run required checks, review the diff
-and open a PR using the repository templates. Do not merge automatically.
-
-The [Foundation workflow](.github/workflows/foundation.yml) runs pytest on
-Python 3.11 and 3.12, Ruff, configuration mypy and credential-pattern checks
-on PRs and pushes to `main`, using the same pinned installation without provider
-secrets. The [CI contract](docs/TESTING.md#foundation-actions-workflow--issue-12)
-lists exact check names, scanner limitations and owner-only protection setup.
-
-The [M0 verification record](docs/milestones/m0-verification.md) consolidates
-the SRS §23 deliverable checklist, code review and sanitized exit evidence.
-At the 2026-10-03 review of `e0bbeb1`, all three technical exit criteria have
-supporting evidence, including a successful Foundation run on `main` after
-PR #35 merged. All thirteen foundation issues are closed; CI
-[issue #12](https://github.com/daniilnahl/Stock-Tracking-App/issues/12) was
-implemented in [PR #34](https://github.com/daniilnahl/Stock-Tracking-App/pull/34)
-and its completed state was reconciled after owner confirmation.
-[M0](https://github.com/daniilnahl/Stock-Tracking-App/milestone/1)
-is complete under `AGENTS.md` §10.7.
-The foundation does not complete the later domain, provider, persistence or
-financial milestones.
-
-## Persistence milestone status
-
-**M3 is COMPLETE as of 2026-10-06.** All nine required issues (#68–75 and #84)
-are closed after owner merges of PR #77–83, #85 and #86. Completed main is
-`534a178005a5dd5662ec0cb261cadaf3ce5f2888`; all five checks in the
-[post-merge Foundation run](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/37533716609)
-passed. [Milestone 4](https://github.com/daniilnahl/Stock-Tracking-App/milestone/4)
-is closed with zero open and nine closed issues. The
-[exit evidence](docs/milestones/m3-exit-evidence.md) records precise Portfolio
-and both CLI restart preservation, source/wheel offline checks, neutral import
-and checked backup/restore. Local full verification passed 1,850 tests; final
-merged-main persistence verification passed 498 tests. Storage remains cwd-local,
-schema version 1 and last-successful-save; manual legacy reconstruction preserves
-original files. Historical data is now completed M4 work; snapshot analytics
-is completed M5 work as recorded below, and CLI V2 remains a later milestone.
-
-## Historical market data and M4 status
-
-**M4 is COMPLETE.** Issues #88–94 and implementation PRs #95–101 are closed,
-and [milestone 5](https://github.com/daniilnahl/Stock-Tracking-App/milestone/5)
-is closed with zero open and 14 closed items. Completed implementation main is
-`0e4b50583e255406d1f2d8e93abdcdc820c2fcbb`; the
-[final main Foundation run](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/38339230334)
-passed all five checks. [Exit evidence](docs/milestones/m4-exit-evidence.md) maps
-all five SRS deliverables to reviewed source/installed-wheel tests and closure.
-
-The accepted raw endpoint feeds actual session observations into charts. A
-separate cwd-local JSON sidecar caches exact historical requests for one hour;
-it is not holdings state or part of SQLite backup/restore. Graphing preserves
-holdings, current quotes and summary metadata. See
-[cache operations](docs/HISTORICAL_CACHE.md) for policy, bounds and safe failures,
-and the date-selection usage above. No synthetic summary-derived chart fallback
-remains. Offline fixtures verify implementation behavior; live entitlement,
-complete sessions, historical currency and adjusted/dividend analytics are not
-certified.
-
-## Snapshot portfolio analytics and M5 status
-
-The additive `stock_tracker.domain.portfolio_snapshot` API now computes numeric
-cost basis, market value, unrealized P&L/ratio and ordered position allocation
-under [accepted ADR-0011](docs/adr/0011-snapshot-portfolio-analytics.md). Callers
-supply immutable Position/price rows and explicit cost, quote and aggregate
-currency assertions. Calculations validate consistency without fetching prices
-or claiming currency authenticity or observation freshness. Missing inputs and
-undefined zero-denominator metrics remain distinguishable from numeric zero.
-
-The required snapshot implementation and independent audit are owner-merged at
-`11f7333abdac830e139dd74354c87b30fe4cd45d`; all required issues and PR/main CI
-gates passed. **M5 is complete:** independent review passed and milestone 6 is
-closed with zero open and seven closed items. [M5 exit evidence](docs/milestones/m5-exit-evidence.md) records known
-values, actual source/installed-wheel isolation and exact SQLite restart, with
-the [verified completion report](https://github.com/daniilnahl/Stock-Tracking-App/issues/107#issuecomment-6139320638).
-This completes the accepted pure API;
-it adds no CLI command. Optional historical, benchmark, risk, dividend and FX
-metrics remain blocked on approved definitions. CLI service integration and its
-separate exit audit are tracked under M6 below.
-
-## CLI services and M6 completion
-
-Both maintained root CLIs now use the accepted injected application services
-for local state, current-data operations and menu historical retrieval. Existing
-commands, prompts, namespace separation, offline help/display and precise numeric
-ownership remain supported. The owner-merged implementation is PR #124, with
-passing required PR/main CI.
-
-The combined source/installed-wheel audit PR #125 is owner-merged at
-`237c4c5f7d9825c284d706d6730bcdf9ed3510f6`. All seven required issues #112–118
-are closed completed, and exact audit PR/main CI passed all five checks.
-**The accepted M6 implementation and exit audit are complete.**
-[M6 exit evidence](docs/milestones/m6-exit-evidence.md) records the completion
-review. The milestone is closed (zero open/nine closed items); administrative
-#126 is complete, with [documentation PR #127](https://github.com/daniilnahl/Stock-Tracking-App/pull/127)
-awaiting owner review/merge.
-See the [manual CLI showcase](docs/CLI_SHOWCASE.md) for actual commands,
-isolated state and the distinction between demo responses and live market data.
-This scope adds no installed CLI entrypoint,
-REST API, dashboard, new financial metric or hosted deployment contract.
-
-## Acknowledgments
-- ### Financial Modeling Prep API
-  #### This app utilizes the Financial Modeling Prep API for retrieving stock data.
-  #### You can learn more about the API at https://financialmodelingprep.com/developer/docs/.
-- ### RICH Library
-  #### The app uses the RICH API for creating beautiful tables and enhancing the CLI interface.
-  #### More information can be found at https://rich.readthedocs.io/.
-- ### Typer Library
-  #### The app is built using the Typer API to handle CLI commands.
-  #### You can check out Typer at https://typer.tiangolo.com/.
-  #### Citation: Ramírez, S. Typer [Computer software]. https://github.com/fastapi/typer.
-
-## License
-This project is licensed under the MIT License.
+[MIT License](LICENSE). The project uses Financial Modeling Prep, Rich, Typer,
+FastAPI and React. Bundled dashboard/font
+[license notices](src/stock_tracker/api/dashboard_assets/LICENSE.txt) accompany
+the distributed assets.
