@@ -1,5 +1,48 @@
 # M8 — Web Dashboard execution plan
 
+## Final audit and README follow-up — 2026-10-16
+
+The owner confirmed PR #159 merged and requested the final push, followed by
+streamlining the main README. PR #159 is verified owner-merged at
+`4474c44322a58c7d8fa98e7c63e8f044030127ef`, containing reviewed packaging head
+`71fab3f5e1d3560f0b0db354b9d9b4cf50210eee`. Exact-head Foundation `38943862172`
+and combined main Foundation `38944336927` passed all five jobs. #155 is closed.
+
+#148 is delegated to `m8_review`, independent of the frontend implementation,
+on `codex/148-m8-exit-audit` from that main. It owns bounded actual source/wheel
+browser audit checks, clean-install verification and requirement/exit evidence.
+The Master owns this plan/publication; another agent and the Master independently
+review the audit change. No production feature, dependency, CI, rights or hosting
+expansion is authorized. Heavy native suites remain serialized. Demonstrations
+must use labeled synthetic state with no credential-bearing artifacts. Full
+WCAG certification or untested browser/screen-reader coverage must not be claimed.
+
+#160 records the owner's README follow-up. Its edits begin after the audit work
+is verified and will be a separate bounded documentation PR. It preserves the
+canonical setup anchor, current command/security/data contracts and links to
+historical evidence while removing stale milestone narratives. Neither audit
+readiness nor README cleanup closes M8 before required owner merges/main CI.
+
+The audit reproduced two bounded layout defects: header overflow with enlarged
+Overview text/spacing and a namespace select grid overflowing at 320px. Header
+wrapping and a zero-minimum grid track preserve the approved pixel themes and
+native controls. Strict real-launcher regressions and deliberate packaged CSS
+checks cover these fixes. Evidence scopes text overrides/media emulation and
+distinguishes actual fresh-session 401 from controlled nonempty-state clearing.
+No API, privacy, financial or provider-rights behavior changes.
+
+Final audit verification: fresh Python environment canonical install; targeted
+297 and full 2795 passed. The final CSS-only grid correction was followed by
+43 hosting/packaging/hygiene passes, with the pre-existing cold Matplotlib
+warning and unchanged successful retry explicitly recorded (follow-up #161).
+Final frontend 164, fixture browser 27 and real source/wheel workflows 2 passed;
+each actual workflow covers eight viewport/theme combinations plus bounded
+text/media/session checks. Schema/type/build/package byte check, Ruff, configured
+mypy and pip check passed. Independent source/test/evidence review found no
+actionable issue. Master inspected the actual installed-wheel labeled 200% CSS
+text capture; normal viewport and narrow phone captures are also available.
+Staged hygiene, exact-head hosted CI and owner merge remain publication gates.
+
 ## Production distribution — 2026-10-15
 
 The owner instructed **“Pr merged continue the work”**. PR #157 is verified

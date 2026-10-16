@@ -78,8 +78,9 @@ Issue #145 composes the existing SettingsField, Button, DataTable, EmptyState
 and ErrorState primitives on Watchlists. Its exact namespace selector is local
 UI state; only explicit Read/Reload calls the shared client. Ordered duplicate
 rows expose response-local ordinals and exact Decimal strings. Cancellation
-restores focus to Read. Overview keeps its reserved panels and structural table;
-saved holdings and counts are not duplicated there. Search/add stays a truthful
+restores focus to Read. Overview keeps its reserved panels and shows only the
+current validated namespace's duplicate-inclusive count and observation limits;
+it does not duplicate holdings rows or combine namespace counts. Search/add stays a truthful
 unsupported disclosure. The README records read/error/precision boundaries.
 
 Issue #146 adds fresh-row detail to Watchlists, using native disclosure for

@@ -52,7 +52,7 @@ h1, h2, h3, strong, th { font-weight: 400; }
 a { color: var(--accent); text-underline-offset: .3em; text-decoration-thickness: 2px; }
 :focus-visible { outline: 3px solid var(--focus); outline-offset: 5px; }
 .site-header, main, .storage-notice { max-width: 1120px; margin: auto; padding: var(--space-lg); }
-.site-header { display: flex; align-items: center; gap: var(--space-lg); border-bottom: 2px solid var(--text); }
+.site-header { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-lg); border-bottom: 2px solid var(--text); }
 .brand { white-space: nowrap; text-decoration: none; }
 nav { display: flex; flex-wrap: wrap; gap: var(--space-md); flex: 1; }
 nav a[aria-current="page"] { text-decoration-style: double; }
@@ -90,7 +90,7 @@ th { color: var(--muted); }
 .scroll-hint { color: var(--muted); font-size: 1rem; }
 .empty-state { border-left: 3px solid var(--muted); padding: .5rem var(--space-md); margin: var(--space-lg) 0; }
 .state-title { color: var(--text); }
-.settings-field { display: grid; gap: var(--space-xs); margin: var(--space-md) 0; }
+.settings-field { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-xs); margin: var(--space-md) 0; }
 input, select, textarea { max-width: 100%; min-height: 44px; background: var(--surface); color: var(--text); border: 2px solid var(--control-border); border-radius: var(--radius); padding: .5rem; }
 input[type="password"] { width: 100%; }
 .connection-status { border-left: 3px solid var(--muted); padding-left: var(--space-md); }

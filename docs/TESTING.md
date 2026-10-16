@@ -36,6 +36,14 @@ It verifies asset/CSP/font parity, both namespaces, detail, overview and disable
 history while preserving SQLite bytes and absent cache/legacy paths. Browser and
 canonical Python heavy suites run sequentially. Default pytest never starts a listener.
 
+The independent #148 [exit audit](milestones/m8-exit-evidence.md) reuses this
+actual source/installed-wheel launcher profile, adding keyboard/skip/table access
+across eight viewport/theme combinations (including320 CSSpx), bounded user text
+spacing/200% text checks, forced-colors/reduced-motion and real reload/401 clearing.
+Its [reproduction guide](../frontend/AUDIT.md) distinguishes actual API operation
+from the separate controlled successful-history fixtures and records accessibility
+limitations, the narrowly corrected header wrap and remaining owner/CI exit gates.
+
 ## Unit tests
 
 Unit tests cover isolated behavior such as:
