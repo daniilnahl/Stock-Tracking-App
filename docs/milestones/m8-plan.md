@@ -1,5 +1,81 @@
 # M8 — Web Dashboard execution plan
 
+## Detail/history and overview — 2026-10-15
+
+The owner instructed **“pr merged, continue the work”**. PR #156 is verified
+owner-merged at `481c7609d34720f5819d0c001b98f2ee6de92e30`, containing reviewed
+watchlists head `291688906f8841fe6554159a3973820fc2742733`. Exact-head Foundation
+`38812823965` and post-merge main Foundation `38813607165` passed all five jobs.
+#145 is closed through its owner merge, with visual demos of both namespaces.
+
+#146 is delegated to `frontend_plan` on `codex/146-stored-row-history` in the
+primary task worktree. #147 is delegated to `m8_analysis` on
+`codex/147-supported-overview` in the clean reused managed `m8-api-client`
+worktree. Both start from `481c760`. Independent review is assigned to
+`m8_review` and the Master. Ownership is non-overlapping: #146 owns Watchlists,
+detail/history/chart and any minimal client selection-invalidation helper;
+#147 owns Overview and reads the existing session without changing it. The
+SearchDisclosure contract stays stable. Shared docs are #146/Master-owned;
+#147 documents its feature separately. Heavy Python/browser checks are serialized
+to avoid port and native-font-cache contention.
+
+#146 must re-read and validate the exact namespace/ordinal/Stock before detail,
+discard obsolete selections/history, retain exact raw values and bigint volume,
+and label checked finite chart projections as approximate beside the exact table.
+Live history rights remain disabled. #147 counts only the explicitly named
+successful loaded namespace, including duplicates; unavailable data is not zero
+and no global total or automatic request is invented. It reuses the existing
+theme/connection lifecycle and preserves the unavailable future panels.
+Neither issue changes backend endpoints, dependencies, CI, hosting, financial
+formulas or rights activation. #155 waits for both owner merges/main CI before
+the actual asset/launcher/wheel bridge; #148 remains the independent exit audit.
+
+### #146/#147 implementation and review
+
+#146 opens detail only through a fresh exact namespace/ordinal/Stock selection.
+Close, list reload, namespace/route change and disconnect clear obsolete detail
+and history, with a minimal additive client invalidation helper. Existing saved
+inputs/snapshots remain exact, with unknown currency and explicit decimal-ratio
+return units. Raw history uses paired dates, sparse returned points, an exact
+OHLC/bigint-volume table and separately checked finite approximate coordinates.
+Unsafe projection hides only the chart; history rights remain server-gated.
+HTML date labels retain readable pixel text on phones and axes use contrasting
+theme text tokens. No financial formula, adjusted return or session is invented.
+
+#147 derives duplicate-inclusive counts solely from the named current successful
+watchlist snapshot. Known empty is zero; loading, failure, cancellation,
+disconnect/replacement and unsupported/inconsistent state are unavailable.
+It creates no client, credential state, storage or request. The two unavailable
+future panels, three cards and Saved observations rectangle remain; that last
+panel now contains truthful scope/provenance/navigation instead of an obsolete
+empty holdings table. Scoped wrapping handles untrusted long saved-list names.
+
+Independent `m8_review` reviewed both issues' source, unit/browser code and
+feature documentation with no remaining actionable finding. Actual browser and
+canonical checks plus Master visual inspection remain issue-specific release
+gates; no standalone fixture is claimed to satisfy installed integration.
+
+#147 final verification passed in its isolated worktree: 124 frontend tests,
+schema drift/TypeScript/production build, 21 installed-Edge browser checks,
+targeted Python 42 and full pytest 2794, Ruff, configured mypy (config.py), pip
+check and final staged hygiene 9. Master inspected actual labeled synthetic
+light desktop/dark phone captures and confirmed the approved panel structure.
+PR #157 publishes head `579f620605275eda6840c41b278efb9646c2cc67` independently
+of #146. Exact-head Foundation `38845080867` passed all five jobs;
+`MASTER-REVIEW-PASSED` is recorded in the PR because its authenticated author
+cannot approve its own PR. Owner merge remains required; no control is bypassed.
+
+#146 final verification passed: 149 frontend tests, schema drift/TypeScript/
+production build and 25 installed-Edge browser checks; targeted serialization/
+watchlist/history/hosting/packaging/hygiene 142 and full pytest 2794; Ruff,
+configured mypy (config.py) and pip check. The long-symbol phone overflow case
+was reproduced and fixed through scoped heading wrapping, without changing
+client policy or backend behavior. Master inspected focused synthetic desktop
+history, phone chart and disabled-history captures; exact data remains accessible
+by table scrolling and live history rights remain off. No unresolved independent
+source/test/documentation finding remains. Final staged hygiene, exact-head
+hosted CI and owner merge remain separate gates for this branch.
+
 ## Saved watchlists — 2026-10-15
 
 The owner instructed **“pr merged, continue the work”**. PR #154 is verified
@@ -216,9 +292,9 @@ Parent: [M8 milestone 9](https://github.com/daniilnahl/Stock-Tracking-App/milest
 | [#143](https://github.com/daniilnahl/Stock-Tracking-App/issues/143) Frontend scaffold/precise typed client | Accepted contract | Closed completed; owner merged PR #151; main CI passed |
 | [#144](https://github.com/daniilnahl/Stock-Tracking-App/issues/144) Shared shell/themes/component guide | Scaffold/client merged, main CI passed | Closed completed; owner merged PR #153; main CI passed |
 | [#152](https://github.com/daniilnahl/Stock-Tracking-App/issues/152) Memory-only local API connection controls | Hosting, client, shell merged; main CI passed | Closed completed; owner merged PR #154; main CI passed |
-| [#145](https://github.com/daniilnahl/Stock-Tracking-App/issues/145) Both saved watchlists | Hosting, client, shell, connection #152 merged; main CI passed | In progress; frontend_plan; codex/145-saved-watchlists |
-| [#146](https://github.com/daniilnahl/Stock-Tracking-App/issues/146) Exact stored-row detail/raw history | Watchlists | Blocked |
-| [#147](https://github.com/daniilnahl/Stock-Tracking-App/issues/147) Supported overview/settings | Watchlists, shell | Blocked |
+| [#145](https://github.com/daniilnahl/Stock-Tracking-App/issues/145) Both saved watchlists | Hosting, client, shell, connection #152 merged; main CI passed | Closed completed; owner merged PR #156; main CI passed |
+| [#146](https://github.com/daniilnahl/Stock-Tracking-App/issues/146) Exact stored-row detail/raw history | Watchlists merged; main CI passed | In progress; frontend_plan; codex/146-stored-row-history |
+| [#147](https://github.com/daniilnahl/Stock-Tracking-App/issues/147) Supported overview/settings | Watchlists and shell merged; main CI passed | In progress; m8_analysis; codex/147-supported-overview |
 | [#155](https://github.com/daniilnahl/Stock-Tracking-App/issues/155) Package dashboard assets and actual local-launcher integration | Completed views #145/#146/#147 | Blocked; required bridge before exit audit |
 | [#148](https://github.com/daniilnahl/Stock-Tracking-App/issues/148) Independent browser/distribution exit audit | All implementations merged | Blocked |
 

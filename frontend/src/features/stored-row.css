@@ -1,0 +1,15 @@
+.stored-detail { border-top: 2px solid var(--border); margin-top: var(--space-lg); padding-top: var(--space-lg); }
+.stored-detail .panel-heading > h3 { min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
+.stored-detail h3:focus { outline: 3px solid var(--focus); outline-offset: 5px; }
+.stored-detail h4 { font-size: 1.1rem; font-weight: 400; }
+.stored-detail p, .stored-detail summary { overflow-wrap: anywhere; }
+.stored-detail summary { cursor: pointer; padding: var(--space-sm) 0; }
+.saved-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-md); }
+.saved-fields > div { min-width: 0; }
+.history-range { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-md); }
+.stored-history { margin-top: var(--space-lg); border-top: 2px solid var(--border); }
+.stored-history svg { display: block; width: 100%; height: auto; color: var(--text); }
+.history-chart-dates { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-md); }
+.history-axis { stroke: var(--text); fill: none; stroke-width: 2; }
+.history-point { fill: var(--chart-line); }
+@media (max-width: 760px) { .saved-fields, .history-range { grid-template-columns: 1fr; } }

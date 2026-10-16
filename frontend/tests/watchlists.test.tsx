@@ -47,9 +47,9 @@ describe("explicit saved watchlist reads", () => {
     const rows = within(table).getAllByRole("row").slice(1);
     expect(rows).toHaveLength(3);
     expect(rows.map(row => within(row).getAllByRole("cell").map(cell => cell.textContent))).toEqual([
-      ["0", "DEMOSyntheticNASDAQ", "0.12345678901234567890123456789", "Owned", "1.00000000000000000001", "2E-18"],
-      ["1", "DEMOSyntheticNASDAQ", "0", "Unowned", "Not applicable (unowned)", "0"],
-      ["2", "DEMOSyntheticNASDAQ", "0", "Owned", "0", "0"],
+      ["0", "DEMOSyntheticNASDAQ", "0.12345678901234567890123456789", "Owned", "1.00000000000000000001", "2E-18", "Open detail for row 0"],
+      ["1", "DEMOSyntheticNASDAQ", "0", "Unowned", "Not applicable (unowned)", "0", "Open detail for row 1"],
+      ["2", "DEMOSyntheticNASDAQ", "0", "Owned", "0", "0", "Open detail for row 2"],
     ]);
     expect(screen.getByText(/Currency: unknown for both costs and prices/)).toBeTruthy();
     expect(document.body.textContent?.includes("opaque label")).toBe(false);

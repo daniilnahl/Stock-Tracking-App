@@ -1,7 +1,7 @@
-# Dashboard shell, precise client and saved watchlists — issues #143–145/#152
+# Dashboard shell, precise client and stored-row history — issues #143–146/#152
 
 Implements the accepted read-only ADR-0014 client foundation and shared
-monochrome shell: UI801–809, UI810–815, UI816–818, UI820, UI824–826, UI828 and X718 within
+monochrome shell: UI801–809, UI810–815, UI816–818, UI820–821, UI824–826, UI828 and X718 within
 their bounded foundation scope. The owner accepted the revised all-text pixel
 design and scoped ADR after PR #149; owner-merged #142 records acceptance.
 
@@ -9,12 +9,14 @@ The shared shell has typed Overview/Watchlists/Settings routes, a working
 local light/dark theme preference and masked memory-only local API configuration.
 Configuration does not verify authentication or make a request. Watchlists
 supports explicit read/reload of both saved namespaces through that same session;
-saved observations never claim live-price freshness. Detail/history, overview
-aggregates and the combined browser/distribution audit remain separate issues.
+saved observations never claim live-price freshness. Stored-row detail re-reads
+before selection, with explicit sparse raw history and an exact-value table.
+Overview count/status integration is tracked separately in #147; packaged
+distribution and audit follow #155/#148.
 The #143 **synthetic client
 foundation demo** is preserved separately at `#client-foundation`. See the
 [component guide](COMPONENTS.md) for inputs, navigation and theme contracts.
-No backend/API contract, dependency, CI workflow or rights gate changes in #144–145/#152.
+No backend/API contract, dependency, CI workflow or rights gate changes in #144–146/#152.
 
 ## Reproduce
 
@@ -111,8 +113,10 @@ selectRow always re-reads the list and compares its exact Stock fields/ordinal
 to the requested row. Missing/changed rows clear selection and require a new
 choice. Selection objects belong only to that client/list revision; history
 refuses copied/stale selections. A list reload always discards detail/history.
-Identical duplicates have no stable cross-request identity: later features must
-label details as a returned request-local selection, not a permanent holding ID.
+Identical duplicates have no stable cross-request identity: detail labels the
+returned request-local selection, never a permanent holding ID. `clearSelection`
+only invalidates selection/history and aborts their work; it retains the configured
+connection and saved list. The feature aborts its pending selection read separately.
 
 ## Memory-only connection controls — issue #152
 
@@ -170,7 +174,8 @@ Null average cost denotes unowned; explicit zero cost/quantity remains owned.
 Null saved price is unavailable, never zero. Costs/prices are per share with
 unknown currency. Source, times and freshness remain unknown even when opaque
 saved metadata contains a currency-like label. No snapshot metrics, arithmetic,
-totals, sorting, detail/history or new API contract is introduced.
+totals, sorting or new API contract is introduced by the watchlist table.
+Stored-row detail/history is isolated in #146 below.
 
 Safe disconnected, unsupported, loading, cancelled, empty, success, network,
 schema, legacy-state and authentication failures preserve usable explicit
@@ -179,6 +184,46 @@ these states and ignored late transport results. Separate browser checks
 intercept only the two existing same-origin saved paths with synthetic payloads;
 captures contain a conspicuous test-inserted synthetic/no-live-data banner.
 No sample figures or browser-test mode ships in production assets.
+
+## Stored-row detail and raw history — issue #146
+
+Each visible ordinal has an Open detail action. It calls `selectRow` to re-read
+the namespace and compare the expected exact Stock identity before publishing
+the returned row. Missing/changed associations clear detail and require a new
+choice; identical duplicates retain only response-local identity. Close, list
+reload, namespace change and route unmount clear selection/history and abort
+pending consumers. Disconnect/replacement/401 retain the client-wide clearing
+contract. Cancellation/close/retry keep a stable keyboard focus target.
+
+Detail displays saved inputs, opaque metadata and existing API snapshot values
+without arithmetic or rounding. Monetary units explicitly have unknown currency;
+unrealized return remains the API's dimensionless decimal ratio, never multiplied
+into percentage points. Null/unowned/owned-zero and unavailable-return distinctions
+remain explicit. Saved metadata is text, not a verified company profile or evidence
+of currency, freshness, returns or source.
+
+History requires an explicit read with both ISO dates or neither; default requests
+display the API's returned inclusive range. Sparse raw OHLC strings, null adjusted
+close, and exact bigint volume are shown in a named scrollable table. Session dates
+are labels, not observation times. Declared source/cache-policy provenance is shown
+without claiming live freshness; currency and observation/retrieval times stay unknown.
+The safe `history_disabled` response explains the closed rights gate. No UI control
+activates historical acquisition, changes server settings or grants provider rights.
+
+The chart is an explicitly approximate scatter plot of returned close observations.
+It draws no connecting lines or invented sessions. Its isolated disposable projection
+uses browser Number only for chart geometry, with finite checks, nonzero-underflow
+refusal and safe single/flat observations. Overflow/unsafe geometry omits the chart
+while retaining exact values. These numbers never feed display values, storage or
+financial metrics. Endpoint dates remain normal-size pixel HTML outside SVG; axes
+and points use the theme text color. The precise table is always the numeric source.
+
+Component tests cover fresh association, snapshot units/nulls, paired dates, disabled,
+incompatible/offline/401 states, safe cancellation and late-result suppression. The
+separate browser profile intercepts existing same-origin endpoints only, uses runtime
+synthetic credentials, and inserts conspicuous synthetic/no-live-data labels into
+focused detail/history/chart captures. There is no production fixture mode or new
+dependency, API, provider activation, Python, CI or hosting change.
 
 ## Separate browser demonstration
 
@@ -286,3 +331,28 @@ and pip check passed. Browser and Python suites ran sequentially. No backend,
 Python/dependency, CI, distribution or user-state changes were required. Staged
 hygiene, remote CI and owner merge remain separate gates; these checks do not
 certify live API operation, full WCAG compliance or M8 completion.
+
+## Issue #146 implementation verification — 2026-10-15
+
+Existing Node24.19.0/npm10.8.2 and unchanged dependencies/lockfile: final schema
+drift/typecheck/production build passed; 149 deterministic frontend tests passed
+in 8.53s. Separate installed-Edge profile passed 25 checks in 22.3s, including
+fresh duplicate association, exact Decimal/int64 history, paired-date refusal,
+disabled rights, 401 clearing, keyboard cancellation/focus and phone overflow
+for long untrusted symbols. The reproduced heading overflow was fixed with a
+scoped wrapping rule; no client identity policy or API contract changed.
+
+Canonical Python3.12.14: `python -m pytest tests/test_api_serialization.py
+tests/test_api_watchlists.py tests/test_api_history.py tests/test_dashboard_hosting.py
+tests/test_packaging.py tests/test_repository_hygiene.py -v` passed 142 in 74.02s;
+full pytest passed 2794 in 158.43s. Ruff, configured mypy (config.py) and pip
+check passed. Browser and Python suites ran sequentially under the shared
+verification slot. No real API/provider/user database or production token was used.
+
+Focused desktop/phone history/chart and disabled-state captures contain conspicuous
+synthetic/no-live-data/rights-not-activated labels. The phone table's right-scroll
+capture exposes exact max/zero/null volume; all password fields are absent.
+Actual focused desktop history, phone chart and disabled phone captures were
+visually inspected. No dependency, Python, CI, hosting or rights activation changed.
+Root staged hygiene, remote CI, owner merge and combined distribution/M8 audit
+remain separate gates; this is not certification of live entitlement or full WCAG.

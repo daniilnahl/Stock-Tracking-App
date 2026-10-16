@@ -7,6 +7,7 @@ import type { EntryResponse } from "../services/contracts.generated";
 import { ClientError, validNamespace } from "../services/validation";
 import type { Namespace } from "../services/validation";
 import { SearchDisclosure } from "./ShellPages";
+import { StoredRowDetail } from "./StoredRowDetail";
 
 const namespaces: Readonly<Record<Namespace, string>> = {
   menu_watchlist: "Menu watchlist",
@@ -27,6 +28,7 @@ export function WatchlistsPage() {
   const [showResource, setShowResource] = useState(true);
   const [failure, setFailure] = useState<ClientError | null>(null);
   const [cancelled, setCancelled] = useState(false);
+  const [opening, setOpening] = useState(false);
   const request = useRef<AbortController | null>(null);
   const controls = useRef<HTMLDivElement>(null);
   const namespaceControl = useRef<HTMLSelectElement>(null);
@@ -34,7 +36,7 @@ export function WatchlistsPage() {
   const configured = snapshot.connection === "connected";
   const resource = showResource && snapshot.namespace === namespace ? snapshot.watchlist : null;
   const loading = configured && resource?.status === "loading";
-  useEffect(() => () => { attempt.current++; request.current?.abort(); }, [client]);
+  useEffect(() => () => { attempt.current++; request.current?.abort(); client.clearSelection(); }, [client]);
   useEffect(() => { if (configured) setFailure(null); }, [configured]);
   useLayoutEffect(() => { if (cancelled) controls.current?.querySelector<HTMLButtonElement>("button")?.focus(); }, [cancelled]);
   const abandon = () => {
@@ -47,6 +49,8 @@ export function WatchlistsPage() {
     const current = attempt.current;
     const controller = new AbortController();
     request.current = controller;
+    client.clearSelection();
+    setOpening(false);
     setShowResource(true);
     setFailure(null);
     setCancelled(false);
@@ -59,19 +63,36 @@ export function WatchlistsPage() {
       if (safe.code !== "cancelled") setFailure(safe);
     } finally { if (current === attempt.current) request.current = null; }
   };
+  const open = async (row: EntryResponse) => {
+    abandon(); client.clearSelection();
+    const current = attempt.current;
+    const controller = new AbortController();
+    request.current = controller;
+    setShowResource(true); setFailure(null); setCancelled(false); setOpening(true);
+    try { await client.selectRow(namespace, row.ordinal, row.stock, { signal: controller.signal }); }
+    catch (error) {
+      if (current === attempt.current) {
+        const safe = error instanceof ClientError ? error : new ClientError("api_error");
+        if (safe.code !== "cancelled") { setFailure(safe); namespaceControl.current?.focus(); }
+      }
+    } finally { if (current === attempt.current) { request.current = null; setOpening(false); } }
+  };
+  const close = () => { abandon(); client.clearSelection(); setOpening(false); namespaceControl.current?.focus(); };
   const error = failure ?? (resource?.status === "error" ? resource.error : null);
   const data = configured && resource?.status === "success" ? resource.data : null;
+  const selection = snapshot.selection?.namespace === namespace && data ? snapshot.selection : null;
+  const selectedEntry = selection ? data?.entries[selection.ordinal] : null;
   return <section className="panel" aria-labelledby="watchlist-title">
     <div className="panel-heading"><div><p className="eyebrow">Saved observations / read only</p><h2 id="watchlist-title">Browse a saved watchlist</h2></div></div>
     <SettingsField label="Saved namespace" hint="These are separate saved lists. Changing the selection does not request data.">
       {attributes => <select {...attributes} ref={namespaceControl} value={namespace} onChange={event => {
         if (!validNamespace(event.target.value)) return;
-        abandon(); setNamespace(event.target.value); setShowResource(false); setFailure(null); setCancelled(false);
+        abandon(); client.clearSelection(); setOpening(false); setNamespace(event.target.value); setShowResource(false); setFailure(null); setCancelled(false);
       }}>{Object.entries(namespaces).map(([id, name]) => <option key={id} value={id}>{name}</option>)}</select>}
     </SettingsField>
     <p className="footnote">Namespace: <span>{namespace}</span>. Read or reload only re-reads saved data. It does not fetch quotes, change holdings or establish current prices.</p>
     <div className="actions" ref={controls}><Button disabled={!configured || loading} onClick={() => { void read(); }}>{data ? "Reload saved entries" : "Read saved entries"}</Button>
-      {loading && <Button onClick={() => { abandon(); setCancelled(true); }}>Cancel read</Button>}
+      {loading && <Button onClick={() => { abandon(); client.clearSelection(); setOpening(false); setCancelled(true); }}>{opening ? "Cancel opening detail" : "Cancel read"}</Button>}
       <SearchDisclosure /></div>
     {error && <ErrorState error={error} {...(configured && !loading ? { onRetry: () => {
       // Retry disappears when loading starts; retain a meaningful keyboard target.
@@ -81,13 +102,14 @@ export function WatchlistsPage() {
     {!configured && <EmptyState title={snapshot.connection === "unsupported" ? "Saved reads unsupported" : "Saved reads disconnected"}
       message={snapshot.connection === "unsupported" ? "Use a supported browser at the local API origin, then configure again." : "Configure a memory-only connection in Settings before explicitly reading a saved list."} />}
     {!configured && <a href={routeHref("settings")}>Open connection settings</a>}
-    {loading && <EmptyState title="Reading saved entries" message="The previous table is cleared while this read is pending." />}
+    {loading && <EmptyState title={opening ? "Re-reading saved row before detail" : "Reading saved entries"} message="The previous table and detail are cleared while this read is pending." />}
     {configured && !loading && !data && !error && <EmptyState title={cancelled ? "Saved read cancelled" : "Saved entries not loaded"}
       message="Choose Read saved entries when ready. No request is made automatically." />}
     {data && <><h3>{data.name}</h3><p className="state-title" role="status">Saved read complete. These observations are not live quotes.</p>
-      <DataTable caption={`${namespaces[namespace]} / saved entries`} columns={columns} rows={data.entries}
+      <DataTable caption={`${namespaces[namespace]} / saved entries`} columns={[...columns, { id: "detail", header: "Stored row", render: row => <Button onClick={() => { void open(row); }}>Open detail for row {row.ordinal}</Button> }]} rows={data.entries}
         rowKey={row => `${namespace}:${row.ordinal}`} emptyMessage="This saved watchlist has no entries." />
       <p className="footnote">Rows retain saved order, including duplicates. Row ordinals belong only to this response; they are not permanent security IDs.</p></>}
     <p className="footnote">Currency: unknown for both costs and prices. Source, observation time and retrieval time: unknown. Freshness: unknown. Saved metadata does not establish currency or provenance. Exact decimal text is displayed without rounding; zero is distinct from unavailable or unowned.</p>
+    {selection && selectedEntry && <StoredRowDetail key={selection.revision} entry={selectedEntry} selection={selection} onClose={close} />}
   </section>;
 }

@@ -1,4 +1,4 @@
-# Shared dashboard components — issue #144
+# Shared dashboard components — issues #144/#146
 
 The local all-text Stock Pixel font, semantic CSS tokens, square controls and
 hard shadows apply to every component. Light is the default; the centrally
@@ -13,7 +13,7 @@ No per-feature brand colors, font CDN, images of text or decorative flicker.
 | `PageLayout` | title, description, children, optional headingRef. Owns the only main and h1. The shell owns route titles/focus; feature modules provide content rather than another page shell. |
 | `Navigation` | current RouteId or null. Reads only the typed central inventory. The three primary items remain Overview, Watchlists and Settings. Active page uses aria-current plus a double underline; all links remain keyboard accessible. |
 | `DataTable<Row>` | caption, readonly columns (id/header/render/optional numeric), readonly rows, rowKey and emptyMessage. Native caption/th/scope semantics; exact text is preserved. A named focusable overflow region and visible horizontal-scroll hint preserve phone access. Caller provides namespace/request-local ordinal keys for actual watchlist rows; never deduplicate by symbol. |
-| `Chart` | title. Currently an explicit unavailable figure with no series, axes, numbers or sample points. Actual raw-price rendering and its exact-value table require #146; this component does not calculate or approximate financial values. |
+| `Chart` | title and optional children. Owns a semantic figure/caption; without children shows explicit unavailability. The history feature supplies finite approximate sparse-point geometry, provenance limits and an accompanying exact-value DataTable. The primitive calculates no financial values. |
 | `EmptyState` | title and message rendered as text in a status region. State why data is empty/disconnected/unsupported; do not fabricate values or present unavailable data as zero. |
 | `ErrorState` | A safe ClientError from the central client; optional onRetry. Announces the fixed safe message and renders a retry button only when the caller supplies a supported operation. Never pass raw provider exceptions or server text. |
 | `FilterPanel` | title and children. Native fieldset/legend grouping. Include only filters supported by a real feature; the shell does not invent filtering behavior. |
@@ -42,8 +42,9 @@ and agent placeholder titles remain above the three status cards; their labels
 do not enable a service. Search/add toggles an explanation and a fixed safe
 GitHub source-document link. It issues no request and offers no save operation.
 The guide components are verified through isolated synthetic tests. There is
-no publicly enabled component playground, demo-price stock list or history API
-flow in the shell. The #143 synthetic client check remains separate at
+no publicly enabled component playground or demo-price stock list. Stored-row
+history is an explicit protected workflow with the server rights gate preserved.
+The #143 synthetic client check remains separate at
 `#client-foundation`, omitted from the three primary navigation items.
 
 ## Route and theme contracts
@@ -80,6 +81,17 @@ rows expose response-local ordinals and exact Decimal strings. Cancellation
 restores focus to Read. Overview keeps its reserved panels and structural table;
 saved holdings and counts are not duplicated there. Search/add stays a truthful
 unsupported disclosure. The README records read/error/precision boundaries.
+
+Issue #146 adds fresh-row detail to Watchlists, using native disclosure for
+opaque saved metadata and definition lists for exact inputs/snapshot values.
+It adds a grouped paired-date history form and exact sparse OHLC/volume table.
+Chart children contain points only for returned dates; geometry is approximate,
+and unsafe projections leave the exact table available. Date labels use ordinary
+pixel HTML rather than tiny SVG text; axes/points use the high-contrast text token.
+Feature styles live in `src/features/stored-row.css`, using existing theme tokens.
+Closing detail clears selection/history and focuses the namespace control;
+history cancellation focuses Read, and retry focuses Start date before replacing
+the transient retry button. All protected operations use the shared client.
 
 ## Verification boundaries
 
