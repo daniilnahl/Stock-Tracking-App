@@ -27,6 +27,12 @@ endpoint/symbol/use rights still unverified. Do not assume a free key, start a
 trial, buy access or substitute scraping. This narrows available delivery
 options but does not approve a new preset or resolve M9 exit criteria.
 
+**EPS feasibility:** the owner's subsequent Finnhub free-tier request is recorded
+in [the EPS report](m9-finnhub-eps.md). Recent quarterly actual/estimate observations
+are a candidate; forward estimate series are Premium. Keep this investigation
+inside planning #164 until field semantics, access and provider extension are
+accepted. No implementation agent is assigned to a blocked connector task.
+
 Baseline is owner-merged main `4d7720446ab299344ec98b1a28169143d7a9202a`.
 PR #162's final M8 audit is merged at `9a6a41449d1f483b7e2218eabc8db1867e05d497`;
 README PR #163 is merged at baseline. GitHub reports both post-merge Foundation

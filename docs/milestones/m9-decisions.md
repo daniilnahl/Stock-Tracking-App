@@ -18,6 +18,12 @@ entitlement is available. Evaluate an FMP free-tier subset only after verifying
 its exact fields/rights/access; defer FINVIZ API activation. Free account/key
 existence is unconfirmed. See the coverage report for current published limits.
 
+**EPS requirement:** the owner requires EPS and requested Finnhub free-tier
+evaluation. [Research](m9-finnhub-eps.md) distinguishes recent quarterly actuals/
+estimates from TTM/annual/forward EPS. Free recent results do not resolve the
+long-term expected-growth requirement; precise accounting/period semantics and
+allowed use remain contract decisions before implementation.
+
 ## Recommended scope boundary
 
 Use the existing local single-user Python service/API/dashboard architecture.

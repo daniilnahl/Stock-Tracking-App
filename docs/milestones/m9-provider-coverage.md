@@ -18,6 +18,12 @@ current access. Its [Elite comparison](https://finviz.com/elite) excludes export
 from free accounts; the official API announcement describes Elite token access.
 No purchase, trial or scraping workaround is authorized.
 
+**EPS investigation:** the owner next requested Finnhub free-tier research.
+The [Finnhub EPS report](m9-finnhub-eps.md) verifies recent quarterly surprises
+and a bounded earnings calendar, while the separate forward EPS estimate series
+is Premium. This is a targeted candidate supplement, not connector activation
+or a change to the selected FMP priority.
+
 FMP's [FAQ](https://site.financialmodelingprep.com/faqs) describes a free testing
 tier of up to **250 requests/day**, including an example of five years of annual
 US financial statements; it also identifies paid-only endpoints. This is not
