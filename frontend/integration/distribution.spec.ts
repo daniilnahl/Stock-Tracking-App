@@ -6,6 +6,7 @@ import { createServer } from "node:net";
 import { resolve, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
+import { auditPresentation, auditReloadAndUnauthorized } from "./exit-audit";
 
 const frontend = fileURLToPath(new URL("../", import.meta.url));
 const repository = resolve(frontend, "..");
@@ -102,13 +103,17 @@ test("actual source/wheel launcher serves the closed dashboard and authenticated
       consumed = true; return token;
     });
     const field = page.getByLabel("Local API token", { exact: true });
-    await field.evaluate(async element => {
+    const configureOwnedConnection = async () => {
+      consumed = false; // Arm one transfer for this explicit test configuration.
+      await field.evaluate(async element => {
       const obtain = (window as unknown as { takeSyntheticConnectionOnce: () => Promise<string> }).takeSyntheticConnectionOnce;
       if (!(element instanceof HTMLInputElement)) throw new Error("Expected masked field");
       element.value = await obtain(); element.dispatchEvent(new Event("input", { bubbles: true }));
-    });
-    await page.getByRole("button", { name: "Configure connection" }).click();
-    expect(await field.evaluate(element => element instanceof HTMLInputElement && element.value.length === 0)).toBe(true);
+      });
+      await page.getByRole("button", { name: "Configure connection" }).click();
+      expect(await field.evaluate(element => element instanceof HTMLInputElement && element.value.length === 0)).toBe(true);
+    };
+    await configureOwnedConnection();
     expect(apiPaths.length).toBe(0);
     if (wheel) await page.getByLabel("Theme", { exact: true }).selectOption("dark");
     await page.getByRole("link", { name: "Watchlists", exact: true }).click();
@@ -142,13 +147,23 @@ test("actual source/wheel launcher serves the closed dashboard and authenticated
     expect(await page.evaluate(() => Object.keys(localStorage).every(key => key === "stock-tracker.theme") && Object.keys(sessionStorage).length === 0)).toBe(true);
     expect(await page.locator('input[type="password"]').count()).toBe(0);
     await page.screenshot({ path: testInfo.outputPath(`issue155-${testInfo.project.name}-overview.png`), fullPage: true });
+    await auditPresentation(page, testInfo, async () => { expect((await page.content()).includes(token)).toBe(false); });
+    await auditReloadAndUnauthorized(page);
+    await page.getByRole("link", { name: "Settings", exact: true }).click();
+    await configureOwnedConnection();
+    await page.getByRole("link", { name: "Watchlists", exact: true }).click();
+    await page.getByRole("button", { name: "Read saved entries" }).click();
+    await expect(page.getByRole("table")).toBeVisible();
     await page.getByRole("link", { name: "Settings", exact: true }).click();
     await page.getByRole("button", { name: "Disconnect", exact: true }).click();
+    await page.getByRole("link", { name: "Overview", exact: true }).click();
+    await expect(page.getByRole("status", { name: "Saved entry count unavailable" })).toHaveText("Unavailable");
+    await page.getByRole("link", { name: "Settings", exact: true }).click();
     await page.reload();
     await expect(page.getByText("Disconnected", { exact: true })).toBeVisible();
     expect(await field.evaluate(element => element instanceof HTMLInputElement && element.value.length === 0)).toBe(true);
     expect(external || pageError || cspFailure).toBe(false);
-    expect(JSON.stringify(apiPaths) === JSON.stringify(["/api/v1/watchlists/menu_watchlist", "/api/v1/watchlists/menu_watchlist", "/api/v1/watchlists/menu_watchlist/entries/0/history", "/api/v1/watchlists/daniils_stock_method"])).toBe(true);
+    expect(JSON.stringify(apiPaths) === JSON.stringify(["/api/v1/watchlists/menu_watchlist", "/api/v1/watchlists/menu_watchlist", "/api/v1/watchlists/menu_watchlist/entries/0/history", "/api/v1/watchlists/daniils_stock_method", "/api/v1/watchlists/menu_watchlist", "/api/v1/watchlists/menu_watchlist"])).toBe(true);
     expect(digest(readFileSync(join(state, "holdings.sqlite3"))) === before).toBe(true);
     expect(["history.json", "menu.pkl", "method.pkl"].every(name => !existsSync(join(state, name)))).toBe(true);
   } finally {
