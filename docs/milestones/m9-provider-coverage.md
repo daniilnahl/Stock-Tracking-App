@@ -11,6 +11,22 @@ covered by FMP” is interpreted in that context as **not covered by FMP**; that
 interpretation remains open to correction. This records source priority, not
 acceptance of all M9 decisions, a preset or account entitlement.
 
+**Owner access update — 2026-10-16:** the owner reports “no subscription.”
+Treat both sources as having no paid entitlement; do not infer a free account,
+configured key or trial. FINVIZ enrichment is future scope, unavailable under
+current access. Its [Elite comparison](https://finviz.com/elite) excludes exports
+from free accounts; the official API announcement describes Elite token access.
+No purchase, trial or scraping workaround is authorized.
+
+FMP's [FAQ](https://site.financialmodelingprep.com/faqs) describes a free testing
+tier of up to **250 requests/day**, including an example of five years of annual
+US financial statements; it also identifies paid-only endpoints. This is not
+an all-endpoint/all-symbol entitlement guarantee or approval for display/storage.
+The next contract proposal must inventory verified free-access fields and
+request costs before promising live screening or opt-in scheduling. Without
+that evidence, retain offline synthetic contract development and honest
+unavailable states. Do not change accepted runtime quotas from this research.
+
 ## What counts as a gap
 
 Distinguish four things: a metric absent from this application's small adapter;

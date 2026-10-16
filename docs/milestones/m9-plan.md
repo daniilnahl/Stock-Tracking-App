@@ -21,6 +21,12 @@ findings and conditional routing: documented FMP capabilities stay with FMP;
 FINVIZ is considered for verified native/semantic gaps only. This resolves source
 priority, not authenticated schemas, actual entitlement, metrics or activation.
 
+The owner subsequently reported **no subscription**. FINVIZ activation is
+deferred; FMP free-tier feasibility is the next source-contract task, with exact
+endpoint/symbol/use rights still unverified. Do not assume a free key, start a
+trial, buy access or substitute scraping. This narrows available delivery
+options but does not approve a new preset or resolve M9 exit criteria.
+
 Baseline is owner-merged main `4d7720446ab299344ec98b1a28169143d7a9202a`.
 PR #162's final M8 audit is merged at `9a6a41449d1f483b7e2218eabc8db1867e05d497`;
 README PR #163 is merged at baseline. GitHub reports both post-merge Foundation

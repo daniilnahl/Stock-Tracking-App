@@ -13,6 +13,11 @@ is selected: FMP first, optional FINVIZ enrichment. See the
 capabilities and unresolved API/rights evidence. This does not select a financial
 preset, approve unknown entitlement or accept the whole M9 specification.
 
+**Owner access update — 2026-10-16:** “no subscription.” No paid FMP/FINVIZ
+entitlement is available. Evaluate an FMP free-tier subset only after verifying
+its exact fields/rights/access; defer FINVIZ API activation. Free account/key
+existence is unconfirmed. See the coverage report for current published limits.
+
 ## Recommended scope boundary
 
 Use the existing local single-user Python service/API/dashboard architecture.
@@ -62,7 +67,7 @@ remain M10 gates. D5 rights must still cover any proposed non-AI report use.
 
 Source priority is now selected. Remaining immediate human decisions are the
 **research question and exact universe**, together with acceptance of the
-informational boundary and sanitized account/field-use evidence. A broad
+informational boundary and exact free-tier field/access/use evidence. A broad
 instruction to start M9 cannot safely choose these product
 semantics. Planning is reviewable now; runtime implementation remains blocked by
 the relevant SRS and AGENTS requirements rather than an agent-imposed approval step.
