@@ -1,4 +1,4 @@
-# Dashboard shell, precise client and stored-row history — issues #143–146/#152
+# Local packaged dashboard — issues #143–147/#152/#155
 
 Implements the accepted read-only ADR-0014 client foundation and shared
 monochrome shell: UI801–809, UI810–815, UI816–818, UI820–821, UI824–826, UI828 and X718 within
@@ -11,8 +11,9 @@ Configuration does not verify authentication or make a request. Watchlists
 supports explicit read/reload of both saved namespaces through that same session;
 saved observations never claim live-price freshness. Stored-row detail re-reads
 before selection, with explicit sparse raw history and an exact-value table.
-Overview count/status integration is tracked separately in #147; packaged
-distribution and audit follow #155/#148.
+Overview counts only the current validated saved namespace (#147). The deliberately
+packaged dashboard and real source/wheel launcher integration are #155; the final
+independent milestone audit remains #148.
 The #143 **synthetic client
 foundation demo** is preserved separately at `#client-foundation`. See the
 [component guide](COMPONENTS.md) for inputs, navigation and theme contracts.
@@ -36,8 +37,64 @@ npm run build
 
 No development API proxy or automatic Python import/build/download exists.
 The `dist` directory is local build output, not a committed artifact.
-Production serving/allowlisting/distribution is owned by #142/#148. Never
+Production serving/allowlisting/distribution is implemented by #142/#155. Never
 serve real API operations through a separate-port frontend development server.
+
+## Deliberate Python distribution — issue #155
+
+From `frontend`, run `npm ci`, `npm run package:dashboard`, then
+`npm run package:check` before the normal Python wheel build. The package command
+runs schema/type/Vite build and a separate explicit bridge; no Python install,
+import, help or launcher path invokes it. Review and commit the five generated
+files under `src/stock_tracker/api/dashboard_assets/`. Installed/API-only users
+need neither Node/npm nor browser tools. Python's existing exact package-data and
+route allowlists remain unchanged: `/` plus `/dashboard-assets/hosting.js`,
+`hosting.css`, `stock-pixel.ttf`, `LICENSE.txt`. No directory mount, manifest
+discovery, chunks, maps, dev source, fallback path or credential substitution.
+
+Vite uses stable flat names and `/dashboard-assets/` as its base. The bridge
+validates the exact input/output sets, external asset references, original font
+and pinned production licenses before writes. It rejects unexpected files and
+dependency drift; `--check` compares exact bytes without modifying package files.
+`LICENSE.txt` combines project/original-font MIT text with local React19.3.1,
+ReactDOM19.3.1, scheduler0.28.0 and emitted Vite8.3.4 modulepreload-helper core MIT
+notices; Vite's dev-tool bundled notices are excluded. LF attributes pin the HTML input
+and all packaged text; an actual isolated autocrlf checkout test protects Windows
+byte parity. Build again and check rather than accepting line-ending normalization
+or automatically discovering changed filenames. No dependency or lockfile changes.
+
+## Actual launcher/installed-wheel browser integration — issue #155
+
+After deliberate packaging, set `PLAYWRIGHT_CHANNEL=msedge` for installed Edge and
+run `npm run test:integration`. It uses the existing canonical `.venv` Python
+(override only via `STOCK_TRACKER_TEST_PYTHON` when necessary), builds/installs a wheel
+offline into an ignored task-local target, and verifies source then wheel using
+the real production launcher/composition at fixed `127.0.0.1:8000`. An occupied
+port fails without stopping its listener; cleanup terminates only the owned child.
+History rights remain disabled. Temporary real SQLite has explicitly synthetic
+duplicate/null/zero/precise rows in both namespaces; no real DB or provider is used.
+No `page.route` API mocks or test server replaces actual application requests.
+
+The profile verifies exact source/wheel served bytes, closed routes, unchanged CSP,
+actual local font, authenticated saved/detail/overview flows and safe disabled
+history. SQLite hashes remain unchanged and cache/legacy paths stay absent.
+Credentials are randomly generated at runtime and passed only through the child
+environment and a test-context one-shot binding into the transient masked field.
+No production hook is added. Field/DOM/output/path diagnostics use booleans; raw
+child output is never dumped. Only theme persists. Traces, videos and automatic
+screenshots are off. The integration config also sets Playwright1.64.1's recognized
+`PLAYWRIGHT_NO_COPY_PROMPT` switch (`lib/index.js:_takePageSnapshot`) to suppress
+automatic failure ARIA snapshots. Screenshots require an absent password field,
+no token in DOM and conspicuous synthetic/no-live-data/rights-not-activated labels.
+They remain in ignored `frontend/test-results/integration/`.
+
+A deliberate negative diagnostic probe is opt-in: set
+`STOCK_TRACKER_DIAGNOSTIC_PROBE=1` and run `npm run test:integration -- --project=source
+--grep="explicit negative privacy"`. Expected exit is1 with a fixed boolean failure;
+inspect artifacts for absence of trace/video/screenshots and `# Page snapshot`.
+The masked probe value is generated inside the page and never returned. Unset
+the probe flag before the normal passing integration command. This tests the
+diagnostic control; it does not weaken application assertions or hide failures.
 
 Direct runtime dependencies are only React/ReactDOM. Vite and its official
 React plugin build TSX; TypeScript checks contracts; Vitest executes offline
@@ -356,3 +413,36 @@ Actual focused desktop history, phone chart and disabled phone captures were
 visually inspected. No dependency, Python, CI, hosting or rights activation changed.
 Root staged hygiene, remote CI, owner merge and combined distribution/M8 audit
 remain separate gates; this is not certification of live entitlement or full WCAG.
+
+## Issue #155 implementation verification — 2026-10-16
+
+Existing Node24.19.0/npm10.8.2 and unchanged dependencies/lockfile: schema drift,
+typecheck, production build and deliberate package bridge passed. Final frontend
+suite passed 164 in 7.01s; existing separate installed-Edge browser regression
+profile passed 27 in 26.4s. Actual source and offline-installed-wheel integration
+profile passed 2 in 15.7s, using the production launcher/composition, temporary
+synthetic SQLite, real same-origin API requests and disabled history rights.
+Both distributions served exactly the reviewed asset bytes under unchanged CSP,
+loaded the local font, retained read-only database bytes, and created no cache or
+legacy files. Final byte check passed; repeated deliberate builds produced
+identical SHA256 hashes for all five packaged resources, including font and
+React/ReactDOM/scheduler/Vite-core notices. Scoped LF attributes and a real Git
+checkout regression protect Windows asset bytes.
+
+The bridge junction-refusal fixture initially encountered sandbox EPERM; the
+unchanged test passed under approved native execution. The integration-only
+controlled diagnostic probe deliberately failed with its fixed boolean assertion;
+its retained error context contained no page/ARIA snapshot, screenshot, video or
+trace. The normal source/wheel profile then passed separately. All final demo
+captures show synthetic/no-live-data/rights-not-activated labels and contain no
+password fields or real credentials. Source desktop and wheel phone captures
+were visually inspected.
+
+Canonical Python3.12.14: `python -m pytest tests/test_dashboard_hosting.py
+tests/test_api_foundation.py tests/test_api_boundary.py tests/test_api_launcher.py
+tests/test_packaging.py tests/test_repository_hygiene.py -v` passed 197 in 76.52s;
+full `python -m pytest` passed 2795 in 157.12s. `python -m ruff check .`, configured
+`python -m mypy` (config.py), `python -m pip check` and `git diff --check` passed.
+Heavy suites ran sequentially, with no environment/dependency/CI/security-contract
+change. Independent review found no unresolved findings. Root staged hygiene,
+remote CI, owner merge and the remaining M8 audit are separate gates.

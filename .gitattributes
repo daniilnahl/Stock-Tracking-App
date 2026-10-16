@@ -1,2 +1,7 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+/frontend/index.html text eol=lf
+/src/stock_tracker/api/dashboard_assets/index.html text eol=lf
+/src/stock_tracker/api/dashboard_assets/hosting.js text eol=lf
+/src/stock_tracker/api/dashboard_assets/hosting.css text eol=lf
+/src/stock_tracker/api/dashboard_assets/LICENSE.txt text eol=lf

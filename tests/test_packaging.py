@@ -38,6 +38,10 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
     wheel, = tmp_path.glob("*.whl")
     with zipfile.ZipFile(wheel) as archive:
         payload = {name for name in archive.namelist() if ".dist-info/" not in name}
+        # The installed dashboard must contain exactly the reviewed source bytes.
+        for name in ("index.html", "hosting.css", "hosting.js", "stock-pixel.ttf", "LICENSE.txt"):
+            packaged = "stock_tracker/api/dashboard_assets/" + name
+            assert archive.read(packaged) == (ROOT / "src" / packaged).read_bytes()
     assert payload == {
         "stock.py", "watch_list.py", "menu_watchlist.py", "daniils_stock_method.py",
         "utils/utility_module.py", "config.py",
