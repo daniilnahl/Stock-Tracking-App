@@ -2,13 +2,22 @@
 
 **Version:** 1.2 proposed (approved baseline: 1.1)
 
-**Status:** PARTIALLY ACCEPTED — M7 under ADR-0013; M8 under ADR-0014's read-only scope and approved design revisions; M9's bounded Finnhub upcoming-release EPS observation task under ADR-0015. Remaining M9–M10 and out-of-scope decisions remain proposed. Existing approved requirements remain authoritative.
+**Status:** PARTIALLY ACCEPTED — M7 under ADR-0013; M8 under ADR-0014's read-only scope and approved design revisions; M9's bounded Finnhub upcoming-release EPS observation task under ADR-0015; M9 user-criteria/M10 Taurus discovery ownership under ADR-0017. Remaining M9–M10 and out-of-scope decisions remain proposed. Existing approved requirements remain authoritative.
 
 **Primary implementation language:** Python  
 **Current interface:** Typer CLI  
 **Target:** Production-quality portfolio tracking and analytics application
 
 ## Approval record
+
+**Criteria/discovery ownership — 2026-10-17:** the owner explicitly directed
+that M9 let users configure stock criteria through different parameters, with
+Taurus agents searching for matching stocks in M10 instead of M9 API-driven
+discovery. [ADR-0017](docs/adr/0017-user-criteria-taurus-discovery.md), #174,
+records this accepted ownership change. It supersedes the earlier proposed M9
+screening/sector/daily-candidate execution allocation. Parameter/schema/storage
+details, daily ranking and agent implementation remain unapproved; no runtime
+search, provider/model call or whole-M9/M10 acceptance follows.
 
 **M9 bounded EPS task — 2026-10-16:** the owner explicitly requested
 implementation of exact EPS observation/comparison rules and a narrowly scoped
@@ -1038,8 +1047,8 @@ AI research. Reduced manual navigation does not imply complete data or certainty
 | --- | --- | --- |
 | M7 REST API | Typed versioned transport, errors and local security | Accepted M6 shared services; no new financial calculations or speculative research endpoints |
 | M8 Web Dashboard | Reusable shell, actual-data views, themes and settings | Stabilized M7 contracts; no provider parsing or financial business logic |
-| M9 Automated Stock Research | Permitted evidence acquisition, deterministic screening, approved selection and opt-in scheduling | Accepted provider/domain/repository services and separately approved research API; no LLM reasoning or trading |
-| M10 AI Research Agents | Optional bounded, auditable read-only research adapter | M9 evidence where supported, accepted feasibility/privacy/worker contracts; no mandatory core dependency or modification of M9 qualification |
+| M9 Automated Stock Research | Permitted known-stock evidence and user-configurable criteria prepared for handoff | ADR-0017 moves candidate screening/sector/suggested-stock discovery to M10; no market-search engine or agent execution in M9 |
+| M10 AI Research Agents | Taurus criteria-driven stock discovery, candidate results and optional read-only analysis | M9 user criteria/evidence where supported; accepted feasibility/privacy/worker contracts; no silent criteria changes or trading |
 
 M7 and the CLI share injected Python application services; the existing CLI is
 not required to use HTTP. M8 consumes M7 APIs. Research and AI API extensions
@@ -1192,10 +1201,12 @@ persistent light/dark choice and reusable modular UI without duplicated logic.
 
 ### 23.9.1 Goal
 
-Replace repetitive site navigation with permitted, source-aware, reproducible
-evidence acquisition, explicit screening, sector discovery, qualified Stock of
-the Day and opt-in watchlist research. M9 is deterministic/rule-driven; AI
-narrative belongs to M10. No default metric, threshold or ranking is approved.
+Provide permitted known-stock evidence and let users configure stock criteria
+across supported parameters for a future Taurus handoff. Under accepted
+ADR-0017, M9 does not execute API-based candidate discovery, sector screening
+or suggested-stock selection; Taurus searches using those criteria in M10.
+Other proposed data/watchlist capabilities retain their separate gates. No
+default parameter list, metric, threshold, formula or ranking is approved.
 
 ### 23.9.2 Data sources and ingestion (proposed)
 
@@ -1213,21 +1224,21 @@ narrative belongs to M10. No default metric, threshold or ranking is approved.
 - **RSH912 — Persistence:** Separate research cache/run snapshots from user watchlists/Portfolios; approved retention/license constraints, migrations and deletion policy for explicitly cache-owned expired data. Never delete user-owned reports/data by inference.
 - **RSH913 — Coverage:** Show supported instruments/exchanges, delisted/ambiguous exclusions, missing fields/outages; no all-market completeness claim.
 
-### 23.9.3 Screening and explainable selection (proposed)
+### 23.9.3 User criteria and future discovery handoff
 
-- **RSH914 — Screens:** Versioned named rules over explicit dated universe/sectors; typed predicates/operators/units/null policy/stable tie-break.
+- **RSH914 — Criteria definitions:** User-configurable supported parameters and explicit values/operators; the typed field/unit/null/combination/versioning contract requires separate review. M9 prepares criteria, not a candidate-search engine.
 - **RSH915 — Math approval:** Every derived financial metric, score, weight, indicator or claimed default threshold MUST have normative semantics and known-value tests in FINANCIAL_CALCULATIONS.md or an approved decision cross-referenced there. No invented valuation/attractiveness heuristics.
-- **RSH916 — User criteria:** UI/API MUST run at least one explicitly approved screen with inspectable/adjustable documented filters; unsupported criteria reject clearly. **[DECISION REQUIRED, D6]** First preset/field list remains undefined.
-- **RSH917 — Missing inputs:** Missing required input cannot pass; count unknown/excluded with reason. Missing is not zero; optional values cannot silently alter ranking.
-- **RSH918 — Cutoff:** One analysis cutoff and compatible dates; no future-filed evidence in historical screening. Save vintage and ruleset version.
-- **RSH919 — Sectors:** Bounded ranked per-sector results show evaluated/qualified/excluded counts. Taxonomy, unmapped sectors and bounds require approval; no assumed fixed quota.
-- **RSH920 — Stock of the Day:** At most one candidate per defined local market date, from approved universe/rules/rank/tie-break. No qualified data/candidate means explicit “No qualifying stock today” with reasons. **[DECISION REQUIRED, D7]** Market calendar/date/ranking remain blocked.
-- **RSH921 — Explanation:** Show passed rules, thresholds/actuals, disqualifying/missing criteria, dated source references and freshness; separate observed data, computed scores and narrative opinion.
+- **RSH916 — User criteria:** M9 UI/API lets users configure, inspect and validate criteria across supported parameters for M10 Taurus search. Unsupported criteria reject clearly; no hidden preset or search is executed. **[DECISION REQUIRED, D6]** Exact parameter/schema/UI/storage contract remains undefined.
+- **RSH917 — Missing inputs:** Criteria validation and known-stock evidence distinguish missing from zero. M10 must not claim a candidate meets a criterion without its required evidence; this does not require M9 to search or rank candidates.
+- **RSH918 — Cutoff:** Preserve compatible dates and the approved analysis context for known-stock observations. M10 search/candidate cutoff and historical-evaluation rules require their own reviewed contract; no future-evidence/backtest claim follows from M9 criteria preparation.
+- **RSH919 — Sectors:** Sector preferences may be criteria only after their field/taxonomy contract is reviewed. Sector candidate discovery/grouped results belong to M10; M9 has no ranked-sector-result exit requirement.
+- **RSH920 — Suggested-stock handoff:** M9 prepares user criteria; actual candidate discovery and suggested-stock results belong to M10 Taurus under ADR-0017. Keep results unavailable before M10 exists. **[DECISION REQUIRED, D7]** Any daily cadence, market calendar, ranking/tie-break and no-candidate policy needs a separate M10 contract; M9 need not produce a daily winner.
+- **RSH921 — Explanation:** M9 exposes user-selected parameters/operators/values and validation limits. M10 candidate results expose criterion evidence, unmet/unverified criteria, dated sources and limits, separating observed facts from agent opinions.
 - **RSH922 — Advice boundary:** Screening results for research only; no order, guarantee, prediction or personalized suitability. D11 remains blocking.
-- **RSH923 — Stability:** Identical snapshot/rules/config produce identical ordering/results; reruns create dated revisions, never silently mutate original snapshots.
-- **RSH924 — Duplicates:** Approved canonical-ID research deduplication MUST NOT mutate ordered watchlist/position duplicates.
-- **RSH925 — Transparency:** Publish universe/exclusions/coverage/tie-break; historical evaluation cannot assume current surviving tickers.
-- **RSH926 — Qualification:** Missing mandatory evidence, invalid/stale core input or unresolved identity conflict cannot receive qualified state.
+- **RSH923 — Stability:** Preserve exact user criteria and approved evidence snapshots without silent mutation. Criteria version/handoff identity needs review; this is not a promise that agent searches are deterministic or complete.
+- **RSH924 — Duplicates:** Criteria configuration and any future M10 candidate deduplication MUST NOT mutate ordered watchlist/position duplicates; canonical identity/dedup details require review.
+- **RSH925 — Transparency:** M9 states supported criteria and known-stock data limits. M10 documents search scope/exclusions/evidence coverage; no all-market, point-in-time or survivorship-free claim is inferred.
+- **RSH926 — Qualification:** Valid criteria are not a qualified candidate result. M10 cannot label missing mandatory evidence, invalid/stale core input or unresolved identity conflict as a verified criterion match.
 
 ### 23.9.4 Monitoring, jobs, reports and UI (proposed)
 
@@ -1238,44 +1249,52 @@ narrative belongs to M10. No default metric, threshold or ranking is approved.
 - **RSH931 — Durability:** Approved states equivalent to queued/running/completed/partial/failed/cancelled; non-secret IDs, counters, bounded concurrency, restart/dedup policies and atomic completed-snapshot publication.
 - **RSH932 — Errors:** Distinguish invalid symbol, unsupported universe, config/credentials, license, quota, outage, incomplete snapshot and data conflict; partial remains partial.
 - **RSH933 — Reports:** Compact stock/company/sector, timestamps, criteria, meaningful supported fundamentals/history, sources/gaps and approved conclusions. Export/PDF optional and separately rights/retention-gated.
-- **RSH934 — UI:** Research/Discover, filters, sectors, Stock-of-the-Day and watchlist panel only after approved routes/models; reuse M8.
+- **RSH934 — UI:** M9 exposes criteria configuration and approved known-stock/watchlist views only after their routes/models pass. Candidate discovery, sector results and suggested-stock execution are M10 Taurus features; placeholders remain unavailable meanwhile. Reuse M8.
 - **RSH935 — API:** Versioned research/criteria/jobs contracts use M7 precision/errors/security and server authorization; async semantics require approval.
 - **RSH936 — Settings:** Enabled providers/presets/sectors/schedules/notification preferences validated/versioned/migrated separately from financial watchlist state.
 - **RSH937 — Notifications:** In-app status MAY ship; email/phone/push/webhooks/always-on delivery require explicit channels/privacy/deployment approval. Unconfigured means no external delivery.
-- **RSH938 — Evaluation:** Curated multi-sector, missing/stale/conflict, holiday, no-candidate and cutoff fixtures; record coverage/reproducibility, not forecast accuracy.
-- **RSH939 — Outage:** Smaller labeled subset SHOULD run only if approved rules permit degraded evidence; otherwise incomplete/blocked. Never relax thresholds to force a result.
-- **RSH940 — Done:** Approved rights/screening contracts, provenance, reproducible universe/selection, no-candidate behavior, opt-in durable schedule, safe watchlists, schema/tests and independent audit.
+- **RSH938 — Evaluation:** M9 tests supported/unsupported criteria, validation, exact handoff values, missing/stale/conflicting known-stock evidence and disabled-M10 independence. Candidate search, sector/no-candidate/daily fixtures belong to M10's future contract; no forecast-accuracy claim.
+- **RSH939 — Outage:** Approved known-stock data paths expose incomplete/blocked evidence without breaking criteria configuration. They do not launch a fallback discovery search. M10 must not relax user criteria to force a candidate during an outage.
+- **RSH940 — Done:** Approved data/criteria contracts, provenance, user-configurable validated criteria and nonexecuting M10 handoff, plus any separately approved watchlist/schedule scope, schema/tests and independent audit. M9 exit excludes market candidate search, ranked sector results and a daily suggested-stock winner.
 
 ### 23.9.5 M9 contract inventory and review groups (illustrative)
 
-Candidate records, not public schemas: ResearchObservation (identity/metric/value/
-units/currency/source/dates/availability/license); ScreenDefinition (ID/version/
-universe/cutoff/predicates/ranking/taxonomy/tie-break); ResearchRun (ID/status/
-times/as-of/coverage/config digest/rules/vintage/errors); QualifiedCandidate
-(identity/sector/rank/state/predicates/missing evidence/observations/references).
-No assumption about nullability, public visibility or persistence is approved.
+Candidate M9 records, not public schemas: ResearchObservation (known-stock
+identity/metric/value/units/currency/source/dates/availability/license),
+CriteriaDefinition (user-selected supported parameters/operators/values and
+validation context), CriteriaHandoff (exact definition/version association),
+and any separately approved known-stock ResearchRun. SearchUniverse,
+QualifiedCandidate, sector rankings and suggested-stock selection records belong
+to future M10 contracts. No field list, public schema, storage or version format
+is accepted by this illustrative inventory.
 
-Future groups: scope/universe/metric/screen ADR; rights/API feasibility; typed
-observations/run storage; optional official adapter; normalization/freshness/
-conflicts/quotas; screening/sectors; daily selection; watchlist/jobs; research
-API/UI; independent rights/correctness/cutoff/security/exit audit.
+Future M9 groups: supported-parameter/criteria/handoff contract; rights/API
+feasibility; approved known-stock observations/storage; optional official adapter;
+normalization/freshness/conflicts/quotas; separately approved watchlist/jobs;
+criteria/API/UI and independent exit audit. Candidate screening, sector discovery
+and suggested-stock search move to M10; no M9 provider-screener dependency.
 
 ### 23.9.6 M9 exit criteria (proposed)
 
-Permitted controlled data supports documented reproducible sector screens,
-inspectable criteria/sources, a daily candidate only when qualified, opt-in
-watchlist research without holdings mutation, honest data-quality states and
-previous dated runs. No subscription, scraping right or financial convention
-is assumed; all dependent decision gates must be resolved.
+Users can configure and inspect validated supported stock criteria, with an
+explicit handoff boundary for future M10 Taurus search that performs no discovery
+while M10 is unavailable. Approved known-stock data and separately approved
+watchlist research preserve provenance, quality states and holdings. M9 does not
+need an API-backed market screener, ranked sector results or a daily candidate.
+No parameter default, subscription, scraping right, financial convention or
+unapproved persistence/scheduling contract is assumed.
 
 ## Milestone 10 — AI Research Agents
 
 ### 23.10.1 Goal and feasibility gate
 
-Explore TauricResearch/TradingAgents or an approved equivalent as an optional,
-read-only multi-perspective engine. Ground fallible analyst-style reports in
-M9 evidence and keep them separate from deterministic qualification. This is
-not autonomous portfolio management. No upstream default graph is accepted.
+Taurus agents will search for stocks using user-configured M9 criteria and
+present evidence-backed candidate results under accepted ownership ADR-0017.
+The framework/tool/model implementation remains to be verified; the earlier
+TauricResearch/TradingAgents candidate is not selected by the product label.
+Optional read-only analysis uses permitted evidence, with observed matches and
+fallible opinions clearly separate. No autonomous portfolio management or
+upstream default graph is accepted.
 
 M10 approval first permits only separately scoped, time-boxed feasibility work;
 production integration waits for an accepted feasibility/isolation ADR. The
@@ -1310,18 +1329,22 @@ No spike, environment installation or paid run is authorized by this proposal.
 - **AI1023 — API:** Appropriately secured/authenticated request/inspect/list/cancel/delete run/report endpoints use approved versioned M7 schemas; deletion needs explicit record ownership and approved data policy.
 - **AI1024 — Evaluation:** Fixed offline evidence and curated historical cases assess attribution/schema/missing data/injection/input reproducibility/cost/failure; no profit or prediction claim from small backtests.
 - **AI1025 — Regression:** Absent optional imports, model failure, disabled feature, malicious evidence, permission refusal, timeout, duplicate job and exhausted budgets cannot break core workflows.
-- **AI1026 — Licenses:** Review actual TradingAgents Apache-2.0 distribution/NOTICE obligations and separate data/news/model licensing; source code permission is not data permission.
+- **AI1026 — Licenses:** Review the selected component/version's actual license/NOTICE obligations and separate data/news/model licensing. Review TradingAgents specifically only if it is selected; the Taurus responsibility does not choose that framework. Source code permission is not data permission.
 - **AI1027 — Local model:** MAY support proven compatible/resources/security backend; not required and no silent large-model download.
 - **AI1028 — Quality:** Label AI text, source references, unresolved claims, cutoff and configuration; never “verified analyst consensus.”
 - **AI1029 — Rollout:** Explicit disabled-by-default flag and documented disable/uninstall; disabling leaves core functionality and holdings intact.
 - **AI1030 — Done:** Accepted feasibility ADR, pinned isolated adapter, read-only/privacy/rights controls, bounded runs, grounded UI/API, failure/attack/cost tests, independent audit, owner merge and exit evidence.
+- **AI1031 — Criteria-driven discovery:** Taurus candidate search consumes the explicit M9 user-criteria snapshot without silently relaxing or replacing parameters. Search sources/tools, supported universe and exact handoff schema need a separate contract; no M9 API-screener prerequisite.
+- **AI1032 — Candidate evidence:** A claimed criterion match needs captured compatible evidence. Show missing/unverified criteria and search coverage/limits; distinguish no candidates found from incomplete/failed/disabled search. Sector/suggested-stock results and any daily-selection policy belong to M10, not M9 exit.
 
 ### 23.10.3 M10 pipeline and review groups (illustrative)
 
-Selection/cutoff → opt-in/identity/rights/budget checks → approved M9 evidence
-snapshot → bounded optional worker → validated references/output/warnings →
-persisted read-only report → M8 via M7 API. LLM disagreement cannot overwrite
-M9 eligibility or deterministic results.
+M9 user criteria → explicit M10 initiation and opt-in/rights/budget checks →
+bounded Taurus candidate search with permitted tools/evidence → identity and
+criteria-evidence validation → candidate results with gaps/limits → optional
+read-only analysis/report through approved storage/API/UI. Reuse known-stock M9
+evidence where suitable; no M9 candidate-search output is a prerequisite. Agent
+disagreement cannot overwrite the user's criteria or fabricate a verified match.
 
 Future groups: authorized license/dependency/storage/security/cost spike;
 accepted worker/adapter/privacy decision; evidence/prompt/tool/output controls;
@@ -1330,9 +1353,11 @@ API/UI integration; independent rights/cost/injection/cutoff/regression audit.
 
 ### 23.10.4 M10 exit criteria (proposed)
 
-With AI explicitly enabled and permitted evidence, the user can request bounded
-read-only analysis, inspect source-linked claims/disagreement/costs/limits,
-cancel or inspect failure and retain normal tracker use with AI disabled.
+With Taurus explicitly enabled and permitted evidence, the user can search for
+candidate stocks using their M9 criteria, inspect source-linked matches/gaps and
+coverage, and distinguish empty/incomplete/failed outcomes. Optional read-only
+analysis exposes claims/disagreement/costs/limits; users can cancel or inspect
+failure and retain normal tracker/criteria use with AI disabled.
 No application trade instruction or execution; unresolved feasibility, rights,
 privacy, cost enforcement or §4 gates block release.
 
