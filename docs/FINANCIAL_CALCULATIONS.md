@@ -9,6 +9,29 @@ This document defines financial semantics for the Stock Tracking App.
 
 If a metric is not defined here, an agent MUST NOT invent its behavior. Add or approve the definition before implementation.
 
+## Scoped EPS observation contract — 2026-10-16
+
+The owner requested EPS observation/comparison implementation and selected
+Finnhub Free's upcoming-release estimate. [ADR-0015](adr/0015-finnhub-upcoming-eps.md)
+defines this additive, reported-data contract for issue #166. It does not approve
+new financial arithmetic or the full M9 specification.
+
+- **EPS-001:** an upcoming-release EPS estimate is Finnhub calendar's reported
+  `epsEstimate`, associated with provider symbol and fiscal year/quarter. It is
+  non-GAAP currency-per-share; currency, basic/diluted basis and vintage remain
+  unknown. Release date is not fiscal period end.
+- **EPS-002:** preserve the finite signed value as Decimal, with no computation
+  or rounding. Null means unavailable, zero is numeric zero, negative is valid.
+  Synthetic known values `1.250000000000000001`, `0` and `-0.25` remain exact.
+- **EPS-003:** only explicitly unreleased (`epsActual` null) events strictly
+  after a caller-supplied analysis date qualify. Missing actual is not null.
+  Receipt time is not evidence publication time or a historical forecast vintage.
+- **EPS-004:** matching observation identity is not a financial comparison.
+  Unknown currency/share basis/vintage prevents claims of comparable EPS.
+  No actual-minus-estimate, growth, annual/TTM sum, ratio, surprise percentage,
+  PEG or score is defined or implemented by this scope. Historical earnings
+  estimates and Premium forward consensus data are different datasets.
+
 ---
 
 # 1. Scope

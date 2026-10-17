@@ -10,6 +10,26 @@ The goal is to make tests deterministic, meaningful, isolated, and suitable for 
 
 # 1. Test Layers
 
+## Finnhub upcoming-release EPS — issue #166
+
+Run `python -m pytest tests/test_finnhub_eps.py tests/test_finnhub_transport.py
+tests/test_packaging.py -v` for [ADR-0015](adr/0015-finnhub-upcoming-eps.md).
+These offline tests cover injected calendar payloads, exact signed Decimal/null
+values, fixed analysis dates, fiscal periods, actual-present exclusion, unknown
+metadata, duplicates, safe errors and bounded requests. Native transport tests
+mock HTTPS and verify the Finnhub-only path/host, header authentication, redirect
+refusal, bounded reads and response closure. FMP's transport allowlist and default
+factories remain separate and unchanged. Installed-wheel verification exercises
+the new capability with synthetic payloads and no account or provider calls.
+
+The receipt clock is UTC; the caller's analysis/release dates use an explicit
+date-only convention. Tests do not equate those dates or infer market timezone.
+Same-day releases are excluded by this scope. No test authorizes live access,
+claims complete future coverage or computes EPS growth/TTM/PEG/comparisons.
+Full canonical Python, lint, configured type/dependency and staged-hygiene
+checks remain required. Browser tests are separate and unnecessary for this
+backend-only change. Live free-key probes require a separately authorized profile.
+
 ## M8 opt-in hosting and packaged dashboard — issues #142/#155
 
 Run `python -m pytest tests/test_dashboard_hosting.py tests/test_api_foundation.py

@@ -59,6 +59,8 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
         "stock_tracker/exceptions.py", "stock_tracker/providers/__init__.py",
         "stock_tracker/providers/models.py", "stock_tracker/providers/protocols.py",
         "stock_tracker/providers/transport.py", "stock_tracker/providers/fmp.py",
+        "stock_tracker/providers/eps.py", "stock_tracker/providers/finnhub.py",
+        "stock_tracker/providers/finnhub_transport.py",
         "stock_tracker/providers/factory.py",
         "stock_tracker/providers/history_cache.py",
         "stock_tracker/persistence/__init__.py", "stock_tracker/persistence/models.py",
@@ -112,6 +114,13 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
     )
     assert current_service.returncode == 0, current_service.stderr
     assert current_service.stdout == current_service.stderr == ""
+
+    eps_provider = subprocess.run(
+        [sys.executable, "-I", "-B", str(ROOT / "tests/finnhub_eps_probe.py"), str(installed)],
+        cwd=tmp_path, env=environment, capture_output=True, text=True, timeout=30,
+    )
+    assert eps_provider.returncode == 0, eps_provider.stderr
+    assert eps_provider.stdout == eps_provider.stderr == ""
 
     api_foundation = subprocess.run(
         [sys.executable, "-I", "-B", str(ROOT / "tests/api_foundation_probe.py"), str(installed)],
