@@ -28,6 +28,12 @@ validate the existing raw observations without live/default activation. The
 remaining exclusions above still apply. Issue-specific gates and accepted
 M0–M8 contracts remain authoritative.
 
+**Next EPS API proposal — 2026-10-16:** PR #169 is owner-merged and its
+post-merge CI passed. [ADR-0016](docs/adr/0016-upcoming-eps-api.md), issue #170,
+proposes a disabled-by-default explicit provider-symbol API, date/budget/bounds
+and later activation contract. It remains **proposed** pending explicit owner
+acceptance; this record authorizes no new route, live acquisition or broader M9.
+
 **M8 scoped acceptance — 2026-10-14:** after reviewing PR #149's revised
 all-text retro pixel preview, requested unavailable placeholders, backend/
 frontend TO-DO LIST and CI repair, the owner instructed **“approved continue
