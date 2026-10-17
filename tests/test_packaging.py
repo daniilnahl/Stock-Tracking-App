@@ -419,6 +419,15 @@ with patch.dict(sys.modules, blocked):
             Path(sys.argv[1]).resolve())
 
 # Preserve installed legacy module checks after guarded fresh domain imports.
+import config
+def denied_dotenv(*args, **kwargs):
+    raise AssertionError('Finnhub loader attempted dotenv discovery')
+with patch.object(config.dotenv, 'load_dotenv', denied_dotenv), patch.object(config.os, 'getenv', return_value='synthetic-installed-finnhub') as getenv:
+    finnhub_configuration = config.load_finnhub_configuration()
+    assert config.require_finnhub_api_key(finnhub_configuration.api_key) == 'synthetic-installed-finnhub'
+    assert repr(finnhub_configuration) == 'Configuration()'
+    getenv.assert_called_once_with('FINNHUB_API_KEY')
+
 import stock_tracker.providers.transport as provider_transport
 import stock_tracker.providers.fmp as provider_fmp
 import stock_tracker.providers.factory as provider_factory

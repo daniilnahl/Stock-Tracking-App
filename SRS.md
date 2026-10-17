@@ -34,6 +34,13 @@ proposes a disabled-by-default explicit provider-symbol API, date/budget/bounds
 and later activation contract. It remains **proposed** pending explicit owner
 acceptance; this record authorizes no new route, live acquisition or broader M9.
 
+**Finnhub environment configuration — 2026-10-17:** the owner reported obtaining
+a Finnhub key and explicitly requested loading it from Windows environment
+variables like FMP. This authorizes [issue #172](https://github.com/daniilnahl/Stock-Tracking-App/issues/172)
+and ADR-0015's narrow configuration addendum: explicit current-process
+`FINNHUB_API_KEY` loading and safe validation for adapter injection. It accepts
+no public route, date/quota default, live call or broader ADR-0016 proposal.
+
 **M8 scoped acceptance — 2026-10-14:** after reviewing PR #149's revised
 all-text retro pixel preview, requested unavailable placeholders, backend/
 frontend TO-DO LIST and CI repair, the owner instructed **“approved continue
