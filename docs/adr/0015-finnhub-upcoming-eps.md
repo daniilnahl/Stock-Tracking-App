@@ -158,3 +158,28 @@ saved-stock identity mapping, public API/CLI/UI, persistence, scheduler, numeric
 comparison or screen. Verified access/use, trusted date convention, identity and
 quota ownership remain gates for later live wiring. Source and installed-wheel
 tests must exercise the service with fixed dates and synthetic provider data.
+
+## Scoped credential configuration — issue #172
+
+On 2026-10-17 the owner reported obtaining a Finnhub key and explicitly requested
+loading it from Windows environment variables like FMP. This authorizes
+[issue #172](https://github.com/daniilnahl/Stock-Tracking-App/issues/172)'s additive
+`load_finnhub_configuration() -> Configuration` and
+`require_finnhub_api_key(api_key: str | None) -> str` in the existing application
+configuration layer. Reuse the secret-hidden optional `Configuration.api_key`
+value without changing FMP's loader, precedence or callers.
+
+Only an explicit loader invocation reads `FINNHUB_API_KEY` from the current
+process environment, with native Windows case handling. It does not invoke
+dotenv or fall back to `FMP_API_KEY`/`MY_API_KEY`. Importing configuration performs
+no key lookup. Optional loading can yield None; explicit validation rejects
+missing, blank, padded, control/non-ASCII or invalid typed header values with
+safe `ConfigurationError`, returning an accepted key unchanged. Keep secret
+values out of repr, diagnostics and logs. No owner key is read by agent checks;
+tests replace the process variables with synthetic values.
+
+This is the explicitly authorized configuration boundary reserved above, not
+default application composition or acceptance of ADR-0016. No provider request,
+API/CLI/UI/launcher route, production date, quota policy, environment mutation,
+credential persistence, new dependency or live probe is added. Account-specific
+access and permitted use remain unverified by this implementation.

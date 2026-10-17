@@ -12,6 +12,16 @@ The goal is to make tests deterministic, meaningful, isolated, and suitable for 
 
 ## Finnhub upcoming-release EPS — issue #166
 
+For [#172](https://github.com/daniilnahl/Stock-Tracking-App/issues/172)'s explicit
+environment loader, run `python -m pytest tests/test_finnhub_configuration.py
+tests/test_configuration_security.py -v`. All keys are synthetic; tests isolate
+`FINNHUB_API_KEY`, FMP and legacy variables and must never inspect the owner's
+real credential. Verify no dotenv call/fallback/import-time lookup, unchanged
+FMP precedence, native Windows name handling, safe header validation and exact
+header injection into the real adapter behind a controlled HTTP transport.
+Configured mypy covers the changed `config.py`. Full source/installed-wheel and
+staged-hygiene checks remain required; no live access is tested.
+
 For the injected application-service continuation [#168](https://github.com/daniilnahl/Stock-Tracking-App/issues/168),
 also run `python -m pytest tests/test_upcoming_eps_service.py -v`.
 Use fixed research-date suppliers and lazy fake providers to verify admission

@@ -125,6 +125,36 @@ precedence over the legacy `MY_API_KEY` fallback; a present empty canonical
 value fails validation. Provider keys remain server-side. API/dashboard history
 has its own rights gate even when a provider key is configured.
 
+For Finnhub, create a Windows user environment variable named `FINNHUB_API_KEY`
+in **Edit environment variables for your account**, then restart the terminal
+and any parent application (including Codex) that launches Python so it inherits
+the new value. Windows variable names are case-insensitive; uppercase is the
+canonical spelling and is required on case-sensitive platforms.
+
+For only the current PowerShell session, enter the key without putting its
+literal value in command history:
+
+```powershell
+$env:FINNHUB_API_KEY = [System.Net.NetworkCredential]::new('', (Read-Host 'Finnhub API key' -AsSecureString)).Password
+```
+
+The explicit Finnhub configuration entry point reads the current process
+environment without calling dotenv or falling back to either FMP variable:
+
+```python
+from config import load_finnhub_configuration, require_finnhub_api_key
+
+key = require_finnhub_api_key(load_finnhub_configuration().api_key)
+```
+
+Pass this value as `api_key=key` when explicitly constructing
+`FinnhubUpcomingEpsProvider` with its required injected transport, clock and
+bounds. Loading configuration makes no provider request and does not activate
+an API/dashboard route. Missing, blank or malformed header values raise a safe
+`ConfigurationError`. Do not print, commit or put the key in a URL. The Finnhub
+loader does not itself read `.env`; previously populated process variables are
+read as-is. Existing FMP dotenv behavior remains unchanged.
+
 ## Saved data
 
 The CLI uses cwd-local `stock_tracker.sqlite3`, with independent

@@ -41,3 +41,20 @@ def require_api_key(api_key: str | None) -> str:
             "Set FMP_API_KEY in your environment or local .env before making requests."
         )
     return api_key
+
+
+def load_finnhub_configuration() -> Configuration:
+    """Read Finnhub's process variable explicitly, without dotenv or fallbacks."""
+    return Configuration(os.getenv("FINNHUB_API_KEY"))
+
+
+def require_finnhub_api_key(api_key: str | None) -> str:
+    """Validate Finnhub header authentication without altering or exposing it."""
+    if api_key is None or (isinstance(api_key, str) and not api_key.strip()):
+        raise ConfigurationError(
+            "Set FINNHUB_API_KEY in your process environment before making requests."
+        )
+    if (not isinstance(api_key, str) or api_key != api_key.strip()
+            or any(ord(char) < 32 or ord(char) >= 127 for char in api_key)):
+        raise ConfigurationError("Finnhub credential must be a valid header value.")
+    return api_key
