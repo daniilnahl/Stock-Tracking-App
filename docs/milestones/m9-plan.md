@@ -1,6 +1,18 @@
 # M9 — Automated Stock Research planning
 
-## Current continuation — 2026-10-16
+## Current API contract proposal — 2026-10-16
+
+PR #169 is owner-merged at `1847a155d2e44f1fa82e315e060f557a421e542d`;
+post-merge [Foundation 38988510270](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/38988510270)
+passed. The injected EPS service is delivered. The next meaningful step is
+[#170](https://github.com/daniilnahl/Stock-Tracking-App/issues/170), a concrete
+[opt-in EPS API/composition proposal](../adr/0016-upcoming-eps-api.md). It is
+**proposed**, with no runtime change or live acquisition authorized. Master owns
+the proposal; `m9_analysis` independently reviews. Its conditional delivery order
+is injected API, evidence-gated composition/budget, then a separately reviewed
+minimal dashboard form. No further offline wrapper is proposed.
+
+## Previous service continuation — 2026-10-16
 
 Planning PR #165 and the scoped EPS implementation PR #167 are owner-merged.
 Main `74f787554e3cd7c7083738347a83c887e1a1c5d0` passed
@@ -85,7 +97,8 @@ dated, comparable, rights-cleared research qualification.
 | --- | --- | --- | --- |
 | [#164](https://github.com/daniilnahl/Stock-Tracking-App/issues/164): readiness, decision brief and conditional dependency plan | Planning documents reviewed and locally verified; owner product decisions pending | Current request authorizes planning | Master; `m9_analysis` independent review passed; publication/current PR tracked on #164 |
 | #166: Finnhub Free upcoming-release EPS contract/adapter | Owner-merged; post-merge CI passed | Narrow owner-selected reported-data scope | `eps_impl`; PR #167; independent review passed |
-| #168: injected upcoming-EPS application service | Locally verified; publication/owner merge tracked on issue | #166 merged; ADR-0015 service addendum | `eps_impl`; complete independent review passed; 3045 full tests passed |
+| #168: injected upcoming-EPS application service | Owner-merged #169; main CI passed | #166 merged; ADR-0015 service addendum | `eps_impl`; complete independent review passed; 3045 full tests passed |
+| #170: opt-in EPS API/composition contract | Proposal in review; runtime blocked on acceptance | #168 merged; account/use evidence gates live composition | Master; `m9_analysis` independent review |
 | Provider/field/use rights contract for live activation | Candidate planning task | Owner source/entitlement evidence; dated official documentation review | Unassigned; no live activation issue or PR |
 | First screen/universe/taxonomy/daily selection contract | Candidate planning task | Owner product choices and normative financial definitions | Unassigned; no implementation issue or PR |
 | Research storage/jobs/API contract | Candidate planning task | Accepted scope and evidence/screen contracts | Unassigned; no implementation issue or PR |

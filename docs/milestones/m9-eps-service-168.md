@@ -26,6 +26,12 @@ API/CLI/UI, saved-stock mapping, quota policy, cache or persistence is added.
 
 ## Verification and remaining gates
 
+**Merge update:** PR #169 is owner-merged at
+`1847a155d2e44f1fa82e315e060f557a421e542d`; post-merge
+[Foundation 38988510270](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/38988510270)
+passed. The local execution narrative below predates publication. The next task
+is [#170's API proposal](../adr/0016-upcoming-eps-api.md), pending acceptance.
+
 Use synthetic providers and fixed date suppliers for meaningful admission,
 failure, precision, provenance and source/installed-wheel isolation checks.
 Run targeted tests, full pytest, Ruff, configured mypy, pip check, staged hygiene
