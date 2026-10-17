@@ -2,13 +2,27 @@
 
 **Version:** 1.2 proposed (approved baseline: 1.1)
 
-**Status:** PARTIALLY ACCEPTED — M7 under ADR-0013; M8 under ADR-0014's read-only scope and approved design revisions. M9–M10 and out-of-scope decisions remain proposed. Existing approved requirements remain authoritative.
+**Status:** PARTIALLY ACCEPTED — M7 under ADR-0013; M8 under ADR-0014's read-only scope and approved design revisions; M9's bounded Finnhub upcoming-release EPS observation task under ADR-0015. Remaining M9–M10 and out-of-scope decisions remain proposed. Existing approved requirements remain authoritative.
 
 **Primary implementation language:** Python  
 **Current interface:** Typer CLI  
 **Target:** Production-quality portfolio tracking and analytics application
 
 ## Approval record
+
+**M9 bounded EPS task — 2026-10-16:** the owner explicitly requested
+implementation of exact EPS observation/comparison rules and a narrowly scoped
+Finnhub quarterly-EPS adapter, focusing on future estimated EPS, then selected
+**“Upcoming release EPS estimate on Free (Recommended)”**. This authorizes
+[ADR-0015](docs/adr/0015-finnhub-upcoming-eps.md) and EPS-001–004's reported-data
+scope: an additive, explicitly injected backend calendar adapter, exact signed
+numeric/null observations, unknown metadata and conservative comparison limits.
+It does not approve computed EPS comparisons, TTM/growth/PEG, the Premium forward
+series, a screen/ranking, live rights/access, default application activation,
+research API/UI, persistence/scheduling, broader routing or the whole M9 proposal.
+The task remains incomplete until implementation, required verification,
+independent review and owner merge. Issue-specific gates and accepted M0–M8
+contracts remain authoritative.
 
 **M8 scoped acceptance — 2026-10-14:** after reviewing PR #149's revised
 all-text retro pixel preview, requested unavailable placeholders, backend/
