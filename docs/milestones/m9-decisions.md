@@ -6,6 +6,16 @@ This brief narrows the questions that block SRS §23.9. It does not approve a
 screen, financial formula, provider use, calendar, quota or persistence design.
 See [the execution plan](m9-plan.md) for capability evidence and dependencies.
 
+**Scoped acceptance update — 2026-10-16:** the owner subsequently selected
+Finnhub Free's upcoming-release EPS estimate and requested implementation.
+[ADR-0015](../adr/0015-finnhub-upcoming-eps.md) and EPS-001–004 now define that
+narrow observation capability, owner-merged in #167. The owner's instruction
+to continue authorizes #168's injected application service under the ADR's
+addendum. Earlier investigation-only statements below are superseded for this
+bounded offline capability. Live/default wiring still needs actual access/use,
+trusted date convention, identity and quota ownership; full M9 and the remaining
+screen/calculation/storage/API decisions are not accepted.
+
 **Owner source-direction update — 2026-10-16:** the owner selected “first use
 FMP then use finviz” and requested a native-metric gap comparison. Source priority
 is selected: FMP first, optional FINVIZ enrichment. See the
@@ -75,5 +85,6 @@ Source priority is now selected. Remaining immediate human decisions are the
 **research question and exact universe**, together with acceptance of the
 informational boundary and exact free-tier field/access/use evidence. A broad
 instruction to start M9 cannot safely choose these product
-semantics. Planning is reviewable now; runtime implementation remains blocked by
-the relevant SRS and AGENTS requirements rather than an agent-imposed approval step.
+semantics. Broader runtime implementation remains blocked by the relevant SRS
+and AGENTS requirements. The accepted offline EPS adapter and injected-service
+continuation above are separate, bounded exceptions to that broader block.

@@ -1,6 +1,26 @@
 # M9 — Automated Stock Research planning
 
-## Status — 2026-10-16
+## Current continuation — 2026-10-16
+
+Planning PR #165 and the scoped EPS implementation PR #167 are owner-merged.
+Main `74f787554e3cd7c7083738347a83c887e1a1c5d0` passed
+[Foundation 38987281100](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/38987281100).
+The selected Finnhub Free upcoming-release observation contract is accepted
+under [ADR-0015](../adr/0015-finnhub-upcoming-eps.md) and EPS-001–004; its adapter,
+strict transport and offline tests are implemented. This supersedes the initial
+investigation-only statements below for that narrow capability.
+
+After the owner's instruction to continue, [#168](https://github.com/daniilnahl/Stock-Tracking-App/issues/168)
+adds an explicitly injected application service with one intended research-date
+sample, immutable request context and validated raw observations. See
+[the bounded task record](m9-eps-service-168.md). `eps_impl` owns source/tests;
+Master owns contracts, verification and publication; `m9_analysis` independently
+reviews. No default/live acquisition, identity mapping, API/UI, arithmetic,
+quota policy or persistence is authorized. Broader M9 remains proposed and its
+other decision gates remain open. The following initial plan is dated history,
+not a claim that the merged adapter is still unimplemented.
+
+## Initial planning status — 2026-10-16
 
 Planning started for [#164](https://github.com/daniilnahl/Stock-Tracking-App/issues/164)
 in [M9, milestone 10](https://github.com/daniilnahl/Stock-Tracking-App/milestone/10).
@@ -64,7 +84,9 @@ dated, comparable, rights-cleared research qualification.
 | Issue / objective | Status | Dependency | Assigned agent / PR / review |
 | --- | --- | --- | --- |
 | [#164](https://github.com/daniilnahl/Stock-Tracking-App/issues/164): readiness, decision brief and conditional dependency plan | Planning documents reviewed and locally verified; owner product decisions pending | Current request authorizes planning | Master; `m9_analysis` independent review passed; publication/current PR tracked on #164 |
-| Provider/field/use rights contract | Candidate planning task | Owner source/entitlement evidence; dated official documentation review | Unassigned; no implementation issue or PR |
+| #166: Finnhub Free upcoming-release EPS contract/adapter | Owner-merged; post-merge CI passed | Narrow owner-selected reported-data scope | `eps_impl`; PR #167; independent review passed |
+| #168: injected upcoming-EPS application service | Locally verified; publication/owner merge tracked on issue | #166 merged; ADR-0015 service addendum | `eps_impl`; complete independent review passed; 3045 full tests passed |
+| Provider/field/use rights contract for live activation | Candidate planning task | Owner source/entitlement evidence; dated official documentation review | Unassigned; no live activation issue or PR |
 | First screen/universe/taxonomy/daily selection contract | Candidate planning task | Owner product choices and normative financial definitions | Unassigned; no implementation issue or PR |
 | Research storage/jobs/API contract | Candidate planning task | Accepted scope and evidence/screen contracts | Unassigned; no implementation issue or PR |
 
