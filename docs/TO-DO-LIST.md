@@ -71,12 +71,20 @@ only, not recommendations, agents, provider activation or new APIs.
 
 ## Future placeholders — separate backend work
 
-- [ ] **Recommend stock of the day:** M9 remains proposed. Approve research
-  scope/advice boundary, permitted universe/data rights, normative screening
-  fields/formulas, ranking/tie-break, market calendar/date and no-candidate
-  behavior before exposing results. No invented recommendation or sample winner.
-- [ ] **Taurus Agents Menu:** the name is a requested UI label, not a selected
-  agent integration. Define intended agents and operations, then approve any
+- [ ] **User stock criteria — M9:** following owner-accepted
+  [ADR-0017](adr/0017-user-criteria-taurus-discovery.md), let users configure
+  supported parameters. First define exact fields/operators/units/null rules,
+  settings/API/UI and handoff contracts. M9 validates/prepares criteria without
+  calling a screener or executing a market search. Known-stock data calls remain
+  separate. No criteria form is implemented by this checklist.
+- [ ] **Recommend stock of the day — M10:** Taurus searches for stocks using
+  the M9 user criteria. Candidate/sector discovery and suggested results are
+  deferred to M10; any daily cadence, rank/tie-break and no-candidate policy need
+  a separate contract. Keep the current placeholder unavailable, with no sample
+  winner or claim that criteria configuration has searched the market.
+- [ ] **Taurus Agents Menu — M10:** Taurus is the chosen responsibility for
+  criteria-driven search, not a verified framework/model integration. Define
+  intended agents/search tools and operations, then approve any
   backend/vendor, data transmission/retention, authentication, budgets,
   cancellation, failure and opinion-display rules. M10 gates still apply where
   AI is involved; no provider/model calls, keys, spending or private holdings
