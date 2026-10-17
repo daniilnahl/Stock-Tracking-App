@@ -121,3 +121,40 @@ inclusion and unchanged FMP behavior. Follow TESTING.md's full canonical checks,
 independent review and owner merge; do not activate a connector from passing CI.
 The result is an opt-in backend adapter ready for later composition, not a live
 screen, full forward consensus feed or completed M9 milestone.
+
+## Scoped application-service continuation — issue #168
+
+After merging #167, the owner instructed continued work. The next bounded step,
+[issue #168](https://github.com/daniilnahl/Stock-Tracking-App/issues/168), implements
+the intended-research-date boundary above through an explicitly injected service:
+
+```python
+UpcomingEpsService(providers: Callable[[], UpcomingEpsProvider], *,
+                   research_date: Callable[[], date])
+service.upcoming_eps(symbol: str, *, start: date, end: date) -> UpcomingEpsView
+```
+
+The frozen view retains symbol, start, end, analysis_date and the immutable
+observations tuple. Validate the explicit provider symbol (including UTF-8
+encodability) and exact date bounds before acquiring a provider. Sample the
+injected research_date once per valid local request and require an exact date
+with `analysis_date < start <= end`. No per-request analysis-date override exists.
+The injected supplier represents the intended research date in the same explicit
+date convention as release dates; it does not certify historical availability.
+No timezone, system clock or production supplier is selected by this task.
+
+Acquire one provider lazily and invoke its existing method once. Validate its
+returned tuple and every observation, including the fixed source/accounting/unit
+and unknown-metadata fields, exact symbol, requested window, unique fiscal periods
+and increasing release-date/year/quarter ordering. Reject malformed output using
+existing safe errors; never repair metadata, silently filter it or choose a
+revision. Preserve exact signed Decimal/null values and propagate existing
+provider failures without retries, cache or fallback. Empty results remain only
+an empty provider result, without a completeness or invalid-symbol claim.
+
+This is an additive, offline-testable application boundary under EPS-001–004.
+It authorizes no default composition, credentials/configuration, live access,
+saved-stock identity mapping, public API/CLI/UI, persistence, scheduler, numeric
+comparison or screen. Verified access/use, trusted date convention, identity and
+quota ownership remain gates for later live wiring. Source and installed-wheel
+tests must exercise the service with fixed dates and synthetic provider data.

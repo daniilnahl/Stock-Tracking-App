@@ -10,6 +10,8 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 NEUTRAL = ("stock_tracker.services", "stock_tracker.domain", "stock_tracker.exceptions",
            "stock_tracker.providers.models", "stock_tracker.providers.protocols",
+           "stock_tracker.providers.eps.UpcomingEpsEstimate",
+           "stock_tracker.providers.eps.UpcomingEpsProvider",
            "stock_tracker.persistence.models", "stock_tracker.persistence.protocols")
 CONCRETE = {"os", "sys", "pathlib", "io", "sqlite3", "socket", "urllib", "http", "ssl",
             "pickle", "subprocess", "importlib", "ctypes"}
@@ -59,6 +61,10 @@ def test_maintained_commands_delegate_infrastructure(name):
     "import rich", "from config import load_configuration", "import sqlite3 as storage",
     "from stock_tracker.providers import factory as factory_alias",
     "from stock_tracker.compatibility.numeric import to_decimal", "import os",
+    "from stock_tracker.providers.finnhub import FinnhubUpcomingEpsProvider",
+    "from stock_tracker.providers.finnhub_transport import FinnhubHttpTransport",
+    "import stock_tracker.providers.eps",
+    "from stock_tracker.providers.eps import UnapprovedCapability",
 ])
 def test_service_checker_rejects_controlled_boundary_violations(source):
     assert findings(source, service=True)
@@ -75,6 +81,7 @@ def test_command_checker_rejects_controlled_boundary_violations(source):
 
 def test_neutral_and_presentation_adapter_controls_are_permitted():
     assert findings("from .models import EntryUpdate\nfrom decimal import Decimal\n"
-                    "from stock_tracker.providers.protocols import MarketDataProvider", service=True) == []
+                    "from stock_tracker.providers.protocols import MarketDataProvider\n"
+                    "from stock_tracker.providers.eps import UpcomingEpsEstimate, UpcomingEpsProvider", service=True) == []
     assert findings("from pathlib import Path\nfrom stock_tracker.cli.composition import current_service",
                     service=False) == []

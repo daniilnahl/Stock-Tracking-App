@@ -74,6 +74,7 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
         "stock_tracker/services/__init__.py", "stock_tracker/services/models.py",
         "stock_tracker/services/protocols.py", "stock_tracker/services/watchlists.py",
         "stock_tracker/services/history.py", "stock_tracker/services/history_policy.py",
+        "stock_tracker/services/eps.py",
         "stock_tracker/cli/__init__.py", "stock_tracker/cli/storage.py",
         "stock_tracker/services/current_data.py", "stock_tracker/services/numeric.py",
         "stock_tracker/cli/current_data.py",
@@ -121,6 +122,13 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
     )
     assert eps_provider.returncode == 0, eps_provider.stderr
     assert eps_provider.stdout == eps_provider.stderr == ""
+
+    eps_service = subprocess.run(
+        [sys.executable, "-I", "-B", str(ROOT / "tests/upcoming_eps_service_probe.py"), str(installed)],
+        cwd=tmp_path, env=environment, capture_output=True, text=True, timeout=30,
+    )
+    assert eps_service.returncode == 0, eps_service.stderr
+    assert eps_service.stdout == eps_service.stderr == ""
 
     api_foundation = subprocess.run(
         [sys.executable, "-I", "-B", str(ROOT / "tests/api_foundation_probe.py"), str(installed)],

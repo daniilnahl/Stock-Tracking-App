@@ -12,6 +12,16 @@ The goal is to make tests deterministic, meaningful, isolated, and suitable for 
 
 ## Finnhub upcoming-release EPS — issue #166
 
+For the injected application-service continuation [#168](https://github.com/daniilnahl/Stock-Tracking-App/issues/168),
+also run `python -m pytest tests/test_upcoming_eps_service.py -v`.
+Use fixed research-date suppliers and lazy fake providers to verify admission
+before acquisition, one date sample, no historical override, immutable request
+context, exact Decimal/null values, empty results, provenance and malformed
+provider-output rejection. Failures propagate without retries or fallback.
+The cold source/installed-wheel EPS probe must also exercise the real service
+with injected fixtures. This does not select a production date convention,
+map saved stock identities or enable a live connector or public route.
+
 Run `python -m pytest tests/test_finnhub_eps.py tests/test_finnhub_transport.py
 tests/test_packaging.py -v` for [ADR-0015](adr/0015-finnhub-upcoming-eps.md).
 These offline tests cover injected calendar payloads, exact signed Decimal/null

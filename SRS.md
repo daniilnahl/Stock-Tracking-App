@@ -20,9 +20,13 @@ numeric/null observations, unknown metadata and conservative comparison limits.
 It does not approve computed EPS comparisons, TTM/growth/PEG, the Premium forward
 series, a screen/ranking, live rights/access, default application activation,
 research API/UI, persistence/scheduling, broader routing or the whole M9 proposal.
-The task remains incomplete until implementation, required verification,
-independent review and owner merge. Issue-specific gates and accepted M0–M8
-contracts remain authoritative.
+PR #167 is owner-merged at `74f787554e3cd7c7083738347a83c887e1a1c5d0`, with
+post-merge Foundation CI passed. The owner's subsequent instruction to continue
+authorizes the bounded injected application service in ADR-0015's #168 addendum:
+retain explicit request context, obtain the intended research date once and
+validate the existing raw observations without live/default activation. The
+remaining exclusions above still apply. Issue-specific gates and accepted
+M0–M8 contracts remain authoritative.
 
 **M8 scoped acceptance — 2026-10-14:** after reviewing PR #149's revised
 all-text retro pixel preview, requested unavailable placeholders, backend/
