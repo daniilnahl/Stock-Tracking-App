@@ -1,11 +1,24 @@
 # Local packaged dashboard — issues #143–147/#152/#155
 
+## Custom stock criteria — issue #176
+
+The `Stock criteria` editor implements the bounded
+[ADR-0018](../docs/adr/0018-custom-criteria-editor.md) contract. Users name their
+own parameters and enter exact inclusive numeric ranges with explicit unit/
+context, or textual requirements, then select all/any and prepare a read-only
+snapshot. This records intent, not computed metrics or verified stock matches.
+Editing makes a prepared snapshot outdated until prepared again. Draft/snapshot
+state stays in app memory across navigation and clears on reload/pagehide or
+Clear criteria. Nothing is saved to browser storage or sent to the API/Taurus.
+Taurus discovery remains unavailable until M10. No API token is needed to use
+the editor; existing saved-data connection behavior remains separate.
+
 Implements the accepted read-only ADR-0014 client foundation and shared
 monochrome shell: UI801–809, UI810–815, UI816–818, UI820–821, UI824–826, UI828 and X718 within
 their bounded foundation scope. The owner accepted the revised all-text pixel
 design and scoped ADR after PR #149; owner-merged #142 records acceptance.
 
-The shared shell has typed Overview/Watchlists/Settings routes, a working
+The shared shell has typed Overview/Watchlists/Stock criteria/Settings routes, a working
 local light/dark theme preference and masked memory-only local API configuration.
 Configuration does not verify authentication or make a request. Watchlists
 supports explicit read/reload of both saved namespaces through that same session;

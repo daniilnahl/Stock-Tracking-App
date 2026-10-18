@@ -1,5 +1,19 @@
 # M9 — Automated Stock Research planning
 
+## Current custom editor — 2026-10-17
+
+The owner merged #175, then explicitly chose **arbitrary user-defined parameters
+and range values**, rather than a fixed first metric list. Accepted
+[ADR-0018](../adr/0018-custom-criteria-editor.md),
+[#176](https://github.com/daniilnahl/Stock-Tracking-App/issues/176), narrows that
+to a working tab-memory editor for custom numeric ranges or textual requirements,
+with exact data-only prepared preview and no stock search. See
+[the editor task record](m9-custom-criteria-176.md).
+`eps_impl` owns frontend/tests and the deliberate packaged assets; Master owns
+docs, final checks/publication; `m9_analysis` independently reviews. M10 still
+owns interpreting/verifying criteria and discovery. No financial metric or
+source-comparability claim follows from a custom parameter label.
+
 ## Current ownership change — 2026-10-17
 
 The owner explicitly moved criteria-driven stock discovery to **M10 Taurus**.
@@ -121,7 +135,7 @@ dated, comparable, rights-cleared research qualification.
 | #168: injected upcoming-EPS application service | Owner-merged #169; main CI passed | #166 merged; ADR-0015 service addendum | `eps_impl`; complete independent review passed; 3045 full tests passed |
 | #170: opt-in EPS API/composition contract | Proposal in review; runtime blocked on acceptance | #168 merged; account/use evidence gates live composition | Master; `m9_analysis` independent review |
 | Provider/field/use rights contract for live activation | Candidate planning task | Owner source/entitlement evidence; dated official documentation review | Unassigned; no live activation issue or PR |
-| Supported user parameters/criteria validation/handoff contract | Next criteria planning task under ADR-0017 | Explicit field/operator/unit/combination/schema/storage choices; no hidden default preset | Unassigned; no runtime implementation issue |
+| #176 custom parameter editor / prepared handoff | Implemented and locally verified; PR/CI/owner merge pending | Owner custom-parameter answer; accepted ADR-0018 | `eps_impl`; 217 frontend / 29 browser / 2 source-wheel / 3077 Python checks passed; no source metric evaluation, backend call or persistence |
 | Taurus candidate/sector/suggested-stock discovery | Moved to M10 | M9 criteria handoff; separate M10 feasibility/evidence/budget contracts | Coarse follow-up only; no M9 search implementation |
 | Research storage/jobs/API contract | Candidate planning task | Accepted scope and evidence/screen contracts | Unassigned; no implementation issue or PR |
 
@@ -143,8 +157,8 @@ authorization. Final decomposition follows accepted contracts, not this inventor
 | Approved source field acquisition | RSH901–905, RSH911 | Observation/provider contract; actual per-field/use rights and endpoint schema |
 | Comparability, freshness and conflict evaluation | RSH907–910, RSH917–918, RSH926 | Field registry, dated fixtures, acquisition, freshness/precedence decisions |
 | Shared provider quotas/coalescing | RSH911, X720, X723 | Verified enabled-plan limits, concurrency ownership and accepted retry changes |
-| User criteria configuration/validation | RSH914–917, RSH921, RSH936 | Supported parameter/operator/unit/null/combination contract and approved settings/API/UI persistence boundary |
-| Nonexecuting Taurus handoff | RSH920, RSH923, RSH925–926; ADR-0017 | Accepted criteria definition and exact snapshot/version boundary; no agent/search call in M9 |
+| Custom criteria editor/validation | RSH914–917, RSH921; ADR-0018 | Accepted custom range/text/all-any tab-memory contract; durable settings/API storage remains separate |
+| Nonexecuting prepared Taurus data | RSH920, RSH923, RSH925–926; ADR-0017/0018 | Accepted local version-1 envelope and immutable snapshot; actual M10 input/execution revalidation remains future work |
 | Separately approved known-stock research runs/cancellation | RSH929, RSH931–933 | Known-stock scope, repository, quota and job lifecycle contracts; not a discovery prerequisite |
 | Safe watchlist association/change detection | RSH924, RSH927–928 | Stable identities/runs; canonical dedup and prior/current evidence policy |
 | Opt-in schedules/restart recovery | RSH930–932, RSH936 | Durable runs; timezone/frequency/missed-run policy and typed settings |

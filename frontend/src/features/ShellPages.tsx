@@ -35,6 +35,8 @@ export function SavedObservations() {
 }
 export function OverviewPage() {
   return <>
+    <section className="panel" aria-labelledby="criteria-entry-title"><h2 id="criteria-entry-title">Set your stock criteria</h2>
+      <p>Define your own parameters and ranges. Preparing criteria does not run a search.</p><a href={routeHref("stock-criteria")}>Open Stock criteria</a></section>
     <div className="feature-placeholders">
       <section className="panel" aria-labelledby="recommend-title"><p className="eyebrow">Placeholder / unavailable</p>
         <h2 id="recommend-title">Recommend stock of the day</h2><p>Reserved for future research. No recommendation service is connected.</p></section>

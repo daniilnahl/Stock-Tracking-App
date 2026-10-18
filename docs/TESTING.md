@@ -10,6 +10,20 @@ The goal is to make tests deterministic, meaningful, isolated, and suitable for 
 
 # 1. Test Layers
 
+## Custom stock criteria editor — issue #176
+
+Under [ADR-0018](adr/0018-custom-criteria-editor.md), frontend tests cover custom
+names/text, explicit unit/context, exact signed decimal endpoint strings, range
+ordering/limits, all/any, immutable snapshots, outdated edits, navigation and
+pagehide/reload clearing. Criteria are unevaluated user requests, never provider
+facts. Prove editing/preparing/clearing causes no API/provider/agent request or
+browser persistence. Preserve the existing source/installed-wheel closed asset
+set and actual local launcher profiles; rebuild with `npm run package:dashboard`
+and verify `npm run package:check`. Run unit/type/build/browser and actual
+`npm run test:integration` profiles before the canonical Python suite, avoiding
+concurrent heavy browser/Python runs. Browser credentials/data remain synthetic;
+no live provider/model, private data or real key is needed.
+
 ## Finnhub upcoming-release EPS — issue #166
 
 For [#172](https://github.com/daniilnahl/Stock-Tracking-App/issues/172)'s explicit

@@ -18,8 +18,8 @@ function navigate(hash: string) {
   });
 }
 describe("typed navigation and approved shell", () => {
-  it("has the central three-item navigation and safely rejects unknown routes", () => {
-    expect(navigation.map(item => item.id)).toEqual(["overview", "watchlists", "settings"]);
+  it("has the central navigation and safely rejects unknown routes", () => {
+    expect(navigation.map(item => item.id)).toEqual(["overview", "watchlists", "stock-criteria", "settings"]);
     expect(routeHref("settings")).toBe("#settings");
     expect(resolveRoute("")).toBe("overview");
     expect(resolveRoute("#client-foundation")).toBe("client-foundation");
@@ -31,7 +31,7 @@ describe("typed navigation and approved shell", () => {
     render(<App />);
     expect(screen.getAllByRole("main")).toHaveLength(1);
     expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
-    expect(within(screen.getByRole("navigation")).getAllByRole("link").map(link => link.textContent)).toEqual(["Overview", "Watchlists", "Settings"]);
+    expect(within(screen.getByRole("navigation")).getAllByRole("link").map(link => link.textContent)).toEqual(["Overview", "Watchlists", "Stock criteria", "Settings"]);
     const recommend = screen.getByRole("heading", { name: "Recommend stock of the day" });
     const taurus = screen.getByRole("heading", { name: "Taurus Agents Menu" });
     const cards = screen.getByLabelText("Workspace status");
