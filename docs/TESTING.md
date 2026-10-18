@@ -1,5 +1,10 @@
 # Testing Strategy
 
+**Current evidence:** [implementation status](CURRENT_STATUS.md) links the
+merged M9 dashboard/audit and post-merge CI. Dated commands/results below are
+task-specific records; older future/merge-gate wording does not undo delivered
+capabilities. Default tests remain offline and require no real provider keys.
+
 ## Purpose
 
 This document defines the testing contract for the Stock Tracking App.
@@ -1149,5 +1154,6 @@ sockets bootstrap before network denial. Import/framework and installed TLS CA
 reads remain possible; dotenv discovery is disabled and all credentials are
 synthetic. Existing cold import/help probes and broad access/cancellation/error
 matrices remain independently required. See [M7 exit evidence](milestones/m7-exit-evidence.md)
-for guard exceptions, requirement mapping and pending owner-merge/main-CI gates.
-This audit does not certify live entitlement or milestone completion.
+for guard exceptions and the historical requirement mapping. The audit issue
+is closed and delivered; see [current status](CURRENT_STATUS.md) for technical
+versus administrative milestone state. It does not certify live entitlement.

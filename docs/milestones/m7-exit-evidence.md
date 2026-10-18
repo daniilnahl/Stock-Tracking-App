@@ -1,5 +1,7 @@
 # M7 independent combined exit audit — issue #134
 
+**Current delivery — 2026-10-18:** audit issue #134 is closed and its accepted implementation is delivered. The incomplete/pending notices below describe the original audit snapshot. M7's milestone container remains administratively open with zero open issues; this is separate from technical delivery. See [current status](../CURRENT_STATUS.md).
+
 ## Scope and completion gate
 
 This audit implements verification of accepted ADR-0013 Option A and applicable

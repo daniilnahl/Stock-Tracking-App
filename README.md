@@ -8,10 +8,11 @@ pixel dashboard in monochrome light and dark themes.
 | Interface | Supported capabilities |
 |---|---|
 | CLI | Add, remove, show and refresh saved stocks; graph observed raw historical closes for supported NASDAQ stocks. |
-| Dashboard | Read both saved watchlists, open stored-row details, see the selected list's entry count and choose a theme. |
-| Local API | Read saved watchlists and the typed OpenAPI contract; historical requests have a separate, disabled-by-default rights gate. |
+| Dashboard | Read both saved watchlists and row history where enabled; prepare custom range/text stock criteria; manually request upcoming EPS where enabled; choose a theme. |
+| Local API | Authenticated saved watchlist/history and upcoming-EPS reads, with typed OpenAPI; history and EPS have separate default-disabled activation gates. |
 
-The dashboard and API are read-only. Saved prices have unknown freshness and do
+The dashboard and API do not mutate holdings. Stock criteria are descriptive,
+tab-memory user input; preparation performs no search or API call. Saved prices have unknown freshness and do
 not establish current quotes or currency. Search/add, recommendations and Taurus
 Agents are explicitly unavailable; their [follow-up scope](docs/TO-DO-LIST.md)
 is documented. Live dashboard/API history remains disabled until the separate
@@ -212,16 +213,19 @@ browser profiles are separate; no development proxy bypasses the local API.
 
 ## Design and project evidence
 
-- [Approved SRS](SRS.md) and [architecture decisions](docs/adr/).
+- [Implementation status and documentation index](docs/CURRENT_STATUS.md),
+  [partially accepted SRS](SRS.md) and [architecture decisions](docs/adr/).
 - [Financial calculation definitions](docs/FINANCIAL_CALCULATIONS.md).
 - [Dashboard component guide](frontend/COMPONENTS.md) and [M8 execution plan](docs/milestones/m8-plan.md).
 - [Milestone verification records](docs/milestones/) and the [final M8 audit PR](https://github.com/daniilnahl/Stock-Tracking-App/pull/162).
 - [Contribution and agent policy](AGENTS.md).
 
-The final M8 audit and README follow-up require owner merge and passing main CI
-before milestone closure. Research/AI services, mutations in the browser,
-additional analytics and hosted deployment are outside the accepted dashboard
-scope.
+The M8 audit/README follow-up and M9 criteria/EPS/audit work are merged.
+The [current status](docs/CURRENT_STATUS.md) distinguishes implemented scope,
+administrative milestone state and future work. Taurus search/suggestions,
+browser holdings mutations, additional unapproved analytics and hosted
+deployment remain unavailable. Preparing criteria or reading raw EPS does not
+evaluate criteria or produce a suggested stock.
 
 ## License and acknowledgments
 

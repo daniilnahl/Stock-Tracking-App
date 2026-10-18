@@ -1,5 +1,7 @@
 # M7–M10 proposed SRS: conflict and decision report
 
+**Current acceptance/delivery — 2026-10-18:** M7 and M8 local scopes plus ADR-0015–0018's bounded M9 criteria/EPS capabilities are accepted and delivered. M10 ownership is selected, but Taurus execution remains proposed/unimplemented. The original report below is a dated proposal snapshot, including its original 143 IDs; current SRS also includes AI1031–1032. Its old M8/no-frontend and blanket acceptance gates are not current status. See [implementation status](../CURRENT_STATUS.md) and the SRS approval record.
+
 **Status: PARTIALLY ACCEPTED — M7 under ADR-0013; remaining decisions pending.** Prepared 2026-10-13
 (America/Los_Angeles); repository observations continued on 2026-10-14 UTC.
 **Scoped acceptance update — 2026-10-14:** the owner's direct **"pr merged,

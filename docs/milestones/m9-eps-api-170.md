@@ -1,5 +1,7 @@
 # M9 upcoming-EPS API contract — issue #170
 
+**Current delivery — 2026-10-18:** this is a dated task/research record. The accepted criteria editor and EPS adapter/service/configuration/API/opt-in launcher/dashboard are now merged, and the independent audit is merged with passing main CI. Earlier pending/no-API/no-UI statements apply to their original scope or unapproved extensions. Provider research remains dated; no new entitlement, metric or live call is inferred. See [current implementation status](../CURRENT_STATUS.md).
+
 The owner merged #169 and requested continuation. The adapter and injected
 application service are delivered; public API, production date and quota
 choices remain reserved by ADR-0015. [Issue #170](https://github.com/daniilnahl/Stock-Tracking-App/issues/170)

@@ -1,5 +1,7 @@
 # ADR-0016: Opt-in local upcoming-EPS API
 
+**Current delivery — 2026-10-18:** stages 1–3 are implemented and owner-merged in #179/#181/#183. Dashboard main Foundation 39150626845 and independent audit main Foundation 39150641007 passed. Conditional-sequence wording below records the original proposal, not remaining implementation work. Activation remains opt-in under the documented operating assumptions. See [current status](../CURRENT_STATUS.md).
+
 ## Status and decision requested
 
 **Stage 3 accepted for the bounded manual form — 2026-10-17.** After the

@@ -1,5 +1,12 @@
 # M9 decision brief
 
+**Current disposition — 2026-10-18:** accepted ADR-0015–0018 criteria/EPS work
+and the independent audit are merged, with passing main CI. No additional
+runtime task or product decision was identified for that accepted scope.
+The older broad decision requests below apply only if those future capabilities
+are selected; they do not keep delivered narrow contracts unaccepted.
+See [current status](../CURRENT_STATUS.md) for precise implementation limits.
+
 **EPS dashboard continuation — 2026-10-17:** the owner merged #181 and
 instructed continuation after the dashboard form was identified as next. This
 accepts ADR-0016 stage 3/#182's explicit manual symbol/date form with exact raw

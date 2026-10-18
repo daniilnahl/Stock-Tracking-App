@@ -2,15 +2,22 @@
 
 ## Current capability and scope
 
-The M8 preview is illustrative. The current M7 REST API exposes health,
-schema, saved watchlist reads and exact stored-row history only
-(`src/stock_tracker/api/app.py`). There is **no browser stock-search or add
-endpoint**. `CurrentDataService` already provides candidate resolution and
+The shipped local dashboard has Overview, Watchlists, Stock criteria, Upcoming
+EPS and Settings routes. The REST API exposes health/schema, saved watchlist
+reads, exact stored-row history and authenticated manual upcoming EPS
+(`src/stock_tracker/api/app.py`). History and EPS remain independently disabled
+by default; see [API operations](API_OPERATIONS.md) for explicit launcher flags
+and bounded access. There is **no browser stock-search or add endpoint**.
+`CurrentDataService` already provides candidate resolution and
 in-memory add behavior for the CLI; `WatchlistService` owns local load/save.
 Their presence does not establish an approved HTTP mutation contract.
-ADR-0013 and proposed ADR-0014 scope the dashboard to read-only operations.
+Accepted ADR-0013/0014 retain the dashboard's read-only API boundary;
+[ADR-0016](adr/0016-upcoming-eps-api.md) adds bounded manual EPS and
+[ADR-0018](adr/0018-custom-criteria-editor.md) defines the local criteria editor.
+The [accepted M9 scope audit](milestones/m9-exit-audit-184.md) separates shipped
+behavior from M10 discovery deferrals.
 
-The visible **Search / add stock** control in the preview opens an explanation
+The visible **Search / add stock** control opens an explanation
 of this missing capability. It must not pretend to search or save. The two
 requested panels, **Recommend stock of the day** and **Taurus Agents Menu**,
 are explicitly unavailable placeholders. Their presence authorizes layout
@@ -50,7 +57,7 @@ only, not recommendations, agents, provider activation or new APIs.
 
 ## Frontend — search and add
 
-- [ ] Keep an obvious Search / add stock entry point near the watchlist.
+- [x] Keep an obvious Search / add stock entry point near the watchlist.
   Until an accepted backend is available, activate only an explanation with
   “Unavailable — backend search/add is not implemented”; issue no requests,
   show no fabricated results and expose no enabled save action.
@@ -69,16 +76,25 @@ only, not recommendations, agents, provider activation or new APIs.
   duplicate handling and failure recovery using schema fixtures and separate
   browser E2E. Provide a labeled isolated visual demo with the completed issue.
 
-## Future placeholders — separate backend work
+## Delivered M9 scope and deferred discovery
 
 - [x] **User stock criteria — M9:** following owner-accepted
   [ADR-0017](adr/0017-user-criteria-taurus-discovery.md), let users configure
   custom parameters under [ADR-0018](adr/0018-custom-criteria-editor.md)/#176:
   numeric ranges with explicit user context or text requirements, exact prepared
   snapshot and tab-memory lifecycle. Delivered in owner-merged #177 for #176;
-  post-merge Foundation 39083592809 passed. M9 validates/prepares descriptive criteria without calling a screener or
-  executing a market search. Known-stock data calls remain separate; arbitrary
+  post-merge Foundation 39083592809 passed. M9 validates/prepares descriptive
+  criteria without calling a screener or executing a market search.
+  Known-stock data calls remain separate; arbitrary
   source metric evaluation and durable saving are not implemented by this editor.
+- [x] **Manual upcoming EPS — M9:** the Finnhub Free upcoming-release adapter,
+  service, explicit process-key configuration, bounded opt-in local API and
+  dashboard form are delivered through owner-merged #183 and predecessor work
+  under ADR-0016. Users enter an exact symbol/date window and explicitly read,
+  cancel or clear observations. Exact EPS/null values and source/unknown metadata
+  are displayed; there is no financial comparison, criteria matching, automatic
+  polling or browser provider key. Acquisition stays disabled by default.
+  Owner-merged #185 records the accepted M9 scope audit.
 - [ ] **Recommend stock of the day — M10:** Taurus searches for stocks using
   the M9 user criteria. Candidate/sector discovery and suggested results are
   deferred to M10; any daily cadence, rank/tie-break and no-candidate policy need
@@ -91,10 +107,11 @@ only, not recommendations, agents, provider activation or new APIs.
   cancellation, failure and opinion-display rules. M10 gates still apply where
   AI is involved; no provider/model calls, keys, spending or private holdings
   transmission are authorized by this placeholder.
-- [ ] Frontend keeps both panels visibly marked “Placeholder · unavailable”
-  with concise explanations. Enable future controls only after their backend
-  contracts, scope and verification pass. Keep pixel typography and established
-  monochrome light/dark themes across all states.
+- [x] Frontend keeps both panels visibly marked “Placeholder · unavailable”
+  with concise explanations and the established pixel typography and monochrome
+  light/dark themes.
+- [ ] Enable future discovery/agent controls only after their backend contracts,
+  scope and verification pass. Preserve those presentation conventions.
 
 This checklist records prerequisites; it does not approve mutation semantics,
 new financial rules or future milestone implementation. Decompose approved

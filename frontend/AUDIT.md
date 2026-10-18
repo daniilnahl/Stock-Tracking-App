@@ -1,5 +1,11 @@
 # Independent M8 exit audit — issue #148
 
+This is the historical M8 audit reproduction guide. Current scope as of
+2026-10-18 also includes the shipped criteria editor and manual upcoming EPS,
+with separate contracts/evidence in the
+[accepted M9 scope audit](../docs/milestones/m9-exit-audit-184.md). Original M8
+results do not establish coverage of those later features.
+
 Run the canonical pinned setup from README.md. Use an isolated Python3.12
 environment with `pip install ".[dev]"`; no additional tool/dependency is needed.
 The heavy profiles below must run sequentially, using installed Edge and an
@@ -32,11 +38,13 @@ Explicit wheel captures are labeled synthetic/no-live-data/rights-not-activated,
 contain no password controls or process token in DOM, and stay under ignored
 `test-results/integration`. Automatic trace/video/screenshot/ARIA diagnostics are
 disabled by the existing integration profile. Source/wheel database hashes stay
-unchanged and history rights remain disabled. Controlled chart success is verified
-by existing fixture tests rather than live provider activation.
+unchanged and history/EPS acquisition remain disabled. The current integration
+profile also covers criteria without an API connection and the real EPS form's
+disabled response. Controlled chart/EPS success is verified by synthetic fixture
+tests rather than live provider activation.
 
-The complete requirement matrix, command results, findings and remaining review/
-merge gates are in [M8 evidence](../docs/milestones/m8-exit-evidence.md). Media
+The complete requirement matrix, recorded command results, findings and delivery
+evidence are in [M8 evidence](../docs/milestones/m8-exit-evidence.md). Media
 emulation/CSSOM are bounded checks, not full screen-reader, native zoom or cross-
-browser accessibility certification. Root README is intentionally unchanged by
-this audit; streamlining it is a separate user-requested follow-up.
+browser accessibility certification. The original #148 audit deliberately left
+the root README unchanged; subsequent documentation reconciliation is separate.

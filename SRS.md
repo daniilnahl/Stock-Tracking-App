@@ -10,6 +10,16 @@
 
 ## Approval record
 
+**Delivery reconciliation — 2026-10-18:** this records implementation, not new
+specification acceptance. ADR-0016's dashboard stage is owner-merged in #183 at
+`17bb77f18e5a6d75be19834dee506a19bf89d663` (main Foundation 39150626845 passed).
+The accepted-scope M9 audit is owner-merged in #185 at
+`6c5a3f9b975ebd2b0230c7a8ccb773de982ecf69` (main Foundation 39150641007 passed).
+No missing runtime task was identified within accepted criteria/EPS scope.
+See [current implementation status](docs/CURRENT_STATUS.md) for delivered,
+deferred and administrative states. Remaining proposed requirements, M10
+execution and financial comparisons are not accepted by these merges.
+
 **Upcoming-EPS dashboard — 2026-10-17:** after the dashboard form was identified
 as next, the owner merged #181 and instructed continuation. This accepts
 [ADR-0016](docs/adr/0016-upcoming-eps-api.md) stage 3/#182's bounded explicit
@@ -1052,7 +1062,8 @@ stocktracker analytics risk
 **Current acceptance status — 2026-10-14:** API701–724 and applicable X710–729
 are accepted within ADR-0013 Option A as recorded above. The proposal-status,
 illustrative issue-group and decision-gate wording below retains the original
-review snapshot; unaccepted M8–M10 and out-of-scope decisions remain pending.
+review snapshot. M8 and the M9 slices recorded above are now accepted and
+implemented; remaining unaccepted M9/M10 and out-of-scope decisions remain pending.
 
 ### 23.7.0 Proposal status, interpretation and dependencies
 
@@ -1398,7 +1409,9 @@ privacy, cost enforcement or §4 gates block release.
 
 ### 23.11 Owner acceptance and release gates (proposed)
 
-Acceptance is **PENDING** for this diff and all new architecture choices.
+Acceptance remains **PENDING only for the portions not accepted in the approval
+record and controlling ADRs**. M7, M8 and the bounded M9 criteria/EPS contracts
+are already accepted; their implementation status is tracked separately.
 The [decision report](docs/milestones/m7-m10-srs-review.md) tracks D1–D11 and
 additional contract gaps, verified baseline and external-source limits. Obtain
 explicit acceptance of the specification and relevant ADRs/precise exit

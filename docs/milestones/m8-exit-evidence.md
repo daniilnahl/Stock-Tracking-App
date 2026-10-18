@@ -1,5 +1,7 @@
 # M8 independent exit audit — issue #148
 
+**Current delivery — 2026-10-18:** audit #148 and README follow-up are owner-merged (#162/#163); all M8 issues are closed. The in-progress notices and three-route matrix below are dated M8 evidence. The current dashboard has five routes after M9 criteria/EPS delivery. M8's administrative milestone remains open. See [current status](../CURRENT_STATUS.md).
+
 ## Status and accepted scope
 
 Audit in progress on `codex/148-m8-exit-audit`, based on owner-merged #155 / PR159

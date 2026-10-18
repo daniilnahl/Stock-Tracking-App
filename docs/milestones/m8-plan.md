@@ -1,5 +1,7 @@
 # M8 — Web Dashboard execution plan
 
+**Current delivery — 2026-10-18:** the final audit (#162) and README follow-up (#163) are owner-merged and all M8 issues are closed. Assignments below are dated execution history. The administrative milestone remains open; the dashboard has since gained accepted M9 criteria/EPS pages. See [current status](../CURRENT_STATUS.md).
+
 ## Final audit and README follow-up — 2026-10-16
 
 The owner confirmed PR #159 merged and requested the final push, followed by
