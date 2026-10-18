@@ -94,6 +94,31 @@ test("actual source/wheel launcher serves the closed dashboard and authenticated
     page.on("pageerror", () => { pageError = true; });
     page.on("console", message => { if (/content security|violat|refused to/i.test(message.text())) cspFailure = true; });
     await page.setViewportSize(wheel ? { width: 390, height: 844 } : { width: 1440, height: 1100 });
+    // The criteria editor operates before any connection, with real packaged
+    // assets and no API mocks. This same workflow executes for source and wheel.
+    await page.goto("/#stock-criteria");
+    await page.waitForLoadState("networkidle");
+    const criteriaRequests: string[] = [];
+    const recordCriteriaRequest = (request: { url(): string }) => criteriaRequests.push(request.url());
+    page.on("request", recordCriteriaRequest);
+    await page.getByLabel("Parameter name 1", { exact: true }).fill("Synthetic custom parameter");
+    await page.getByLabel("Units and context 1", { exact: true }).fill("User units and period; no financial evaluation");
+    await page.getByLabel("Minimum 1 (inclusive)", { exact: true }).fill("-0.25");
+    await page.getByLabel("Maximum 1 (inclusive)", { exact: true }).fill("1.250000000000000001");
+    await page.getByRole("button", { name: "Prepare criteria", exact: true }).click();
+    await expect(page.getByRole("heading", { name: "Prepared — Taurus search unavailable", exact: true })).toBeVisible();
+    const preparedCriteria = await page.getByLabel("Prepared criteria snapshot", { exact: true }).textContent();
+    expect(JSON.parse(preparedCriteria!).criteria[0].maximum === "1.250000000000000001").toBe(true);
+    await page.getByRole("link", { name: "Overview", exact: true }).click();
+    await page.getByRole("link", { name: "Stock criteria", exact: true }).click();
+    await expect(page.getByLabel("Prepared criteria snapshot", { exact: true })).toHaveText(preparedCriteria!);
+    await page.getByLabel("Maximum 1 (inclusive)", { exact: true }).fill("9");
+    await expect(page.getByLabel("Outdated criteria snapshot", { exact: true })).toHaveText(preparedCriteria!);
+    expect(criteriaRequests.length === 0 && apiPaths.length === 0).toBe(true);
+    page.off("request", recordCriteriaRequest);
+    await page.reload();
+    await expect(page.getByLabel("Parameter name 1", { exact: true })).toHaveValue("");
+    await expect(page.getByLabel("Prepared criteria snapshot", { exact: true })).toHaveCount(0);
     await page.goto("/#settings");
     let consumed = false;
     // Test-context-only one-shot binding: no credential argument is recorded by

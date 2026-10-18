@@ -73,10 +73,12 @@ only, not recommendations, agents, provider activation or new APIs.
 
 - [ ] **User stock criteria — M9:** following owner-accepted
   [ADR-0017](adr/0017-user-criteria-taurus-discovery.md), let users configure
-  supported parameters. First define exact fields/operators/units/null rules,
-  settings/API/UI and handoff contracts. M9 validates/prepares criteria without
-  calling a screener or executing a market search. Known-stock data calls remain
-  separate. No criteria form is implemented by this checklist.
+  custom parameters under [ADR-0018](adr/0018-custom-criteria-editor.md)/#176:
+  numeric ranges with explicit user context or text requirements, exact prepared
+  snapshot and tab-memory lifecycle. Implementation/verification is tracked on
+  #176. M9 validates/prepares descriptive criteria without calling a screener or
+  executing a market search. Known-stock data calls remain separate; arbitrary
+  source metric evaluation and durable saving are not implemented by this editor.
 - [ ] **Recommend stock of the day — M10:** Taurus searches for stocks using
   the M9 user criteria. Candidate/sector discovery and suggested results are
   deferred to M10; any daily cadence, rank/tie-break and no-candidate policy need

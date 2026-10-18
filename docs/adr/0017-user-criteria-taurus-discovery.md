@@ -30,6 +30,10 @@ unchanged. Optional FINVIZ access is neither assumed nor required by this change
 ## Criteria and handoff boundaries
 
 The user chooses criteria rather than receiving a fixed agent-selected default.
+The owner's subsequent custom-parameter answer and accepted
+[ADR-0018](0018-custom-criteria-editor.md) define a first tab-memory descriptive
+editor. That scoped contract supersedes the fixed-field-list question below for
+the editor only; source-metric evaluation and M10 execution remain separate.
 The supported parameter list, field meanings, operators, units, valid ranges,
 null handling, combinations, persistence/versioning, API and UI design need a
 bounded criteria contract before implementation. No particular metric, default

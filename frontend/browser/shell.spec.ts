@@ -24,7 +24,7 @@ for (const viewport of [{ width: 1440, height: 1100 }, { width: 768, height: 102
       await page.goto("/");
       await expect(page.locator("html")).toHaveAttribute("data-theme", theme);
       await expect(page.getByRole("heading", { name: "Your watchlists, clearly." })).toBeVisible();
-      await expect(page.getByRole("navigation").getByRole("link")).toHaveCount(3);
+      await expect(page.getByRole("navigation").getByRole("link")).toHaveCount(4);
       await expect(page.getByText("Placeholder / unavailable")).toHaveCount(2);
       await page.evaluate(() => document.fonts.ready);
       expect(await page.evaluate(() => document.fonts.check('20px "Stock Pixel"'))).toBe(true);

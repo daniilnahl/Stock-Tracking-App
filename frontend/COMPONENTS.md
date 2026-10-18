@@ -11,7 +11,8 @@ No per-feature brand colors, font CDN, images of text or decorative flicker.
 | --- | --- |
 | `Button` | Native button attributes, children and optional className. Defaults to type button; pass type submit only for an approved form. Native disabled, labels and handlers remain intact. Use ordinary next-action labels or stable toggle labels with an accurate pressed state. |
 | `PageLayout` | title, description, children, optional headingRef. Owns the only main and h1. The shell owns route titles/focus; feature modules provide content rather than another page shell. |
-| `Navigation` | current RouteId or null. Reads only the typed central inventory. The three primary items remain Overview, Watchlists and Settings. Active page uses aria-current plus a double underline; all links remain keyboard accessible. |
+| `Navigation` | current RouteId or null. Reads only the typed central inventory: Overview, Watchlists, Stock criteria and Settings. Active page uses aria-current plus a double underline; all links remain keyboard accessible. |
+| `StockCriteria` | App-owned in-memory state and setter. Edits custom range/text rows, validates exact descriptive input, focuses invalid fields and renders an immutable prepared or outdated preview. No API/provider/agent request or browser persistence. See ADR-0018. |
 | `DataTable<Row>` | caption, readonly columns (id/header/render/optional numeric), readonly rows, rowKey and emptyMessage. Native caption/th/scope semantics; exact text is preserved. A named focusable overflow region and visible horizontal-scroll hint preserve phone access. Caller provides namespace/request-local ordinal keys for actual watchlist rows; never deduplicate by symbol. |
 | `Chart` | title and optional children. Owns a semantic figure/caption; without children shows explicit unavailability. The history feature supplies finite approximate sparse-point geometry, provenance limits and an accompanying exact-value DataTable. The primitive calculates no financial values. |
 | `EmptyState` | title and message rendered as text in a status region. State why data is empty/disconnected/unsupported; do not fabricate values or present unavailable data as zero. |
@@ -45,7 +46,9 @@ The guide components are verified through isolated synthetic tests. There is
 no publicly enabled component playground or demo-price stock list. Stored-row
 history is an explicit protected workflow with the server rights gate preserved.
 The #143 synthetic client check remains separate at
-`#client-foundation`, omitted from the three primary navigation items.
+`#client-foundation`, omitted from primary navigation. The separate
+`#stock-criteria` route is a primary entry under
+[ADR-0018](../docs/adr/0018-custom-criteria-editor.md).
 
 ## Route and theme contracts
 

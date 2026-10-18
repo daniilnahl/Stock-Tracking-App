@@ -1,5 +1,13 @@
 # M9 decision brief
 
+**Custom criteria answer — 2026-10-17:** the owner selected whatever parameter
+names and range values users want. Accepted
+[ADR-0018](../adr/0018-custom-criteria-editor.md) defines #176's nonexecuting
+tab-memory editor: custom names, signed exact ranges with explicit user context,
+text requirements and all/any mode. The older fixed-field-list question below
+is superseded for this descriptive editor. It does not approve evaluation of
+arbitrary financial metrics, a provider mapping, durable storage or agent calls.
+
 **Owner ownership decision — 2026-10-17:** accepted
 [ADR-0017](../adr/0017-user-criteria-taurus-discovery.md) supersedes the original
 M9 screen/daily-selection allocation: M9 lets users configure stock criteria;
@@ -67,7 +75,7 @@ contract but cannot establish rights or satisfy a live-data requirement.
 | --- | --- | --- |
 | M9 acceptance and D11 | Explicitly accept the intended SRS §23.9 scope and informational boundary; identify any deferred exit requirements. | Accept deterministic evidence/filter research only; omit directional model opinions. No full M9 acceptance is inferred from requesting planning. |
 | D5 / RSH901–905 / X717, X727 | Identify the actual FMP plan and permitted fields/uses; provide sanitized applicable entitlement/contract evidence for acquisition, display, storage, automation, retention and report use. No credentials in chat/repo. | Prepare a dated field/use rights matrix from official documentation plus owner entitlement evidence. Unknown rights keep that path disabled. Technical API availability alone is insufficient. |
-| D6 / RSH914–917, RSH921, RSH936 | Define the user-configurable parameters/operators/units/ranges/combinations/null rules, settings/API/UI contract and exact M10 handoff. | M9 configures criteria and performs no candidate discovery. Do not invent a preset, metric, default threshold, weighting or storage schema. Taurus search universe/taxonomy/results belong to M10. |
+| D6 / RSH914–917, RSH921, RSH936 | ADR-0018 now defines the custom range/text editor, explicit context/all-any, exact prepared envelope and tab-memory lifecycle. Backend storage and actual source-metric verification remain future contracts. | M9 prepares descriptive criteria and performs no discovery. A user label is not an approved financial metric, provider field or taxonomy. Taurus interpretation/search/results belong to M10. |
 | FIN-004/005 / RSH915 | For each derived metric or score, approve formula, units, rounding boundary, input dates/periods, currency, zero/missing behavior and worked fixed examples in the financial specification. Even reported fields need an approved semantic registry. | Prefer the fewest fields necessary for the chosen question. No new arithmetic or known-value expectation can be written before that question is selected. |
 | D7 / future M10 suggested-stock policy | Define any daily cadence, market calendar, ranking/tie-break, revision and empty/incomplete-search outcome under the future Taurus contract. | Moved out of M9 exit by ADR-0017. No M9 daily winner is required; do not infer a daily agent schedule or ranking from this reassignment. |
 | D8 / RSH910–912, RSH929–931, RSH936 | Approve separate research storage ownership/location/versioning, retention/backup, job transitions, atomic completion, dedup/concurrency, cancellation, schedule bounds and missed-run/restart behavior. Supply actual plan quota evidence and per-class freshness choices. | Draft this architecture after field/snapshot needs stabilize. Preserve the single migration mechanism and prohibit inferred deletion of user-owned reports. Do not select retention periods, scheduler frequency or quota limits without evidence/approval. |
@@ -92,10 +100,10 @@ remain M10 gates. D5 rights must still cover any proposed non-AI report use.
    delegate isolated branches and independently review tested PRs. Owner merges
    remain required. Approval of one contract does not unlock unrelated gates.
 
-Source priority and M9-criteria/M10-discovery ownership are now selected. The
-next M9 criteria contract defines **supported parameters, operators, units,
-validation and settings/handoff**, together with any applicable field/use
-evidence. Taurus search scope/universe and suggested-result policy are M10
-decisions. These exact schemas/financial semantics are not invented from a broad
-milestone instruction. Existing accepted EPS/configuration capabilities remain
-independently available; no stock-finding engine is an M9 prerequisite.
+Source priority, M9-criteria/M10-discovery ownership and ADR-0018's first custom
+descriptive editor are now selected. #176 implements that editor and local
+prepared data. Future durable saving/backend routes and actual source-metric
+evaluation need separate contracts/evidence. Taurus interpretation, search scope/
+universe and suggested-result policy are M10 decisions. Existing accepted EPS/
+configuration capabilities remain independently available; no stock-finding
+engine is an M9 prerequisite.

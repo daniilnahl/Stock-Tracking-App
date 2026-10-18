@@ -2,13 +2,22 @@
 
 **Version:** 1.2 proposed (approved baseline: 1.1)
 
-**Status:** PARTIALLY ACCEPTED — M7 under ADR-0013; M8 under ADR-0014's read-only scope and approved design revisions; M9's bounded Finnhub upcoming-release EPS observation task under ADR-0015; M9 user-criteria/M10 Taurus discovery ownership under ADR-0017. Remaining M9–M10 and out-of-scope decisions remain proposed. Existing approved requirements remain authoritative.
+**Status:** PARTIALLY ACCEPTED — M7 under ADR-0013; M8 under ADR-0014's read-only scope and approved design revisions; M9's bounded Finnhub upcoming-release EPS task under ADR-0015; M9/M10 discovery ownership under ADR-0017 and the custom descriptive criteria editor under ADR-0018. Remaining M9–M10 and out-of-scope decisions remain proposed. Existing approved requirements remain authoritative.
 
 **Primary implementation language:** Python  
 **Current interface:** Typer CLI  
 **Target:** Production-quality portfolio tracking and analytics application
 
 ## Approval record
+
+**Custom criteria editor — 2026-10-17:** asked for the first parameter list, the
+owner explicitly chose arbitrary user-customized parameters and range values.
+[ADR-0018](docs/adr/0018-custom-criteria-editor.md), #176, accepts the bounded
+tab-memory editor and prepared data-only preview. Parameter names/units describe
+user intent; no financial metric evaluation, source support, Taurus execution,
+backend route or durable persistence is approved. This narrows ADR-0017's former
+field-list question to custom descriptive criteria; its M10 discovery ownership
+and existing financial/evidence restrictions remain intact.
 
 **Criteria/discovery ownership — 2026-10-17:** the owner explicitly directed
 that M9 let users configure stock criteria through different parameters, with
@@ -1226,9 +1235,9 @@ default parameter list, metric, threshold, formula or ranking is approved.
 
 ### 23.9.3 User criteria and future discovery handoff
 
-- **RSH914 — Criteria definitions:** User-configurable supported parameters and explicit values/operators; the typed field/unit/null/combination/versioning contract requires separate review. M9 prepares criteria, not a candidate-search engine.
+- **RSH914 — Criteria definitions:** Under accepted ADR-0018, users define arbitrary descriptive parameter names and inclusive exact numeric ranges with unit/context or textual requirements. The bounded versioned data envelope supports explicit all/any; it does not define actual source metrics or evaluate matches. M9 prepares criteria, not a candidate-search engine.
 - **RSH915 — Math approval:** Every derived financial metric, score, weight, indicator or claimed default threshold MUST have normative semantics and known-value tests in FINANCIAL_CALCULATIONS.md or an approved decision cross-referenced there. No invented valuation/attractiveness heuristics.
-- **RSH916 — User criteria:** M9 UI/API lets users configure, inspect and validate criteria across supported parameters for M10 Taurus search. Unsupported criteria reject clearly; no hidden preset or search is executed. **[DECISION REQUIRED, D6]** Exact parameter/schema/UI/storage contract remains undefined.
+- **RSH916 — User criteria:** ADR-0018's local dashboard editor lets users configure, inspect and validate custom range/text criteria for future M10 Taurus search, without an API call. Unsupported representations and invalid ranges reject clearly; no hidden preset or search. Durable storage, backend criteria endpoints and actual source-metric verification remain separate contracts.
 - **RSH917 — Missing inputs:** Criteria validation and known-stock evidence distinguish missing from zero. M10 must not claim a candidate meets a criterion without its required evidence; this does not require M9 to search or rank candidates.
 - **RSH918 — Cutoff:** Preserve compatible dates and the approved analysis context for known-stock observations. M10 search/candidate cutoff and historical-evaluation rules require their own reviewed contract; no future-evidence/backtest claim follows from M9 criteria preparation.
 - **RSH919 — Sectors:** Sector preferences may be criteria only after their field/taxonomy contract is reviewed. Sector candidate discovery/grouped results belong to M10; M9 has no ranked-sector-result exit requirement.

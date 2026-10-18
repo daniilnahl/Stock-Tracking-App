@@ -1,0 +1,9 @@
+.criteria-rows { display: grid; gap: var(--space-lg); }
+.criteria-row { margin: 0; min-width: 0; padding: var(--space-md); border: 2px solid var(--control-border); }
+.criteria-row legend { padding: 0 var(--space-xs); }
+.criteria-row input, .criteria-row textarea { width: 100%; min-width: 0; }
+.criteria-bounds { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-md); }
+.criteria-preview { white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; border: 2px dashed var(--border); padding: var(--space-md); }
+.criteria-editor .field-error { border-left: 3px solid var(--text); padding-left: var(--space-sm); }
+.criteria-editor [aria-invalid="true"] { border-style: dashed; outline: 1px solid var(--text); }
+@media (max-width: 760px) { .criteria-bounds { grid-template-columns: minmax(0, 1fr); } }
