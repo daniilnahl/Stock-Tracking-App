@@ -4,9 +4,11 @@
 assessment addresses [#191](https://github.com/daniilnahl/Stock-Tracking-App/issues/191)
 in [M10](https://github.com/daniilnahl/Stock-Tracking-App/milestone/11).
 It does not select a framework, accept an ADR, authorize installation or external
-execution, or activate Taurus. One focused assessment session is bounded to
-45 minutes; no model/provider call, credential access, private-data inspection,
-upstream execution, account change or runtime modification is part of this work.
+execution, or activate Taurus. No model/provider call, credential access,
+private-data inspection, upstream execution, account change or runtime
+modification is part of this work. Related M10 assessments:
+[criteria and candidate evidence](m10-criteria-evidence.md) and
+[framework feasibility](m10-framework-feasibility.md).
 
 ## Authority and present evidence
 
@@ -37,6 +39,15 @@ not an AI sandbox or proof of external usage rights:
 These controls need an accepted implementation/isolation ADR and offline proof
 on the supported deployment before any activation. A subprocess, prompt warning,
 Python monkeypatch or model promise alone is insufficient.
+
+Open question for the owner, not a decision of this assessment: the README
+documents native Windows setup (PowerShell virtualenv and user environment
+variables) alongside macOS/Linux, and the tests include native Windows junction
+and reparse-point cases. The identity boundary, refusal of inherited handles,
+and DNS/proxy egress denial proposed below are not demonstrated on that Windows
+deployment. Whether those controls can be enforced there, or only inside a
+container or VM, is unresolved. This assessment does not choose a platform or
+a sandbox mechanism.
 
 1. **Admission and data minimization (AI1005–1008, X716–718).** Keep Taurus
    disabled by default. Require explicit initiation, exact reviewed criteria,
@@ -91,12 +102,19 @@ Python monkeypatch or model promise alone is insufficient.
    no HTML/script execution or automatic remote image/link retrieval. Do not
    publish chain-of-thought. These are layered containment proposals, not a
    guarantee that prompt injection is solved. [OWASP's primary guidance](https://genai.owasp.org/llmrisk/llm01-prompt-injection/)
-   describes indirect input attacks and recommends least privilege and treating
-   model behavior as untrusted; those principles motivate the external broker.
+   (accessed 2026-10-18) describes indirect input attacks and recommends least
+   privilege and treating model behavior as untrusted; those principles motivate
+   the external broker.
 6. **Publication and failure (AI1014/1017/1018/1021/1029).** Validate into a
    bounded staging artifact and publish a completed report atomically only after
-   all mandatory gates pass. Keep partial/failed/cancelled outcomes distinct from
-   no candidates found. Diagnostics allow only non-secret IDs, safe status/error
+   all mandatory gates pass. Keep partial, failed, cancelled and disabled
+   outcomes distinct from no candidates found. SRS AI1015 names lifecycle states
+   including `partial`/`failed`/`cancelled`; AI1032 and §23.10.4 also say
+   `incomplete` (and AI1032 `disabled`) for that distinction from an empty
+   search. The SRS does not pick one of those words. This assessment uses
+   AI1015's `partial` for the unfinished run, and the same labels as the
+   [criteria and candidate evidence proposal](m10-criteria-evidence.md).
+   Diagnostics allow only non-secret IDs, safe status/error
    categories, approved model/settings identifiers, durations and counters;
    never raw prompts, exceptions, request headers, token-bearing URLs, private
    input, sensitive excerpts or indefinite conversational memory. Disabling or
@@ -204,8 +222,5 @@ remains the canonical suite contract.
 | Disk full, publication failure, corrupted output or worker outage | No completed report published from partial text; no core mutation; bounded diagnostic and preserved user reports. |
 | AI absent/disabled/incompatible; exhausted budget | CLI, M7/M8, M9 criteria and accepted EPS paths remain usable; no optional import/config acquisition on core paths. |
 
-The current documentation deliverable requires link/diff review and canonical
-Python, Ruff, configured mypy, pip check and staged hygiene before its PR.
-Historical baseline CI is not a result for this branch. No frontend rebuild or
-browser profile is needed for this Markdown-only diff. Passing those regression
-checks will not prove the proposed AI controls, vendor rights or milestone exit.
+Repository regression checks do not prove the proposed AI controls, vendor
+rights or milestone exit.
