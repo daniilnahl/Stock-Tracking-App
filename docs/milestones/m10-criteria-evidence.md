@@ -14,10 +14,13 @@ model, discovery tool, financial metric or production activation is added.
 
 It inspects repository contracts, implementation and tests. It makes no market,
 model or upstream execution request and requires no installation or credential.
-Related M10 assessments:
-[safety, rights and budgets](m10-safety-assessment.md) and
-[framework feasibility](m10-framework-feasibility.md). A later accepted contract
-must reconcile their rights, budget and isolation decisions before execution.
+Related M10 work: [safety, rights and budgets](m10-safety-assessment.md),
+the [revised M10 plan](m10-plan.md), and the FinRobot reviews
+[#197](https://github.com/daniilnahl/Stock-Tracking-App/issues/197) and
+[#198](https://github.com/daniilnahl/Stock-Tracking-App/issues/198).
+Framework direction is FinRobot, the owner's decision of 2026-10-18; this
+proposal remains framework-independent. A later accepted contract must reconcile
+their rights, budget and isolation decisions before execution.
 
 ## Existing boundary inspected
 
@@ -253,8 +256,11 @@ workflow, permissible predicates and per-metric financial definitions; the
 identity/universe/source/cutoff contract; qualification combination rules;
 evidence/report inventory and validation; and the partial, cancelled, disabled
 and no-candidate policy. Coordinate rights, privacy, budgets, cancellation and
-retention with the [safety assessment](m10-safety-assessment.md) and the
-integration choice with the [framework assessment](m10-framework-feasibility.md).
+retention with the [safety assessment](m10-safety-assessment.md), the selected
+FinRobot adapter review ([#197](https://github.com/daniilnahl/Stock-Tracking-App/issues/197))
+and FinRobot safety applicability
+([#198](https://github.com/daniilnahl/Stock-Tracking-App/issues/198)).
+See the [revised M10 plan](m10-plan.md).
 Durable state, API, UI and production enablement require their own bounded
 contracts and issues. This document does not claim owner acceptance or M10
 completion.
