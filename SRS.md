@@ -10,6 +10,14 @@
 
 ## Approval record
 
+**Upcoming-EPS API — 2026-10-17:** after owner-merging #177, the owner explicitly
+approved ADR-0016 Option A and requested an online test. This accepts #178's
+authenticated, disabled-by-default injected API adapter and one isolated live
+single-symbol smoke through the existing transport/service/API. Production
+composition/flag/budget and the EPS dashboard form remain separate tasks. No
+financial comparison, persistence, candidate discovery or full-M9 approval is
+implied. Live success establishes technical access only at test time.
+
 **Custom criteria editor — 2026-10-17:** asked for the first parameter list, the
 owner explicitly chose arbitrary user-customized parameters and range values.
 [ADR-0018](docs/adr/0018-custom-criteria-editor.md), #176, accepts the bounded
@@ -46,11 +54,12 @@ validate the existing raw observations without live/default activation. The
 remaining exclusions above still apply. Issue-specific gates and accepted
 M0–M8 contracts remain authoritative.
 
-**Next EPS API proposal — 2026-10-16:** PR #169 is owner-merged and its
+**Original EPS API proposal — 2026-10-16:** PR #169 is owner-merged and its
 post-merge CI passed. [ADR-0016](docs/adr/0016-upcoming-eps-api.md), issue #170,
 proposes a disabled-by-default explicit provider-symbol API, date/budget/bounds
-and later activation contract. It remains **proposed** pending explicit owner
-acceptance; this record authorizes no new route, live acquisition or broader M9.
+and later activation contract. It was **proposed** at that time; the 2026-10-17
+approval above supersedes that status for stage 1 and its requested smoke only.
+Production acquisition and broader M9 retain their separate gates.
 
 **Finnhub environment configuration — 2026-10-17:** the owner reported obtaining
 a Finnhub key and explicitly requested loading it from Windows environment

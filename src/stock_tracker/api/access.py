@@ -86,7 +86,7 @@ class AccessBoundary:
                     raise ApiFailure("unauthorized")
             # Future history handler validates the exact paired-date grammar.
             # Fixed routes and unsupported paths cannot accept hidden options.
-            if query and not path.endswith("/history"):
+            if query and not path.endswith("/history") and path != "/api/v1/research/upcoming-eps":
                 raise ApiFailure("invalid_request")
             lengths = values(b"content-length")
             if lengths and (len(lengths) != 1 or not lengths[0] or

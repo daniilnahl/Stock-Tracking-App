@@ -130,6 +130,12 @@ class ProviderRequestError(StockTrackerError):
     _message = "Market-data provider rejected the request."
 
 
+class UpcomingEpsInputError(ProviderRequestError):
+    """Local upcoming-EPS admission failure, distinct from provider rejection."""
+
+    _message = "Upcoming EPS request input is invalid."
+
+
 _RESPONSE_FIELDS = frozenset({
     "symbol", "exchange", "name", "currency", "price", "as_of", "retrieved_at",
     "sector", "country", "market_cap", "day_1", "day_5", "month_1", "month_3",

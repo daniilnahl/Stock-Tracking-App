@@ -1,5 +1,12 @@
 # M9 decision brief
 
+**EPS API approval — 2026-10-17:** the owner explicitly approved ADR-0016
+Option A and requested online verification. #178 implements the injected API
+adapter plus one isolated real single-symbol request. This resolves the API
+contract for stage 1; production composition/budget/use evidence and dashboard
+design remain separate. The previously reported key is available as a Windows
+user variable; no key or vendor response is recorded in this brief.
+
 **Custom criteria answer — 2026-10-17:** the owner selected whatever parameter
 names and range values users want. Accepted
 [ADR-0018](../adr/0018-custom-criteria-editor.md) defines #176's nonexecuting

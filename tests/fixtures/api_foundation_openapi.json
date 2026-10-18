@@ -624,6 +624,197 @@
         "title": "StockResponse",
         "type": "object"
       },
+      "UpcomingEpsObservationResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "accounting_basis": {
+            "const": "non-GAAP",
+            "title": "Accounting Basis",
+            "type": "string"
+          },
+          "currency": {
+            "title": "Currency",
+            "type": "null"
+          },
+          "estimate": {
+            "anyOf": [
+              {
+                "description": "Exact finite Decimal text, including scale/exponent; no float conversion.",
+                "examples": [
+                  "120.000",
+                  "0",
+                  "1E-20"
+                ],
+                "pattern": "^[+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)(?:[eE][+-]?[0-9]+)?$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Estimate"
+          },
+          "fiscal_period_end": {
+            "title": "Fiscal Period End",
+            "type": "null"
+          },
+          "fiscal_quarter": {
+            "maximum": 4,
+            "minimum": 1,
+            "title": "Fiscal Quarter",
+            "type": "integer"
+          },
+          "fiscal_year": {
+            "maximum": 9999,
+            "minimum": 1,
+            "title": "Fiscal Year",
+            "type": "integer"
+          },
+          "provider": {
+            "const": "finnhub",
+            "title": "Provider",
+            "type": "string"
+          },
+          "published_at": {
+            "title": "Published At",
+            "type": "null"
+          },
+          "release_date": {
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+            "title": "Release Date",
+            "type": "string"
+          },
+          "release_session": {
+            "anyOf": [
+              {
+                "enum": [
+                  "bmo",
+                  "amc",
+                  "dmh"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Release Session"
+          },
+          "retrieved_at": {
+            "description": "UTC receipt timestamp; not forecast publication/vintage.",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]{6})?Z$",
+            "title": "Retrieved At",
+            "type": "string"
+          },
+          "share_basis": {
+            "title": "Share Basis",
+            "type": "null"
+          },
+          "source": {
+            "const": "earnings_calendar",
+            "title": "Source",
+            "type": "string"
+          },
+          "source_field": {
+            "const": "epsEstimate",
+            "title": "Source Field",
+            "type": "string"
+          },
+          "symbol": {
+            "title": "Symbol",
+            "type": "string"
+          },
+          "units": {
+            "const": "currency-per-share",
+            "title": "Units",
+            "type": "string"
+          }
+        },
+        "required": [
+          "symbol",
+          "fiscal_year",
+          "fiscal_quarter",
+          "release_date",
+          "release_session",
+          "estimate",
+          "retrieved_at",
+          "provider",
+          "source",
+          "source_field",
+          "accounting_basis",
+          "units",
+          "currency",
+          "share_basis",
+          "published_at",
+          "fiscal_period_end"
+        ],
+        "title": "UpcomingEpsObservationResponse",
+        "type": "object"
+      },
+      "UpcomingEpsResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "analysis_date": {
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+            "title": "Analysis Date",
+            "type": "string"
+          },
+          "coverage": {
+            "const": "not_asserted",
+            "title": "Coverage",
+            "type": "string"
+          },
+          "date_convention": {
+            "const": "utc-reference-day/vendor-date-labels",
+            "title": "Date Convention",
+            "type": "string"
+          },
+          "end": {
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+            "title": "End",
+            "type": "string"
+          },
+          "observation_kind": {
+            "const": "upcoming_release_eps_estimate",
+            "title": "Observation Kind",
+            "type": "string"
+          },
+          "observations": {
+            "items": {
+              "$ref": "#/components/schemas/UpcomingEpsObservationResponse"
+            },
+            "title": "Observations",
+            "type": "array"
+          },
+          "provider": {
+            "const": "finnhub",
+            "title": "Provider",
+            "type": "string"
+          },
+          "provider_symbol": {
+            "title": "Provider Symbol",
+            "type": "string"
+          },
+          "start": {
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+            "title": "Start",
+            "type": "string"
+          }
+        },
+        "required": [
+          "provider",
+          "provider_symbol",
+          "start",
+          "end",
+          "analysis_date",
+          "date_convention",
+          "observation_kind",
+          "coverage",
+          "observations"
+        ],
+        "title": "UpcomingEpsResponse",
+        "type": "object"
+      },
       "WatchlistResponse": {
         "additionalProperties": false,
         "properties": {
@@ -934,6 +1125,14 @@
                       }
                     }
                   },
+                  "eps_disabled": {
+                    "value": {
+                      "error": {
+                        "code": "eps_disabled",
+                        "message": "Upcoming EPS acquisition is disabled."
+                      }
+                    }
+                  },
                   "history_disabled": {
                     "value": {
                       "error": {
@@ -1001,6 +1200,414 @@
           }
         ],
         "summary": "Authenticated static API schema; no application dependency acquisition."
+      }
+    },
+    "/api/v1/research/upcoming-eps": {
+      "get": {
+        "operationId": "upcoming_eps_api_v1_research_upcoming_eps_get",
+        "parameters": [
+          {
+            "description": "Explicit case-sensitive Finnhub symbol; no identity/coverage inference.",
+            "in": "query",
+            "name": "provider_symbol",
+            "required": true,
+            "schema": {
+              "pattern": "^[A-Z0-9][A-Z0-9.-]{0,31}$",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Inclusive date label; at most 92 included dates, strictly after the injected UTC reference day.",
+            "in": "query",
+            "name": "start",
+            "required": true,
+            "schema": {
+              "format": "date",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Inclusive date label; at most 92 included dates, strictly after the injected UTC reference day.",
+            "in": "query",
+            "name": "end",
+            "required": true,
+            "schema": {
+              "format": "date",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "empty": {
+                    "value": {
+                      "analysis_date": "2026-10-17",
+                      "coverage": "not_asserted",
+                      "date_convention": "utc-reference-day/vendor-date-labels",
+                      "end": "2026-11-16",
+                      "observation_kind": "upcoming_release_eps_estimate",
+                      "observations": [],
+                      "provider": "finnhub",
+                      "provider_symbol": "TEST",
+                      "start": "2026-10-18"
+                    }
+                  },
+                  "observation": {
+                    "value": {
+                      "analysis_date": "2026-10-17",
+                      "coverage": "not_asserted",
+                      "date_convention": "utc-reference-day/vendor-date-labels",
+                      "end": "2026-11-16",
+                      "observation_kind": "upcoming_release_eps_estimate",
+                      "observations": [
+                        {
+                          "accounting_basis": "non-GAAP",
+                          "estimate": "1.250000000000000001",
+                          "fiscal_quarter": 3,
+                          "fiscal_year": 2026,
+                          "provider": "finnhub",
+                          "release_date": "2026-10-20",
+                          "release_session": "amc",
+                          "retrieved_at": "2026-10-17T20:00:00Z",
+                          "source": "earnings_calendar",
+                          "source_field": "epsEstimate",
+                          "symbol": "TEST",
+                          "units": "currency-per-share"
+                        }
+                      ],
+                      "provider": "finnhub",
+                      "provider_symbol": "TEST",
+                      "start": "2026-10-18"
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "host_invalid": {
+                    "value": {
+                      "error": {
+                        "code": "host_invalid",
+                        "message": "Host is not allowed."
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Fixed safe failure."
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "unauthorized": {
+                    "value": {
+                      "error": {
+                        "code": "unauthorized",
+                        "message": "Authentication is required."
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Fixed safe failure."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "origin_forbidden": {
+                    "value": {
+                      "error": {
+                        "code": "origin_forbidden",
+                        "message": "Browser origins are not allowed."
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Fixed safe failure."
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "not_found": {
+                    "value": {
+                      "error": {
+                        "code": "not_found",
+                        "message": "Resource was not found."
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Fixed safe failure."
+          },
+          "405": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "method_not_allowed": {
+                    "value": {
+                      "error": {
+                        "code": "method_not_allowed",
+                        "message": "Method is not allowed."
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Fixed safe failure."
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "legacy_state_present": {
+                    "value": {
+                      "error": {
+                        "code": "legacy_state_present",
+                        "message": "Legacy state requires an explicit safe transition."
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Fixed safe failure."
+          },
+          "414": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "request_too_large": {
+                    "value": {
+                      "error": {
+                        "code": "request_too_large",
+                        "message": "Request target exceeds the supported size."
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Fixed safe failure."
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "invalid_request": {
+                    "value": {
+                      "error": {
+                        "code": "invalid_request",
+                        "message": "Request input is invalid."
+                      }
+                    }
+                  },
+                  "invalid_ticker": {
+                    "value": {
+                      "error": {
+                        "code": "invalid_ticker",
+                        "message": "Ticker input is invalid."
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Fixed safe failure."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "provider_rate_limited": {
+                    "value": {
+                      "error": {
+                        "code": "provider_rate_limited",
+                        "message": "Market-data rate limit reached."
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Fixed safe failure."
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "internal_error": {
+                    "value": {
+                      "error": {
+                        "code": "internal_error",
+                        "message": "The operation failed."
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Fixed safe failure."
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "provider_response_invalid": {
+                    "value": {
+                      "error": {
+                        "code": "provider_response_invalid",
+                        "message": "Market-data response is invalid."
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Fixed safe failure."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "api_busy": {
+                    "value": {
+                      "error": {
+                        "code": "api_busy",
+                        "message": "API operation capacity is unavailable."
+                      }
+                    }
+                  },
+                  "eps_disabled": {
+                    "value": {
+                      "error": {
+                        "code": "eps_disabled",
+                        "message": "Upcoming EPS acquisition is disabled."
+                      }
+                    }
+                  },
+                  "history_disabled": {
+                    "value": {
+                      "error": {
+                        "code": "history_disabled",
+                        "message": "Historical acquisition is disabled."
+                      }
+                    }
+                  },
+                  "market_data_unavailable": {
+                    "value": {
+                      "error": {
+                        "code": "market_data_unavailable",
+                        "message": "Market data is unavailable."
+                      }
+                    }
+                  },
+                  "provider_unavailable": {
+                    "value": {
+                      "error": {
+                        "code": "provider_unavailable",
+                        "message": "Market-data provider is unavailable."
+                      }
+                    }
+                  },
+                  "response_too_large": {
+                    "value": {
+                      "error": {
+                        "code": "response_too_large",
+                        "message": "Response exceeds the supported size."
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Fixed safe failure."
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "provider_timeout": {
+                    "value": {
+                      "error": {
+                        "code": "provider_timeout",
+                        "message": "Market-data request timed out."
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Fixed safe failure."
+          }
+        },
+        "security": [
+          {
+            "LocalBearer": []
+          }
+        ],
+        "summary": "Explicit upcoming non-GAAP EPS observations; disabled by default; coverage not asserted."
       }
     },
     "/api/v1/watchlists/{namespace}": {
@@ -1274,6 +1881,14 @@
                       "error": {
                         "code": "api_busy",
                         "message": "API operation capacity is unavailable."
+                      }
+                    }
+                  },
+                  "eps_disabled": {
+                    "value": {
+                      "error": {
+                        "code": "eps_disabled",
+                        "message": "Upcoming EPS acquisition is disabled."
                       }
                     }
                   },
@@ -1673,6 +2288,14 @@
                       }
                     }
                   },
+                  "eps_disabled": {
+                    "value": {
+                      "error": {
+                        "code": "eps_disabled",
+                        "message": "Upcoming EPS acquisition is disabled."
+                      }
+                    }
+                  },
                   "history_disabled": {
                     "value": {
                       "error": {
@@ -1996,6 +2619,14 @@
                       "error": {
                         "code": "api_busy",
                         "message": "API operation capacity is unavailable."
+                      }
+                    }
+                  },
+                  "eps_disabled": {
+                    "value": {
+                      "error": {
+                        "code": "eps_disabled",
+                        "message": "Upcoming EPS acquisition is disabled."
                       }
                     }
                   },

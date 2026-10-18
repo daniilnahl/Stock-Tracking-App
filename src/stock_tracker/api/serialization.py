@@ -7,6 +7,7 @@ from stock_tracker.domain import DomainValidationError, PositionSnapshot, Stock
 from stock_tracker.exceptions import MarketDataUnavailableError, ProviderResponseError
 from stock_tracker.services.history_policy import validated_raw_bars
 from stock_tracker.services.models import HistoryView, WatchlistView, validated_record
+from stock_tracker.services.eps import UpcomingEpsView
 
 from .context import ApiServices
 from .errors import ApiFailure
@@ -102,4 +103,31 @@ def history_payload(view: HistoryView, *, ordinal: int, services: ApiServices):
                   "open": decimal_text(bar.open), "high": decimal_text(bar.high),
                   "low": decimal_text(bar.low), "close": decimal_text(bar.close),
                   "adjusted_close": None, "volume": bar.volume} for bar in bars],
+    }
+
+
+def upcoming_eps_payload(view: UpcomingEpsView, *, symbol: str, start: date, end: date):
+    if type(view) is not UpcomingEpsView:
+        raise ApiFailure("internal_error")
+    try:
+        UpcomingEpsView.__post_init__(view)
+        if (view.symbol, view.start, view.end) != (symbol, start, end):
+            raise ApiFailure("internal_error")
+    except (ProviderResponseError, AttributeError):
+        raise ApiFailure("internal_error") from None
+    return {
+        "provider": "finnhub", "provider_symbol": view.symbol,
+        "start": view.start.isoformat(), "end": view.end.isoformat(), "analysis_date": view.analysis_date.isoformat(),
+        "date_convention": "utc-reference-day/vendor-date-labels",
+        "observation_kind": "upcoming_release_eps_estimate", "coverage": "not_asserted",
+        "observations": [{
+            "symbol": item.symbol, "fiscal_year": item.fiscal_year, "fiscal_quarter": item.fiscal_quarter,
+            "release_date": item.release_date.isoformat(), "release_session": item.release_session,
+            "estimate": decimal_text(item.estimate),
+            "retrieved_at": item.retrieved_at.isoformat().removesuffix("+00:00") + "Z",
+            **{name: getattr(item, name) for name in (
+                "provider", "source", "source_field", "accounting_basis", "units", "currency",
+                "share_basis", "published_at", "fiscal_period_end",
+            )},
+        } for item in view.observations],
     }

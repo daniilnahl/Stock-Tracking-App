@@ -3,6 +3,7 @@
 from datetime import date
 import re
 from typing import Annotated
+from urllib.parse import parse_qsl
 
 from fastapi import FastAPI, Path, Request
 from fastapi.exceptions import RequestValidationError
@@ -16,11 +17,22 @@ from .access import AccessBoundary, validate_token
 from .context import Admission, ApiServices, run_data_operation
 from .errors import ApiFailure, ERRORS, error_code, record_failure
 from .json_response import BoundedJSONResponse, error_response
-from .schemas import ErrorResponse, HealthResponse, HistoryResponse, WatchlistResponse
-from .serialization import history_payload, watchlist_payload
+from .schemas import ErrorResponse, HealthResponse, HistoryResponse, WatchlistResponse, UpcomingEpsResponse
+from .serialization import history_payload, watchlist_payload, upcoming_eps_payload
 
 
 PROTECTED_OPENAPI = {"security": [{"LocalBearer": []}]}
+EPS_EXAMPLE = {
+    "provider": "finnhub", "provider_symbol": "TEST", "start": "2026-10-18", "end": "2026-11-16",
+    "analysis_date": "2026-10-17", "date_convention": "utc-reference-day/vendor-date-labels",
+    "observation_kind": "upcoming_release_eps_estimate", "coverage": "not_asserted",
+    "observations": [{"symbol": "TEST", "fiscal_year": 2026, "fiscal_quarter": 3,
+                      "release_date": "2026-10-20", "release_session": "amc",
+                      "estimate": "1.250000000000000001", "retrieved_at": "2026-10-17T20:00:00Z",
+                      "provider": "finnhub", "source": "earnings_calendar", "source_field": "epsEstimate",
+                      "accounting_basis": "non-GAAP", "units": "currency-per-share", "currency": None,
+                      "share_basis": None, "published_at": None, "fiscal_period_end": None}],
+}
 
 
 def error_documents():
@@ -175,6 +187,50 @@ def create_app(*, token: str | None = None, services: ApiServices | None = None,
 
         return await run_data_operation(app, operation, history=True)
 
+    @app.get("/api/v1/research/upcoming-eps", response_model=UpcomingEpsResponse,
+             responses={**error_documents(), 200: {"content": {"application/json": {"examples": {
+                 "observation": {"value": EPS_EXAMPLE},
+                 "empty": {"value": {**EPS_EXAMPLE, "observations": []}},
+             }}}}}, openapi_extra={**PROTECTED_OPENAPI, "parameters": [
+                 {"name": "provider_symbol", "in": "query", "required": True,
+                  "schema": {"type": "string", "pattern": "^[A-Z0-9][A-Z0-9.-]{0,31}$"},
+                  "description": "Explicit case-sensitive Finnhub symbol; no identity/coverage inference."},
+                 *[{"name": name, "in": "query", "required": True,
+                    "schema": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$", "format": "date"},
+                    "description": "Inclusive date label; at most 92 included dates, strictly after the injected UTC reference day."} for name in ("start", "end")],
+             ]}, summary="Explicit upcoming non-GAAP EPS observations; disabled by default; coverage not asserted.")
+    async def upcoming_eps(request: Request):
+        try:
+            query = request.scope.get("query_string", b"").decode("ascii")
+            if re.search(r"%(?![0-9A-Fa-f]{2})", query):
+                raise ValueError()
+            pairs = parse_qsl(query, keep_blank_values=True, strict_parsing=True, encoding="utf-8", errors="strict")
+            if len(pairs) != 3 or {key for key, value in pairs} != {"provider_symbol", "start", "end"}:
+                raise ValueError()
+            values = dict(pairs)
+            symbol = values["provider_symbol"]
+            if re.fullmatch(r"[A-Z0-9][A-Z0-9.-]{0,31}", symbol, re.ASCII) is None:
+                raise ValueError()
+            if any(re.fullmatch(r"[0-9]{4}-[0-9]{2}-[0-9]{2}", values[name], re.ASCII) is None for name in ("start", "end")):
+                raise ValueError()
+            start, end = date.fromisoformat(values["start"]), date.fromisoformat(values["end"])
+            if not 0 <= (end - start).days <= 91:
+                raise ValueError()
+        except (ValueError, UnicodeError):
+            raise ApiFailure("invalid_request") from None
+        services = app.state.api_services
+        if not services.upcoming_eps_enabled:
+            raise ApiFailure("eps_disabled")
+
+        def operation():
+            service = services.upcoming_eps
+            if service is None:
+                raise ApiFailure("internal_error")
+            view = service.upcoming_eps(symbol, start=start, end=end)
+            return upcoming_eps_payload(view, symbol=symbol, start=start, end=end)
+
+        return await run_data_operation(app, operation, eps=True)
+
     default_openapi = app.openapi
 
     def documented_openapi():
@@ -187,6 +243,9 @@ def create_app(*, token: str | None = None, services: ApiServices | None = None,
         volume = document["components"]["schemas"]["BarResponse"]["properties"]["volume"]["anyOf"]
         integer = next(branch for branch in volume if branch.get("type") == "integer")
         integer["minimum"], integer["maximum"] = 0, 9223372036854775807
+        for name, minimum, maximum in (("fiscal_year", 1, 9999), ("fiscal_quarter", 1, 4)):
+            field = document["components"]["schemas"]["UpcomingEpsObservationResponse"]["properties"][name]
+            field["minimum"], field["maximum"] = minimum, maximum
         document.setdefault("components", {}).setdefault("securitySchemes", {})["LocalBearer"] = {
             "type": "http", "scheme": "bearer",
             "description": "Operator-supplied local token; never a provider credential. Exactly one Authorization header.",

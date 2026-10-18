@@ -26,6 +26,19 @@ no live provider/model, private data or real key is needed.
 
 ## Finnhub upcoming-release EPS — issue #166
 
+For [#178](https://github.com/daniilnahl/Stock-Tracking-App/issues/178), verify the
+injected API's exact query admission, default-disabled dependencies, exact
+projection/provenance/request matching, safe error distinction and EPS/shared
+cancellation lifetime, alongside existing service/API/access/schema/source-wheel
+checks. Keep fixed clocks, synthetic credentials and fake providers in pytest.
+The owner's separately authorized one-symbol native live smoke is manual only:
+read the process Finnhub key privately, issue at most one bounded request through
+transport/service/injected API, and report only safe status/parsing/counts. No
+raw payload, observation or credential belongs in fixtures/logs/docs. A missing
+or refused key/entitlement records an unverified or failed live result; offline
+success cannot substitute for live access. No automatic live CI, retry, startup
+probe or production acquisition is added.
+
 For [#172](https://github.com/daniilnahl/Stock-Tracking-App/issues/172)'s explicit
 environment loader, run `python -m pytest tests/test_finnhub_configuration.py
 tests/test_configuration_security.py -v`. All keys are synthetic; tests isolate
