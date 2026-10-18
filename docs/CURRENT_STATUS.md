@@ -8,17 +8,22 @@ This is a delivery assessment, not new approval of proposed requirements.
 `3b3df5b2f43f1f8df00f88b76714385a865516be` and successful main Foundation
 [39151805497](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/39151805497),
 the owner requested concurrent issue work for M10. The
-[parallel feasibility plan](milestones/m10-plan.md) starts three independent
-static/offline assessments, each with its own issue, branch/worktree and PR.
-Assessment PRs [#193](https://github.com/daniilnahl/Stock-Tracking-App/pull/193),
-[#194](https://github.com/daniilnahl/Stock-Tracking-App/pull/194) and
-[#195](https://github.com/daniilnahl/Stock-Tracking-App/pull/195) are published
-after independent review and canonical local checks. Native dependencies block
+[parallel feasibility plan](milestones/m10-plan.md) records three independent
+static/offline assessments. After owner merge of those assessments, the
+feasibility record is
+[criteria and candidate evidence](milestones/m10-criteria-evidence.md)
+([#193](https://github.com/daniilnahl/Stock-Tracking-App/pull/193)),
+[safety, rights and budgets](milestones/m10-safety-assessment.md)
+([#194](https://github.com/daniilnahl/Stock-Tracking-App/pull/194)) and
+[framework feasibility](milestones/m10-framework-feasibility.md)
+([#195](https://github.com/daniilnahl/Stock-Tracking-App/pull/195)).
 [#192](https://github.com/daniilnahl/Stock-Tracking-App/issues/192)'s proposed
-feasibility ADR until assessment owner merges and required CI pass.
+feasibility ADR stays blocked until those merges and required CI have completed.
 Taurus runtime/search remains unavailable; feasibility findings, owner decisions
 and accepted implementation contracts are still required. The reconciliation
-snapshot and verification below retain their original #186 context.
+snapshot below keeps its original #186 context. Issue
+[#186](https://github.com/daniilnahl/Stock-Tracking-App/issues/186) closed as
+completed on 2026-10-18.
 
 ## Is everything implemented?
 
@@ -70,12 +75,13 @@ No live provider or model request was made for this reconciliation.
   merged at `6c5a3f9b975ebd2b0230c7a8ccb773de982ecf69`;
   [main Foundation 39150641007](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/39150641007) passed.
 - Required M9 delivery/audit issues #164/166/168/170/172/174/176/178/180/182/184
-  are closed. This documentation issue #186 is the current open M9 task; its
-  own review/CI/owner merge remains separate. No missing runtime task was found
+  and #186 are closed. #186 closed as completed on 2026-10-18; it is not an open
+  M9 task. No missing runtime task was found
   in the accepted scope by the implementation inspection or independent audit.
 - GitHub milestones M0/M2–M6 are closed. M1/M7/M8 remain administratively open
   with zero open issues; their delivered technical scope is distinct from that
-  container state. M9 remains open for this reconciliation. No milestone was
+  container state. The M9 milestone container remains administratively open with
+  no open issues; the #186 reconciliation is closed. No milestone was
   closed by this task, and no full-roadmap completion is claimed.
 
 Prior dashboard-head checks passed 273 frontend, 31 browser, two real source/wheel
