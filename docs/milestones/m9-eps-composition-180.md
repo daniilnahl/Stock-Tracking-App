@@ -1,5 +1,7 @@
 # Opt-in EPS launcher and budget — issue #180
 
+**Current delivery — 2026-10-18:** this is a dated task/research record. The accepted criteria editor and EPS adapter/service/configuration/API/opt-in launcher/dashboard are now merged, and the independent audit is merged with passing main CI. Earlier pending/no-API/no-UI statements apply to their original scope or unapproved extensions. Provider research remains dated; no new entitlement, metric or live call is inferred. See [current implementation status](../CURRENT_STATUS.md).
+
 The owner merged #179 at `e7f4647f393f423f8ac3243c804ae82ed25e9cec`;
 post-merge Foundation 39094106222 passed. The owner requested continuation and
 confirmed personal non-business use with exclusive relevant Finnhub account

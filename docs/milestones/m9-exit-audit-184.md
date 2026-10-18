@@ -1,5 +1,15 @@
 # M9 accepted-scope exit audit — issue #184
 
+**Delivered update — 2026-10-18:** the original open/unmerged snapshot below is
+superseded. #183 merged at `17bb77f18e5a6d75be19834dee506a19bf89d663`, with main
+Foundation 39150626845 passed. This audit merged in #185 at
+`6c5a3f9b975ebd2b0230c7a8ccb773de982ecf69`, with main Foundation 39150641007
+passed; #182/#184 are closed. Audit exact-head Foundation 39150284915 passed all
+five jobs. No missing accepted runtime task was found. #186 is the current
+documentation reconciliation; its merge/CI and administrative closure remain
+separate. See [current status](../CURRENT_STATUS.md). Original evidence and
+verification results below are retained as dated history.
+
 ## Finding — 2026-10-18
 
 The accepted criteria and EPS contracts have no identified missing runtime

@@ -1,5 +1,7 @@
 # Custom stock criteria editor — issue #176
 
+**Current delivery — 2026-10-18:** this is a dated task/research record. The accepted criteria editor and EPS adapter/service/configuration/API/opt-in launcher/dashboard are now merged, and the independent audit is merged with passing main CI. Earlier pending/no-API/no-UI statements apply to their original scope or unapproved extensions. Provider research remains dated; no new entitlement, metric or live call is inferred. See [current implementation status](../CURRENT_STATUS.md).
+
 Owner-merged #175 accepts M9 criteria/M10 Taurus discovery ownership. Asked
 which parameters to support, the owner explicitly chose arbitrary customized
 parameters and range values. [Issue #176](https://github.com/daniilnahl/Stock-Tracking-App/issues/176)

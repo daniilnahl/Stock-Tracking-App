@@ -1,5 +1,7 @@
 # M9: Finnhub free-tier EPS feasibility
 
+**Current delivery — 2026-10-18:** this is a dated task/research record. The accepted criteria editor and EPS adapter/service/configuration/API/opt-in launcher/dashboard are now merged, and the independent audit is merged with passing main CI. Earlier pending/no-API/no-UI statements apply to their original scope or unapproved extensions. Provider research remains dated; no new entitlement, metric or live call is inferred. See [current implementation status](../CURRENT_STATUS.md).
+
 **Checked:** 2026-10-16 (America/Los_Angeles). **Status:** research only.
 The owner requires EPS and requested evaluation of Finnhub's free tier after
 confirming no paid subscriptions. Parent: [#164](https://github.com/daniilnahl/Stock-Tracking-App/issues/164),

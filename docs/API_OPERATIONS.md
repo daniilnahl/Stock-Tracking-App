@@ -1,5 +1,11 @@
 # Local REST operation — issue #133
 
+**Current delivery — 2026-10-18:** the manual Upcoming EPS dashboard and local
+opt-in acquisition described here are merged and verified. The Stock criteria
+page independently prepares custom data without a request; it does not search
+or evaluate metrics. See [implementation status](CURRENT_STATUS.md) for delivered
+scope and deferred features. The history rights gate is independent of EPS.
+
 ## Optional packaged dashboard — issues #142/#155
 
 Append `--dashboard` to the existing four-path invocation to serve the packaged

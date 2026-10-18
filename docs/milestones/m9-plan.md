@@ -1,5 +1,18 @@
 # M9 — Automated Stock Research planning
 
+## Current implementation — 2026-10-18
+
+Accepted criteria/EPS scope and the independent audit are delivered. PR #183
+merged at `17bb77f18e5a6d75be19834dee506a19bf89d663`, with main Foundation
+39150626845 passed; #185 merged at `6c5a3f9b975ebd2b0230c7a8ccb773de982ecf69`,
+with main Foundation 39150641007 passed. Required issues through #184 are closed.
+[#186](https://github.com/daniilnahl/Stock-Tracking-App/issues/186) reconciles the
+documentation and confirms no missing runtime task in the accepted scope.
+See [current status](../CURRENT_STATUS.md) for implementation, explicit future
+scope and administrative milestone state. Earlier stage narratives below are
+dated history; they do not reopen already satisfied gates or approve broader
+proposed research. The current documentation task's merge/CI remains separate.
+
 ## Current manual EPS dashboard — 2026-10-17
 
 The owner merged #181 at `3af4db73d734453737e956819ef232c4c9197fdd`;
@@ -166,15 +179,17 @@ dated, comparable, rights-cleared research qualification.
 
 | Issue / objective | Status | Dependency | Assigned agent / PR / review |
 | --- | --- | --- | --- |
-| [#164](https://github.com/daniilnahl/Stock-Tracking-App/issues/164): readiness, decision brief and conditional dependency plan | Planning documents reviewed and locally verified; owner product decisions pending | Current request authorizes planning | Master; `m9_analysis` independent review passed; publication/current PR tracked on #164 |
+| [#164](https://github.com/daniilnahl/Stock-Tracking-App/issues/164): readiness, decision brief and conditional dependency plan | Closed; bounded accepted work delivered in the issues below | Broader proposed decisions remain conditional future scope | Master; independent review passed |
 | #166: Finnhub Free upcoming-release EPS contract/adapter | Owner-merged; post-merge CI passed | Narrow owner-selected reported-data scope | `eps_impl`; PR #167; independent review passed |
 | #168: injected upcoming-EPS application service | Owner-merged #169; main CI passed | #166 merged; ADR-0015 service addendum | `eps_impl`; complete independent review passed; 3045 full tests passed |
-| #170: opt-in EPS API/composition contract | Stage 1 accepted for #178; later composition remains gated | #168 merged; explicit API/isolated-smoke approval; account/use evidence gates production composition | Master; `m9_analysis` independent review |
-| Provider/field/use rights contract for live activation | Candidate planning task | Owner source/entitlement evidence; dated official documentation review | Unassigned; no live activation issue or PR |
+| #170: opt-in EPS API/composition contract | Closed; stages 1–3 accepted and implemented in #178/#180/#182 | Dated technical smoke and personal/exclusive-quota assumptions recorded | Master; independent review passed |
+| Additional provider/field/use contracts | Conditional future planning only | New source/field entitlement evidence; not a remaining approved EPS implementation task | Unassigned; no new activation implied |
 | #176 custom parameter editor / prepared handoff | Owner-merged #177; main CI passed | Owner custom-parameter answer; accepted ADR-0018 | `eps_impl`; 217 frontend / 29 browser / 2 source-wheel / 3077 Python checks passed; no source metric evaluation, backend call or persistence |
 | #178 injected upcoming-EPS API / isolated live verification | Owner-merged #179; main CI passed | Explicit ADR-0016 Option A and online smoke approval; #177 merged and main CI passed | `eps_impl`; 3151 Python / 217 frontend / 29 browser / 2 source-wheel checks passed; one real Finnhub/API request passed |
 | #180 opt-in EPS launcher / composition / budget | Owner-merged #181; main CI passed | #179 merged and main CI passed; owner personal-use/exclusive-quota confirmation | `eps_impl`; 3178 Python / 217 frontend / 29 browser / 2 source-wheel checks passed; no new live call or persistence |
-| #182 manual upcoming-EPS dashboard | Implemented and locally verified; PR/CI/owner merge pending | #181 merged and main CI passed; owner continuation after identifying dashboard form as next | `eps_impl`; 3178 Python / 273 frontend / 31 browser / 2 source-wheel checks passed; exact sourced observations, no backend changes or search |
+| #182 manual upcoming-EPS dashboard | Closed; owner-merged #183; main CI passed | Accepted ADR-0016 stage 3 | `eps_impl`; 3178 Python / 273 frontend / 31 browser / 2 source-wheel checks passed; exact sourced observations |
+| #184 accepted-scope exit audit | Closed; owner-merged #185; main CI passed | Accepted delivery evidence and independent review | No missing accepted runtime task; no broad roadmap completion claim |
+| #186 documentation reconciliation | In progress | #183/#185 merged and main CI passed | Master/frontend documentation review; canonical verification pending |
 | Taurus candidate/sector/suggested-stock discovery | Moved to M10 | M9 criteria handoff; separate M10 feasibility/evidence/budget contracts | Coarse follow-up only; no M9 search implementation |
 | Research storage/jobs/API contract | Candidate planning task | Accepted scope and evidence/screen contracts | Unassigned; no implementation issue or PR |
 
@@ -230,7 +245,9 @@ validated user criteria and an inspectable nonexecuting M10 handoff, permitted
 known-stock data and any separately approved watchlist/settings scope, independent
 review, required issue closure, owner merges and passing CI. A market screener,
 ranked sector results and daily stock winner are explicitly not M9 exit gates.
-No milestone completion claim is possible while remaining contracts are unresolved.
+Unapproved future contracts do not automatically block exit of the accepted
+criteria/EPS scope. Required delivery is now merged/audited; this documentation
+task's merge/CI and administrative milestone closure remain separate.
 
 ## Current verification
 
@@ -271,8 +288,7 @@ Past M8 results do not substitute for this branch's checks.
 accepted criteria/EPS slices, mapping source, tests and delivery evidence.
 No missing runtime feature was identified; the prepared criteria preview already
 supplies the nonexecuting M10 boundary. Broader proposed research is not
-automatically required work. PR #183 currently reports open/unmerged through both
-GitHub connector and REST, despite the owner's merge report; its exact-head CI
-passed. Final exit remains pending its actual merge/main CI, this audit's
-review/merge and required issue closure. No milestone closure, new product
+automatically required work. The original snapshot saw #183 open; it and the
+audit #185 have since merged with passing main CI. #186 updates that delivery
+state across documentation. No administrative milestone closure, new product
 acceptance or M10 execution is inferred.

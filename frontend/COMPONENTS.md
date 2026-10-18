@@ -1,4 +1,9 @@
-# Shared dashboard components — issues #144/#146
+# Shared dashboard components
+
+Current scope — 2026-10-18: the five primary routes include the shipped criteria
+editor and manual upcoming-EPS form. See the
+[accepted M9 scope audit](../docs/milestones/m9-exit-audit-184.md) and historical
+[M8 evidence](../docs/milestones/m8-exit-evidence.md) for their separate boundaries.
 
 The local all-text Stock Pixel font, semantic CSS tokens, square controls and
 hard shadows apply to every component. Light is the default; the centrally
@@ -40,7 +45,8 @@ policy is defined by these generic primitives.
 
 The shell shows truthful session/status limits; Watchlists displays explicit
 saved-read results and their safe lifecycle states. Exact research
-and agent placeholder titles remain above the three status cards; their labels
+and agent placeholder titles remain above the three status cards, following
+the criteria and EPS entry links; their labels
 do not enable a service. Search/add toggles an explanation and a fixed safe
 GitHub source-document link. It issues no request and offers no save operation.
 The guide components are verified through isolated synthetic tests. There is
@@ -49,7 +55,8 @@ history is an explicit protected workflow with the server rights gate preserved.
 The #143 synthetic client check remains separate at
 `#client-foundation`, omitted from primary navigation. The separate
 `#stock-criteria` route is a primary entry under
-[ADR-0018](../docs/adr/0018-custom-criteria-editor.md).
+[ADR-0018](../docs/adr/0018-custom-criteria-editor.md); `#upcoming-eps` is a primary
+entry under [ADR-0016](../docs/adr/0016-upcoming-eps-api.md).
 
 ## Route and theme contracts
 
@@ -66,6 +73,11 @@ Blocked reads/writes keep a usable page theme and announce that persistence
 is unavailable. Only localStorage events can sync the preference across tabs;
 sessionStorage/other keys are ignored. No token/private response or route is
 persisted. Appearance controls do not claim to configure any server behavior.
+
+Criteria draft/prepared state stays in App memory across navigation and clears
+on reload/pagehide or explicit clear. EPS edits/cancel and session resets
+invalidate results; route departure, explicit clear and pagehide/reload also
+clear the draft. Neither feature is persisted.
 
 Issue #152 adds a separate masked connection form, backed by one App-owned client
 and shared memory snapshot. The native password field is uncontrolled; the whole
@@ -104,7 +116,8 @@ the transient retry button. All protected operations use the shared client.
 semantics, approved placeholder order, disclosure safety, exact text/duplicate
 rows and escaped external strings, empty/error/group/field/chart semantics,
 theme defaults/persistence/invalid preferences/storage failures/cross-tab area
-isolation, and the unchanged precise-client tests.
+isolation, criteria validation/preparation/outdated snapshots and EPS exact
+decoding, fixed safe API errors, cancellation and late-response suppression.
 
 The separate installed-Edge browser profile exercises production assets under
 the existing loopback fixture/CSP. It covers light/dark desktop/tablet/phone,
@@ -112,5 +125,8 @@ keyboard skip/navigation/back/settings, local-font loading, overflow regions,
 literal Decimal/int64 display, blocked storage and reduced motion. It calculates
 contrast from actual computed palette tokens: body/muted text at least 4.5:1
 and focus/control borders at least 3:1 against both backgrounds/surfaces.
-These bounded checks do not certify a full screen-reader audit, every possible
-content length, a production service-backed workflow or the M8 exit criteria.
+These fixture checks alone do not establish production service integration.
+The separate source/installed-wheel profile exercises the real local launcher,
+criteria without API access and the default-disabled EPS form response, alongside
+saved-data workflows. Recorded M8/M9 evidence is linked above. These bounded
+checks do not certify a full screen-reader audit or every possible content length.

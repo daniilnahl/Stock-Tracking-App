@@ -1,5 +1,7 @@
 # M9 injected upcoming-EPS service — issue #168
 
+**Current delivery — 2026-10-18:** this is a dated task/research record. The accepted criteria editor and EPS adapter/service/configuration/API/opt-in launcher/dashboard are now merged, and the independent audit is merged with passing main CI. Earlier pending/no-API/no-UI statements apply to their original scope or unapproved extensions. Provider research remains dated; no new entitlement, metric or live call is inferred. See [current implementation status](../CURRENT_STATUS.md).
+
 [Issue #168](https://github.com/daniilnahl/Stock-Tracking-App/issues/168) follows
 owner-merged #166/#167 and the owner's instruction to continue. The accepted
 contract is [ADR-0015's service addendum](../adr/0015-finnhub-upcoming-eps.md),

@@ -1,5 +1,11 @@
 # Manual upcoming-EPS dashboard — issue #182
 
+**Delivered — 2026-10-18:** owner-merged #183 at
+`17bb77f18e5a6d75be19834dee506a19bf89d663`; main Foundation 39150626845 passed.
+#182 is closed. Exact-head Foundation 39098471335 also passed all five jobs.
+The pending publication statements below are the original task snapshot.
+See [current status](../CURRENT_STATUS.md) for the merged audit and scope limits.
+
 The owner merged #181 at `3af4db73d734453737e956819ef232c4c9197fdd`;
 post-merge Foundation 39097470838 passed. After the dashboard form was identified
 as next, the owner instructed continuation. [ADR-0016](../adr/0016-upcoming-eps-api.md)

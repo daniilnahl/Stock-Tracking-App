@@ -1,5 +1,7 @@
 # M7 — REST API execution plan
 
+**Current delivery — 2026-10-18:** accepted M7 implementation and audit issues are closed. Execution assignments and pending gates below are historical planning snapshots. M7's administrative milestone remains open with zero open issues. See [current status](../CURRENT_STATUS.md).
+
 ## Authority and current state — 2026-10-13
 
 **Acceptance update — 2026-10-14:** the owner directly instructed **"pr merged,

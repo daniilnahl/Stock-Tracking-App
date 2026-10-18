@@ -1,5 +1,7 @@
 # ADR-0015: Scoped Finnhub Free upcoming-release EPS observations
 
+**Current delivery — 2026-10-18:** the adapter/service/configuration and later ADR-0016 API, opt-in launcher and manual dashboard are merged. Earlier no-live/API/UI statements below bound their original tasks; later accepted stages supply those capabilities. Observation semantics and comparison prohibitions remain unchanged. See [current status](../CURRENT_STATUS.md).
+
 ## Status and authorization
 
 Accepted for this bounded provider-observation task, 2026-10-16. The owner

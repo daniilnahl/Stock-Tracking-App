@@ -1,4 +1,10 @@
-# Local packaged dashboard — issues #143–147/#152/#155
+# Local packaged dashboard
+
+Current scope — 2026-10-18: the shipped dashboard includes saved-data reads,
+custom stock criteria and manual upcoming EPS. See the
+[accepted M9 scope audit](../docs/milestones/m9-exit-audit-184.md) for completion
+evidence and M10 deferrals. The dated implementation records below retain their
+original verification results; their then-pending gates are historical.
 
 ## Manual upcoming EPS — issue #182
 
@@ -7,7 +13,10 @@ stage 3 and the existing local bearer session. Enter an explicit Finnhub symbol
 and inclusive ISO start/end dates, then manually request observations. Fields
 start blank; the browser chooses no current-day/window default, looks up no
 stock and performs no polling or retry. The server owns its UTC future cutoff
-and opt-in flag/budget; provider credentials remain backend-only.
+and opt-in flag/budget; provider credentials remain backend-only. Launcher flags,
+`FINNHUB_API_KEY` inheritance and bounded request/cooldown behavior are documented
+in [API operations](../docs/API_OPERATIONS.md). EPS is disabled by default;
+`--dashboard --enable-upcoming-eps` explicitly enables this local workflow.
 
 The client validates the generated schema, exact request association, calendar/
 receipt labels, ordered unique periods and provenance before publishing.
@@ -17,8 +26,7 @@ provider source and receipt-time limits. Empty results assert no complete
 coverage. Editing, clear, cancellation or leaving the route removes earlier
 results; draft/results are not retained across route departure or reload.
 Existing session-wide authorization/disconnect clearing remains in force.
-No financial comparison, criteria matching, storage, backend change or further
-live request is part of this frontend task.
+No financial comparison, criteria matching or persistence is implemented.
 
 ## Custom stock criteria — issue #176
 
@@ -45,8 +53,10 @@ supports explicit read/reload of both saved namespaces through that same session
 saved observations never claim live-price freshness. Stored-row detail re-reads
 before selection, with explicit sparse raw history and an exact-value table.
 Overview counts only the current validated saved namespace (#147). The deliberately
-packaged dashboard and real source/wheel launcher integration are #155; the final
-independent milestone audit remains #148.
+packaged dashboard and real source/wheel launcher integration are #155; the
+completed M8 audit is recorded in
+[M8 evidence](../docs/milestones/m8-exit-evidence.md). The accepted M9 additions
+have their separate scope audit linked above.
 The #143 **synthetic client
 foundation demo** is preserved separately at `#client-foundation`. See the
 [component guide](COMPONENTS.md) for inputs, navigation and theme contracts.
@@ -104,13 +114,16 @@ run `npm run test:integration`. It uses the existing canonical `.venv` Python
 offline into an ignored task-local target, and verifies source then wheel using
 the real production launcher/composition at fixed `127.0.0.1:8000`. An occupied
 port fails without stopping its listener; cleanup terminates only the owned child.
-History rights remain disabled. Temporary real SQLite has explicitly synthetic
+History and upcoming-EPS acquisition remain disabled in this test profile.
+Temporary real SQLite has explicitly synthetic
 duplicate/null/zero/precise rows in both namespaces; no real DB or provider is used.
 No `page.route` API mocks or test server replaces actual application requests.
 
 The profile verifies exact source/wheel served bytes, closed routes, unchanged CSP,
 actual local font, authenticated saved/detail/overview flows and safe disabled
-history. SQLite hashes remain unchanged and cache/legacy paths stay absent.
+history/EPS responses. It also exercises criteria preparation without a token or
+API request, navigation/reload lifecycle and the real EPS form's disabled route.
+SQLite hashes remain unchanged and cache/legacy paths stay absent.
 Credentials are randomly generated at runtime and passed only through the child
 environment and a test-context one-shot binding into the transient masked field.
 No production hook is added. Field/DOM/output/path diagnostics use booleans; raw
@@ -150,11 +163,12 @@ Official compatibility/support references checked 2026-10-14:
 ## Schema and exact numbers
 
 `npm run generate` derives readonly contracts, runtime schemas and fixed
-error/status/message contracts from the reviewed M7 snapshot at
+error/status/message contracts from the reviewed local API snapshot, including
+the accepted upcoming-EPS extension, at
 `../tests/fixtures/api_foundation_openapi.json`. `schema:check` compares the
 entire deterministic result and source hash, normalizing CRLF/LF for portable checks. Review schema changes rather
 than regenerating blindly. The dependency-free generator supports only the
-schema keywords actually used by M7 and fails on unknown constructs.
+reviewed schema subset and fails on unknown constructs.
 
 **Browser prerequisite:** native JSON.parse reviver `context.source` support
 is required. The client probes this before retaining a credential and before
@@ -167,18 +181,22 @@ wrapper. Runtime schema validation accepts only original unsigned canonical
 integer lexemes for integer fields, rejects wrong JSON types and overflow,
 and returns volume as bigint. The generated int64 maximum comes from the
 original schema lexeme `9223372036854775807`, never a rounded JS literal.
-Ordinals alone become Number after proving they are safe nonnegative integers.
-Decimal fields remain exact strings including scale/exponents. No new metric,
-rounding or chart projection is performed. Zero and null remain distinct.
+Bounded integer metadata (ordinals and fiscal year/quarter) becomes Number only
+after exact integer/range validation. Decimal fields remain exact strings
+including scale/exponents. The decoder performs no financial arithmetic or
+rounding. Zero and null remain distinct.
 Objects/arrays are strictly validated and frozen before publication. Additional
 checks bind namespace/ordered ordinals and history Stock/ordinal/date range/
-ordered sparse bars. Unknown currency, freshness and provenance stay unknown.
+ordered sparse bars. EPS checks bind the exact symbol/date request, real calendar
+dates and UTC receipt, at most 128 rows, ordered unique fiscal periods and fixed
+source/unknown metadata. Unknown currency, freshness and provenance stay unknown.
 This validates the approved wire contract without duplicating domain arithmetic.
 
 ## Native client lifecycle
 
 `ApiClient` exposes connect/disconnect, immutable getSnapshot/subscribe,
-loadWatchlist, selectRow and loadHistory. Features consume this single layer.
+loadWatchlist, selectRow, clearSelection, loadHistory, loadUpcomingEps and
+clearUpcomingEps. Features consume this single layer.
 `connect` accepts only the existing API token grammar and exact fixed local
 origins; the token remains in a private field and Authorization headers.
 Outside its transient masked entry field, do not put it in DOM text/attributes,
@@ -193,11 +211,17 @@ clears every private view even if its body is malformed. Other API errors
 must match generated fixed status/code/message triples; raw errors and server
 text never become diagnostics. There is no automatic retry or stale fallback.
 
-Identical pending requests share one transport. Each consumer can cancel;
+Identical pending watchlist/history requests share one transport. Each consumer can cancel;
 the transport aborts when its last consumer leaves. Disconnect, reconnect,
 namespace changes, list reload and history-range supersession abort obsolete
 work and suppress ignored late results using controller/session/selection
 checks. A failed reload removes old values instead of declaring them current.
+
+Each explicit EPS read supersedes earlier EPS work, including an identical query.
+Edits/cancel/clear/route departure invalidate its revision and abort pending work;
+session/revision checks suppress late responses. Clearing EPS retains the
+configured connection and saved list. Authorization failure or disconnect clears
+private data across the shared session.
 
 selectRow always re-reads the list and compares its exact Stock fields/ordinal
 to the requested row. Missing/changed rows clear selection and require a new
@@ -335,7 +359,8 @@ require a browser or access the network.
 The profile verifies desktop/phone layouts, actual local pixel-font loading,
 keyboard activation, exact displayed strings, safe error/clear behavior,
 no implicit private API request and the unsupported-parser warning. Explicit
-watchlist workflows use intercepted synthetic responses only. Screenshots are in
+watchlist/history/EPS workflows use intercepted synthetic responses only; criteria
+preparation needs no API. Screenshots are in
 ignored test-results. This is bounded foundation evidence, not a full WCAG,
 theme, production API or installed-wheel browser audit.
 

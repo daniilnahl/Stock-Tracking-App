@@ -1,5 +1,16 @@
 # REST foundation, saved views and stored history - issues #130-132
 
+**Current extension — 2026-10-18:** the merged M9 adapter also registers
+authenticated GET `/api/v1/research/upcoming-eps`. `ApiServices` includes
+`upcoming_eps` and default-false `upcoming_eps_enabled`; the shared admission
+boundary permits one EPS operation within four total operations, independently
+of the one-history limit. `run_data_operation(..., eps=True)` owns that slot.
+Generated schemas and `upcoming_eps_payload` preserve exact estimates and
+provenance. The normal launcher supplies the separately opt-in lazy provider
+and budget. See [API operations](API_OPERATIONS.md)
+and [current status](CURRENT_STATUS.md). The M7 foundation description below
+records its original, still-supported routes and contracts.
+
 Accepted [ADR-0013](adr/0013-local-read-only-rest-api.md) defines the M7
 contract. This foundation implements injectable transport infrastructure,
 serialization and safety boundaries. It registers GET `/health`,

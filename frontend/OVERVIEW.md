@@ -1,5 +1,13 @@
 # Supported overview — issue #147
 
+Current scope — 2026-10-18: the packaged dashboard has five primary routes.
+Overview links to the shipped Stock criteria editor and Upcoming EPS form before
+the reserved panels and status cards. These links make no automatic request.
+See [the frontend guide](README.md) and
+[accepted M9 scope audit](../docs/milestones/m9-exit-audit-184.md). Taurus discovery
+and recommendations remain deferred to M10. The dated #147 results below are
+historical evidence for the original overview scope.
+
 The Overview reads the existing App-owned client snapshot. It creates no client,
 collects no credential, calls no API and stores no additional preference. Theme
 and connection controls continue to use the unchanged #144/#152 implementations.
@@ -21,15 +29,17 @@ valuation, return, risk calculation, analytics route or extra endpoint.
 
 The exact two future-feature panels remain above the same three cards.
 Search/add keeps its explanation and fixed source-document link; no request or
-save action is enabled. Recommendation/agent services and live history remain
-unavailable under their separate acceptance and rights gates.
+save action is enabled. Recommendation/agent services remain unavailable.
+Stored-row history and manual upcoming EPS use their separate default-disabled
+launcher gates; Overview activates neither workflow nor provider access.
 
 ## Contracts and files
 
 - `src/features/OverviewSummary.tsx`: one shared success-evidence gate and the
   three cards, using existing palette/type/spacing/accessibility tokens.
-- `src/features/ShellPages.tsx`: Overview wiring and the existing panel's scope
-  text/navigation. Settings and SearchDisclosure behavior remain unchanged.
+- `src/features/ShellPages.tsx`: Overview wiring, criteria/EPS entry links and
+  the existing panel's scope text/navigation. Settings and SearchDisclosure
+  behavior remain unchanged.
 - `tests/overview.test.tsx`: both namespaces, duplicate-inclusive count, known
   empty zero, precise scope, unsafe-name escaping, unavailable/reset states,
   pending cancellation and no automatic fetch/storage.
@@ -55,7 +65,10 @@ the masked control before leaving Settings; captures contain no credential
 field. Trace, video and automatic failure screenshots remain disabled. The demo
 banner explicitly identifies synthetic data. No live API/provider/user state,
 financial evidence, installed dashboard integration or full WCAG/M8 completion
-is inferred from this bounded demonstration. Distribution remains #155/#148.
+is inferred from this original #147 demonstration. The later real source/wheel
+integration and completed M8 audit are recorded in
+[M8 evidence](../docs/milestones/m8-exit-evidence.md); current M9 coverage has its
+separate audit linked above.
 
 ## Implementation verification — 2026-10-15
 
