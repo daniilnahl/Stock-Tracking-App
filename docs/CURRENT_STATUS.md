@@ -4,6 +4,22 @@ Verified 2026-10-18 for [#186](https://github.com/daniilnahl/Stock-Tracking-App/
 from merged main `6c5a3f9b975ebd2b0230c7a8ccb773de982ecf69`.
 This is a delivery assessment, not new approval of proposed requirements.
 
+**M10 starting phase — 2026-10-18:** after owner merge of #187 at
+`3b3df5b2f43f1f8df00f88b76714385a865516be` and successful main Foundation
+[39151805497](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/39151805497),
+the owner requested concurrent issue work for M10. The
+[parallel feasibility plan](milestones/m10-plan.md) starts three independent
+static/offline assessments, each with its own issue, branch/worktree and PR.
+Assessment PRs [#193](https://github.com/daniilnahl/Stock-Tracking-App/pull/193),
+[#194](https://github.com/daniilnahl/Stock-Tracking-App/pull/194) and
+[#195](https://github.com/daniilnahl/Stock-Tracking-App/pull/195) are published
+after independent review and canonical local checks. Native dependencies block
+[#192](https://github.com/daniilnahl/Stock-Tracking-App/issues/192)'s proposed
+feasibility ADR until assessment owner merges and required CI pass.
+Taurus runtime/search remains unavailable; feasibility findings, owner decisions
+and accepted implementation contracts are still required. The reconciliation
+snapshot and verification below retain their original #186 context.
+
 ## Is everything implemented?
 
 **No missing runtime requirement was identified within the accepted M0–M8 and

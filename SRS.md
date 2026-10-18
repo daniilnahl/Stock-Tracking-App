@@ -10,6 +10,16 @@
 
 ## Approval record
 
+**M10 start — 2026-10-18:** the owner requested starting Milestone 10 with
+multiple agents able to work on different issues concurrently. This authorizes
+the [parallel feasibility plan](docs/milestones/m10-plan.md): bounded static/offline
+framework, criteria/evidence and safety/rights/budget assessments. These produce
+reviewable proposals; they do not select a framework, accept production
+contracts, authorize upstream installation/execution or paid/model/provider
+runs, or complete M10. The existing §23.10 feasibility-first sequence and
+ADR-0017/0018 boundaries remain in force. Implementation follows separately
+reviewed and accepted precise contracts.
+
 **Delivery reconciliation — 2026-10-18:** this records implementation, not new
 specification acceptance. ADR-0016's dashboard stage is owner-merged in #183 at
 `17bb77f18e5a6d75be19834dee506a19bf89d663` (main Foundation 39150626845 passed).
