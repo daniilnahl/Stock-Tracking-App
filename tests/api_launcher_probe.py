@@ -20,7 +20,7 @@ from api_foundation_probe import denied, DeniedEnvironment, DeniedOutput, forbid
 _configuration = None
 
 
-def guarded_launch_configuration(*, dashboard=False):
+def guarded_launch_configuration(*, dashboard=False, upcoming_eps=False):
     """Only synthetic process-token lookup and native path metadata may occur."""
     from stock_tracker.api.configuration import load_api_configuration
     original_import = builtins.__import__
@@ -65,7 +65,7 @@ def guarded_launch_configuration(*, dashboard=False):
                 pass
             else:
                 raise AssertionError("A launch configuration denial control failed")
-        return load_api_configuration(enable_dashboard=dashboard, **{name: str(Path.cwd() / name) for name in
+        return load_api_configuration(enable_dashboard=dashboard, enable_upcoming_eps=upcoming_eps, **{name: str(Path.cwd() / name) for name in
             ("database", "history_cache", "menu_legacy", "evaluation_legacy")})
 
 
@@ -85,14 +85,15 @@ async def help_exercise(create_app):
         else:
             raise AssertionError("Help did not exit")
     help_text = output.getvalue()
-    assert all(option in help_text for option in ("--database", "--history-cache", "--menu-legacy", "--evaluation-legacy", "--enable-history", "--dashboard"))
+    assert all(option in help_text for option in ("--database", "--history-cache", "--menu-legacy", "--evaluation-legacy", "--enable-history", "--enable-upcoming-eps", "--dashboard"))
     assert "127.0.0.1:8000" in help_text
 
 
 async def composition_exercise(create_app):
     from stock_tracker.api import composition
     config = _configuration
-    instance = composition.create_local_app(config)
+    with patch.object(composition, "monotonic", lambda: 0.0):
+        instance = composition.create_local_app(config)
     diagnostics = []
     class Capture(logging.Handler):
         def emit(self, record):
@@ -118,6 +119,21 @@ async def composition_exercise(create_app):
         if path.endswith("history"):
             assert payload["error"]["code"] == "history_disabled"
     assert diagnostics == ["API operation failed: history_disabled"]
+    scope.update(path="/api/v1/research/upcoming-eps", raw_path=b"/api/v1/research/upcoming-eps",
+                 query_string=b"provider_symbol=TEST&start=2026-10-18&end=2026-10-31")
+    sent = []
+    from datetime import datetime, timezone
+    class Clock:
+        @classmethod
+        def now(cls, zone):
+            assert zone is timezone.utc
+            return datetime(2026, 10, 17, tzinfo=timezone.utc)
+    with patch.object(composition, "datetime", Clock):
+        await instance(scope, receive, send)
+    assert sent[0]["status"] == (429 if config.enable_upcoming_eps else 503)
+    expected = "eps_rate_limited" if config.enable_upcoming_eps else "eps_disabled"
+    payload = json.loads(b"".join(message.get("body", b"") for message in sent))
+    assert payload["error"]["code"] == expected
 
 
 if __name__ == "__main__":
@@ -129,4 +145,6 @@ if __name__ == "__main__":
     _configuration = guarded_launch_configuration()
     main(sys.argv[1], composition_exercise)
     _configuration = guarded_launch_configuration(dashboard=True)
+    main(sys.argv[1], composition_exercise)
+    _configuration = guarded_launch_configuration(upcoming_eps=True)
     main(sys.argv[1], composition_exercise)

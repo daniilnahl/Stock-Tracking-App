@@ -1,5 +1,12 @@
 # M9 decision brief
 
+**EPS composition confirmation — 2026-10-17:** following owner merge of #179
+and passing main CI, the owner confirmed personal non-business use and exclusive
+relevant Finnhub account quota. Together with the successful prior live calendar
+test, this accepts ADR-0016 stage 2/#180: opt-in launcher, lazy process key/native
+provider and local rolling budget. The dashboard form, shared-account use and
+broader research remain separate. No new live request is part of this task.
+
 **EPS API approval — 2026-10-17:** the owner explicitly approved ADR-0016
 Option A and requested online verification. #178 implements the injected API
 adapter plus one isolated real single-symbol request. This resolves the API

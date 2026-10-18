@@ -10,6 +10,14 @@
 
 ## Approval record
 
+**Upcoming-EPS launcher — 2026-10-17:** the owner merged #179, requested
+continuation, and confirmed personal non-business use and exclusive relevant
+Finnhub account quota. Together with the successful prior calendar smoke, this
+accepts [ADR-0016](docs/adr/0016-upcoming-eps-api.md) stage 2/#180: opt-in
+`--enable-upcoming-eps`, lazy process-only key loading, UTC reference day, bounded
+native provider and application-local budget. No default acquisition, new live
+probe, persistence, dashboard form or broader M9/M10 acceptance follows.
+
 **Upcoming-EPS API — 2026-10-17:** after owner-merging #177, the owner explicitly
 approved ADR-0016 Option A and requested an online test. This accepts #178's
 authenticated, disabled-by-default injected API adapter and one isolated live

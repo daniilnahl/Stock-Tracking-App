@@ -24,6 +24,7 @@ FORBIDDEN = (
     "rich", "typer", "matplotlib", "stock_tracker.providers.factory",
     "stock_tracker.providers.fmp", "stock_tracker.providers.transport", "stock_tracker.providers.history_cache",
     "stock_tracker.providers.finnhub", "stock_tracker.providers.finnhub_transport",
+    "stock_tracker.providers.finnhub_factory",
     "stock_tracker.persistence.connection", "stock_tracker.persistence.sqlite_watchlists",
     "stock_tracker.persistence.sqlite_portfolios", "stock_tracker.persistence.migrations",
     "stock_tracker.persistence.history_cache", "stock_tracker.persistence.transfer",

@@ -61,6 +61,7 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
         "stock_tracker/providers/transport.py", "stock_tracker/providers/fmp.py",
         "stock_tracker/providers/eps.py", "stock_tracker/providers/finnhub.py",
         "stock_tracker/providers/finnhub_transport.py",
+        "stock_tracker/providers/finnhub_factory.py",
         "stock_tracker/providers/factory.py",
         "stock_tracker/providers/history_cache.py",
         "stock_tracker/persistence/__init__.py", "stock_tracker/persistence/models.py",
@@ -86,6 +87,7 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
         "stock_tracker/api/configuration.py", "stock_tracker/api/composition.py",
         "stock_tracker/api/launcher.py", "stock_tracker/api/__main__.py",
         "stock_tracker/api/dashboard.py",
+        "stock_tracker/api/eps_budget.py",
         "stock_tracker/api/dashboard_assets/index.html",
         "stock_tracker/api/dashboard_assets/hosting.css",
         "stock_tracker/api/dashboard_assets/hosting.js",
@@ -129,6 +131,13 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
     )
     assert eps_service.returncode == 0, eps_service.stderr
     assert eps_service.stdout == eps_service.stderr == ""
+
+    eps_composition = subprocess.run(
+        [sys.executable, "-I", "-B", str(ROOT / "tests/eps_composition_probe.py"), str(installed)],
+        cwd=tmp_path, env=environment, capture_output=True, text=True, timeout=30,
+    )
+    assert eps_composition.returncode == 0, eps_composition.stderr
+    assert eps_composition.stdout == eps_composition.stderr == ""
 
     api_foundation = subprocess.run(
         [sys.executable, "-I", "-B", str(ROOT / "tests/api_foundation_probe.py"), str(installed)],
