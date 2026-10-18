@@ -6,9 +6,13 @@ in [M10](https://github.com/daniilnahl/Stock-Tracking-App/milestone/11).
 It does not select a framework, accept an ADR, authorize installation or external
 execution, or activate Taurus. No model/provider call, credential access,
 private-data inspection, upstream execution, account change or runtime
-modification is part of this work. Related M10 assessments:
-[criteria and candidate evidence](m10-criteria-evidence.md) and
-[framework feasibility](m10-framework-feasibility.md).
+modification is part of this work. Related M10 work:
+[criteria and candidate evidence](m10-criteria-evidence.md),
+the [revised M10 plan](m10-plan.md), and the FinRobot reviews
+[#197](https://github.com/daniilnahl/Stock-Tracking-App/issues/197) and
+[#198](https://github.com/daniilnahl/Stock-Tracking-App/issues/198).
+The owner selected FinRobot on 2026-10-18. This document does not re-decide
+that selection; FinRobot-specific mapping is #198.
 
 ## Authority and present evidence
 
@@ -40,14 +44,10 @@ These controls need an accepted implementation/isolation ADR and offline proof
 on the supported deployment before any activation. A subprocess, prompt warning,
 Python monkeypatch or model promise alone is insufficient.
 
-Open question for the owner, not a decision of this assessment: the README
-documents native Windows setup (PowerShell virtualenv and user environment
-variables) alongside macOS/Linux, and the tests include native Windows junction
-and reparse-point cases. The identity boundary, refusal of inherited handles,
-and DNS/proxy egress denial proposed below are not demonstrated on that Windows
-deployment. Whether those controls can be enforced there, or only inside a
-container or VM, is unresolved. This assessment does not choose a platform or
-a sandbox mechanism.
+Owner decision, 2026-10-18: the M10 agent sandbox is Linux-only. On Windows it
+runs through WSL or Docker. Native Windows sandboxing is not required. The
+identity, handle and egress controls below apply to that Linux deployment.
+The app's existing Windows setup and tests remain for the tracker itself.
 
 1. **Admission and data minimization (AI1005–1008, X716–718).** Keep Taurus
    disabled by default. Require explicit initiation, exact reviewed criteria,
@@ -178,7 +178,7 @@ is the required decision matrix, not a legal conclusion or permission grant.
 
 | Use / boundary | Evidence required before activation | Present finding / owner decision |
 | --- | --- | --- |
-| Framework code | Pinned version, actual license/NOTICE and dependencies, redistribution obligations, default telemetry/tools/storage inventory | Candidate-independent; unverified. No framework selected or installed. |
+| Framework code | Pinned version, actual license/NOTICE and dependencies, redistribution obligations, default telemetry/tools/storage inventory | Framework direction: FinRobot (owner decision, 2026-10-18). Component, revision, NOTICE/trademark and dependency specifics are pending [#197](https://github.com/daniilnahl/Stock-Tracking-App/issues/197) and [#198](https://github.com/daniilnahl/Stock-Tracking-App/issues/198). Nothing installed. |
 | Public evidence acquisition | Dated official source terms and contract for exact endpoint/fields, automation, quota, attribution and account entitlement | Unknown; existing quote/history/EPS access does not transfer rights to discovery. No scraping authorization. |
 | Sending evidence to model/tools | Both data-source permission for third-party processing and exact recipient model/tool terms, subprocessors, regions and purpose; account-specific restrictions | Unknown; transmission blocked. Local processing also needs applicable data/model permission. |
 | Provider retention/training | Actual endpoint/account logging, abuse monitoring, training, deletion, backup and subprocessors policy; any required contractual opt-out | Unknown; neither zero retention nor no-training inferred. Consent cannot override unavailable source rights. |
