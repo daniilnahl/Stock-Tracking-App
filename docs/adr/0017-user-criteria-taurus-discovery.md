@@ -2,8 +2,8 @@
 
 ## Status and authorization
 
-**Framework direction addendum — 2026-10-18:** the owner subsequently excluded
-TauricResearch/TradingAgents and selected FinRobot for M10's agent workflow.
+**Framework direction addendum — the owner's decision of 2026-10-18:** the owner
+excluded TauricResearch/TradingAgents and selected FinRobot for M10's agent workflow.
 This supersedes the earlier unresolved framework selection only. The accepted
 M9/M10 responsibility and exact ADR-0018 handoff remain unchanged; generation,
 workflow, tools, models, rights, budgets and execution contracts still need review.

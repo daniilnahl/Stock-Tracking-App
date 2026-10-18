@@ -10,7 +10,7 @@
 
 ## Approval record
 
-**M10 framework revision — 2026-10-18:** the owner excluded
+**M10 framework selection — the owner's decision of 2026-10-18:** the owner excluded
 TauricResearch/TradingAgents, then explicitly selected
 [AI4Finance-Foundation/FinRobot](https://github.com/AI4Finance-Foundation/FinRobot)
 as the agent workflow for the re-evaluated M10 integration scope. This selects

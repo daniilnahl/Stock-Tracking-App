@@ -2,7 +2,8 @@
 
 ## Current owner decision — 2026-10-18
 
-The owner excluded TauricResearch/TradingAgents, then explicitly selected
+The owner's decision of 2026-10-18 excluded TauricResearch/TradingAgents, then
+explicitly selected
 [AI4Finance-Foundation/FinRobot](https://github.com/AI4Finance-Foundation/FinRobot)
 as the agent workflow. M10 therefore retains agent-enabled research integration;
 it is not infrastructure-only and does not substitute an invented agent stack.
@@ -12,7 +13,8 @@ Framework selection does not accept upstream defaults, new financial formulas,
 source/model rights, paid runs or a replacement toolchain.
 
 This supersedes the TradingAgents-specific integration path and its mandatory
-dependency on #189/#195. That report remains historical decision evidence;
+dependency on #189/#195. That
+[TradingAgents report](m10-tradingagents-feasibility.md) remains historical decision evidence;
 merging it is not a prerequisite for FinRobot. The earlier assessment-phase
 record below is preserved as history, including its original dependency graph,
 PR heads and test results; it is not the current execution graph.
@@ -30,12 +32,17 @@ PR heads and test results; it is not the current execution graph.
 | API/dashboard | Authenticated local API and packaged dashboard | Add accepted versioned research routes and opt-in composition, then run/candidate/progress/source/cost views in the existing dashboard. Preserve core workflows and disabled-mode independence. |
 | Verification/release | Existing deterministic core tests and source/wheel profiles | FinRobot adapter, evidence, injection, budget/cancellation, absent-AI and actual composition checks; independent audit, owner merges and main CI against accepted revised exit criteria. |
 
+Owner decision, 2026-10-18, for the safety and budget row: the M10 agent sandbox
+is Linux-only. On Windows it runs through WSL or Docker. Native Windows
+sandboxing is not required. #191/#194 and #198 apply isolation controls on that
+Linux deployment.
+
 TradingAgents installation/pin resolution, graph pruning, memory/auth/checkpoint
 adaptation and its component-specific notices are removed from M10 work. Its
 four dependency conflicts are not FinRobot findings. Trading, autonomous holdings
 changes, upstream valuation/backtest formulas, daily-winner policy, paid sources,
-hosted release and unrelated browser holdings mutations are not silently added
-by the phrase "everything besides". Their existing separate gates remain.
+hosted release and unrelated browser holdings mutations stay under their
+existing separate gates. Selecting FinRobot does not add them.
 
 ## FinRobot preliminary review and unresolved fit
 
@@ -44,9 +51,18 @@ Source inspected at commit
 This is a source-review pin, not an accepted installation/artifact pin.
 
 - FinRobot contains V0 AutoGen, V1 equity and V2 desktop/backend generations.
-  Root installation packages V0; do not assume it installs the V2 backend.
-  See pinned [root setup](https://github.com/AI4Finance-Foundation/FinRobot/blob/2717499b8e30f242640af08c4ad9afd1113c2d45/setup.py)
-  and [V2 manifest](https://github.com/AI4Finance-Foundation/FinRobot/blob/2717499b8e30f242640af08c4ad9afd1113c2d45/finrobot_desktop/pyproject.toml).
+  Pinned root [setup.py](https://github.com/AI4Finance-Foundation/FinRobot/blob/2717499b8e30f242640af08c4ad9afd1113c2d45/setup.py)
+  installs V0 under the import name `finrobot` and also installs
+  `finrobot_equity` (V1). V2's package is also named `finrobot`
+  ([V2 manifest](https://github.com/AI4Finance-Foundation/FinRobot/blob/2717499b8e30f242640af08c4ad9afd1113c2d45/finrobot_desktop/pyproject.toml)),
+  so the two clash on that name. Root installation does not install the V2 backend.
+- The pinned root [NOTICE](https://github.com/AI4Finance-Foundation/FinRobot/blob/2717499b8e30f242640af08c4ad9afd1113c2d45/NOTICE)
+  is part of the SRS AI1026 license review. It identifies Apache-2.0 and states
+  that "FinRobot" and "AI4Finance" are trademarks of AI4Finance Foundation, that
+  use of the FinRobot name, logo, or brand on a derivative product, service, or
+  distribution must follow the FinRobot Trademark Policy, and that redistributions
+  must retain the NOTICE. Component, dependency, and data/model obligations remain
+  for #197. Nothing was copied or installed.
 - V0 declares Python `>=3.10,<3.12` and incompatible NumPy/Starlette/
   typing_extensions pins; V1 requires NumPy below 2. V2 declares Python `>=3.11`
   and its shared direct FastAPI/Uvicorn/Click/Matplotlib ranges allow the core
@@ -175,17 +191,18 @@ from installing a candidate framework.
 
 ## Issue ownership and phase status
 
-This table records the original assessment tracks. A 2026-10-18 GitHub recheck
-still reports #193/#194/#195 open and unmerged; report publication is not owner
-merge. The current FinRobot dependency table above supersedes this phase's
-original #192 blockers.
+This table records the original assessment tracks. Recommended merge order is
+this plan (#196) first, then #193, #194 and #195. Those three PRs were open on
+2026-10-18; this historical table does not record their later merges. Publishing
+a report is not itself an owner merge. The current FinRobot dependency table
+above supersedes this phase's original #192 blockers.
 
 | Issue | Agent | Exclusive file ownership | Branch | Status / dependency | PR |
 | --- | --- | --- | --- | --- | --- |
 | [#188](https://github.com/daniilnahl/Stock-Tracking-App/issues/188) Parallel plan | Master | This plan; minimal SRS/current-status pointers; GitHub planning metadata | `codex/m10-parallel-feasibility` | Planning record. Owner merge of this plan is separate from the assessments. | This planning change |
-| [#189](https://github.com/daniilnahl/Stock-Tracking-App/issues/189) Framework feasibility | `m10_framework` | `docs/milestones/m10-framework-feasibility.md` | `codex/189-m10-framework` | Reviewed open PR; excluded candidate is no longer required. | [#195](https://github.com/daniilnahl/Stock-Tracking-App/pull/195) |
-| [#190](https://github.com/daniilnahl/Stock-Tracking-App/issues/190) Criteria/evidence proposal | `m10_contract_review` | `docs/milestones/m10-criteria-evidence.md` | `codex/190-m10-criteria` | Reviewed open PR; owner merge remains separate. | [#193](https://github.com/daniilnahl/Stock-Tracking-App/pull/193) |
-| [#191](https://github.com/daniilnahl/Stock-Tracking-App/issues/191) Safety/rights/budgets | `m10_safety` | `docs/milestones/m10-safety-assessment.md` | `codex/191-m10-safety` | Reviewed open PR; owner merge remains separate. | [#194](https://github.com/daniilnahl/Stock-Tracking-App/pull/194) |
+| [#189](https://github.com/daniilnahl/Stock-Tracking-App/issues/189) TradingAgents feasibility | `m10_framework` | `docs/milestones/m10-tradingagents-feasibility.md` | `codex/189-m10-framework` | Historical evidence. Open on 2026-10-18; merge after this plan. Excluded candidate is not required. | [#195](https://github.com/daniilnahl/Stock-Tracking-App/pull/195) |
+| [#190](https://github.com/daniilnahl/Stock-Tracking-App/issues/190) Criteria/evidence proposal | `m10_contract_review` | `docs/milestones/m10-criteria-evidence.md` | `codex/190-m10-criteria` | Open on 2026-10-18; merge after this plan. | [#193](https://github.com/daniilnahl/Stock-Tracking-App/pull/193) |
+| [#191](https://github.com/daniilnahl/Stock-Tracking-App/issues/191) Safety/rights/budgets | `m10_safety` | `docs/milestones/m10-safety-assessment.md` | `codex/191-m10-safety` | Open on 2026-10-18; merge after this plan. | [#194](https://github.com/daniilnahl/Stock-Tracking-App/pull/194) |
 | [#192](https://github.com/daniilnahl/Stock-Tracking-App/issues/192) Proposed feasibility/isolation ADR | Unassigned until ready | `docs/adr/0019-m10-feasibility-isolation.md`, then approved minimal status links | Assign at start | **Blocked** on revised #190/#191/#197/#198 delivery | Not started |
 
 Each assessment used an isolated checkout of the baseline; no shared index or

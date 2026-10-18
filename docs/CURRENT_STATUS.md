@@ -19,10 +19,12 @@ framework direction and current issue dependencies.
 [39151805497](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/39151805497),
 the owner requested concurrent issue work for M10. The
 [parallel feasibility plan](milestones/m10-plan.md) records three independent
-static/offline assessments. GitHub recheck on 2026-10-18 still reports all three
-assessment PRs open and unmerged: [criteria and candidate evidence #193](https://github.com/daniilnahl/Stock-Tracking-App/pull/193),
+static/offline assessments. Recommended merge order is this plan first, then
+the three assessment PRs, which were open on 2026-10-18:
+[criteria and candidate evidence #193](https://github.com/daniilnahl/Stock-Tracking-App/pull/193),
 [safety, rights and budgets #194](https://github.com/daniilnahl/Stock-Tracking-App/pull/194)
-and [excluded-framework feasibility #195](https://github.com/daniilnahl/Stock-Tracking-App/pull/195).
+and [TradingAgents feasibility #195](https://github.com/daniilnahl/Stock-Tracking-App/pull/195).
+This snapshot does not record their later merges.
 [#192](https://github.com/daniilnahl/Stock-Tracking-App/issues/192)'s proposed
 feasibility ADR now requires the criteria/general-safety and new FinRobot
 findings under the revised dependency table; #195 is no longer required.
