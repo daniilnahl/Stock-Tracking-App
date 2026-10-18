@@ -24,13 +24,13 @@ PR heads and test results; it is not the current execution graph.
 | Area | Already available / reusable | Remaining bounded work |
 | --- | --- | --- |
 | Criteria | ADR-0018 tab-memory editor and exact immutable prepared envelope | Revalidate backend handoff; bind snapshot to a run; resolve supported meanings without altering user input. #190/#193 is a reviewed proposal, not an implemented receiver. |
-| FinRobot execution | Framework direction selected; preliminary static source review only | Review generation/revision, define isolated adapter and research-only tool subset, then prove a bounded synthetic PoC. No M10 runtime exists yet. |
+| FinRobot execution | Framework direction selected; preliminary static source review only. Owner policy of 2026-10-18: do not import FinRobot code; the pin is a reference design. | Build agents in this application without loading that package, then prove a bounded synthetic PoC. Reopening an import needs a new owner decision. No M10 runtime exists yet. |
 | Data and discovery | Existing FMP current/history and explicit Finnhub EPS capabilities | Define permitted universe and discovery tools; map identities, dates/units and evidence. Ticker research does not establish criteria-driven discovery. Existing EPS unknowns still prevent unsupported comparisons. |
 | Evidence/results | #190/#193 proposed qualification and source-support rules | Implement captured provenance, exact criterion association, candidate prerequisites, missing/conflicting evidence, no-candidate versus incomplete/failed/disabled outcomes and validated reports. |
-| Safety/budgets | Existing API access/admission and #191/#194 general assessment | Apply controls to actual FinRobot effects; isolate credentials/files/network, enforce tool and spend/resource bounds, protect private input, sanitize diagnostics and retain uncertain call reservations. |
+| Safety/budgets | Existing API access/admission, #191/#194 general proposal, and the recorded [FinRobot surface map](m10-finrobot-safety.md) | Apply the map without importing FinRobot. Isolate credentials, files, and network; enforce spend and resource bounds; sanitize diagnostics; retain uncertain call reservations. The owner grants agents a view of stored holdings and allows scoped opinion text. D9 stays open and gates activation. The map is not an implemented sandbox. |
 | Lifecycle/storage | Core SQLite holdings and history cache | Separately reviewed research run/report storage, start/status/cancel/partial/failure behavior, dedup/recovery/retention and user-owned-report rules. Core storage is not an existing research store. |
 | API/dashboard | Authenticated local API and packaged dashboard | Add accepted versioned research routes and opt-in composition, then run/candidate/progress/source/cost views in the existing dashboard. Preserve core workflows and disabled-mode independence. |
-| Verification/release | Existing deterministic core tests and source/wheel profiles | FinRobot adapter, evidence, injection, budget/cancellation, absent-AI and actual composition checks; independent audit, owner merges and main CI against accepted revised exit criteria. |
+| Verification/release | Existing deterministic core tests and source/wheel profiles | No-import agent, evidence, injection, budget/cancellation, absent-AI and actual composition checks; independent audit, owner merges and main CI against accepted revised exit criteria. |
 
 Owner decision, 2026-10-18, for the safety and budget row: the M10 agent sandbox
 is Linux-only. On Windows it runs through WSL or Docker. Native Windows
@@ -40,15 +40,29 @@ Linux deployment.
 TradingAgents installation/pin resolution, graph pruning, memory/auth/checkpoint
 adaptation and its component-specific notices are removed from M10 work. Its
 four dependency conflicts are not FinRobot findings. Trading, autonomous holdings
-changes, upstream valuation/backtest formulas, daily-winner policy, paid sources,
-hosted release and unrelated browser holdings mutations stay under their
-existing separate gates. Selecting FinRobot does not add them.
+changes, upstream valuation/backtest formulas, paid sources, hosted release and
+unrelated browser holdings mutations stay under their existing separate gates.
+Selecting FinRobot does not add them. Opinion text for research output and a
+stock suggestion of the day is an owner decision recorded in the safety map.
+That allowance does not set a ranking formula, a cadence, or a financial
+calculation, and it does not authorize a trade.
+
+Owner decisions of 2026-10-18, recorded from the owner's answers on
+[#199](https://github.com/daniilnahl/Stock-Tracking-App/pull/199) in
+[m10-finrobot-safety.md](m10-finrobot-safety.md). These are policy, not
+enforcement. M10 agents are built without importing FinRobot code. Agents may
+see this application's stored holdings; credentials and secrets stay excluded.
+D9 pricing and uncertain in-flight charges on cancellation stay open and gate
+activation.
 
 ## FinRobot preliminary review and unresolved fit
 
 Source inspected at commit
 [`2717499b8e30f242640af08c4ad9afd1113c2d45`](https://github.com/AI4Finance-Foundation/FinRobot/commit/2717499b8e30f242640af08c4ad9afd1113c2d45).
 This is a source-review pin, not an accepted installation/artifact pin.
+The tool, credential, egress, budget, and cancellation map for that pin is
+[m10-finrobot-safety.md](m10-finrobot-safety.md). The bullets below stay the
+planning sketch; they are not a second enforcement contract.
 
 - FinRobot contains V0 AutoGen, V1 equity and V2 desktop/backend generations.
   Pinned root [setup.py](https://github.com/AI4Finance-Foundation/FinRobot/blob/2717499b8e30f242640af08c4ad9afd1113c2d45/setup.py)
@@ -79,8 +93,10 @@ This is a source-review pin, not an accepted installation/artifact pin.
   [runner](https://github.com/AI4Finance-Foundation/FinRobot/blob/2717499b8e30f242640af08c4ad9afd1113c2d45/finrobot_desktop/finrobot/engine/pipelines/runner.py)
   and [executor](https://github.com/AI4Finance-Foundation/FinRobot/blob/2717499b8e30f242640af08c4ad9afd1113c2d45/finrobot_desktop/finrobot/engine/pipelines/protocols.py).
 
-Recommend reviewing a minimal V2 Python backend subset behind an adapter while
-retaining this app's UI/authentication and core pins. This is a proposal; neither
+An earlier sketch recommended reviewing a minimal V2 Python backend subset
+behind an adapter while retaining this app's UI, authentication, and core pins.
+The owner's 2026-10-18 decision supersedes that sketch for execution: do not
+import FinRobot code. The inspection notes stay reference material. Neither
 the full desktop/server stack nor a default research pipeline is accepted.
 No upstream package, runtime, code, model or provider was executed in this review.
 
@@ -90,9 +106,9 @@ No upstream package, runtime, code, model or provider was executed in this revie
 | --- | --- | --- |
 | #188 / [#196](https://github.com/daniilnahl/Stock-Tracking-App/pull/196) | Master: plan, SRS, ownership/status pointers and issue metadata | Scope revised in this existing planning PR; owner merge remains separate. Earlier verification below is dated, not this revision's check result. |
 | [#197](https://github.com/daniilnahl/Stock-Tracking-App/issues/197) | `docs/milestones/m10-finrobot-feasibility.md` | Ready for bounded static component/adapter review; no unmerged-interface blocker. |
-| [#198](https://github.com/daniilnahl/Stock-Tracking-App/issues/198) | `docs/milestones/m10-finrobot-safety.md` | Ready in parallel with #197 against pinned source; verify actual tool/IO/budget surfaces. |
+| [#198](https://github.com/daniilnahl/Stock-Tracking-App/issues/198) | `docs/milestones/m10-finrobot-safety.md` | Recorded as a proposal in [m10-finrobot-safety.md](m10-finrobot-safety.md). Parallel with #197. Not an accepted runtime contract. |
 | #190/#193 and #191/#194 | Existing criteria/evidence and general-safety proposal owners | Reuse reviewed findings; owner merges/acceptance remain gates. No duplicate criteria redesign. |
-| [#192](https://github.com/daniilnahl/Stock-Tracking-App/issues/192) | `docs/adr/0019-m10-feasibility-isolation.md` and approved minimal links | Define selected FinRobot adapter/PoC contract after #190/#191/#197/#198 required delivery. #189 is removed as a mandatory blocker. |
+| [#192](https://github.com/daniilnahl/Stock-Tracking-App/issues/192) | `docs/adr/0019-m10-feasibility-isolation.md` and approved minimal links | Define the no-import PoC contract after #190/#191/#197/#198 required delivery. Importing FinRobot code needs a new owner decision. #189 is removed as a mandatory blocker. |
 | #189/#195 | Historical TradingAgents assessment | Excluded framework; optional decision evidence, not required FinRobot delivery. |
 
 Each new issue receives its own branch/worktree/PR when implementation starts.
@@ -103,14 +119,14 @@ different reports. They must not invent a shared runtime interface independently
 flowchart TD
     selection["FinRobot selected; TradingAgents excluded"] --> source["#197 Component/adapter review"]
     selection --> safety["#198 FinRobot safety applicability"]
-    criteria["#190 Criteria/evidence proposal"] --> contract["#192 Proposed FinRobot adapter/PoC contract"]
+    criteria["#190 Criteria/evidence proposal"] --> contract["#192 Proposed no-import PoC contract"]
     general["#191 General safety proposal"] --> contract
     source --> contract
     safety --> contract
     contract --> approval["Owner accepts precise PoC scope and contract"]
-    approval --> poc["Bounded synthetic adapter/worker PoC"]
+    approval --> poc["Bounded synthetic no-import PoC"]
     poc --> stable["Accepted execution and evidence interfaces"]
-    stable --> worker["FinRobot adapter"]
+    stable --> worker["App-owned agent, FinRobot not imported"]
     stable --> validation["Criteria/evidence validation"]
     stable --> lifecycle["Budgets and lifecycle/storage"]
     worker --> integration["API/composition then dashboard"]
