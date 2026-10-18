@@ -27,7 +27,7 @@ PR heads and test results; it is not the current execution graph.
 | FinRobot execution | Framework direction selected; preliminary static source review only | Review generation/revision, define isolated adapter and research-only tool subset, then prove a bounded synthetic PoC. No M10 runtime exists yet. |
 | Data and discovery | Existing FMP current/history and explicit Finnhub EPS capabilities | Define permitted universe and discovery tools; map identities, dates/units and evidence. Ticker research does not establish criteria-driven discovery. Existing EPS unknowns still prevent unsupported comparisons. |
 | Evidence/results | #190/#193 proposed qualification and source-support rules | Implement captured provenance, exact criterion association, candidate prerequisites, missing/conflicting evidence, no-candidate versus incomplete/failed/disabled outcomes and validated reports. |
-| Safety/budgets | Existing API access/admission and #191/#194 general assessment | Apply controls to actual FinRobot effects; isolate credentials/files/network, enforce tool and spend/resource bounds, protect private input, sanitize diagnostics and retain uncertain call reservations. |
+| Safety/budgets | Existing API access/admission, #191/#194 general proposal, and the recorded [FinRobot surface map](m10-finrobot-safety.md) | Apply those proposed controls to actual FinRobot effects; isolate credentials/files/network, enforce tool and spend/resource bounds, protect private input, sanitize diagnostics and retain uncertain call reservations. The map is not an implemented sandbox. |
 | Lifecycle/storage | Core SQLite holdings and history cache | Separately reviewed research run/report storage, start/status/cancel/partial/failure behavior, dedup/recovery/retention and user-owned-report rules. Core storage is not an existing research store. |
 | API/dashboard | Authenticated local API and packaged dashboard | Add accepted versioned research routes and opt-in composition, then run/candidate/progress/source/cost views in the existing dashboard. Preserve core workflows and disabled-mode independence. |
 | Verification/release | Existing deterministic core tests and source/wheel profiles | FinRobot adapter, evidence, injection, budget/cancellation, absent-AI and actual composition checks; independent audit, owner merges and main CI against accepted revised exit criteria. |
@@ -49,6 +49,9 @@ existing separate gates. Selecting FinRobot does not add them.
 Source inspected at commit
 [`2717499b8e30f242640af08c4ad9afd1113c2d45`](https://github.com/AI4Finance-Foundation/FinRobot/commit/2717499b8e30f242640af08c4ad9afd1113c2d45).
 This is a source-review pin, not an accepted installation/artifact pin.
+The tool, credential, egress, budget, and cancellation map for that pin is
+[m10-finrobot-safety.md](m10-finrobot-safety.md). The bullets below stay the
+planning sketch; they are not a second enforcement contract.
 
 - FinRobot contains V0 AutoGen, V1 equity and V2 desktop/backend generations.
   Pinned root [setup.py](https://github.com/AI4Finance-Foundation/FinRobot/blob/2717499b8e30f242640af08c4ad9afd1113c2d45/setup.py)
@@ -90,7 +93,7 @@ No upstream package, runtime, code, model or provider was executed in this revie
 | --- | --- | --- |
 | #188 / [#196](https://github.com/daniilnahl/Stock-Tracking-App/pull/196) | Master: plan, SRS, ownership/status pointers and issue metadata | Scope revised in this existing planning PR; owner merge remains separate. Earlier verification below is dated, not this revision's check result. |
 | [#197](https://github.com/daniilnahl/Stock-Tracking-App/issues/197) | `docs/milestones/m10-finrobot-feasibility.md` | Ready for bounded static component/adapter review; no unmerged-interface blocker. |
-| [#198](https://github.com/daniilnahl/Stock-Tracking-App/issues/198) | `docs/milestones/m10-finrobot-safety.md` | Ready in parallel with #197 against pinned source; verify actual tool/IO/budget surfaces. |
+| [#198](https://github.com/daniilnahl/Stock-Tracking-App/issues/198) | `docs/milestones/m10-finrobot-safety.md` | Recorded as a proposal in [m10-finrobot-safety.md](m10-finrobot-safety.md). Parallel with #197. Not an accepted runtime contract. |
 | #190/#193 and #191/#194 | Existing criteria/evidence and general-safety proposal owners | Reuse reviewed findings; owner merges/acceptance remain gates. No duplicate criteria redesign. |
 | [#192](https://github.com/daniilnahl/Stock-Tracking-App/issues/192) | `docs/adr/0019-m10-feasibility-isolation.md` and approved minimal links | Define selected FinRobot adapter/PoC contract after #190/#191/#197/#198 required delivery. #189 is removed as a mandatory blocker. |
 | #189/#195 | Historical TradingAgents assessment | Excluded framework; optional decision evidence, not required FinRobot delivery. |

@@ -9,7 +9,9 @@ TauricResearch/TradingAgents and selected FinRobot's agent workflow. The
 [revised scope](milestones/m10-plan.md) preserves criteria/evidence, safe bounded
 execution, lifecycle/storage, API/dashboard integration and independent audit;
 it replaces the former framework blocker with FinRobot-specific #197/#198
-review inputs to #192. M9's editor/EPS remain delivered, general assessment
+review inputs to #192. The tool, credential, egress, and budget map is the
+proposal in [m10-finrobot-safety.md](milestones/m10-finrobot-safety.md)
+(issue #198). M9's editor/EPS remain delivered, general assessment
 proposals remain reusable, and no FinRobot runtime/search is implemented.
 The starting-phase records below are historical snapshots superseded by this
 framework direction and current issue dependencies.
