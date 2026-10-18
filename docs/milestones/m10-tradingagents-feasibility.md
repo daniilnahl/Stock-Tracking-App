@@ -1,6 +1,16 @@
-# M10 framework feasibility — issue #189
+# M10 TradingAgents feasibility — historical evidence, issue #189
 
-**Static assessment, 2026-10-18; proposed, not an accepted architecture decision.**
+**Superseded 2026-10-18.** The owner excluded TauricResearch/TradingAgents and
+selected AI4Finance-Foundation/FinRobot. This file is historical evidence only
+and is not a FinRobot blocker. See the revised plan in
+[#196](https://github.com/daniilnahl/Stock-Tracking-App/pull/196), the FinRobot
+component review [#197](https://github.com/daniilnahl/Stock-Tracking-App/issues/197)
+and the FinRobot safety review
+[#198](https://github.com/daniilnahl/Stock-Tracking-App/issues/198).
+The owned-orchestration recommendation and the PoC ceilings below are superseded
+and are not binding.
+
+**Static assessment, 2026-10-18; historical record of an excluded candidate.**
 Parent: [M10 — AI Research Agents](https://github.com/daniilnahl/Stock-Tracking-App/milestone/11).
 [Issue #189](https://github.com/daniilnahl/Stock-Tracking-App/issues/189)
 authorizes one focused source-review session of at most 45 minutes. No upstream
@@ -107,13 +117,16 @@ trading decision. It also covers checkpoint resume and bounded tool loops. This
 is useful evidence of injectable seams, not proof of OS isolation, no real imports,
 rights, actual cost enforcement or read-only behavior. No upstream tests ran.
 
-## Alternatives — recommendations only
+## Alternatives — historical recommendations, not binding
+
+The owned-orchestration row below is superseded. On 2026-10-18 the owner selected
+FinRobot rather than an owned agent stack or TradingAgents.
 
 | Alternative | Fit and cost | Assessment |
 | --- | --- | --- |
 | Direct core import/install | Four explicit pin conflicts; import-time dotenv, constructor IO and full trading workflow share core process privileges. | Reject for the unchanged core. No upgrade/unpin request is made. |
 | Isolated worker/service with a small adapter | Could protect dependency resolution and permit OS-level network/filesystem controls; must remove trader/manager/memory paths, replace acquisition, validate output and prove process cleanup. A subprocess alone is not a sandbox. | Conditional research candidate only. No accepted feasibility/isolation ADR or demonstrated sandbox exists. Modification/fork maintenance and license notices must be budgeted. |
-| Adapter-only owned research orchestration | Does not depend on this upstream graph; fixture-backed input/evidence/output validation can test the M9 boundary without its dependency or action surfaces. Real discovery/tools/models remain unimplemented. | Recommended first PoC proposal, because exact criteria and safety boundaries can be tested independently. It does not select a production framework or claim discovery capability. |
+| Adapter-only owned research orchestration | Does not depend on this upstream graph; fixture-backed input/evidence/output validation can test the M9 boundary without its dependency or action surfaces. Real discovery/tools/models remain unimplemented. | Superseded 2026-10-18; not binding. The original text recommended this as the first PoC because criteria and safety boundaries could be tested independently. The owner instead selected FinRobot. |
 
 The stock/date analysis graph is not demonstrated to enumerate a supported
 universe, preserve arbitrary M9 text semantics, verify each criterion or produce
@@ -122,7 +135,14 @@ AI1031/AI1032. No native read-only switch was found in the inspected configurati
 and graph APIs. Further source audit and an authorized isolated execution test
 would be necessary before claiming safe reuse of individual analysts.
 
-## Proposed future PoC charter — not authorization to execute
+## Proposed future PoC charter — superseded, not binding
+
+Superseded 2026-10-18. These ceilings belonged to the excluded TradingAgents
+track. They are historical text, not a FinRobot PoC budget or an authorization
+to execute. The FinRobot contract is
+[#192](https://github.com/daniilnahl/Stock-Tracking-App/issues/192), using
+[#197](https://github.com/daniilnahl/Stock-Tracking-App/issues/197) and
+[#198](https://github.com/daniilnahl/Stock-Tracking-App/issues/198).
 
 Create a separate bounded issue and obtain owner approval for this charter and
 its isolation/runtime plan before installing or executing upstream. Do not begin
