@@ -2,6 +2,15 @@
 
 ## Status and authorization
 
+**Later recorded policy — 2026-10-18:** merged #199 records FinRobot as a design
+reference for app-owned agents, with no import/loading/vendoring. Its scoped
+opinion and stored-holdings decisions retain credential, external-transmission,
+financial and D9 activation gates. The exact M9 criteria envelope and M10
+ownership remain unchanged. [Proposed ADR-0019](0019-m10-feasibility-isolation.md)
+reconciles this later record; its PoC and interfaces are not accepted here. The
+earlier selected-framework wording below is historical and does not authorize
+the superseded upstream runtime experiment.
+
 **Framework direction addendum — the owner's decision of 2026-10-18:** the owner
 excluded TauricResearch/TradingAgents and selected FinRobot for M10's agent workflow.
 This supersedes the earlier unresolved framework selection only. The accepted

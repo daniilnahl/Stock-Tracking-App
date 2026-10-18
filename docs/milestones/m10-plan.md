@@ -1,5 +1,26 @@
 # M10 — FinRobot integration: revised scope and parallel plan
 
+## Contract proposal and current coordination — 2026-10-18
+
+Assessment PRs #193/#194/#200/#199 are owner-merged; main
+`02815554e204d36809da62775b22a552fec8a257` passed all five Foundation checks.
+Their reports are reviewed inputs, not implemented controls. The later #199
+policy record uses FinRobot only as design reference; it supersedes #197's
+proposed actual-component Phase B. No FinRobot import, loading or vendoring is
+selected for execution.
+
+| Issue | Owner and exclusive work | Current gate |
+| --- | --- | --- |
+| #192 | Codex: [proposed ADR-0019](../adr/0019-m10-feasibility-isolation.md), minimal authoritative/status links and two narrow #198 source-fact errata | Assessment merge/CI inputs delivered; contract remains proposed and needs owner acceptance before PoC work. |
+| [#201](https://github.com/daniilnahl/Stock-Tracking-App/issues/201) | Grok: optional `docs/milestones/m10-poc-review-checklist.md` in its own branch/PR, then read-only review of #192's draft | Checklist preparation can start against merged inputs now; final review waits for the draft, not its merge. Do not co-author ADR-0019 or edit shared sources. |
+
+The zero-billable, synthetic-only charter leaves real model/provider activation,
+external holdings transmission, price/charge settlement and production discovery
+gated. Scoped opinion and local holdings policies do not grant new calculations,
+cadence/ranking rules, secrets access or a broker/trading port. Policy provenance
+and acceptance limits are explicit in the proposed ADR and SRS approval record.
+The older phase tables below retain their dated planning context.
+
 ## Current owner decision — 2026-10-18
 
 The owner's decision of 2026-10-18 excluded TauricResearch/TradingAgents, then

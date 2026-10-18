@@ -4,6 +4,15 @@ Verified 2026-10-18 for [#186](https://github.com/daniilnahl/Stock-Tracking-App/
 from merged main `6c5a3f9b975ebd2b0230c7a8ccb773de982ecf69`.
 This is a delivery assessment, not new approval of proposed requirements.
 
+**M10 contract proposal — 2026-10-18:** #200/#197 and revised #199/#198 are
+owner-merged at main `02815554e204d36809da62775b22a552fec8a257`; all five
+post-merge Foundation checks passed. #192 now proposes
+[ADR-0019](adr/0019-m10-feasibility-isolation.md), an app-owned, no-FinRobot-import,
+zero-billable synthetic PoC contract. Grok's separate [#201](https://github.com/daniilnahl/Stock-Tracking-App/issues/201)
+owns its independent checklist/review. Earlier upstream-execution suggestions
+remain historical. No worker, sandbox enforcement or model/provider run is
+implemented or activated by this proposal; D9 and real-use rights stay gated.
+
 **M10 revised direction — 2026-10-18:** the owner excluded
 TauricResearch/TradingAgents and selected FinRobot's agent workflow. The
 [revised scope](milestones/m10-plan.md) preserves criteria/evidence, safe bounded

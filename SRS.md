@@ -10,6 +10,21 @@
 
 ## Approval record
 
+**M10 recorded policy and contract review — 2026-10-18:** owner-merged #199
+records app-owned agents using FinRobot as a reference design only, with no
+FinRobot imports, loading or vendoring; Linux-only sandboxing (Windows through
+WSL/Docker); scoped research/suggestion opinion text; and an explicit view of
+stored holdings with credentials excluded. These recorded limits supersede the
+earlier proposed upstream-execution path. A local holdings view does not grant
+provider-specific external transmission or retention rights, and opinion text
+does not approve a ranking formula, daily cadence, trade action, financial
+calculation or personalized suitability claim. D9 pricing and uncertain
+in-flight charges remain open and block billable/live activation.
+[Proposed ADR-0019](docs/adr/0019-m10-feasibility-isolation.md), #192, reconciles
+these inputs and proposes a bounded zero-billable synthetic PoC. Its schemas,
+controls and execution charter require separate owner acceptance; publishing,
+testing or merging the proposal does not execute or activate that PoC.
+
 **M10 framework selection — the owner's decision of 2026-10-18:** the owner excluded
 TauricResearch/TradingAgents, then explicitly selected
 [AI4Finance-Foundation/FinRobot](https://github.com/AI4Finance-Foundation/FinRobot)
