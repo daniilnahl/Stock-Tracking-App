@@ -141,6 +141,20 @@ test("actual source/wheel launcher serves the closed dashboard and authenticated
     await configureOwnedConnection();
     expect(apiPaths.length).toBe(0);
     if (wheel) await page.getByLabel("Theme", { exact: true }).selectOption("dark");
+    // Default launcher configuration keeps EPS disabled: exercise the real
+    // authenticated route through its visible form, without provider/API mocks.
+    await page.getByRole("link", { name: "Upcoming EPS", exact: true }).click();
+    await page.getByLabel("Finnhub provider symbol", { exact: true }).fill("TEST");
+    await page.getByLabel("EPS start date", { exact: true }).fill("2026-10-18");
+    await page.getByLabel("EPS end date", { exact: true }).fill("2027-01-17");
+    const epsDisabled = page.waitForResponse(response => new URL(response.url()).pathname === "/api/v1/research/upcoming-eps");
+    await page.getByRole("button", { name: "Read upcoming EPS", exact: true }).click();
+    expect((await epsDisabled).status()).toBe(503);
+    await expect(page.getByRole("alert")).toContainText("Upcoming EPS acquisition is disabled");
+    await expect(page.getByRole("table")).toHaveCount(0);
+    expect(apiPaths.length === 1).toBe(true);
+    await page.getByRole("button", { name: "Clear EPS", exact: true }).click();
+    await expect(page.getByLabel("Finnhub provider symbol", { exact: true })).toHaveValue("");
     await page.getByRole("link", { name: "Watchlists", exact: true }).click();
     await page.getByRole("button", { name: "Read saved entries" }).click();
     await expect(page.getByRole("table")).toBeVisible();
@@ -188,7 +202,7 @@ test("actual source/wheel launcher serves the closed dashboard and authenticated
     await expect(page.getByText("Disconnected", { exact: true })).toBeVisible();
     expect(await field.evaluate(element => element instanceof HTMLInputElement && element.value.length === 0)).toBe(true);
     expect(external || pageError || cspFailure).toBe(false);
-    expect(JSON.stringify(apiPaths) === JSON.stringify(["/api/v1/watchlists/menu_watchlist", "/api/v1/watchlists/menu_watchlist", "/api/v1/watchlists/menu_watchlist/entries/0/history", "/api/v1/watchlists/daniils_stock_method", "/api/v1/watchlists/menu_watchlist", "/api/v1/watchlists/menu_watchlist"])).toBe(true);
+    expect(JSON.stringify(apiPaths) === JSON.stringify(["/api/v1/research/upcoming-eps", "/api/v1/watchlists/menu_watchlist", "/api/v1/watchlists/menu_watchlist", "/api/v1/watchlists/menu_watchlist/entries/0/history", "/api/v1/watchlists/daniils_stock_method", "/api/v1/watchlists/menu_watchlist", "/api/v1/watchlists/menu_watchlist"])).toBe(true);
     expect(digest(readFileSync(join(state, "holdings.sqlite3"))) === before).toBe(true);
     expect(["history.json", "menu.pkl", "method.pkl"].every(name => !existsSync(join(state, name)))).toBe(true);
   } finally {
@@ -198,6 +212,6 @@ test("actual source/wheel launcher serves the closed dashboard and authenticated
     }
     const diagnostics = Buffer.concat(output).toString("utf8");
     expect(diagnostics.includes(token)).toBe(false);
-    expect(diagnostics.split(/\r?\n/).filter(Boolean).every(line => /^API operation failed: (unauthorized|origin_forbidden|history_disabled|not_found)$/.test(line))).toBe(true);
+    expect(diagnostics.split(/\r?\n/).filter(Boolean).every(line => /^API operation failed: (unauthorized|origin_forbidden|history_disabled|eps_disabled|not_found)$/.test(line))).toBe(true);
   }
 });

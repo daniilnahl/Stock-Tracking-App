@@ -1,5 +1,5 @@
 import { schemas } from "./contracts.generated";
-import type { Contracts, WatchlistResponse, HistoryResponse, StockResponse } from "./contracts.generated";
+import type { Contracts, WatchlistResponse, HistoryResponse, StockResponse, UpcomingEpsResponse } from "./contracts.generated";
 
 export type Namespace = WatchlistResponse["namespace"];
 export type ClientErrorCode = "unsupported_browser" | "unsupported_origin" | "invalid_request" | "incompatible_response" | "disconnected" | "cancelled" | "selection_changed" | "network_error" | "unauthorized" | "api_error";
@@ -95,7 +95,7 @@ function validate(value: unknown, schema: Schema): unknown {
         (schema.maximum !== undefined && exact > BigInt(schema.maximum))) return incompatible();
     if (schema.maximum && BigInt(schema.maximum) > BigInt(Number.MAX_SAFE_INTEGER)) return exact;
     if (exact > BigInt(Number.MAX_SAFE_INTEGER)) return incompatible();
-    return Number(exact); // Ordinals only, proven safe; never Decimal/volume.
+    return Number(exact); // Bounded metadata integers only; never Decimal/volume.
   }
   if (schema.type === "array") {
     if (!Array.isArray(value) || !schema.items) return incompatible();
@@ -135,5 +135,27 @@ export function validateHistory(view: HistoryResponse, ordinal: number, stock: S
   for (const bar of view.bars) {
     if (bar.symbol !== stock.symbol.toUpperCase() || !validDate(bar.date) || bar.date < view.start || bar.date > view.end || bar.date <= previous) incompatible();
     previous = bar.date;
+  }
+}
+
+export type UpcomingEpsRequest = Readonly<{ provider_symbol: string; start: string; end: string }>;
+export function validUpcomingEpsRequest(request: UpcomingEpsRequest): boolean {
+  if (!request || typeof request !== "object" || typeof request.provider_symbol !== "string" || /^[A-Z0-9][A-Z0-9.-]{0,31}$/.exec(request.provider_symbol)?.[0] !== request.provider_symbol ||
+      !validDate(request.start) || !validDate(request.end) || request.start > request.end) return false;
+  return Date.parse(`${request.end}T00:00:00Z`) - Date.parse(`${request.start}T00:00:00Z`) <= 91 * 86400000;
+}
+export function validateUpcomingEps(view: UpcomingEpsResponse, request: UpcomingEpsRequest): void {
+  if (!validUpcomingEpsRequest(request) || view.provider_symbol !== request.provider_symbol || view.start !== request.start || view.end !== request.end ||
+      !validDate(view.analysis_date) || view.analysis_date >= view.start || view.observations.length > 128) incompatible();
+  const periods = new Set<string>();
+  let previous: UpcomingEpsResponse["observations"][number] | undefined;
+  for (const row of view.observations) {
+    const period = `${row.fiscal_year}:${row.fiscal_quarter}`;
+    if (row.symbol !== request.provider_symbol || !validDate(row.release_date) || row.release_date < request.start || row.release_date > request.end ||
+        !validDate(row.retrieved_at.slice(0, 10)) || row.retrieved_at.slice(11, 13) > "23" || row.retrieved_at.slice(14, 16) > "59" || row.retrieved_at.slice(17, 19) > "59" || periods.has(period)) incompatible();
+    if (previous && (row.release_date < previous.release_date || (row.release_date === previous.release_date &&
+        (row.fiscal_year < previous.fiscal_year || (row.fiscal_year === previous.fiscal_year && row.fiscal_quarter <= previous.fiscal_quarter))))) incompatible();
+    periods.add(period);
+    previous = row;
   }
 }

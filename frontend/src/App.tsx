@@ -9,6 +9,7 @@ import { SessionContext, connectionLabel } from "./app/session";
 import { ApiClient } from "./services/client";
 import { StockCriteria } from "./features/StockCriteria";
 import { initialCriteriaState } from "./features/criteria";
+import { UpcomingEps } from "./features/UpcomingEps";
 
 const createApiClient = () => new ApiClient();
 export function App({ createClient = createApiClient }: { createClient?: () => ApiClient } = {}) {
@@ -53,14 +54,15 @@ export function App({ createClient = createApiClient }: { createClient?: () => A
       </Button>
     </header>
     {preference.notice && <p className="storage-notice" role="status">{preference.notice}</p>}
-    <PageLayout title={title} headingRef={heading} description={route === "stock-criteria" ? "Your criteria stay in this tab and clear on reload. No API connection is needed." : route === "client-foundation" ? "A separately labeled synthetic client check." : "Saved observations with their limits in view."}>
-      {route !== "client-foundation" && route !== "stock-criteria" && <div className="notice">Local session / {connectionLabel(snapshot).toLowerCase()}. Configuration alone does not verify authentication. Saved observations are not current quotes.</div>}
+    <PageLayout title={title} headingRef={heading} description={route === "upcoming-eps" ? "Explicit upcoming release estimates through your local API. Every read is manual." : route === "stock-criteria" ? "Your criteria stay in this tab and clear on reload. No API connection is needed." : route === "client-foundation" ? "A separately labeled synthetic client check." : "Saved observations with their limits in view."}>
+      {route !== "client-foundation" && route !== "stock-criteria" && route !== "upcoming-eps" && <div className="notice">Local session / {connectionLabel(snapshot).toLowerCase()}. Configuration alone does not verify authentication. Saved observations are not current quotes.</div>}
       {route === "overview" && <OverviewPage />}
       {route === "watchlists" && <WatchlistsPage />}
       {route === "stock-criteria" && <StockCriteria state={criteria} setState={setCriteria} />}
+      {route === "upcoming-eps" && <UpcomingEps />}
       {route === "settings" && <SettingsPage preference={preference} />}
       {route === "client-foundation" && <ClientFoundation />}
-      {route === null && <EmptyState title="This page is not available" message="Choose Overview, Watchlists, Stock criteria or Settings from the navigation." />}
+      {route === null && <EmptyState title="This page is not available" message="Choose Overview, Watchlists, Stock criteria, Upcoming EPS or Settings from the navigation." />}
       <footer className="app-footer"><a href={routeHref("client-foundation")}>Synthetic client foundation demo</a>
         <p>No recommendation or agent service is available. Historical acquisition remains disabled pending its separate rights gate.</p></footer>
     </PageLayout>

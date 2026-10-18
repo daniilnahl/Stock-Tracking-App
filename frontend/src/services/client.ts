@@ -1,7 +1,7 @@
 import { errorContracts } from "./contracts.generated";
-import type { HistoryResponse, StockResponse, WatchlistResponse } from "./contracts.generated";
-import { ClientError, decode, sameStock, supportsExactJSON, validDate, validNamespace, validateHistory, validateWatchlist } from "./validation";
-import type { Namespace } from "./validation";
+import type { HistoryResponse, StockResponse, WatchlistResponse, UpcomingEpsResponse } from "./contracts.generated";
+import { ClientError, decode, sameStock, supportsExactJSON, validDate, validNamespace, validateHistory, validateWatchlist, validUpcomingEpsRequest, validateUpcomingEps } from "./validation";
+import type { Namespace, UpcomingEpsRequest } from "./validation";
 
 export type Resource<T> =
   | { readonly status: "idle" | "loading" }
@@ -14,17 +14,19 @@ export type ClientSnapshot = Readonly<{
   watchlist: Resource<WatchlistResponse>;
   selection: Selection | null;
   history: Resource<HistoryResponse>;
+  upcomingEps: Resource<UpcomingEpsResponse>;
 }>;
 type Fetch = (input: string, init: RequestInit) => Promise<Response>;
 type Pending = { controller: AbortController; promise: Promise<unknown>; consumers: Set<symbol> };
 const idle = Object.freeze({ status: "idle" } as const);
-const initial = (): ClientSnapshot => Object.freeze({ connection: "disconnected", namespace: null, watchlist: idle, selection: null, history: idle });
+const initial = (): ClientSnapshot => Object.freeze({ connection: "disconnected", namespace: null, watchlist: idle, selection: null, history: idle, upcomingEps: idle });
 const maxResponseBytes = 4 * 1024 * 1024;
 
 export class ApiClient {
   #token: string | null = null;
   #generation = 0;
   #revision = 0;
+  #epsRevision = 0;
   #snapshot: ClientSnapshot = initial();
   #listeners = new Set<() => void>();
   #requests = new Map<string, Pending>();
@@ -40,7 +42,7 @@ export class ApiClient {
     return () => { this.#listeners.delete(listener); };
   };
   #publish(next: ClientSnapshot): void {
-    this.#snapshot = Object.freeze({ ...next, watchlist: Object.freeze(next.watchlist), history: Object.freeze(next.history) });
+    this.#snapshot = Object.freeze({ ...next, watchlist: Object.freeze(next.watchlist), history: Object.freeze(next.history), upcomingEps: Object.freeze(next.upcomingEps) });
     for (const listener of this.#listeners) listener();
   }
   #reset(except?: AbortController): void {
@@ -85,6 +87,13 @@ export class ApiClient {
     this.#publish({ ...this.#snapshot, selection: null, history: idle });
   }
   clearSelection(): void { this.#invalidateSelection(); }
+  clearUpcomingEps(): void {
+    this.#epsRevision++;
+    for (const [key, request] of this.#requests) {
+      if (key.startsWith("eps:")) { request.controller.abort(); this.#requests.delete(key); }
+    }
+    this.#publish({ ...this.#snapshot, upcomingEps: idle });
+  }
   #consume<T>(pending: Pending, signal?: AbortSignal): Promise<T> {
     const id = Symbol();
     pending.consumers.add(id);
@@ -127,6 +136,7 @@ export class ApiClient {
         if (generation !== this.#generation || this.#requests.get(key)?.controller !== controller) return;
         if (key.startsWith("watchlist:") && this.#snapshot.namespace === key.slice("watchlist:".length)) this.#publish({ ...this.#snapshot, watchlist: idle });
         if (key.startsWith("history:")) this.#publish({ ...this.#snapshot, history: idle });
+        if (key.startsWith("eps:")) this.#publish({ ...this.#snapshot, upcomingEps: idle });
       }, { once: true });
       const owned = pending;
       const remove = (): void => { if (this.#requests.get(key) === owned) this.#requests.delete(key); };
@@ -251,6 +261,28 @@ export class ApiClient {
         return view;
       } catch (error) {
         if (error instanceof ClientError && error.code !== "unauthorized" && !controller.signal.aborted && generation === this.#generation && selection === this.#snapshot.selection) this.#publish({ ...this.#snapshot, history: { status: "error", error } });
+        throw error;
+      }
+    }, options.signal);
+  }
+  loadUpcomingEps(request: UpcomingEpsRequest, options: { signal?: AbortSignal } = {}): Promise<UpcomingEpsResponse> {
+    this.#connected();
+    if (!validUpcomingEpsRequest(request)) throw new ClientError("invalid_request");
+    if (options.signal?.aborted) return Promise.reject(new ClientError("cancelled"));
+    const expected = Object.freeze({ provider_symbol: request.provider_symbol, start: request.start, end: request.end });
+    this.clearUpcomingEps();
+    const revision = this.#epsRevision, generation = this.#generation;
+    const query = `provider_symbol=${expected.provider_symbol}&start=${expected.start}&end=${expected.end}`;
+    this.#publish({ ...this.#snapshot, upcomingEps: { status: "loading" } });
+    return this.#request(`eps:${query}`, async controller => {
+      try {
+        const view = decode("UpcomingEpsResponse", await this.#read(`/api/v1/research/upcoming-eps?${query}`, controller));
+        validateUpcomingEps(view, expected);
+        if (controller.signal.aborted || generation !== this.#generation || revision !== this.#epsRevision) throw new ClientError("cancelled");
+        this.#publish({ ...this.#snapshot, upcomingEps: { status: "success", data: view } });
+        return view;
+      } catch (error) {
+        if (error instanceof ClientError && error.code !== "unauthorized" && !controller.signal.aborted && generation === this.#generation && revision === this.#epsRevision) this.#publish({ ...this.#snapshot, upcomingEps: { status: "error", error } });
         throw error;
       }
     }, options.signal);

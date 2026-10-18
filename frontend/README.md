@@ -1,5 +1,25 @@
 # Local packaged dashboard — issues #143–147/#152/#155
 
+## Manual upcoming EPS — issue #182
+
+The primary `Upcoming EPS` page uses [ADR-0016](../docs/adr/0016-upcoming-eps-api.md)
+stage 3 and the existing local bearer session. Enter an explicit Finnhub symbol
+and inclusive ISO start/end dates, then manually request observations. Fields
+start blank; the browser chooses no current-day/window default, looks up no
+stock and performs no polling or retry. The server owns its UTC future cutoff
+and opt-in flag/budget; provider credentials remain backend-only.
+
+The client validates the generated schema, exact request association, calendar/
+receipt labels, ordered unique periods and provenance before publishing.
+Display preserves exact signed EPS strings and unavailable/null distinctions,
+non-GAAP units, unknown currency/share basis/publication/fiscal-period end,
+provider source and receipt-time limits. Empty results assert no complete
+coverage. Editing, clear, cancellation or leaving the route removes earlier
+results; draft/results are not retained across route departure or reload.
+Existing session-wide authorization/disconnect clearing remains in force.
+No financial comparison, criteria matching, storage, backend change or further
+live request is part of this frontend task.
+
 ## Custom stock criteria — issue #176
 
 The `Stock criteria` editor implements the bounded
@@ -18,7 +38,7 @@ monochrome shell: UI801–809, UI810–815, UI816–818, UI820–821, UI824–82
 their bounded foundation scope. The owner accepted the revised all-text pixel
 design and scoped ADR after PR #149; owner-merged #142 records acceptance.
 
-The shared shell has typed Overview/Watchlists/Stock criteria/Settings routes, a working
+The shared shell has typed Overview/Watchlists/Stock criteria/Upcoming EPS/Settings routes, a working
 local light/dark theme preference and masked memory-only local API configuration.
 Configuration does not verify authentication or make a request. Watchlists
 supports explicit read/reload of both saved namespaces through that same session;
