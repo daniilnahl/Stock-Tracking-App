@@ -1,5 +1,26 @@
 # M9 — Automated Stock Research planning
 
+## Current ownership change — 2026-10-17
+
+The owner explicitly moved criteria-driven stock discovery to **M10 Taurus**.
+[ADR-0017](../adr/0017-user-criteria-taurus-discovery.md),
+[#174](https://github.com/daniilnahl/Stock-Tracking-App/issues/174), accepts this
+bounded ownership decision: **M9 lets users configure stock criteria; M10 Taurus
+searches for stocks using those criteria**. M9 will not use provider screener
+calls or its own market-scanning engine to find candidates. Ordinary permitted
+data retrieval for a selected stock remains in scope.
+
+The earlier screen/sector/daily-selection allocation below is superseded by this
+decision. The current dependency table and exit plan are revised accordingly.
+M10 remains coarse planning; no model/tool/framework, parameter list, financial
+threshold, storage/API schema or automatic daily-selection policy is chosen.
+Current panels stay unavailable until their respective backend is implemented.
+The Finnhub loader is owner-merged in #173; API activation remains separate.
+
+Master owns this specification/documentation change; `m9_analysis` reviews the
+complete diff independently. Runtime criteria/search implementation is not part
+of #174. No full M9/M10 acceptance or completion is claimed.
+
 ## Current API contract proposal — 2026-10-16
 
 PR #169 is owner-merged at `1847a155d2e44f1fa82e315e060f557a421e542d`;
@@ -100,7 +121,8 @@ dated, comparable, rights-cleared research qualification.
 | #168: injected upcoming-EPS application service | Owner-merged #169; main CI passed | #166 merged; ADR-0015 service addendum | `eps_impl`; complete independent review passed; 3045 full tests passed |
 | #170: opt-in EPS API/composition contract | Proposal in review; runtime blocked on acceptance | #168 merged; account/use evidence gates live composition | Master; `m9_analysis` independent review |
 | Provider/field/use rights contract for live activation | Candidate planning task | Owner source/entitlement evidence; dated official documentation review | Unassigned; no live activation issue or PR |
-| First screen/universe/taxonomy/daily selection contract | Candidate planning task | Owner product choices and normative financial definitions | Unassigned; no implementation issue or PR |
+| Supported user parameters/criteria validation/handoff contract | Next criteria planning task under ADR-0017 | Explicit field/operator/unit/combination/schema/storage choices; no hidden default preset | Unassigned; no runtime implementation issue |
+| Taurus candidate/sector/suggested-stock discovery | Moved to M10 | M9 criteria handoff; separate M10 feasibility/evidence/budget contracts | Coarse follow-up only; no M9 search implementation |
 | Research storage/jobs/API contract | Candidate planning task | Accepted scope and evidence/screen contracts | Unassigned; no implementation issue or PR |
 
 These are separate bounded contract objectives, not one issue to implement the
@@ -121,10 +143,9 @@ authorization. Final decomposition follows accepted contracts, not this inventor
 | Approved source field acquisition | RSH901–905, RSH911 | Observation/provider contract; actual per-field/use rights and endpoint schema |
 | Comparability, freshness and conflict evaluation | RSH907–910, RSH917–918, RSH926 | Field registry, dated fixtures, acquisition, freshness/precedence decisions |
 | Shared provider quotas/coalescing | RSH911, X720, X723 | Verified enabled-plan limits, concurrency ownership and accepted retry changes |
-| First deterministic screen | RSH914–918, RSH921–926 | Approved preset/math/universe/rank; complete validated observation snapshot |
-| Sector result grouping | RSH919, RSH925 | Screen; approved dated taxonomy/unmapped policy/result bounds |
-| Daily selection and no-candidate outcome | RSH920, RSH923 | Screen; approved calendar/date/cutoff/rank/tie-break/revision contract |
-| Durable manual runs/cancellation | RSH929, RSH931–933 | Repository, screen, quota and job lifecycle contracts |
+| User criteria configuration/validation | RSH914–917, RSH921, RSH936 | Supported parameter/operator/unit/null/combination contract and approved settings/API/UI persistence boundary |
+| Nonexecuting Taurus handoff | RSH920, RSH923, RSH925–926; ADR-0017 | Accepted criteria definition and exact snapshot/version boundary; no agent/search call in M9 |
+| Separately approved known-stock research runs/cancellation | RSH929, RSH931–933 | Known-stock scope, repository, quota and job lifecycle contracts; not a discovery prerequisite |
 | Safe watchlist association/change detection | RSH924, RSH927–928 | Stable identities/runs; canonical dedup and prior/current evidence policy |
 | Opt-in schedules/restart recovery | RSH930–932, RSH936 | Durable runs; timezone/frequency/missed-run policy and typed settings |
 | Versioned research routes | RSH935, X710, X718 | Stable services; accepted authorization/async/cancellation/settings contract |
@@ -144,18 +165,19 @@ mypy (`config.py` only), pip check and staged hygiene. Keep source/wheel isolati
 exact Decimal/null/zero behavior, clock injection, mocked providers and temporary
 storage. Browser suites remain separate from default Python tests.
 
-Future research tests must cover reproducible ordering, future-evidence rejection,
-dated sector membership, incompatible periods/currencies, missing/stale/conflict
-exclusions, zero versus unavailable, holidays/no-candidate, per-provider quotas,
-duplicate association without holdings mutation, cancellation, crash recovery,
-partial publication and opt-in schedules. These are prospective requirements,
-not tests introduced or passed by this documentation task.
+Future M9 tests cover supported/unsupported user parameters, units/operators/null
+validation, exact criteria handoff and disabled-M10 independence, plus any
+separately approved known-stock evidence/watchlist/job capabilities. Candidate
+search, sector membership/results, daily cadence and no-candidate search fixtures
+belong to M10's future contract. These are prospective requirements, not runtime
+tests introduced by this specification task.
 
-M9 exit requires every approved RSH requirement mapped to evidence; permitted
-reproducible sector screens and sources; qualified daily/no-candidate outcomes;
-safe opt-in durable watchlist research; prior dated runs; independent review;
-required issue closure, owner merges and passing CI. No milestone completion
-claim is possible while its specification/decision gates remain unresolved.
+M9 exit requires every approved revised RSH requirement mapped to evidence,
+validated user criteria and an inspectable nonexecuting M10 handoff, permitted
+known-stock data and any separately approved watchlist/settings scope, independent
+review, required issue closure, owner merges and passing CI. A market screener,
+ranked sector results and daily stock winner are explicitly not M9 exit gates.
+No milestone completion claim is possible while remaining contracts are unresolved.
 
 ## Current verification
 
