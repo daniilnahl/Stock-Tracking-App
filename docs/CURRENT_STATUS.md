@@ -4,6 +4,16 @@ Verified 2026-10-18 for [#186](https://github.com/daniilnahl/Stock-Tracking-App/
 from merged main `6c5a3f9b975ebd2b0230c7a8ccb773de982ecf69`.
 This is a delivery assessment, not new approval of proposed requirements.
 
+**M10 revised direction — 2026-10-18:** the owner excluded
+TauricResearch/TradingAgents and selected FinRobot's agent workflow. The
+[revised scope](milestones/m10-plan.md) preserves criteria/evidence, safe bounded
+execution, lifecycle/storage, API/dashboard integration and independent audit;
+it replaces the former framework blocker with FinRobot-specific #197/#198
+review inputs to #192. M9's editor/EPS remain delivered, general assessment
+proposals remain reusable, and no FinRobot runtime/search is implemented.
+The starting-phase records below are historical snapshots superseded by this
+framework direction and current issue dependencies.
+
 **M10 starting phase — 2026-10-18:** after owner merge of #187 at
 `3b3df5b2f43f1f8df00f88b76714385a865516be` and successful main Foundation
 [39151805497](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/39151805497),

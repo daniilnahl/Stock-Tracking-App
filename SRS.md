@@ -10,6 +10,17 @@
 
 ## Approval record
 
+**M10 framework revision — 2026-10-18:** the owner excluded
+TauricResearch/TradingAgents, then explicitly selected
+[AI4Finance-Foundation/FinRobot](https://github.com/AI4Finance-Foundation/FinRobot)
+as the agent workflow for the re-evaluated M10 integration scope. This selects
+the framework direction, not a generation, revision, default pipeline, model,
+tool/source entitlement, new metric or paid execution. The revised
+[M10 plan](docs/milestones/m10-plan.md) retains criteria-driven discovery,
+evidence, read-only/privacy/budget controls and integration/audit work while
+removing TradingAgents-specific integration and its mandatory review blocker.
+FinRobot-specific feasibility and precise execution contracts remain required.
+
 **M10 start — 2026-10-18:** the owner requested starting Milestone 10 with
 multiple agents able to work on different issues concurrently. This authorizes
 the [parallel feasibility plan](docs/milestones/m10-plan.md): bounded static/offline
@@ -1346,8 +1357,9 @@ unapproved persistence/scheduling contract is assumed.
 
 Taurus agents will search for stocks using user-configured M9 criteria and
 present evidence-backed candidate results under accepted ownership ADR-0017.
-The framework/tool/model implementation remains to be verified; the earlier
-TauricResearch/TradingAgents candidate is not selected by the product label.
+The owner selected FinRobot as the framework direction on 2026-10-18 and
+excluded TauricResearch/TradingAgents. FinRobot generation/revision, tools,
+model and precise execution contract remain to be verified and accepted.
 Optional read-only analysis uses permitted evidence, with observed matches and
 fallible opinions clearly separate. No autonomous portfolio management or
 upstream default graph is accepted.
@@ -1385,7 +1397,7 @@ No spike, environment installation or paid run is authorized by this proposal.
 - **AI1023 — API:** Appropriately secured/authenticated request/inspect/list/cancel/delete run/report endpoints use approved versioned M7 schemas; deletion needs explicit record ownership and approved data policy.
 - **AI1024 — Evaluation:** Fixed offline evidence and curated historical cases assess attribution/schema/missing data/injection/input reproducibility/cost/failure; no profit or prediction claim from small backtests.
 - **AI1025 — Regression:** Absent optional imports, model failure, disabled feature, malicious evidence, permission refusal, timeout, duplicate job and exhausted budgets cannot break core workflows.
-- **AI1026 — Licenses:** Review the selected component/version's actual license/NOTICE obligations and separate data/news/model licensing. Review TradingAgents specifically only if it is selected; the Taurus responsibility does not choose that framework. Source code permission is not data permission.
+- **AI1026 — Licenses:** Review the selected FinRobot component/version's actual license/NOTICE obligations and separate data/news/model licensing. TradingAgents is excluded under the owner's 2026-10-18 revision. Source code permission is not data permission.
 - **AI1027 — Local model:** MAY support proven compatible/resources/security backend; not required and no silent large-model download.
 - **AI1028 — Quality:** Label AI text, source references, unresolved claims, cutoff and configuration; never “verified analyst consensus.”
 - **AI1029 — Rollout:** Explicit disabled-by-default flag and documented disable/uninstall; disabling leaves core functionality and holdings intact.
