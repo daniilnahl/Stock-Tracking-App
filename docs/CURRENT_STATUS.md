@@ -4,6 +4,36 @@ Verified 2026-10-18 for [#186](https://github.com/daniilnahl/Stock-Tracking-App/
 from merged main `6c5a3f9b975ebd2b0230c7a8ccb773de982ecf69`.
 This is a delivery assessment, not new approval of proposed requirements.
 
+**M10 revised direction — 2026-10-18:** the owner excluded
+TauricResearch/TradingAgents and selected FinRobot's agent workflow. The
+[revised scope](milestones/m10-plan.md) preserves criteria/evidence, safe bounded
+execution, lifecycle/storage, API/dashboard integration and independent audit;
+it replaces the former framework blocker with FinRobot-specific #197/#198
+review inputs to #192. M9's editor/EPS remain delivered, general assessment
+proposals remain reusable, and no FinRobot runtime/search is implemented.
+The starting-phase records below are historical snapshots superseded by this
+framework direction and current issue dependencies.
+
+**M10 starting phase — 2026-10-18:** after owner merge of #187 at
+`3b3df5b2f43f1f8df00f88b76714385a865516be` and successful main Foundation
+[39151805497](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/39151805497),
+the owner requested concurrent issue work for M10. The
+[parallel feasibility plan](milestones/m10-plan.md) records three independent
+static/offline assessments. Recommended merge order is this plan first, then
+the three assessment PRs, which were open on 2026-10-18:
+[criteria and candidate evidence #193](https://github.com/daniilnahl/Stock-Tracking-App/pull/193),
+[safety, rights and budgets #194](https://github.com/daniilnahl/Stock-Tracking-App/pull/194)
+and [TradingAgents feasibility #195](https://github.com/daniilnahl/Stock-Tracking-App/pull/195).
+This snapshot does not record their later merges.
+[#192](https://github.com/daniilnahl/Stock-Tracking-App/issues/192)'s proposed
+feasibility ADR now requires the criteria/general-safety and new FinRobot
+findings under the revised dependency table; #195 is no longer required.
+Taurus runtime/search remains unavailable; feasibility findings, owner decisions
+and accepted implementation contracts are still required. The reconciliation
+snapshot below keeps its original #186 context. Issue
+[#186](https://github.com/daniilnahl/Stock-Tracking-App/issues/186) closed as
+completed on 2026-10-18.
+
 ## Is everything implemented?
 
 **No missing runtime requirement was identified within the accepted M0–M8 and
@@ -54,12 +84,13 @@ No live provider or model request was made for this reconciliation.
   merged at `6c5a3f9b975ebd2b0230c7a8ccb773de982ecf69`;
   [main Foundation 39150641007](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/39150641007) passed.
 - Required M9 delivery/audit issues #164/166/168/170/172/174/176/178/180/182/184
-  are closed. This documentation issue #186 is the current open M9 task; its
-  own review/CI/owner merge remains separate. No missing runtime task was found
+  and #186 are closed. #186 closed as completed on 2026-10-18; it is not an open
+  M9 task. No missing runtime task was found
   in the accepted scope by the implementation inspection or independent audit.
 - GitHub milestones M0/M2–M6 are closed. M1/M7/M8 remain administratively open
   with zero open issues; their delivered technical scope is distinct from that
-  container state. M9 remains open for this reconciliation. No milestone was
+  container state. The M9 milestone container remains administratively open with
+  no open issues; the #186 reconciliation is closed. No milestone was
   closed by this task, and no full-roadmap completion is claimed.
 
 Prior dashboard-head checks passed 273 frontend, 31 browser, two real source/wheel
