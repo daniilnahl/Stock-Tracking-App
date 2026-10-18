@@ -155,6 +155,16 @@ an API/dashboard route. Missing, blank or malformed header values raise a safe
 loader does not itself read `.env`; previously populated process variables are
 read as-is. Existing FMP dotenv behavior remains unchanged.
 
+To enable upcoming EPS in the normal local API, append `--enable-upcoming-eps`
+to the four-path launcher command above. It reads the process Finnhub key lazily
+for an admitted manual request; no key is read or provider call made at startup.
+The first 60 seconds return `eps_rate_limited`, then the local budget allows
+30 attempts per rolling minute and one in flight, with a 60-second cooldown
+after an upstream 429. Keep personal non-business use and exclusive account
+quota as confirmed for this setup. EPS stays disabled without the flag, and no
+EPS dashboard form is included yet. See [API operations](docs/API_OPERATIONS.md)
+for exact query/date rules, safe errors and startup/key inheritance guidance.
+
 ## Saved data
 
 The CLI uses cwd-local `stock_tracker.sqlite3`, with independent

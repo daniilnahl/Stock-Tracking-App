@@ -1057,6 +1057,14 @@
             "content": {
               "application/json": {
                 "examples": {
+                  "eps_rate_limited": {
+                    "value": {
+                      "error": {
+                        "code": "eps_rate_limited",
+                        "message": "Upcoming EPS request budget is unavailable."
+                      }
+                    }
+                  },
                   "provider_rate_limited": {
                     "value": {
                       "error": {
@@ -1465,6 +1473,14 @@
             "content": {
               "application/json": {
                 "examples": {
+                  "eps_rate_limited": {
+                    "value": {
+                      "error": {
+                        "code": "eps_rate_limited",
+                        "message": "Upcoming EPS request budget is unavailable."
+                      }
+                    }
+                  },
                   "provider_rate_limited": {
                     "value": {
                       "error": {
@@ -1816,6 +1832,14 @@
             "content": {
               "application/json": {
                 "examples": {
+                  "eps_rate_limited": {
+                    "value": {
+                      "error": {
+                        "code": "eps_rate_limited",
+                        "message": "Upcoming EPS request budget is unavailable."
+                      }
+                    }
+                  },
                   "provider_rate_limited": {
                     "value": {
                       "error": {
@@ -2220,6 +2244,14 @@
             "content": {
               "application/json": {
                 "examples": {
+                  "eps_rate_limited": {
+                    "value": {
+                      "error": {
+                        "code": "eps_rate_limited",
+                        "message": "Upcoming EPS request budget is unavailable."
+                      }
+                    }
+                  },
                   "provider_rate_limited": {
                     "value": {
                       "error": {
@@ -2554,6 +2586,14 @@
             "content": {
               "application/json": {
                 "examples": {
+                  "eps_rate_limited": {
+                    "value": {
+                      "error": {
+                        "code": "eps_rate_limited",
+                        "message": "Upcoming EPS request budget is unavailable."
+                      }
+                    }
+                  },
                   "provider_rate_limited": {
                     "value": {
                       "error": {

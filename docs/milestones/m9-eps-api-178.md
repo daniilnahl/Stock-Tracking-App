@@ -54,7 +54,11 @@ findings. Initial focused API/service checks: 164 passed in 2.83s. Final results
 | `python -m pytest -q --tb=short` | Final full rerun: 3151 passed in 132.93s. |
 | `python -m ruff check .` / `python -m mypy` / `python -m pip check` | Passed; mypy covers configured `config.py` only; no broken requirements. |
 
-Final staged hygiene remains pending. Python remains pinned 3.12.14;
+Final staged hygiene passed: 9 tests in 13.85s. PR #179 exact-head Foundation
+39091329131 passed all five checks; owner merge at
+`e7f4647f393f423f8ac3243c804ae82ed25e9cec` was followed by successful main
+Foundation 39094106222. Independent and Master review passed.
+Python remains pinned 3.12.14;
 frontend uses existing bundled Node
 24.19.0/npm 10.8.2 and installed Edge. No dependency/runtime/CI change. Native
 Windows profiles use task-local TEMP/TMP. An initial sandbox-only focused-test

@@ -26,6 +26,17 @@ no live provider/model, private data or real key is needed.
 
 ## Finnhub upcoming-release EPS — issue #166
 
+For [#180](https://github.com/daniilnahl/Stock-Tracking-App/issues/180), use fixed
+monotonic/civil clocks to test startup quiet time, trailing-window boundaries,
+configuration/construction failures consuming attempts, 429 receipt cooldown,
+concurrency and cancellation cleanup. Verify default/help/health/schema/static/
+invalid/disabled paths acquire no Finnhub key/provider. Exercise real
+configuration/launcher/service/provider/native transport behind a controlled
+synthetic HTTP opener in source and installed-wheel profiles, retaining cold
+import/IO denial guards. Process-only synthetic keys must never fall back to
+dotenv, FMP variables or the Windows user registry. No new actual provider call
+or live CI is authorized; #178's separate dated smoke remains prior evidence.
+
 For [#178](https://github.com/daniilnahl/Stock-Tracking-App/issues/178), verify the
 injected API's exact query admission, default-disabled dependencies, exact
 projection/provenance/request matching, safe error distinction and EPS/shared

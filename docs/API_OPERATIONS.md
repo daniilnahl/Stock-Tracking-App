@@ -152,7 +152,7 @@ currency remain unknown. The flag changes no holdings, financial formula or
 external provider policy. See [API contract details](API_FOUNDATION.md) for
 exact strings/nulls, dates, units, errors and resource bounds.
 
-## Upcoming EPS — injected API only, issue #178
+## Upcoming EPS — opt-in local acquisition, issues #178/#180
 
 [ADR-0016](adr/0016-upcoming-eps-api.md) stage 1 adds authenticated
 `GET /api/v1/research/upcoming-eps?provider_symbol=TEST&start=2026-10-19&end=2027-01-18`.
@@ -161,11 +161,43 @@ exactly one explicit case-sensitive provider symbol and each ISO calendar date;
 the inclusive window is at most 92 dates and must begin after the service's
 injected UTC reference day. No symbol lookup or saved-holdings association occurs.
 
-The normal launcher keeps EPS disabled and returns fixed 503 `eps_disabled`
-after input validation, without looking up a key or contacting Finnhub. This
-task adds no `--enable-upcoming-eps` flag. An embedding caller can explicitly
-inject `ApiServices(upcoming_eps=service, upcoming_eps_enabled=True)` into
-`create_app`; production credential/date/quota composition is a later task.
+The launcher keeps EPS disabled by default and returns fixed 503 `eps_disabled`
+after input validation, without looking up a key or contacting Finnhub. To opt
+in, append `--enable-upcoming-eps` to the existing four-path launch command.
+This flag is independent of `--dashboard` and `--enable-history`; it does not
+enable history or add an EPS dashboard form. Manual requests still require the
+local API bearer token. An embedding caller may independently inject
+`ApiServices(upcoming_eps=service, upcoming_eps_enabled=True)` into `create_app`.
+
+The owner confirmed personal non-business research and exclusive use of the
+relevant Finnhub account quota. Maintain those conditions and run only one
+instance: the local budget does not coordinate other keys, apps or machines.
+The prior live smoke established calendar access at that time; it is not a
+guarantee of future access or a separate permission grant.
+
+Start from a terminal whose **process environment** contains `FINNHUB_API_KEY`.
+If the Windows user variable was added after the terminal/app started, restart
+the launching process so it inherits the new value. Production does not read
+the Windows user registry directly, invoke dotenv or fall back to FMP keys.
+Do not put the Finnhub key in a query, command-line argument or browser field.
+The local bearer and provider key have separate roles.
+
+Enabled startup performs no Finnhub call or key validation. One server-owned
+UTC reference day is sampled for each locally valid operation. After its
+future-date check and budget admission, lazy composition loads/validates the
+process key and builds the restricted native provider with a 5.0-second timeout,
+262144-byte response bound and 128-row bound. Missing/invalid credentials return
+fixed 503 `provider_unavailable`; health/schema remain available.
+
+For the first 60 seconds after enabled app creation, valid EPS requests return
+fixed 429 `eps_rate_limited`, immediately. Thereafter the app permits at most
+30 provider-acquisition attempts in a trailing 60 seconds and one in flight.
+Key validation/construction failures still count; cancellation does not refund
+an attempt. An upstream 429 returns `provider_rate_limited` and starts another
+60-second local cooldown at receipt. A timestamp expires when age reaches 60
+seconds. There is no sleep, request queue, retry, polling, cache or stale fallback.
+Restart creates a fresh budget with the startup quiet period again. Existing
+shared/EPS active-operation capacity refusals remain 503 `api_busy`.
 
 Successful responses preserve reported non-GAAP EPS as exact decimal strings
 or null, fiscal quarter/year, release date/session and UTC receipt time.
@@ -178,7 +210,9 @@ has one active-operation slot inside the API's shared four-operation capacity.
 
 The owner-authorized isolated live test passed through the actual native Finnhub
 transport/service/injected API; see [dated evidence](milestones/m9-eps-api-178.md).
-It does not enable production acquisition or automatic live tests.
+That smoke was separate from production activation and automatic tests.
+The accepted #180 composition uses only deterministic mocked HTTP in tests;
+see [launcher/budget evidence](milestones/m9-eps-composition-180.md).
 
 ## Offline verification limits
 

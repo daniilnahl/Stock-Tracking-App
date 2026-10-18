@@ -27,6 +27,7 @@ ERRORS = {
     "request_too_large": (414, "Request target exceeds the supported size."),
     "history_disabled": (503, "Historical acquisition is disabled."),
     "eps_disabled": (503, "Upcoming EPS acquisition is disabled."),
+    "eps_rate_limited": (429, "Upcoming EPS request budget is unavailable."),
 }
 
 

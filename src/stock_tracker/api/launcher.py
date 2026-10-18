@@ -7,10 +7,12 @@ from .configuration import ApiConfigurationError, load_api_configuration
 
 HELP = """Usage: python -m stock_tracker.api --database FILE --history-cache FILE
        --menu-legacy FILE --evaluation-legacy FILE [--enable-history] [--dashboard]
+       [--enable-upcoming-eps]
 
 Authenticated local holdings read-only API at 127.0.0.1:8000.
 Four explicit distinct file paths are required; no parents are created.
 Historical acquisition is disabled by default.
+Upcoming EPS acquisition is disabled by default.
 
 Options:
   --database FILE           Existing holdings SQLite file or explicit new path
@@ -20,19 +22,21 @@ Options:
   --dashboard              Serve the packaged local read-only dashboard at /
   --enable-history         Enable only after owner-confirmed local display/cache
                            rights are recorded in docs/API_OPERATIONS.md
+  --enable-upcoming-eps    Enable personal-use EPS with exclusive account quota;
+                           startup and rate-limit cooldowns refuse for 60 seconds
   -h, --help               Show this help without configuration or data access
 """
 
 
 def parse_arguments(argv):
     # Static English help avoids argparse/gettext's locale files, language
-    # environment and terminal-size reads. Only these six launch flags exist.
+    # environment and terminal-size reads. Only these seven launch flags exist.
     if "--help" in argv or "-h" in argv:
         sys.stdout.write(HELP)
         raise SystemExit(0)
     names = {"--" + name.replace("_", "-"): name for name in
              ("database", "history_cache", "menu_legacy", "evaluation_legacy")}
-    values, enabled, dashboard = {}, False, False
+    values, enabled, dashboard, upcoming_eps = {}, False, False, False
     index = 0
     while index < len(argv):
         option = argv[index]
@@ -42,6 +46,9 @@ def parse_arguments(argv):
         elif option == "--dashboard" and not dashboard:
             dashboard = True
             index += 1
+        elif option == "--enable-upcoming-eps" and not upcoming_eps:
+            upcoming_eps = True
+            index += 1
         elif option in names and names[option] not in values and index + 1 < len(argv) and not argv[index + 1].startswith("--"):
             values[names[option]] = argv[index + 1]
             index += 2
@@ -50,7 +57,7 @@ def parse_arguments(argv):
     if index != len(argv) or len(values) != 4:
         sys.stderr.write("Local API arguments are invalid. Use --help for the four required file options.\n")
         raise SystemExit(2)
-    return {**values, "enable_history": enabled, "enable_dashboard": dashboard}
+    return {**values, "enable_history": enabled, "enable_dashboard": dashboard, "enable_upcoming_eps": upcoming_eps}
 
 
 def main(argv=None):

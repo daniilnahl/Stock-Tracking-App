@@ -2,14 +2,29 @@
 
 ## Status and decision requested
 
+**Stage 2 accepted — 2026-10-17.** The owner merged #179 at
+`e7f4647f393f423f8ac3243c804ae82ed25e9cec` and requested continuation;
+post-merge Foundation 39094106222 passed. Asked whether the account is for
+personal non-business research with no concurrent quota consumer, the owner
+confirmed **"Yes—personal use and exclusive quota"**. Together with #178's
+successful one-request calendar test, this satisfies the recorded prerequisites
+for [#180](https://github.com/daniilnahl/Stock-Tracking-App/issues/180)'s opt-in
+launcher/composition/budget implementation below. These are owner-reported
+operating assumptions, not an account-wide coordinator or independent license
+certification. The EPS dashboard form remains a separate reviewed task.
+
+No additional live request is needed or authorized by this implementation task.
+Tests use fixed clocks, synthetic credentials and controlled native HTTP
+fixtures. The earlier Windows-user-variable exception applied only to #178's
+manual smoke; production retains process-only `FINNHUB_API_KEY` loading.
+
 **Partially accepted — stage 1, 2026-10-17.** After owner-merging #177, the owner
 explicitly approved Option A and requested online testing: "Yes approved but
 test it online. We need to ensure the API calls actually work".
 [#178](https://github.com/daniilnahl/Stock-Tracking-App/issues/178) implements the
 injected API adapter and separately verifies one live single-symbol request.
-The production flag/composition/budget and dashboard form remain later tasks;
-their access/use and account-budget gates are preserved. No broad M9/M10
-acceptance follows.
+The later stage-2 acceptance above supersedes the original flag/composition/
+budget gate for #180. The dashboard form and broad M9/M10 remain separate.
 
 The isolated live smoke test uses the real restricted transport, adapter,
 service and injected API in memory, with explicit UTC reference date and one
@@ -203,13 +218,14 @@ key/provider acquisition. Existing FMP paths and defaults stay unchanged.
 ## Access/use evidence and activation gate
 
 The owner reported no paid subscription and subsequently reported obtaining a
-Finnhub key (#172). Calendar entitlement and permitted production use remain
-unverified. Do not request a key in chat, create an account, purchase access or
+Finnhub key (#172). #178's one-request live test confirmed technical calendar
+access at test time, and the owner then confirmed personal non-business use and
+exclusive account quota for #180. Do not request a key in chat, create an account, purchase access or
 scrape. Only the explicit one-request smoke authorization above permits a live
 probe in #178; it does not unlock production composition.
-The owner must confirm a usable Free account exists, intended local personal
-non-business use, and exclusive relevant account-budget ownership before live
-composition is enabled.
+The usable Free calendar access and owner operating-use/quota confirmations
+are now recorded above. They authorize the opt-in composition implementation;
+operators must retain those conditions whenever enabling it.
 Account-specific permission or restrictions take precedence; unknown permitted
 use keeps production acquisition disabled. No automatic probe runs on startup.
 

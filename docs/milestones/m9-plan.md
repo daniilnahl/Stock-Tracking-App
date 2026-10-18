@@ -1,5 +1,17 @@
 # M9 — Automated Stock Research planning
 
+## Current opt-in EPS launcher — 2026-10-17
+
+The owner merged #179 at `e7f4647f393f423f8ac3243c804ae82ed25e9cec`;
+post-merge Foundation 39094106222 passed. The injected API and prior live
+calendar smoke are delivered. The owner confirmed personal non-business use and
+exclusive relevant Finnhub account quota, accepting ADR-0016 stage 2 for
+[#180](https://github.com/daniilnahl/Stock-Tracking-App/issues/180). Implement the
+default-false launcher flag, lazy process-only credential composition and
+application-owned monotonic budget. `eps_impl` owns source/tests/generated
+contracts/assets; Master owns docs/verification/publication; `m9_analysis`
+independently reviews. No new live call or dashboard form is part of this task.
+
 ## Current EPS API continuation — 2026-10-17
 
 The owner merged #177 at `d17c9df61d5ffb491d264c599a5dfdfe259c4e4f`;
@@ -148,7 +160,8 @@ dated, comparable, rights-cleared research qualification.
 | #170: opt-in EPS API/composition contract | Stage 1 accepted for #178; later composition remains gated | #168 merged; explicit API/isolated-smoke approval; account/use evidence gates production composition | Master; `m9_analysis` independent review |
 | Provider/field/use rights contract for live activation | Candidate planning task | Owner source/entitlement evidence; dated official documentation review | Unassigned; no live activation issue or PR |
 | #176 custom parameter editor / prepared handoff | Owner-merged #177; main CI passed | Owner custom-parameter answer; accepted ADR-0018 | `eps_impl`; 217 frontend / 29 browser / 2 source-wheel / 3077 Python checks passed; no source metric evaluation, backend call or persistence |
-| #178 injected upcoming-EPS API / isolated live verification | Implemented and locally verified; PR/CI/owner merge pending | Explicit ADR-0016 Option A and online smoke approval; #177 merged and main CI passed | `eps_impl`; 3151 Python / 217 frontend / 29 browser / 2 source-wheel checks passed; one real Finnhub/API request passed; no production composition, budget or UI |
+| #178 injected upcoming-EPS API / isolated live verification | Owner-merged #179; main CI passed | Explicit ADR-0016 Option A and online smoke approval; #177 merged and main CI passed | `eps_impl`; 3151 Python / 217 frontend / 29 browser / 2 source-wheel checks passed; one real Finnhub/API request passed |
+| #180 opt-in EPS launcher / composition / budget | Implemented and locally verified; PR/CI/owner merge pending | #179 merged and main CI passed; owner personal-use/exclusive-quota confirmation | `eps_impl`; 3178 Python / 217 frontend / 29 browser / 2 source-wheel checks passed; no new live call, persistence, dashboard form or provider fallback |
 | Taurus candidate/sector/suggested-stock discovery | Moved to M10 | M9 criteria handoff; separate M10 feasibility/evidence/budget contracts | Coarse follow-up only; no M9 search implementation |
 | Research storage/jobs/API contract | Candidate planning task | Accepted scope and evidence/screen contracts | Unassigned; no implementation issue or PR |
 
