@@ -101,10 +101,18 @@ def test_bad_bounds_before_date_or_provider(rig, start, end):
     assert rig.events == []
 
 
-@pytest.mark.parametrize("research_date", [None, True, "2026-10-16", STAMP, START, END])
+@pytest.mark.parametrize("research_date", [START, END])
 def test_invalid_intended_date_before_provider(rig, research_date):
     rig.analysis_date = research_date
     with pytest.raises(errors.ProviderRequestError):
+        fetch(rig)
+    assert rig.events == ["date"]
+
+
+@pytest.mark.parametrize("research_date", [None, True, "2026-10-16", STAMP])
+def test_malformed_date_supplier_is_dependency_failure(rig, research_date):
+    rig.analysis_date = research_date
+    with pytest.raises(errors.ProviderUnavailableError):
         fetch(rig)
     assert rig.events == ["date"]
 

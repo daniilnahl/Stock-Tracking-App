@@ -4,7 +4,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import date
 
-from stock_tracker.exceptions import ProviderRequestError, ProviderResponseError
+from stock_tracker.exceptions import ProviderRequestError, ProviderResponseError, ProviderUnavailableError, UpcomingEpsInputError
 from stock_tracker.providers.eps import UpcomingEpsEstimate, UpcomingEpsProvider
 from stock_tracker.providers.models import _symbol
 
@@ -14,9 +14,9 @@ def _request_inputs(symbol: str, start: date, end: date) -> None:
         _symbol(symbol)
         symbol.encode("utf-8")
     except (ProviderResponseError, UnicodeEncodeError):
-        raise ProviderRequestError() from None
+        raise UpcomingEpsInputError() from None
     if type(start) is not date or type(end) is not date or start > end:
-        raise ProviderRequestError()
+        raise UpcomingEpsInputError()
 
 
 @dataclass(frozen=True, slots=True)
@@ -81,8 +81,10 @@ class UpcomingEpsService:
     def upcoming_eps(self, symbol: str, *, start: date, end: date) -> UpcomingEpsView:
         _request_inputs(symbol, start, end)
         analysis_date = self._research_date()
-        if type(analysis_date) is not date or not analysis_date < start:
-            raise ProviderRequestError()
+        if type(analysis_date) is not date:
+            raise ProviderUnavailableError()
+        if not analysis_date < start:
+            raise UpcomingEpsInputError()
         provider = self._providers()
         if not callable(getattr(provider, "get_upcoming_eps", None)):
             raise ProviderResponseError()

@@ -24,6 +24,10 @@ def boundary_findings(source, path):
     # is persistence data, not an FMP response parser; all HTTP, concrete-adapter
     # and other provider-payload checks continue to apply to this module.
     neutral_history = path == 'src/stock_tracker/persistence/history_cache.py'
+    # ADR-0016's exact query grammar uses the standard library's pure parser.
+    # This exact symbol in this one HTTP presentation module performs no IO.
+    def pure_query_parser(name):
+        return path == 'src/stock_tracker/api/app.py' and name == 'urllib.parse.parse_qsl'
     legacy = path == 'utils/utility_module.py'
     aliases = {}
     findings = []
@@ -36,7 +40,8 @@ def boundary_findings(source, path):
             continue
         for alias, module in imports:
             aliases[alias] = module
-            if not adapter and module.split('.')[0] in HTTP_ROOTS and not (legacy and module in LEGACY_IMPORTS):
+            if (not adapter and module.split('.')[0] in HTTP_ROOTS
+                    and not (legacy and module in LEGACY_IMPORTS) and not pure_query_parser(module)):
                 findings.append('direct HTTP import')
             if not adapter and (module.startswith('stock_tracker.providers.fmp')
                                 or module.startswith('stock_tracker.providers.transport')):
@@ -68,7 +73,7 @@ def boundary_findings(source, path):
                 findings.append('maintained caller uses retained legacy helper')
             network = name.split('.')[0] in HTTP_ROOTS or name.split('.')[-1] in {'urlopen', 'build_opener'}
             if network and not adapter and not (legacy and function == 'get_jsonparsed_data'
-                                               and name in {'urllib.request.urlopen', 'certifi.where'}):
+                                               and name in {'urllib.request.urlopen', 'certifi.where'}) and not pure_query_parser(name):
                 findings.append('direct HTTP call')
         for child in ast.iter_child_nodes(node):
             visit(child, function)
@@ -116,3 +121,23 @@ def test_accepted_neutral_cache_symbol_mapping_keeps_provider_boundary_guards():
                    'url = "https://financialmodelingprep.com/stable/quote"'):
         assert boundary_findings(source, path)
     assert boundary_findings('symbol = payload["symbol"]', 'stock.py')
+
+
+def test_exact_api_query_parser_exemption_keeps_network_and_other_paths_denied():
+    path = 'src/stock_tracker/api/app.py'
+    for source in (
+        'from urllib.parse import parse_qsl\npairs = parse_qsl(query)',
+        'from urllib.parse import parse_qsl as parse_query\npairs = parse_query(query)',
+    ):
+        assert boundary_findings(source, path) == []
+        assert boundary_findings(source, 'stock.py')
+        assert boundary_findings(source, 'src/stock_tracker/api/other.py')
+    for source in (
+        'from urllib.request import urlopen as fetch\nfetch(url)',
+        'import urllib.request\nurllib.request.urlopen(url)',
+        'from urllib.parse import urlencode\nurlencode(values)',
+        'import urllib.parse\nurllib.parse.parse_qsl(query)',
+        'import socket\nsocket.create_connection(address)',
+        'from urllib.parse import parse_qsl\nparse_qsl(query)\nurlopen(url)',
+    ):
+        assert boundary_findings(source, path)

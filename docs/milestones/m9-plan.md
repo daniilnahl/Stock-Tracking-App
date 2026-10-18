@@ -1,5 +1,17 @@
 # M9 — Automated Stock Research planning
 
+## Current EPS API continuation — 2026-10-17
+
+The owner merged #177 at `d17c9df61d5ffb491d264c599a5dfdfe259c4e4f`;
+post-merge Foundation 39083592809 passed all five checks. The custom criteria
+editor is delivered. The owner then explicitly approved ADR-0016 Option A and
+requested online testing. [#178](https://github.com/daniilnahl/Stock-Tracking-App/issues/178)
+implements its injected, disabled-by-default EPS API adapter, with a separate
+single-symbol live smoke through the real provider transport/service/API.
+`eps_impl` owns implementation/tests, Master owns docs/live verification and
+publication, and `m9_analysis` independently reviews. No production flag/budget/
+composition or UI is introduced; no full-M9 completion is inferred.
+
 ## Current custom editor — 2026-10-17
 
 The owner merged #175, then explicitly chose **arbitrary user-defined parameters
@@ -133,9 +145,10 @@ dated, comparable, rights-cleared research qualification.
 | [#164](https://github.com/daniilnahl/Stock-Tracking-App/issues/164): readiness, decision brief and conditional dependency plan | Planning documents reviewed and locally verified; owner product decisions pending | Current request authorizes planning | Master; `m9_analysis` independent review passed; publication/current PR tracked on #164 |
 | #166: Finnhub Free upcoming-release EPS contract/adapter | Owner-merged; post-merge CI passed | Narrow owner-selected reported-data scope | `eps_impl`; PR #167; independent review passed |
 | #168: injected upcoming-EPS application service | Owner-merged #169; main CI passed | #166 merged; ADR-0015 service addendum | `eps_impl`; complete independent review passed; 3045 full tests passed |
-| #170: opt-in EPS API/composition contract | Proposal in review; runtime blocked on acceptance | #168 merged; account/use evidence gates live composition | Master; `m9_analysis` independent review |
+| #170: opt-in EPS API/composition contract | Stage 1 accepted for #178; later composition remains gated | #168 merged; explicit API/isolated-smoke approval; account/use evidence gates production composition | Master; `m9_analysis` independent review |
 | Provider/field/use rights contract for live activation | Candidate planning task | Owner source/entitlement evidence; dated official documentation review | Unassigned; no live activation issue or PR |
-| #176 custom parameter editor / prepared handoff | Implemented and locally verified; PR/CI/owner merge pending | Owner custom-parameter answer; accepted ADR-0018 | `eps_impl`; 217 frontend / 29 browser / 2 source-wheel / 3077 Python checks passed; no source metric evaluation, backend call or persistence |
+| #176 custom parameter editor / prepared handoff | Owner-merged #177; main CI passed | Owner custom-parameter answer; accepted ADR-0018 | `eps_impl`; 217 frontend / 29 browser / 2 source-wheel / 3077 Python checks passed; no source metric evaluation, backend call or persistence |
+| #178 injected upcoming-EPS API / isolated live verification | Implemented and locally verified; PR/CI/owner merge pending | Explicit ADR-0016 Option A and online smoke approval; #177 merged and main CI passed | `eps_impl`; 3151 Python / 217 frontend / 29 browser / 2 source-wheel checks passed; one real Finnhub/API request passed; no production composition, budget or UI |
 | Taurus candidate/sector/suggested-stock discovery | Moved to M10 | M9 criteria handoff; separate M10 feasibility/evidence/budget contracts | Coarse follow-up only; no M9 search implementation |
 | Research storage/jobs/API contract | Candidate planning task | Accepted scope and evidence/screen contracts | Unassigned; no implementation issue or PR |
 

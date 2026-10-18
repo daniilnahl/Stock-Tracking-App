@@ -71,12 +71,12 @@ only, not recommendations, agents, provider activation or new APIs.
 
 ## Future placeholders — separate backend work
 
-- [ ] **User stock criteria — M9:** following owner-accepted
+- [x] **User stock criteria — M9:** following owner-accepted
   [ADR-0017](adr/0017-user-criteria-taurus-discovery.md), let users configure
   custom parameters under [ADR-0018](adr/0018-custom-criteria-editor.md)/#176:
   numeric ranges with explicit user context or text requirements, exact prepared
-  snapshot and tab-memory lifecycle. Implementation/verification is tracked on
-  #176. M9 validates/prepares descriptive criteria without calling a screener or
+  snapshot and tab-memory lifecycle. Delivered in owner-merged #177 for #176;
+  post-merge Foundation 39083592809 passed. M9 validates/prepares descriptive criteria without calling a screener or
   executing a market search. Known-stock data calls remain separate; arbitrary
   source metric evaluation and durable saving are not implemented by this editor.
 - [ ] **Recommend stock of the day — M10:** Taurus searches for stocks using

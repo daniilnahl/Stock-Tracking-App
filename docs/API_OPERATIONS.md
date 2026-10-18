@@ -152,6 +152,34 @@ currency remain unknown. The flag changes no holdings, financial formula or
 external provider policy. See [API contract details](API_FOUNDATION.md) for
 exact strings/nulls, dates, units, errors and resource bounds.
 
+## Upcoming EPS — injected API only, issue #178
+
+[ADR-0016](adr/0016-upcoming-eps-api.md) stage 1 adds authenticated
+`GET /api/v1/research/upcoming-eps?provider_symbol=TEST&start=2026-10-19&end=2027-01-18`.
+This synthetic request illustrates syntax, not a current-date preset. Supply
+exactly one explicit case-sensitive provider symbol and each ISO calendar date;
+the inclusive window is at most 92 dates and must begin after the service's
+injected UTC reference day. No symbol lookup or saved-holdings association occurs.
+
+The normal launcher keeps EPS disabled and returns fixed 503 `eps_disabled`
+after input validation, without looking up a key or contacting Finnhub. This
+task adds no `--enable-upcoming-eps` flag. An embedding caller can explicitly
+inject `ApiServices(upcoming_eps=service, upcoming_eps_enabled=True)` into
+`create_app`; production credential/date/quota composition is a later task.
+
+Successful responses preserve reported non-GAAP EPS as exact decimal strings
+or null, fiscal quarter/year, release date/session and UTC receipt time.
+Currency, share basis, publication time and fiscal-period end remain unknown.
+Coverage is `not_asserted`; an empty list establishes no completeness or absence
+of upcoming earnings. No EPS growth, comparison or ranking is calculated.
+Invalid local input is 422; upstream access failures are safe 503 categories,
+with existing rate-limit/timeout/malformed-response categories preserved. EPS
+has one active-operation slot inside the API's shared four-operation capacity.
+
+The owner-authorized isolated live test passed through the actual native Finnhub
+transport/service/injected API; see [dated evidence](milestones/m9-eps-api-178.md).
+It does not enable production acquisition or automatic live tests.
+
 ## Offline verification limits
 
 Launcher tests replace `uvicorn.run` and never start a real listener. Real

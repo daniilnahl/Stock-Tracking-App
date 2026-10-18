@@ -111,3 +111,35 @@ class HistoryResponse(WireModel):
     price_basis: Literal["raw"]
     provenance: HistoryProvenance
     bars: list[BarResponse]
+
+
+class UpcomingEpsObservationResponse(WireModel):
+    symbol: str
+    fiscal_year: int = Field(ge=1, le=9999)
+    fiscal_quarter: int = Field(ge=1, le=4)
+    release_date: str = Field(pattern=r"^[0-9]{4}-[0-9]{2}-[0-9]{2}$")
+    release_session: Literal["bmo", "amc", "dmh"] | None
+    estimate: DecimalText | None
+    retrieved_at: str = Field(pattern=r"^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]{6})?Z$",
+                              description="UTC receipt timestamp; not forecast publication/vintage.")
+    provider: Literal["finnhub"]
+    source: Literal["earnings_calendar"]
+    source_field: Literal["epsEstimate"]
+    accounting_basis: Literal["non-GAAP"]
+    units: Literal["currency-per-share"]
+    currency: None
+    share_basis: None
+    published_at: None
+    fiscal_period_end: None
+
+
+class UpcomingEpsResponse(WireModel):
+    provider: Literal["finnhub"]
+    provider_symbol: str
+    start: str = Field(pattern=r"^[0-9]{4}-[0-9]{2}-[0-9]{2}$")
+    end: str = Field(pattern=r"^[0-9]{4}-[0-9]{2}-[0-9]{2}$")
+    analysis_date: str = Field(pattern=r"^[0-9]{4}-[0-9]{2}-[0-9]{2}$")
+    date_convention: Literal["utc-reference-day/vendor-date-labels"]
+    observation_kind: Literal["upcoming_release_eps_estimate"]
+    coverage: Literal["not_asserted"]
+    observations: list[UpcomingEpsObservationResponse]

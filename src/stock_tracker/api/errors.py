@@ -26,6 +26,7 @@ ERRORS = {
     "response_too_large": (503, "Response exceeds the supported size."),
     "request_too_large": (414, "Request target exceeds the supported size."),
     "history_disabled": (503, "Historical acquisition is disabled."),
+    "eps_disabled": (503, "Upcoming EPS acquisition is disabled."),
 }
 
 
@@ -45,6 +46,7 @@ def error_code(error: Exception) -> str:
     for category, code in (
         (failures.LegacyStatePresentError, "legacy_state_present"),
         (failures.HistoryRangeError, "invalid_request"),
+        (failures.UpcomingEpsInputError, "invalid_request"),
         (DomainValidationError, "invalid_request"),
         (failures.InvalidTickerError, "invalid_ticker"),
         (failures.ProviderTimeoutError, "provider_timeout"),

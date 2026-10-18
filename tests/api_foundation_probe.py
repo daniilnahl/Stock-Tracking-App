@@ -23,6 +23,7 @@ FORBIDDEN = (
     "utils", "stock_tracker.cli", "stock_tracker.compatibility",
     "rich", "typer", "matplotlib", "stock_tracker.providers.factory",
     "stock_tracker.providers.fmp", "stock_tracker.providers.transport", "stock_tracker.providers.history_cache",
+    "stock_tracker.providers.finnhub", "stock_tracker.providers.finnhub_transport",
     "stock_tracker.persistence.connection", "stock_tracker.persistence.sqlite_watchlists",
     "stock_tracker.persistence.sqlite_portfolios", "stock_tracker.persistence.migrations",
     "stock_tracker.persistence.history_cache", "stock_tracker.persistence.transfer",
@@ -62,6 +63,8 @@ async def exercise(create_app):
     from stock_tracker.services.watchlists import WatchlistService
     from stock_tracker.services.history import HistoryService
     from stock_tracker.providers.models import PriceBar
+    from stock_tracker.providers.eps import UpcomingEpsEstimate
+    from stock_tracker.services.eps import UpcomingEpsService
     calls = []
     class Repository:
         def get(self, namespace):
@@ -83,7 +86,7 @@ async def exercise(create_app):
         return Provider()
     instance = create_app(token=synthetic_credential, services=ApiServices(watchlist=acquire,
         history=HistoryService(history_source, clock=lambda: datetime(2020, 3, 1, tzinfo=timezone.utc)), history_enabled=True))
-    assert {route.path for route in instance.routes} == {"/health", "/api/v1/openapi.json", "/api/v1/watchlists/{namespace}", "/api/v1/watchlists/{namespace}/entries/{ordinal}/history"}
+    assert {route.path for route in instance.routes} == {"/health", "/api/v1/openapi.json", "/api/v1/watchlists/{namespace}", "/api/v1/watchlists/{namespace}/entries/{ordinal}/history", "/api/v1/research/upcoming-eps"}
     for path, authorization in (("/health", []), ("/api/v1/openapi.json", [(b"authorization", b"Bearer " + synthetic_credential.encode())]),
                                 ("/api/v1/watchlists/menu_watchlist", [(b"authorization", b"Bearer " + synthetic_credential.encode())]),
                                 ("/api/v1/watchlists/daniils_stock_method", [(b"authorization", b"Bearer " + synthetic_credential.encode())]),
@@ -104,7 +107,7 @@ async def exercise(create_app):
         if path == "/health":
             assert payload == {"status": "ok"} and calls == []
         elif path.endswith("openapi.json"):
-            assert payload["paths"].keys() == {"/health", "/api/v1/openapi.json", "/api/v1/watchlists/{namespace}", "/api/v1/watchlists/{namespace}/entries/{ordinal}/history"} and calls == []
+            assert payload["paths"].keys() == {"/health", "/api/v1/openapi.json", "/api/v1/watchlists/{namespace}", "/api/v1/watchlists/{namespace}/entries/{ordinal}/history", "/api/v1/research/upcoming-eps"} and calls == []
         elif path.endswith("/history"):
             assert payload["ordinal"] == 1 and payload["start"] == "2015-02-28" and payload["end"] == "2020-02-29"
             assert payload["bars"][0]["close"] == "110.0000000000000000001"
@@ -118,6 +121,37 @@ async def exercise(create_app):
             assert payload["entries"][0]["snapshot"]["unrealized_return"] == "0.2"
     assert calls == ["menu_watchlist", "daniils_stock_method", "menu_watchlist"]
     assert history_calls == [("AAPL", date(2015, 2, 28), date(2020, 2, 29))]
+    eps_calls = []
+    class EpsProvider:
+        def get_upcoming_eps(self, symbol, **kwargs):
+            eps_calls.append((symbol, kwargs))
+            return (UpcomingEpsEstimate(symbol, 2026, 3, date(2026, 10, 20), None,
+                    Decimal("1.250000000000000001"), datetime(2026, 10, 17, tzinfo=timezone.utc)),)
+    service = UpcomingEpsService(lambda: EpsProvider(), research_date=lambda: date(2026, 10, 17))
+    eps_path = "/api/v1/research/upcoming-eps"
+    scope.update(path=eps_path, raw_path=eps_path.encode(),
+                 query_string=b"provider_symbol=TEST&start=2026-10-18&end=2026-10-31")
+    sent = []
+    from stock_tracker.api import errors as api_errors
+    safe_logs = []
+    def safe_failure_log(message, code):
+        assert message == "API operation failed: %s" and code == "eps_disabled"
+        safe_logs.append(code)
+    # This failure intentionally emits its fixed category. Capture and validate
+    # only this logger call while ordinary output remains denied by the guards.
+    with patch.object(api_errors.logger, "warning", safe_failure_log):
+        await create_app(token=synthetic_credential, services=ApiServices(upcoming_eps=service))(scope, receive, send)
+    assert sent[0]["status"] == 503 and eps_calls == []
+    assert safe_logs == ["eps_disabled"]
+    sent = []
+    await create_app(token=synthetic_credential, services=ApiServices(upcoming_eps=service, upcoming_eps_enabled=True))(scope, receive, send)
+    assert sent[0]["status"] == 200
+    eps_payload = json.loads(b"".join(item.get("body", b"") for item in sent))
+    assert eps_payload["observations"][0]["estimate"] == "1.250000000000000001"
+    assert eps_payload["observations"][0]["currency"] is None
+    assert eps_payload["date_convention"] == "utc-reference-day/vendor-date-labels"
+    assert eps_calls == [("TEST", {"start": date(2026, 10, 18), "end": date(2026, 10, 31), "analysis_date": date(2026, 10, 17)})]
+    scope["query_string"] = b""
     # Opt-in construction/health/schema also run under all original cold IO
     # guards. Registering assets must not inspect or open their resources.
     dashboard = create_app(token=synthetic_credential, dashboard=True)

@@ -56,5 +56,8 @@ to this editor, and the page explicitly states that reload clears its contents.
 An initial sandbox-only native junction test failure passed on approved native Windows
 execution with task-local TEMP/TMP; no test or dependency was weakened.
 No actual credential, holdings or model/provider request is part of this task.
-Final staged hygiene is repeated after this evidence update. Hosted exact-head CI
-and owner merge remain publication gates; this is not whole-M9 completion.
+Final staged hygiene passed: 9 tests in 14.91s. PR #177 exact-head Foundation
+39083264222 passed all five jobs; the owner merged it at
+`d17c9df61d5ffb491d264c599a5dfdfe259c4e4f`, followed by successful main Foundation
+39083592809. Independent review and Master review passed. This is not whole-M9
+completion; remaining contracts retain their separate gates.

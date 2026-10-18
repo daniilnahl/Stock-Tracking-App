@@ -2,12 +2,34 @@
 
 ## Status and decision requested
 
-**Proposed — owner acceptance required.** This is the concrete proposal for
+**Partially accepted — stage 1, 2026-10-17.** After owner-merging #177, the owner
+explicitly approved Option A and requested online testing: "Yes approved but
+test it online. We need to ensure the API calls actually work".
+[#178](https://github.com/daniilnahl/Stock-Tracking-App/issues/178) implements the
+injected API adapter and separately verifies one live single-symbol request.
+The production flag/composition/budget and dashboard form remain later tasks;
+their access/use and account-budget gates are preserved. No broad M9/M10
+acceptance follows.
+
+The isolated live smoke test uses the real restricted transport, adapter,
+service and injected API in memory, with explicit UTC reference date and one
+future window for a public symbol. The owner authorizes reading the existing
+Finnhub environment credential solely for this test. If the running process has
+not inherited the Windows user variable, pass that value into the test process
+only; do not change saved environment settings or the process-only production
+loader. Never print/store the key, response body or observations; record only
+safe status, parsing and counts. Make no retries, market scan, persistence or
+holdings access. The live profile is manual and excluded from pytest/CI; its
+success establishes technical access at test time, not completeness, permitted
+production use or account-wide quota ownership.
+
+The original proposal follows for traceability. This is the concrete proposal for
 [#170](https://github.com/daniilnahl/Stock-Tracking-App/issues/170), prepared after
 the owner merged #169 and instructed continued work. Main
 `1847a155d2e44f1fa82e315e060f557a421e542d` passed
 [Foundation 38988510270](https://github.com/daniilnahl/Stock-Tracking-App/actions/runs/38988510270).
-This document changes no runtime behavior and does not accept itself.
+The original document changed no runtime behavior; the explicit acceptance above
+authorizes stage 1's runtime change.
 
 Accepting Option A below would authorize the exact injected API implementation
 and tests. Production composition additionally requires the account/use evidence
@@ -180,9 +202,11 @@ key/provider acquisition. Existing FMP paths and defaults stay unchanged.
 
 ## Access/use evidence and activation gate
 
-The owner reported no paid subscription. Free account/key existence and this
-account's calendar entitlement have not been established. Do not request a key
-in chat, create an account, purchase access, scrape or run an authenticated probe.
+The owner reported no paid subscription and subsequently reported obtaining a
+Finnhub key (#172). Calendar entitlement and permitted production use remain
+unverified. Do not request a key in chat, create an account, purchase access or
+scrape. Only the explicit one-request smoke authorization above permits a live
+probe in #178; it does not unlock production composition.
 The owner must confirm a usable Free account exists, intended local personal
 non-business use, and exclusive relevant account-budget ownership before live
 composition is enabled.
