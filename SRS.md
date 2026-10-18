@@ -10,6 +10,15 @@
 
 ## Approval record
 
+**Upcoming-EPS dashboard — 2026-10-17:** after the dashboard form was identified
+as next, the owner merged #181 and instructed continuation. This accepts
+[ADR-0016](docs/adr/0016-upcoming-eps-api.md) stage 3/#182's bounded explicit
+symbol/date form, manual authenticated local request and exact raw observation/
+provenance display using the existing design/session. No date preset, stock
+mapping, criteria evaluation, financial arithmetic, new live probe, storage or
+M10 search follows. Earlier records leaving the UI separate are superseded only
+for this form; broader M9 exit still needs its independent audit.
+
 **Upcoming-EPS launcher — 2026-10-17:** the owner merged #179, requested
 continuation, and confirmed personal non-business use and exclusive relevant
 Finnhub account quota. Together with the successful prior calendar smoke, this

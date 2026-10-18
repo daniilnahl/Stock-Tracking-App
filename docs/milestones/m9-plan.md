@@ -1,5 +1,17 @@
 # M9 — Automated Stock Research planning
 
+## Current manual EPS dashboard — 2026-10-17
+
+The owner merged #181 at `3af4db73d734453737e956819ef232c4c9197fdd`;
+post-merge Foundation 39097470838 passed. After the dashboard EPS form was named
+as next, the owner instructed continuation. ADR-0016 stage 3/#182 defines the
+bounded manual form over the stable local endpoint/composition: three explicit
+blank fields, exact raw observations/provenance and existing session/error/
+cancellation protections. `eps_impl` owns frontend/tests/browser/integration and
+packaged assets; Master owns docs/final verification/publication; `m9_analysis`
+independently reviews. No new live request, backend behavior, financial metric,
+stock search, storage or M10 execution is part of this task.
+
 ## Current opt-in EPS launcher — 2026-10-17
 
 The owner merged #179 at `e7f4647f393f423f8ac3243c804ae82ed25e9cec`;
@@ -161,7 +173,8 @@ dated, comparable, rights-cleared research qualification.
 | Provider/field/use rights contract for live activation | Candidate planning task | Owner source/entitlement evidence; dated official documentation review | Unassigned; no live activation issue or PR |
 | #176 custom parameter editor / prepared handoff | Owner-merged #177; main CI passed | Owner custom-parameter answer; accepted ADR-0018 | `eps_impl`; 217 frontend / 29 browser / 2 source-wheel / 3077 Python checks passed; no source metric evaluation, backend call or persistence |
 | #178 injected upcoming-EPS API / isolated live verification | Owner-merged #179; main CI passed | Explicit ADR-0016 Option A and online smoke approval; #177 merged and main CI passed | `eps_impl`; 3151 Python / 217 frontend / 29 browser / 2 source-wheel checks passed; one real Finnhub/API request passed |
-| #180 opt-in EPS launcher / composition / budget | Implemented and locally verified; PR/CI/owner merge pending | #179 merged and main CI passed; owner personal-use/exclusive-quota confirmation | `eps_impl`; 3178 Python / 217 frontend / 29 browser / 2 source-wheel checks passed; no new live call, persistence, dashboard form or provider fallback |
+| #180 opt-in EPS launcher / composition / budget | Owner-merged #181; main CI passed | #179 merged and main CI passed; owner personal-use/exclusive-quota confirmation | `eps_impl`; 3178 Python / 217 frontend / 29 browser / 2 source-wheel checks passed; no new live call or persistence |
+| #182 manual upcoming-EPS dashboard | Implemented and locally verified; PR/CI/owner merge pending | #181 merged and main CI passed; owner continuation after identifying dashboard form as next | `eps_impl`; 3178 Python / 273 frontend / 31 browser / 2 source-wheel checks passed; exact sourced observations, no backend changes or search |
 | Taurus candidate/sector/suggested-stock discovery | Moved to M10 | M9 criteria handoff; separate M10 feasibility/evidence/budget contracts | Coarse follow-up only; no M9 search implementation |
 | Research storage/jobs/API contract | Candidate planning task | Accepted scope and evidence/screen contracts | Unassigned; no implementation issue or PR |
 

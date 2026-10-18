@@ -26,6 +26,18 @@ no live provider/model, private data or real key is needed.
 
 ## Finnhub upcoming-release EPS — issue #166
 
+For [#182](https://github.com/daniilnahl/Stock-Tracking-App/issues/182), add frontend
+unit/component and browser coverage for explicit manual requests, exact string/
+zero/negative/null/empty distinctions, generated-schema plus request/row/date/
+receipt/provenance validation, no automatic requests, safe errors, editing/
+supersession/cancel/route departure and session-wide 401/disconnect/reload clears.
+Use fixed synthetic payloads/clocks and the existing same-origin client. Show
+mobile/keyboard/light-dark layouts with conspicuous synthetic screenshot labels.
+Rebuild/check packaged assets and extend actual source/wheel launcher integration
+to submit against the real default-disabled route without API mocks or provider
+keys. Run full frontend/browser/integration and canonical Python profiles
+sequentially. No real Finnhub request or credential is needed or authorized here.
+
 For [#180](https://github.com/daniilnahl/Stock-Tracking-App/issues/180), use fixed
 monotonic/civil clocks to test startup quiet time, trailing-window boundaries,
 configuration/construction failures consuming attempts, 429 receipt cooldown,

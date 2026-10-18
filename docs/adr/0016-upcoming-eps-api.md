@@ -2,6 +2,57 @@
 
 ## Status and decision requested
 
+**Stage 3 accepted for the bounded manual form — 2026-10-17.** After the
+dashboard EPS form was identified as the next step, the owner merged #181 and
+instructed **"merged, continue"**. Independently verified merge
+`3af4db73d734453737e956819ef232c4c9197fdd` passed main Foundation 39097470838.
+[#182](https://github.com/daniilnahl/Stock-Tracking-App/issues/182) delivers the
+separate UI task described below, reusing the approved pixel/monochrome design
+and existing local bearer session. This accepts that manual form only, not
+broader research, a new live probe, financial comparisons or M10 discovery.
+
+### Stage 3 UI contract
+
+- Add primary `#upcoming-eps` navigation and an Overview entry. Provide three
+  initially blank fields: explicit Finnhub symbol, inclusive start and end
+  dates. Do not infer saved-stock identity, uppercase/trim input, choose a
+  default window or use browser time as the server's UTC reference day.
+- Reuse the authenticated same-origin client and its exact JSON/4 MiB response
+  bound, request cancellation and safe errors. No Finnhub key field, direct
+  vendor URL, query credential, new storage, polling or automatic retry/fetch.
+  Only a deliberate manual submission requests EPS. Validate symbol/date/span
+  grammar locally; the server owns the strictly-future cutoff.
+- Decode the generated schema and bind every response to the exact requested
+  symbol/window. Validate real calendar labels and UTC receipt syntax, at most
+  128 rows, unique fiscal periods and the backend's ordered observations.
+  Fixed provenance and unknown fields remain exact; reject incompatible output
+  instead of repairing, sorting, dropping rows or publishing a partial result.
+- Render reported non-GAAP EPS as exact strings, including signed zero and
+  negative values. Null is unavailable; an empty successful list means only no
+  returned observations. Display requested/reference dates, fiscal period,
+  vendor release date/session, UTC receipt, provider/source/source field,
+  currency-per-share units, and explicit unknown currency/share basis/
+  publication time/fiscal-period end. Coverage stays `not_asserted`; receipt
+  time is not forecast vintage. No currency symbol, formula, score, comparison,
+  criteria match or future-price claim is inferred.
+- Use read/cancel/clear controls with separate idle/loading/empty/error states.
+  Editing, clear, a new request, cancellation or route departure invalidates
+  earlier results and prevents late publication. Route departure clears this
+  form's local draft/results; unlike the custom-criteria editor it introduces
+  no app-owned draft retention. Disconnect, 401 and page lifecycle clear private
+  results through the existing session. Keep independent watchlist/criteria
+  workflows intact, apart from established session-wide authentication clearing.
+- Explain fixed disabled, startup/local budget, upstream quota, busy, provider
+  failure and authentication outcomes using safe approved messages. No inferred
+  countdown or background request. Reuse accessible labels, first-error focus,
+  keyboard cancellation, shared components and mobile/theme/table-overflow rules.
+- Test strict validation/precision/provenance/context, manual-only calls,
+  supersession/cancellation/401/disconnect/reload, and no new persistence with
+  synthetic fixtures. Rebuild packaged assets; verify unit/type/build/package,
+  browser and actual source/wheel default-disabled API interaction, followed by
+  canonical Python checks and independent review. No additional live data or
+  credential is needed; the earlier native live smoke remains dated evidence.
+
 **Stage 2 accepted — 2026-10-17.** The owner merged #179 at
 `e7f4647f393f423f8ac3243c804ae82ed25e9cec` and requested continuation;
 post-merge Foundation 39094106222 passed. Asked whether the account is for
@@ -11,7 +62,7 @@ successful one-request calendar test, this satisfies the recorded prerequisites
 for [#180](https://github.com/daniilnahl/Stock-Tracking-App/issues/180)'s opt-in
 launcher/composition/budget implementation below. These are owner-reported
 operating assumptions, not an account-wide coordinator or independent license
-certification. The EPS dashboard form remains a separate reviewed task.
+certification. Stage 3 above now supplies the separately reviewed dashboard task.
 
 No additional live request is needed or authorized by this implementation task.
 Tests use fixed clocks, synthetic credentials and controlled native HTTP
@@ -24,7 +75,8 @@ test it online. We need to ensure the API calls actually work".
 [#178](https://github.com/daniilnahl/Stock-Tracking-App/issues/178) implements the
 injected API adapter and separately verifies one live single-symbol request.
 The later stage-2 acceptance above supersedes the original flag/composition/
-budget gate for #180. The dashboard form and broad M9/M10 remain separate.
+budget gate for #180; stage 3 above accepts the bounded form. Broader M9/M10
+remain separate.
 
 The isolated live smoke test uses the real restricted transport, adapter,
 service and injected API in memory, with explicit UTC reference date and one

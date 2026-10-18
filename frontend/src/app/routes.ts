@@ -2,6 +2,7 @@ export const routes = {
   overview: { label: "Overview", title: "Your watchlists, clearly.", navigation: true },
   watchlists: { label: "Watchlists", title: "Saved watchlists", navigation: true },
   "stock-criteria": { label: "Stock criteria", title: "Stock criteria", navigation: true },
+  "upcoming-eps": { label: "Upcoming EPS", title: "Upcoming EPS", navigation: true },
   settings: { label: "Settings", title: "Make yourself at home.", navigation: true },
   "client-foundation": { label: "Client foundation", title: "Client foundation", navigation: false },
 } as const;

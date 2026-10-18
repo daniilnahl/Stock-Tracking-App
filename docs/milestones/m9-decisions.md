@@ -1,5 +1,12 @@
 # M9 decision brief
 
+**EPS dashboard continuation — 2026-10-17:** the owner merged #181 and
+instructed continuation after the dashboard form was identified as next. This
+accepts ADR-0016 stage 3/#182's explicit manual symbol/date form with exact raw
+observations/provenance, existing session and lifecycle protections. Broader
+research, financial comparison, persistence, discovery and another live probe
+remain outside this bounded UI task.
+
 **EPS composition confirmation — 2026-10-17:** following owner merge of #179
 and passing main CI, the owner confirmed personal non-business use and exclusive
 relevant Finnhub account quota. Together with the successful prior live calendar

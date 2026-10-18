@@ -161,8 +161,12 @@ for an admitted manual request; no key is read or provider call made at startup.
 The first 60 seconds return `eps_rate_limited`, then the local budget allows
 30 attempts per rolling minute and one in flight, with a 60-second cooldown
 after an upstream 429. Keep personal non-business use and exclusive account
-quota as confirmed for this setup. EPS stays disabled without the flag, and no
-EPS dashboard form is included yet. See [API operations](docs/API_OPERATIONS.md)
+quota as confirmed for this setup. EPS stays disabled without the flag. The
+**Upcoming EPS** dashboard page lets you enter an explicit Finnhub symbol and
+start/end dates, then request exact raw estimates manually using your existing
+local API connection. No provider key is entered in the browser. Results retain
+unknown currency/share basis and source/receipt limits; no EPS comparison or
+stock search runs. See [API operations](docs/API_OPERATIONS.md)
 for exact query/date rules, safe errors and startup/key inheritance guidance.
 
 ## Saved data

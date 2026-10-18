@@ -64,8 +64,11 @@ new composition and budget. Actual checks so far:
 python -m pytest tests/test_eps_budget.py tests/test_api_eps_composition.py tests/test_api_launcher.py tests/test_api_boundary.py tests/test_api_foundation.py tests/test_api_upcoming_eps.py tests/test_packaging.py --basetemp=.venv/eps-composition-final -q
 ```
 
-Final staged hygiene is repeated after this evidence update; its result and
-exact-head CI are recorded on the PR. Owner merge remains a separate gate.
+Final staged hygiene passed: 9 tests in 14.46s. PR #181 exact-head Foundation
+39095295435 passed all five checks; the owner merged at
+`3af4db73d734453737e956819ef232c4c9197fdd`, followed by successful main Foundation
+39097470838. Independent and Master review passed. No whole-M9 completion is
+claimed; the dashboard and exit audit remain separate tasks.
 Python 3.12.14, bundled Node 24.19.0/npm 10.8.2 and installed Edge
 are unchanged. Native Windows profiles use task-local TEMP/TMP, synthetic process
 keys and controlled HTTP, with no actual provider request or user state.

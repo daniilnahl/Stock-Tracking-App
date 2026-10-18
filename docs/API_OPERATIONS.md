@@ -165,7 +165,11 @@ The launcher keeps EPS disabled by default and returns fixed 503 `eps_disabled`
 after input validation, without looking up a key or contacting Finnhub. To opt
 in, append `--enable-upcoming-eps` to the existing four-path launch command.
 This flag is independent of `--dashboard` and `--enable-history`; it does not
-enable history or add an EPS dashboard form. Manual requests still require the
+enable history. With `--dashboard`, use the **Upcoming EPS** page after configuring
+the existing local connection in Settings. Enter an explicit provider symbol and
+start/end dates, then submit manually; no request runs just by opening the page.
+Editing, clear, cancel or leaving this route removes earlier results. Neither
+the form nor its results are stored across reload. Manual requests require the
 local API bearer token. An embedding caller may independently inject
 `ApiServices(upcoming_eps=service, upcoming_eps_enabled=True)` into `create_app`.
 

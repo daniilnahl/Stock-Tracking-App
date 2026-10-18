@@ -1,0 +1,2 @@
+.upcoming-eps-editor input { width: 100%; min-width: 0; }
+.upcoming-eps-editor [aria-invalid="true"] { border-style: dashed; }
