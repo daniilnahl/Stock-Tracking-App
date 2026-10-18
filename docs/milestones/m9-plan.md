@@ -263,3 +263,16 @@ only. M9 runtime, provider entitlement and milestone exit are not verified:
 contracts/owner evidence are pending and no research implementation exists.
 Hosted PR CI remains a separate publication gate; #164 tracks its current state.
 Past M8 results do not substitute for this branch's checks.
+
+## Accepted-scope exit audit — 2026-10-18
+
+[#184](https://github.com/daniilnahl/Stock-Tracking-App/issues/184)'s
+[exit audit](m9-exit-audit-184.md) supersedes older planning status for the
+accepted criteria/EPS slices, mapping source, tests and delivery evidence.
+No missing runtime feature was identified; the prepared criteria preview already
+supplies the nonexecuting M10 boundary. Broader proposed research is not
+automatically required work. PR #183 currently reports open/unmerged through both
+GitHub connector and REST, despite the owner's merge report; its exact-head CI
+passed. Final exit remains pending its actual merge/main CI, this audit's
+review/merge and required issue closure. No milestone closure, new product
+acceptance or M10 execution is inferred.
