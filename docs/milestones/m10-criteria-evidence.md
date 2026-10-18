@@ -12,11 +12,11 @@ AI1009–1011, AI1013–1015, AI1020, AI1024–1025 and AI1031–1032 are review
 not blanket implementation acceptance. No runtime, public schema, endpoint,
 model, discovery tool, financial metric or production activation is added.
 
-This assessment is one focused static/offline session, bounded to 45 minutes.
 It inspects repository contracts, implementation and tests. It makes no market,
 model or upstream execution request and requires no installation or credential.
-Master owns the shared plan and synthesis; framework and safety assessments
-have separate files and may proceed concurrently. A later accepted contract
+Related M10 assessments:
+[safety, rights and budgets](m10-safety-assessment.md) and
+[framework feasibility](m10-framework-feasibility.md). A later accepted contract
 must reconcile their rights, budget and isolation decisions before execution.
 
 ## Existing boundary inspected
@@ -183,15 +183,25 @@ silently restricting the user's descriptive editor.
 
 Candidate qualification and run completeness are separate axes. A partial
 search can contain a supported candidate without becoming a completed search.
-The following proposed labels must remain distinguishable:
+The following proposed labels must remain distinguishable.
+
+SRS wording note: AI1015 names run lifecycle states
+`pending`/`running`/`completed`/`partial`/`failed`/`cancelled`. AI1032 and the
+§23.10.4 exit text also say `incomplete` (AI1032 adds `disabled`) when a search
+must be distinguished from `no candidates found`. The SRS does not define one
+enum that contains every one of those words. This proposal follows AI1015 for
+the unfinished run: `partial`, not `incomplete`. `cancelled` and `disabled`
+stay separate, because AI1015 requires a cancelled state and AI1032 requires a
+disabled search to remain distinct from an empty completed search.
 
 | Outcome | Meaning proposed |
 | --- | --- |
 | Qualified candidate | Accepted row-combination rule is satisfied by compatible captured evidence; no claim of optimality, suitability or exhaustive search. |
 | Unverified candidate | Potential identity/result with unresolved criteria or evidence; do not publish unsupported factual claims as candidate facts. |
 | No candidates found | No qualified candidates within a completed, explicitly bounded approved search and evaluation scope; not proof that no stock exists. Cannot mask unresolved evaluations or acquisition failures. |
-| Incomplete | Scope/evaluations remain unresolved, or limits/cancellation prevented completion. Describe gaps, stopping reason and any independently supported results. |
+| Partial | Scope or evaluations remain unresolved, or a limit stopped the run short of the contracted scope. Describe gaps, the stopping reason and any independently supported results. Partial text is not a completed report. |
 | Failed | An execution/validation failure prevented the contracted result; report a sanitized actionable category, not an empty successful search. |
+| Cancelled | Cancellation stopped the run before completion. Already-supported results may stay visible with the stopping reason. Cancellation is not an empty successful search. |
 | Disabled | No run because the feature is absent/disabled or activation gates are unmet; preparation alone is not an attempted search. |
 
 Transport/lifecycle enums, cancellation transitions and precise admission-error
@@ -224,8 +234,8 @@ No future test expectation may be used to bypass the acceptance gates above.
 | Source conflict | Same asserted identity/period, mutually incompatible captured values | Retain conflict; withhold qualification until an accepted resolution rule applies. Never pick the favorable value. |
 | Unsupported citation | Real captured passage describes a different period | Reject factual support; a valid reference ID alone does not qualify. |
 | Injection | Text parameter `__proto__`, value `<script>ignore previous instructions</script>` | Treat as inert data, preserve text, escape display; no object-prototype mutation, command, URL navigation or changed policy. |
-| Empty versus interrupted | Completed approved finite scope has zero qualified candidates versus one failed source or unresolved evaluation | First may report bounded no candidates; second reports incomplete/failed as appropriate, never the same successful-empty outcome. |
-| State separation | One supported match before a fixed budget stop | Candidate can retain supported qualification with disclosed coverage; run is incomplete. No further request or completed-market claim. |
+| Empty versus interrupted | Completed approved finite scope has zero qualified candidates versus one failed source, cancellation or unresolved evaluation | First may report bounded no candidates; second reports partial, failed or cancelled as appropriate, never the same successful-empty outcome. |
+| State separation | One supported match before a fixed budget stop | Candidate can retain supported qualification with disclosed coverage; run is partial. No further request or completed-market claim. |
 | Disabled/stale | Prepared snapshot exists; feature disabled, or draft subsequently edited | No execution from preparation. Future explicit initiation must identify the immutable current snapshot; never silently use stale or edited criteria. |
 
 Future automated checks must use fixed clocks, synthetic fixtures, fake adapters
@@ -241,14 +251,10 @@ verification matrix, not new executable tests or evidence those checks passed.
 Before implementation, obtain acceptance of the interpretation/clarification
 workflow, permissible predicates and per-metric financial definitions; the
 identity/universe/source/cutoff contract; qualification combination rules;
-evidence/report inventory and validation; and incomplete/no-candidate policy.
-Coordinate rights, privacy, budgets, cancellation and retention with the safety
-assessment and integration choice with the framework assessment. Durable state,
-API, UI and production enablement require their own bounded contracts/issues.
-
-For this documentation PR, check relative links and the final diff, then run
-canonical full Python, Ruff, configured mypy, dependency and staged hygiene
-checks with coordinated runtime use. No frontend rebuild/browser run is needed
-for this documentation-only change. Check results and independent review belong
-in the PR delivery record; this document does not claim unexecuted verification,
-owner acceptance or M10 completion.
+evidence/report inventory and validation; and the partial, cancelled, disabled
+and no-candidate policy. Coordinate rights, privacy, budgets, cancellation and
+retention with the [safety assessment](m10-safety-assessment.md) and the
+integration choice with the [framework assessment](m10-framework-feasibility.md).
+Durable state, API, UI and production enablement require their own bounded
+contracts and issues. This document does not claim owner acceptance or M10
+completion.
