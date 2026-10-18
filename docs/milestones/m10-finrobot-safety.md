@@ -30,9 +30,17 @@ Owner decisions of 2026-10-18 that this review uses, and does not reopen:
 - FinRobot is the selected framework direction. TauricResearch/TradingAgents is excluded.
 - The M10 agent sandbox is Linux-only. On Windows it runs through WSL or Docker. Native Windows sandboxing is not required.
 
-D9 (hard spend reservation) and D11 (BUY/HOLD/SELL text) stay open. X716 still
-excludes private holdings unless a separate exception is approved. No exception
-is requested here.
+The owner answered the remaining product questions on 2026-10-18, on
+[#199](https://github.com/daniilnahl/Stock-Tracking-App/pull/199). The table
+records those answers. It does not show that a worker, projection, or budget
+ledger exists.
+
+| Topic | Owner decision of 2026-10-18 | Limit of the decision |
+| --- | --- | --- |
+| FinRobot code | Build the M10 agents without loading or importing FinRobot code. The pinned tree is a reference design only. | If that later proves impossible, changing it needs a new owner decision. This document does not pre-approve an import. |
+| Opinion text (D11) | Allowed, scoped to research output and a stock suggestion of the day. | The text is not a brokerage or trading action. Existing financial-calculation rules still apply. No new return, cost-basis, valuation, or ranking convention is created here. |
+| Private holdings | Agents may see the user's private holdings. The owner grants this for this single-user local app. | The grant is the stored holding. It does not include API keys, tokens, `.env` values, keyring entries, or provider secrets. It does not prove a prompt, log, or provider copy is safe. |
+| Costs (D9) | Open. Pricing and uncertain in-flight charges on cancellation are undecided. | Open D9 gates activation. No cap, price version, or cancellation charge rule is set here. |
 
 ## Pin and generations inspected
 
@@ -70,7 +78,8 @@ clash by installing either distribution into this application's environment.
 | Label | Meaning |
 | --- | --- |
 | Source fact | Behavior read at the pin. It describes FinRobot, not this application. |
-| Proposed control | A containment rule this review recommends. It is not implemented here and is not accepted by merging #194. |
+| Owner policy | A 2026-10-18 owner decision recorded in this file. It directs later work. It is not a test result and not runtime enforcement. |
+| Proposed control | A containment rule this review recommends and the owner has not separately decided. It is not implemented here and is not accepted by merging #194. |
 | Unverified | Not demonstrated. Upstream comments, prompt text, and this review are not enforcement evidence. |
 
 This repository has no FinRobot adapter, worker, or interceptor. Every
@@ -322,7 +331,7 @@ Actions, as distinct from file writes:
 
 | Surface | What the pinned source allows | What the pinned source denies | Interception in this application |
 | --- | --- | --- | --- |
-| V0 code execution | Local AutoGen execution, Docker off, IPython cells, file tools under `coding/`. | No Docker isolation at the default. No path jail beyond string prefix `coding/`. | None. Proposed: do not import V0. |
+| V0 code execution | Local AutoGen execution, Docker off, IPython cells, file tools under `coding/`. | No Docker isolation at the default. No path jail beyond string prefix `coding/`. | None. Owner policy: do not import any FinRobot generation. |
 | V0/V1 credentials | JSON file copied into the environment; INI keys; request-body keys; child inherits the parent environment. | V0 helpers error when the expected variable is missing. That is a missing-key failure, not a broker. | None. Proposed: never pass this application's keys across. |
 | V2 lead tools | Every tool in the table above is registered for a configured model. | Unknown `data_type` retries. Invalid tickers return an error string. There is no allowlist argument on `create_lead_agent`. | None. Proposed: do not construct this agent. |
 | V2 dynamic strategy import | Off when the prefix variable is empty. | Non-matching `module:Class` raises `ValueError` before `import_module`. | None. Proposed: do not set the prefix and do not call the adapter. |
@@ -337,56 +346,70 @@ Actions, as distinct from file writes:
 
 ## Allowed research subset
 
-The executable subset authorized by this review is empty.
+The FinRobot executable subset inside this application is empty. Owner policy
+of 2026-10-18 is to build M10 agents without loading or importing any
+generation. The pin remains a reference for which surfaces to avoid.
+FinRobot's defaults still include code execution (V0), a shell child (V1),
+web search, unauthenticated market data, its own watchlist, valuation and
+backtest tools, and home-directory writes (V2). Selecting the framework does
+not adopt those defaults. A prompt instruction inside a skill excerpt is not
+a deny path.
 
-FinRobot's defaults are research-shaped and still include code execution (V0),
-a shell child (V1), web search, unauthenticated market data, watchlist reads,
-valuation and backtest tools, opinion text, and home-directory writes (V2).
-Selecting the framework does not adopt those defaults. A prompt instruction
-inside a skill excerpt is not a deny path.
+What a later implementation may aim at, and still may not activate while D9
+is open:
 
-The only subset that stays eligible for a later, separate contract is:
-
-1. No import of V0 or V1.
-2. No import of the V2 server, routes, desktop shell, secret store, provider
-   chain, skill registry, backtest adapter, or lead agent.
-3. If an owner-accepted PoC later uses any V2 code, it is a reviewed,
-   non-executing fragment behind an adapter this application owns, running as
-   a Linux process with no home directory, no inherited environment, and no
-   network except through a broker this application implements.
-4. Evidence, if a later rights decision allows it, comes only from this
-   application's already accepted public-data transports for an explicit
-   ticker. yfinance, EDGAR-through-FinRobot, Adanos, Alpha Vantage, DuckDuckGo,
-   and social/news downloaders are outside that subset.
-5. The result returns as data to this application's own API and dashboard.
+1. Do not import V0, V1, or V2. That includes the server, routes, desktop
+   shell, secret store, provider chain, skill registry, backtest adapter, and
+   lead agent.
+2. Agents written in this application may follow the review as a design
+   reference. They do not load the pinned package.
+3. Reopening item 1 requires a new owner decision, and only after building
+   without the import has proved impossible.
+4. Market evidence still has to come through rights this application already
+   accepts, or through a later rights decision. yfinance,
+   EDGAR-through-FinRobot, Adanos, Alpha Vantage, DuckDuckGo, and the social
+   or news downloaders are outside that subset.
+5. Results return through this application's own API and dashboard.
    FinRobot artifacts, sessions, and reports are not the product store.
 6. ADR-0018's prepared criteria remain an immutable local snapshot. They are
-   not a FinRobot tool argument and are not rewritten to force a match.
+   not a tool argument and are not rewritten to force a match.
+7. Opinion text may appear only as research output or a stock suggestion of
+   the day. It is model opinion. It is not an order, a broker instruction, or
+   a new financial calculation.
+8. A future agent may be shown this application's stored holdings, because
+   the owner granted that for this single-user local app. The projection is
+   explicit. It is not a mount of the home directory, and it does not include
+   credentials or provider secrets.
 
-Until the gating gaps below are closed, item 3 is not available. Items 1, 2,
-and 6 are immediate constraints on any implementation issue.
+Items 1, 2, 6, 7, and 8 are policy constraints on later work. They are not
+implemented controls. D9 still gates activation.
 
 ## Prohibited paths
 
-**Code.** V0 AutoGen execution and `coding/` file tools. V1 `subprocess.Popen`
-and any command built from request fields. V2 `importlib` strategy loading,
-even though the default prefix list is empty. Unknown `SKILL.md` bodies as
-instructions. Package installation, shell tools, and SQL tools were not found
-as lead-agent tools; their absence is not a reason to load a generation that
-already executes code elsewhere.
+**Code.** Do not import or execute FinRobot. That is the owner's 2026-10-18
+rule, not a test that already fails on `import finrobot`. V0 AutoGen execution
+and `coding/` file tools, V1 `subprocess.Popen`, V2 `importlib` strategy
+loading, and unknown `SKILL.md` bodies stay prohibited surfaces. Package
+installation, shell tools, and SQL tools were not found as lead-agent tools.
+Their absence is not a reason to load a generation that already executes code
+elsewhere.
 
 **Trade and simulated performance.** Live brokerage routing was not found, and
-is still prohibited. Also prohibited now: BackTrader runs, the LLM strategy
-loop, Monte Carlo upside/downside calls, verdict/target/entry publication, and
-IC-memo invest/pass output. D11 remains unresolved, so opinion text stays
-unpublished. Upstream DCF, DDM, LBO, and multiples code is not an application
-metric.
+brokerage, order routing, BackTrader runs, and the LLM strategy loop stay
+prohibited. Upstream DCF, DDM, LBO, and multiples code is not an application
+metric. Opinion text is allowed by the owner only as research output or a
+stock suggestion of the day. A displayed target or suggestion is model
+opinion. It does not become an order, and it does not add a financial
+convention.
 
-**Private data.** FinRobot coverage/watchlist rows, chat context bundles,
-session transcripts, settings, and secret files. V1 user records and session
-cookies. This application's holdings, quantities, costs, annotations, account
-identifiers, local paths, and API bearer. Free-text criteria that may contain
-private text. No X716 exception is implied by enabling a future research flag.
+**Private data.** API keys, tokens, `.env` values, keyring entries, provider
+secrets, FinRobot secret files, V1 session cookies, and this application's
+API bearer stay prohibited. FinRobot's coverage store and chat transcripts
+are not this application's holding store. The owner grants a future agent a
+view of this application's stored holdings, including the quantities and
+costs those holdings already contain. That grant does not cover credentials.
+Free-text criteria remain data, not instructions. A secret typed into
+criteria text is not part of the holdings grant.
 
 ## Local API and dashboard
 
@@ -435,13 +458,17 @@ executed. Provider billing behavior was not observed.
 
 These block activation. Closing them is later accepted work, not this issue.
 
-1. **No confinable default.** The allowed executable subset is empty. Loading
-   `create_lead_agent` or `FinRobot.research` enables tools this scope rejects.
-2. **No hard budget.** D9 is open. Counts and concurrency are not worst-case
-   reservations. Retries and the chat fallback multiply unreserved calls.
-   SDK/CLI skip the HTTP buckets.
+1. **No FinRobot runtime, and no import.** The FinRobot executable subset is
+   empty. Loading `create_lead_agent` or `FinRobot.research` enables tools
+   this scope rejects. The owner has decided to build agents without
+   importing the package. That decision is not yet a failing test.
+2. **No hard budget.** D9 is open and gates activation. Counts and
+   concurrency are not worst-case reservations. Retries and the chat
+   fallback multiply unreserved calls. SDK/CLI skip the HTTP buckets.
+   Pricing and the treatment of an uncertain in-flight charge are undecided.
 3. **Cancellation is local.** Task cancel and SSE disconnect do not retain an
-   uncertain charge or prove the provider stopped.
+   uncertain charge or prove the provider stopped. That charge question is
+   part of the open D9 decision.
 4. **Secrets and home writes.** Linux, WSL, and Docker are exactly the
    environments where the pinned store falls back to plaintext
    `~/.finrobot/.secrets`. The sandbox decision does not remove that fallback.
@@ -449,21 +476,27 @@ These block activation. Closing them is later accepted work, not this issue.
 5. **Egress is not brokered.** yfinance, EDGAR, DuckDuckGo, custom `base_url`,
    and process proxy variables can leave the host without this application's
    transport. Existing FMP/Finnhub rights do not cover those hosts.
-6. **Private context is on by default in V2 chat.** Watchlist text and the
-   client context bundle are inserted into instructions. Transcripts store the
-   conversation. This application's holdings must not be added to that path.
-7. **Financial and opinion output.** Upstream valuation operators and
-   verdict/target/backtest text conflict with the accepted calculation
-   boundary and with open D11. They are not reusable as application results.
+6. **Holdings visibility is a grant, not a built projection.** V2 chat inserts
+   FinRobot's own watchlist and context bundle and stores transcripts. This
+   application must not use that path. The owner allows an explicit projection
+   of this application's stored holdings into a future agent. That projection
+   is not implemented. Credentials stay out of it. Nothing here proves logs
+   or a provider payload will omit secrets.
+7. **Opinion text is scoped policy.** Research output and a stock suggestion
+   of the day may contain model opinion, including a verdict or target shown
+   as opinion. That does not adopt upstream valuation operators, backtest
+   statistics, or a new financial calculation, and it does not send an order.
+   The text is not implemented.
 8. **Rights, price, and retention are unknown.** NOTICE/trademark text is not
    a data or model contract. No provider account, region, training opt-out, or
    report-retention decision was verified.
-9. **Wrong-generation import.** Root install exposes V0 as `finrobot` and does
-   not install V2, which uses the same import name. Either install can pull
-   incompatible Python and dependency pins into this application.
+9. **Either installed generation is the wrong import.** Root install exposes
+   V0 as `finrobot` and does not install V2, which uses the same import name.
+   The owner decision is not to import either one. Installing one to "match
+   the reference" would still pull that generation's pins and tools.
 10. **Enforcement is unbuilt.** #191/#194 and this file are documents. This
-    repository cannot deny a FinRobot tool call until an accepted adapter and
-    tests exist.
+    repository cannot yet deny an import, prove a holdings projection excludes
+    secrets, or stop a billable call. Owner policy is not that proof.
 
 ## Synthetic adversarial and failure matrix
 
@@ -487,26 +520,30 @@ pytest does not cover this matrix.
 | One admitted run fans out to retries, stream fallback, and several providers | `runner.py`, `_stream_with_fallback`, `layer.py` | Dispatch count cannot exceed the reserved worst case. Unknown price dispatches nothing. |
 | Cancel before send, during send, and after the provider has accepted | `cancel_run`, SSE poller | Unsent work is not sent. Uncertain work stays reserved. Poller disconnect does not clear the reservation. |
 | Crash between reserve and settlement | No ledger at the pin | No automatic replay, no double release, cap unchanged. |
-| Watchlist, holdings, or criteria text includes an account identifier | Coverage prompt, ADR-0018 envelope | Outbound admission refuses. Local snapshot bytes stay unchanged. |
-| Pipeline returns a verdict, target, or backtest return | Registry tools, artifact save | Not stored in this app's database and not shown in the dashboard. |
-| Artifact or transcript write | `~/.finrobot` | No file appears under the user home or the core SQLite paths. |
+| Explicit projection of stored holdings | This application's position records | A future agent may receive the holding fields the owner granted, using synthetic rows. API keys, tokens, and `.env` values are absent from the prompt, log, and provider payload. Stored holding bytes are not mutated. |
+| Secret or account credential in criteria text or beside a holding | ADR-0018 envelope; secret files | The holdings grant does not disclose it. It is absent from the prompt, log, and provider payload. |
+| Research opinion or stock suggestion of the day | Owner D11 scope | The text may be kept only as labeled model opinion in those two scopes. No order is submitted. No new numeric convention is stored as an application calculation. |
+| Backtest return or brokerage action | BackTrader; order-shaped tool output | Not executed and not published as an application result. |
+| Artifact or transcript write | `~/.finrobot` | No file appears under the user home from a FinRobot store. Core SQLite paths are not replaced by that store. |
 | AI package missing, disabled, or budget exhausted | This application's CLI, API, dashboard, criteria | Those surfaces still serve. They do not import FinRobot. |
 
 ## Owner decisions still required
 
-- Whether any V2 fragment may be imported after #197, or whether the selected
-  direction must be reimplemented without loading this pin. This review does
-  not recommend enabling the default agent.
-- D9: vendor, price version, caps, and what happens to an uncertain in-flight
-  charge. No numeric default is proposed here.
-- D11: whether opinion text can ever be shown. It cannot be shown on current
-  authority.
-- Confirm that no X716 exception is granted for holdings or for free-text
-  criteria that contain private data.
-- Confirm the Linux/WSL/Docker sandbox image has no user home, no keyring, no
-  inherited environment, and no route except a future broker.
-- #197's license and dependency result, including trademark use if any source
-  is vendored. This review does not clear redistribution.
+D9 is the open owner decision. It covers the vendor, price version, caps, and
+what happens to an uncertain in-flight charge when a run is cancelled. No
+numeric default is proposed here. Activation stays gated until the owner
+decides it. The no-import rule, the scoped opinion text, and the holdings
+grant are recorded above and are not enforcement.
+
+These implementation constraints follow those decisions and are not separate
+product questions:
+
+- The Linux/WSL/Docker sandbox still needs an explicit holdings projection.
+  It does not get a general home-directory mount, keyring access, or inherited
+  environment. `~/.finrobot` is not the holdings source.
+- #197 may keep describing the pinned tree as reference material. That
+  inventory does not authorize an import. Vendoring FinRobot code would be a
+  new owner decision.
 
 ## Boundary
 
@@ -518,17 +555,32 @@ call, or financial calculation is delivered here.
 ## Repository checks
 
 These checks exercise this repository. They do not execute FinRobot and they
-do not prove the matrix above.
+do not prove the matrix above. Python 3.12.3, blank provider-key variables,
+and `COLUMNS=300` so Rich tables are not ellipsized by an 80-column terminal.
+The 35 skips were already present before this documentation change. Python
+3.11 is not installed here. The Foundation workflow runs that suite on the
+pull request.
+
+Initial publication of this file:
 
 | Command | Result |
 | --- | --- |
-| `python -m pytest -q --tb=line` | 3143 passed, 35 skipped, 40.93s. Python 3.12.3. `COLUMNS=300` so Rich tables are not ellipsized by this environment's 80-column terminal. The 35 skips were already present before this documentation change. |
+| `python -m pytest -q --tb=line` | 3143 passed, 35 skipped, 40.93s. |
 | `python -m ruff check .` | Passed. |
 | `python -m mypy` | Passed. Configured files are `config.py` only. |
 | `python -m pip check` | No broken requirements. |
 | Relative links in the three edited Markdown files | Resolved. |
 | `git diff --cached --check` | Passed. |
-| `python -m pytest tests/test_repository_hygiene.py -q --tb=short` | 9 passed, against the staged documentation. |
+| `python -m pytest tests/test_repository_hygiene.py -q --tb=short` | 9 passed. |
 
-Python 3.11 is not installed in this environment. The Foundation workflow runs
-that suite on the pull request.
+Owner-decision revision:
+
+| Command | Result |
+| --- | --- |
+| `python -m pytest -q --tb=line` | 3143 passed, 35 skipped, 41.69s. |
+| `python -m ruff check .` | Passed. |
+| `python -m mypy` | Passed. Configured files are `config.py` only. |
+| `python -m pip check` | No broken requirements. |
+| Relative links in the three edited Markdown files | Resolved. |
+| `git diff --cached --check` | Passed. |
+| `python -m pytest tests/test_repository_hygiene.py -q --tb=short` | 9 passed, against the staged revision. |

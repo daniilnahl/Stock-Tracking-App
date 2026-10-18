@@ -11,8 +11,14 @@ execution, lifecycle/storage, API/dashboard integration and independent audit;
 it replaces the former framework blocker with FinRobot-specific #197/#198
 review inputs to #192. The tool, credential, egress, and budget map is the
 proposal in [m10-finrobot-safety.md](milestones/m10-finrobot-safety.md)
-(issue #198). M9's editor/EPS remain delivered, general assessment
-proposals remain reusable, and no FinRobot runtime/search is implemented.
+(issue #198). On 2026-10-18 the owner further decided that M10 agents are
+built without importing FinRobot code, that opinion text is allowed only for
+research output and a stock suggestion of the day, and that agents may see
+stored holdings in this single-user local app. Credential limits still apply.
+D9 pricing and uncertain in-flight charges stay open and gate activation.
+Those are policy decisions, not enforcement. M9's editor/EPS remain delivered,
+general assessment proposals remain reusable, and no FinRobot runtime/search
+is implemented.
 The starting-phase records below are historical snapshots superseded by this
 framework direction and current issue dependencies.
 
@@ -70,7 +76,8 @@ criteria evaluation and does not associate observations with a saved holding.
 | FINVIZ enrichment and additional FMP fundamental/news fields | No verified paid entitlement or implemented new connector/field contract; [dated coverage research](milestones/m9-provider-coverage.md) is not activation |
 | Premium multi-quarter EPS consensus, historical vintage/backtesting and calculated EPS comparisons | Outside the selected Free upcoming-release contract; unknown metadata cannot establish comparability |
 | Live API/dashboard historical retrieval | Activation remains unverified/disabled by default; controlled success tests and a provider key do not establish rights |
-| Hosted/multi-user release, trading, personalized suitability and directional model opinions | Not implemented or approved by the accepted local contracts |
+| Hosted/multi-user release, trading, and personalized suitability | Not implemented or approved by the accepted local contracts |
+| Directional model opinion text | Allowed by the owner's 2026-10-18 decision for research output and a stock suggestion of the day, as recorded in [m10-finrobot-safety.md](milestones/m10-finrobot-safety.md). Not implemented. Not a brokerage action or a new financial calculation |
 
 The one previously authorized Finnhub smoke returned one validated observation
 through the native transport/service/API. It remains dated technical evidence,
