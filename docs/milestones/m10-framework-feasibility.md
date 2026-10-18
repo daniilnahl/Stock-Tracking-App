@@ -10,7 +10,7 @@ and web tools is the only external acquisition in this assessment.
 
 ## Authority and local baseline
 
-[SRS §23.10](../../SRS.md) AI1001–AI1032 are feasibility targets, not blanket
+[SRS §23.10](../../SRS.md#milestone-10--ai-research-agents) AI1001–AI1032 are feasibility targets, not blanket
 production acceptance. Accepted [ADR-0017](../adr/0017-user-criteria-taurus-discovery.md)
 assigns criteria-driven discovery to Taurus; the product name does not select
 TradingAgents. [ADR-0018](../adr/0018-custom-criteria-editor.md) fixes the exact
@@ -19,7 +19,9 @@ M9 descriptive envelope, not financial interpretations or an executable search.
 and Python 3.11/3.12. [ADR-0013](../adr/0013-local-read-only-rest-api.md) and
 [ADR-0014](../adr/0014-local-read-only-dashboard.md) supply existing local access
 and presentation boundaries. This document accepts none of the open M10 choices.
-The attached master-agent document's M2 placeholder is not this task's scope.
+Related M10 assessments:
+[criteria and candidate evidence](m10-criteria-evidence.md) and
+[safety, rights and budgets](m10-safety-assessment.md).
 
 Inspected local implementation and callers: [criteria preparation](../../frontend/src/features/criteria.ts),
 [editor](../../frontend/src/features/StockCriteria.tsx), [app state](../../frontend/src/App.tsx),
@@ -37,13 +39,10 @@ running them. The prior moving-main review is [historical evidence](m7-m10-srs-r
 ## Reproducible candidate and evidence limits
 
 Candidate only: TauricResearch/TradingAgents commit
-`e8f5503e9b86d5c2710b0c76b1f686703968c9df`, the 2026-10-16 v0.7.0 merge.
-GitHub connector commit search returned that exact [commit][commit]; its pinned
-[package initializer][init] declares 0.7.0. Every upstream source reference below
-uses that commit. The pinned [metadata][metadata] was also read through the web
-reader. The moving commits page returned an older cached September view, so it
-was not used to identify the pin. Shell GitHub API access failed DNS resolution;
-connector reads succeeded. A tag name is not a substitute for this immutable pin.
+`e8f5503e9b86d5c2710b0c76b1f686703968c9df`, confirmed on 2026-10-18 as the
+2026-10-16 v0.7.0 pin from the GitHub [commit][commit]; the pinned
+[package initializer][init] declares 0.7.0. Every upstream source reference
+below uses that commit. A tag name is not a substitute for this immutable pin.
 
 Facts below are static observations of the listed files. They do not establish
 installed-wheel contents, a complete dependency license inventory, absence of
@@ -171,15 +170,8 @@ artifact notices; actual OS sandbox and resource mechanisms; consent/privacy;
 versioned execution/report/lifecycle/storage/API contracts; hard paid-call spend
 reservation (unknown pricing blocks that path); opinion policy; and independent
 failure/attack/cutoff audit. Existing proposed SRS/decision gates remain open.
-The first PoC cannot close them or qualify M10 for release.
-
-## Verification record
-
-This is one new Markdown file. Local relative links and final diff require review;
-canonical Python, Ruff, configured mypy, pip check and staged hygiene must be
-recorded on this branch before publication. Frontend rebuild/browser execution
-is not required for this documentation-only change. Historical main/PR CI does
-not substitute for this branch's checks. No upstream runtime result is claimed.
+The first PoC cannot close them or qualify M10 for release. No upstream runtime
+result is claimed.
 
 [commit]: https://github.com/TauricResearch/TradingAgents/commit/e8f5503e9b86d5c2710b0c76b1f686703968c9df
 [init]: https://github.com/TauricResearch/TradingAgents/blob/e8f5503e9b86d5c2710b0c76b1f686703968c9df/tradingagents/__init__.py
