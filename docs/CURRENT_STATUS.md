@@ -4,6 +4,30 @@ Verified 2026-10-18 for [#186](https://github.com/daniilnahl/Stock-Tracking-App/
 from merged main `6c5a3f9b975ebd2b0230c7a8ccb773de982ecf69`.
 This is a delivery assessment, not new approval of proposed requirements.
 
+**M10 owner decisions — 2026-10-19:** [ADR-0020](adr/0020-m10-owner-decisions.md)
+records the owner's resolutions of mismatches M-01 through M-07. Hard per-run
+and per-day dollar caps are configured by the owner and are not given numeric
+defaults here. Billable providers stay disabled until those caps are set. The
+zero-cost synthetic mode ships first. A run reserves its full estimated
+maximum cost before any billable call, keeps that reservation on an in-flight
+cancel, and releases it only after the provider's reported usage confirms the
+real charge. Settlement requires that usage report to match or fall within
+the reservation. Agents may read holdings locally. Holdings are never sent to
+any LLM provider. The agent-visible projection is tickers and portfolio
+weights only, with no quantities, cost basis, or account data. Opinion text
+is allowed only when labeled "Research opinion, not financial advice", and
+only in research output and the stock suggestion of the day, as Buy, Hold, or
+Avoid plus a reason, with no numeric price targets and no forecasts. The
+suggestion of the day is one deterministic watchlist pick per day from
+existing factual criteria; the agent writes only the explanation. This
+resolves D7 for that feature only and is not implemented. Canonical run
+statuses are `pending`, `running`, `completed`, `completed_empty`, `partial`,
+`failed`, `cancelled`, and `disabled`. Evidence comes only from the user's
+own FMP and Finnhub data under those providers' existing terms. Reports are
+retained locally only. #197 Phase B is retired, and its numeric charter
+figures are not defaults. Where the 2026-10-18 paragraph below differs, this
+decision controls. Nothing in this paragraph is a runtime.
+
 **M10 revised direction — 2026-10-18:** the owner excluded
 TauricResearch/TradingAgents and selected FinRobot's agent workflow. The
 [revised scope](milestones/m10-plan.md) preserves criteria/evidence, safe bounded
@@ -15,8 +39,10 @@ proposal in [m10-finrobot-safety.md](milestones/m10-finrobot-safety.md)
 built without importing FinRobot code, that opinion text is allowed only for
 research output and a stock suggestion of the day, and that agents may see
 stored holdings in this single-user local app. Credential limits still apply.
-D9 pricing and uncertain in-flight charges stay open and gate activation.
-Those are policy decisions, not enforcement. M9's editor/EPS remain delivered,
+D9 pricing and uncertain in-flight charges stay open in this 2026-10-18
+paragraph. ADR-0020 supersedes that open status, the holdings field list, and
+the opinion scope where they differ. Those 2026-10-18 sentences are policy
+history, not enforcement. M9's editor/EPS remain delivered,
 general assessment proposals remain reusable, and no FinRobot runtime/search
 is implemented.
 The starting-phase records below are historical snapshots superseded by this
@@ -70,14 +96,15 @@ criteria evaluation and does not associate observations with a saved holding.
 
 | Feature | Disposition |
 | --- | --- |
-| Taurus agents, criteria-driven candidate search, ranked sectors, suggested stock and daily winner | M10, under [ADR-0017](adr/0017-user-criteria-taurus-discovery.md). No agent/model/tool call or candidate result exists |
+| Taurus agents, criteria-driven candidate search, and ranked sectors | M10, under [ADR-0017](adr/0017-user-criteria-taurus-discovery.md). No agent/model/tool call or candidate result exists |
+| Stock suggestion of the day | Decided in [ADR-0020](adr/0020-m10-owner-decisions.md) for this feature only: one deterministic watchlist pick per day from existing factual criteria; the agent writes only the explanation. Not implemented. No new ranking metric |
 | Browser search/add/remove/edit holdings | No accepted write API; CLI editing remains available. [Follow-up checklist](TO-DO-LIST.md) |
 | Research persistence, monitoring/change detection, durable jobs, schedules, broad reports and external notifications | Proposed/separately gated work; not approved M9 exit obligations |
 | FINVIZ enrichment and additional FMP fundamental/news fields | No verified paid entitlement or implemented new connector/field contract; [dated coverage research](milestones/m9-provider-coverage.md) is not activation |
 | Premium multi-quarter EPS consensus, historical vintage/backtesting and calculated EPS comparisons | Outside the selected Free upcoming-release contract; unknown metadata cannot establish comparability |
 | Live API/dashboard historical retrieval | Activation remains unverified/disabled by default; controlled success tests and a provider key do not establish rights |
 | Hosted/multi-user release, trading, and personalized suitability | Not implemented or approved by the accepted local contracts |
-| Directional model opinion text | Allowed by the owner's 2026-10-18 decision for research output and a stock suggestion of the day, as recorded in [m10-finrobot-safety.md](milestones/m10-finrobot-safety.md). Not implemented. Not a brokerage action or a new financial calculation |
+| Directional model opinion text | Allowed by the owner's 2026-10-19 decision only when labeled "Research opinion, not financial advice", and only in research output and the stock suggestion of the day. Verdicts are Buy, Hold, or Avoid plus a reason. No numeric price targets and no forecasts. Not implemented. Not a brokerage action or a new financial calculation. Recorded in [ADR-0020](adr/0020-m10-owner-decisions.md) |
 
 The one previously authorized Finnhub smoke returned one validated observation
 through the native transport/service/API. It remains dated technical evidence,
