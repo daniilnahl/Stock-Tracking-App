@@ -2,6 +2,16 @@
 
 ## Status and authorization
 
+**Suggestion-of-the-day addendum — the owner's decision of 2026-10-19:**
+[ADR-0020](0020-m10-owner-decisions.md) resolves daily selection for the stock
+suggestion of the day only. One suggestion per day is picked deterministically
+from the user's watchlist using existing factual criteria the application
+already computes. The agent writes only the explanation. No new ranking metric
+is created. The responsibility table below remains the 2026-10-17 record. Its
+statement that exact daily cadence, ranking, and selection remain unresolved
+is superseded only for that feature. A general market calendar and other D7
+items stay open. This addendum does not authorize implementation.
+
 **Framework direction addendum — the owner's decision of 2026-10-18:** the owner
 excluded TauricResearch/TradingAgents and selected FinRobot for M10's agent workflow.
 This supersedes the earlier unresolved framework selection only. The accepted

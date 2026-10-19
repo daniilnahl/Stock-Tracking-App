@@ -2,13 +2,40 @@
 
 **Version:** 1.2 proposed (approved baseline: 1.1)
 
-**Status:** PARTIALLY ACCEPTED — M7 under ADR-0013; M8 under ADR-0014's read-only scope and approved design revisions; M9's bounded Finnhub upcoming-release EPS task under ADR-0015; M9/M10 discovery ownership under ADR-0017 and the custom descriptive criteria editor under ADR-0018. Remaining M9–M10 and out-of-scope decisions remain proposed. Existing approved requirements remain authoritative.
+**Status:** PARTIALLY ACCEPTED — M7 under ADR-0013; M8 under ADR-0014's read-only scope and approved design revisions; M9's bounded Finnhub upcoming-release EPS task under ADR-0015; M9/M10 discovery ownership under ADR-0017 and the custom descriptive criteria editor under ADR-0018. The owner's 2026-10-19 decisions in ADR-0020 accept the named cost, holdings-projection, labeled-opinion, suggestion-of-the-day, run-status, licensing, settlement, and Phase B retirement rules. Other remaining M9–M10 and out-of-scope decisions remain proposed. Existing approved requirements remain authoritative.
 
 **Primary implementation language:** Python  
 **Current interface:** Typer CLI  
 **Target:** Production-quality portfolio tracking and analytics application
 
 ## Approval record
+
+**M10 owner decisions — 2026-10-19:** the owner accepted the resolutions in
+[ADR-0020](docs/adr/0020-m10-owner-decisions.md). Hard per-run and per-day
+dollar caps are configured by the owner, with no numeric default in the
+specification. A run reserves its full estimated maximum cost before any
+billable call. On an in-flight cancel, the whole reservation is kept and
+released only after the provider's reported usage confirms the real charge.
+A run is settled only when that usage report matches or is within the
+reservation. The zero-cost synthetic mode ships first, and billable providers
+stay disabled until the caps are configured. Agents may read holdings
+locally. Holdings are never sent to any LLM provider. The agent-visible
+projection is tickers and portfolio weights only, with no quantities, cost
+basis, or account data. X716 is unchanged. Opinion text is allowed only when
+labeled "Research opinion, not financial advice", and only in research output
+and the stock suggestion of the day. Verdicts are limited to Buy, Hold, or
+Avoid plus a reason, with no numeric price targets and no forecasts. The
+stock suggestion of the day is one deterministic watchlist pick per day from
+existing factual criteria the application already computes; the agent writes
+only the explanation, and no new ranking metric is created. This resolves D7
+for that feature only. The canonical run statuses are `pending`, `running`,
+`completed`, `completed_empty`, `partial`, `failed`, `cancelled`, and
+`disabled`. Evidence comes only from the user's own FMP and Finnhub data
+under those providers' existing terms, and reports are retained locally only.
+#197 Phase B is retired, and its numeric charter figures are not defaults.
+For the named features, this supersedes the 2026-10-17 statement that daily
+ranking remains unapproved, and the 2026-10-18 holdings, opinion, and open-D9
+sentences where they differ. It does not authorize implementation.
 
 **M10 framework selection — the owner's decision of 2026-10-18:** the owner excluded
 TauricResearch/TradingAgents, then explicitly selected
@@ -228,6 +255,15 @@ The initial production-quality version will not include:
 - Social/community features.
 
 These require separate requirements and approval.
+
+The owner's decision of 2026-10-19, recorded in
+[ADR-0020](docs/adr/0020-m10-owner-decisions.md) and AI1019, does not remove
+those non-goals. Opinion text is allowed only when labeled "Research opinion,
+not financial advice", and only in research output and the stock suggestion
+of the day. Verdicts are limited to Buy, Hold, or Avoid plus a reason. That
+text includes no numeric price target and no forecast. It is not financial
+advice and is not machine-learning price prediction, and it does not
+authorize a trade.
 
 ---
 
@@ -1097,13 +1133,17 @@ owner acceptance and any required ADR are recorded. Approval of the SRS alone
 does not settle decisions left open here. Existing §§4, 6, 9–16, 24–25 and
 accepted ADR-0005–0012 remain authoritative; a material conflict requires review.
 
-**Proposed §4 reconciliation [DECISION REQUIRED, D11]:** M9/M10 are intended to
-provide informational screening and clearly labeled, fallible research opinions.
-They do not authorize financial advice, individualized suitability assessments,
-machine-learning price prediction, brokerage connectivity or automated trading.
-The existing §4 exclusions are unchanged. The owner must explicitly accept this
-boundary, including whether upstream BUY/HOLD/SELL opinions are allowed at all,
-or approve a separate §4 amendment. Labels alone do not settle that conflict.
+**§4 reconciliation — accepted for the labeled opinion, 2026-10-19:** M9/M10
+may provide informational screening and the fallible research opinion defined
+in AI1019. They do not authorize financial advice, individualized suitability
+assessments, machine-learning price prediction, brokerage connectivity, or
+automated trading. The existing §4 exclusions are unchanged. The owner accepted
+this boundary in [ADR-0020](docs/adr/0020-m10-owner-decisions.md): opinion text
+is allowed only when labeled "Research opinion, not financial advice", only in
+research output and the stock suggestion of the day, and only as Buy, Hold, or
+Avoid plus a reason. Numeric price targets and forecasts stay prohibited.
+This resolves D11 for that labeled text. It does not approve any other opinion
+form.
 
 The intended outcome is a simple, coherent, monochrome, local-first research
 workspace: tracked stocks, source-aware security investigation, configurable
@@ -1299,9 +1339,9 @@ default parameter list, metric, threshold, formula or ranking is approved.
 - **RSH917 — Missing inputs:** Criteria validation and known-stock evidence distinguish missing from zero. M10 must not claim a candidate meets a criterion without its required evidence; this does not require M9 to search or rank candidates.
 - **RSH918 — Cutoff:** Preserve compatible dates and the approved analysis context for known-stock observations. M10 search/candidate cutoff and historical-evaluation rules require their own reviewed contract; no future-evidence/backtest claim follows from M9 criteria preparation.
 - **RSH919 — Sectors:** Sector preferences may be criteria only after their field/taxonomy contract is reviewed. Sector candidate discovery/grouped results belong to M10; M9 has no ranked-sector-result exit requirement.
-- **RSH920 — Suggested-stock handoff:** M9 prepares user criteria; actual candidate discovery and suggested-stock results belong to M10 Taurus under ADR-0017. Keep results unavailable before M10 exists. **[DECISION REQUIRED, D7]** Any daily cadence, market calendar, ranking/tie-break and no-candidate policy needs a separate M10 contract; M9 need not produce a daily winner.
+- **RSH920 — Suggested-stock handoff:** M9 prepares user criteria; actual candidate discovery and suggested-stock results belong to M10 Taurus under ADR-0017. Keep results unavailable before M10 exists. The stock suggestion of the day is decided in ADR-0020 for that feature only: one per day, picked deterministically from the user's watchlist using existing factual criteria the application already computes; the agent writes only the explanation; no new ranking metric. M9 still need not produce a daily winner. A general market calendar and other D7 items outside that feature remain unresolved.
 - **RSH921 — Explanation:** M9 exposes user-selected parameters/operators/values and validation limits. M10 candidate results expose criterion evidence, unmet/unverified criteria, dated sources and limits, separating observed facts from agent opinions.
-- **RSH922 — Advice boundary:** Screening results for research only; no order, guarantee, prediction or personalized suitability. D11 remains blocking.
+- **RSH922 — Advice boundary:** Screening results for research only; no order, guarantee, prediction or personalized suitability. Opinion text follows the accepted AI1019 label and verdict limits. Other opinion forms remain prohibited.
 - **RSH923 — Stability:** Preserve exact user criteria and approved evidence snapshots without silent mutation. Criteria version/handoff identity needs review; this is not a promise that agent searches are deterministic or complete.
 - **RSH924 — Duplicates:** Criteria configuration and any future M10 candidate deduplication MUST NOT mutate ordered watchlist/position duplicates; canonical identity/dedup details require review.
 - **RSH925 — Transparency:** M9 states supported criteria and known-stock data limits. M10 documents search scope/exclusions/evidence coverage; no all-market, point-in-time or survivorship-free claim is inferred.
@@ -1375,35 +1415,35 @@ No spike, environment installation or paid run is authorized by this proposal.
 - **AI1001 — Spike:** Isolated time-boxed compatibility PoC before dependency acceptance; compare direct integration, separate worker/service and adapter-only alternative, recommending only compliant approaches.
 - **AI1002 — Isolation:** Separate process/environment or isolated service behind small adapter SHOULD protect core pins and filesystem/network boundaries; reviewed ADR, no unapproved package manager or Python change.
 - **AI1003 — Version:** Review specific tag/commit, license/NOTICE, dependencies/Python, default sources, persistence/logs and behavior; pin tested approved version, not moving main.
-- **AI1004 — Read-only:** Disable brokerage/order/trader routing and simulated core mutations. If upstream cannot be constrained to research-only, do not ship. Specialist risk/technical views cannot introduce undefined app metrics or price forecasts.
+- **AI1004 — Read-only:** Disable brokerage/order/trader routing and simulated core mutations. If upstream cannot be constrained to research-only, do not ship. Specialist risk/technical views cannot introduce undefined app metrics or price forecasts. The 2026-10-19 opinion decision adds no numeric price target and no forecast.
 - **AI1005 — Consent/cost:** Explicit user enablement/initiation or opt-in; configurable provider/model, spend/token estimate, depth, timeout and concurrency SHOULD have safe defaults; no silent paid run. Budget enforcement contract is required before activation.
 - **AI1006 — Credentials:** Server-side isolated keys, absent from reports/traces/exports/client payloads and prompts.
-- **AI1007 — Privacy:** Only public licensed security evidence by default. Private holdings/costs/annotations/account data require documented purpose/provider-specific opt-in AND owner-approved exception to X716; general AI enablement is insufficient.
-- **AI1008 — Rights:** Verify evidence transmission and report retention rights with model/data vendors. Unclear rights block transmission or require separate permitted dataset.
+- **AI1007 — Privacy:** Agents may read holdings locally. Holdings are never sent to any LLM provider. The agent-visible projection is tickers and portfolio weights only, with no quantities, cost basis, or account data. X716 stays as written, because nothing is transmitted. Credentials and other secrets stay excluded under AI1006 and X718. Portfolio weight is the accepted figure the application already computes; this projection adds no new financial metric.
+- **AI1008 — Rights:** Evidence comes only from the user's own FMP and Finnhub data under those providers' existing terms. Reports are retained locally only. Unclear rights for any other source, model, redistribution, or publication still block that path. This is the 2026-10-19 licensing decision. It does not authorize sending holdings to a model.
 - **AI1009 — Untrusted inputs:** Websites/articles/filings/social/tool responses/summaries/model text are evidence, never system instructions; prompt-injection and command/URL validation defenses required.
 - **AI1010 — Grounding:** Every source-dependent claim MUST cite real captured evidence with sanitized provider URL/ID and effective/retrieval time. Validate references and support; unsupported factual claims MUST be withheld from published reports and retained only as sanitized validation failures/partial-run diagnostics. No invented evidence/tool execution; reference existence alone does not prove a claim.
 - **AI1011 — Uncertainty:** Separate opinions, observations and deterministic qualification; show conflict, missing evidence and time lag.
 - **AI1012 — Workflow:** Bounded configured viewpoints such as fundamentals/technical/news/bull-bear/risk; exact graph/stopping/consensus needs approval, not upstream defaults.
 - **AI1013 — Output:** Versioned AIResearchReport with status/identity/cutoff/evidence/agent sections/agreement/limits/settings/token-cost usage/safety flags.
 - **AI1014 — Fallback:** CLI/M7/M8/M9 remain usable with absent/disabled/offline/limited/incompatible/invalid AI.
-- **AI1015 — Lifecycle:** Reuse approved M9 durable conventions where suitable, including pending/running/completed/partial/failed/cancelled, dedup/retry/crash recovery; partial text is never completed report.
-- **AI1016 — Budgets:** Enforce hard time/request/token/cost/storage/concurrency bounds; stop runaway debate/retry/new calls. **[DECISION REQUIRED, D9]** Reserve worst-case authorized spend before each call; unknown pricing/usage or inability to enforce a cap blocks that vendor/path. Cancellation cannot undo an already authorized billable request.
+- **AI1015 — Lifecycle:** One canonical run-status list: `pending`, `running`, `completed`, `completed_empty`, `partial`, `failed`, `cancelled`, `disabled`. No candidates found is `completed_empty`. Partial text is never a completed report. `disabled` means the path is not active. Dedup, retry, and crash recovery still apply. No other status word is part of this list.
+- **AI1016 — Budgets:** Enforce hard time, request, token, cost, storage, and concurrency bounds; stop runaway debate, retry, and new calls. Hard per-run and per-day caps are in dollars. The owner sets the amounts in configuration; this requirement states no numeric default. A run reserves its full estimated maximum cost before any billable call. On an in-flight cancel, the whole reservation is kept and released only after the provider's reported usage confirms the real charge. A run counts as settled only when that usage report matches or is within the reservation. A finished local task or a missing usage payload is not settled. A usage report outside the reservation does not settle the run and does not authorize another billable call. The zero-cost synthetic mode ships first, and billable providers stay disabled until the caps are configured. Unknown pricing or inability to enforce the configured cap still blocks that billable path. This is the 2026-10-19 resolution of D9.
 - **AI1017 — Observability:** Sanitized step/status/evidence/settings/model/cost/error/duration; no chain-of-thought logs, sensitive prompt dumps or indefinite memory retention.
 - **AI1018 — Storage:** Separate approved report/checkpoint paths; control upstream defaults, retention/deletion/idempotence/run isolation. No overwrite of user tables; user reports are not automatically disposable cache.
-- **AI1019 — Opinions:** **[DECISION REQUIRED, D11]** Whether BUY/HOLD/SELL text may be shown remains blocked. If explicitly approved, label it model research opinion, never app instruction, deterministic score, personalized portfolio recommendation or guarantee; X716/AI1004 still prohibit execution.
+- **AI1019 — Opinions:** Opinion text is allowed only when labeled "Research opinion, not financial advice", and only in research output and the stock suggestion of the day. Verdicts are limited to Buy, Hold, or Avoid plus a reason. No numeric price targets and no forecasts. The text is not an application instruction, a deterministic score, a personalized portfolio recommendation, a guarantee, or a brokerage action. X716 and AI1004 still prohibit execution. This is the owner's 2026-10-19 decision and resolves D11 for this labeled text only.
 - **AI1020 — Historical integrity:** Use only evidence available by cutoff, dated publication/universe. Unverified point-in-time sources cannot support historical validation/backtest claims; identify any limitation and withhold unsupported claims.
 - **AI1021 — Failure:** Sanitized actionable exceptions cannot corrupt holdings/watchlists/M9/API; no infinite expensive retry.
 - **AI1022 — UI:** Optional stock/Research panel reuses M8, showing progress/settings/cost/sources/disagreement/limits/age independently of M9 badges.
 - **AI1023 — API:** Appropriately secured/authenticated request/inspect/list/cancel/delete run/report endpoints use approved versioned M7 schemas; deletion needs explicit record ownership and approved data policy.
 - **AI1024 — Evaluation:** Fixed offline evidence and curated historical cases assess attribution/schema/missing data/injection/input reproducibility/cost/failure; no profit or prediction claim from small backtests.
 - **AI1025 — Regression:** Absent optional imports, model failure, disabled feature, malicious evidence, permission refusal, timeout, duplicate job and exhausted budgets cannot break core workflows.
-- **AI1026 — Licenses:** Review the selected FinRobot component/version's actual license/NOTICE obligations and separate data/news/model licensing. TradingAgents is excluded under the owner's 2026-10-18 revision. Source code permission is not data permission.
+- **AI1026 — Licenses:** Evidence comes only from the user's own FMP and Finnhub data under those providers' existing terms. Reports are retained locally only. TradingAgents is excluded under the owner's 2026-10-18 revision. FinRobot remains a reference design and is not imported. Source code permission is not data permission. Component and NOTICE review still applies before any later import decision.
 - **AI1027 — Local model:** MAY support proven compatible/resources/security backend; not required and no silent large-model download.
 - **AI1028 — Quality:** Label AI text, source references, unresolved claims, cutoff and configuration; never “verified analyst consensus.”
 - **AI1029 — Rollout:** Explicit disabled-by-default flag and documented disable/uninstall; disabling leaves core functionality and holdings intact.
 - **AI1030 — Done:** Accepted feasibility ADR, pinned isolated adapter, read-only/privacy/rights controls, bounded runs, grounded UI/API, failure/attack/cost tests, independent audit, owner merge and exit evidence.
 - **AI1031 — Criteria-driven discovery:** Taurus candidate search consumes the explicit M9 user-criteria snapshot without silently relaxing or replacing parameters. Search sources/tools, supported universe and exact handoff schema need a separate contract; no M9 API-screener prerequisite.
-- **AI1032 — Candidate evidence:** A claimed criterion match needs captured compatible evidence. Show missing/unverified criteria and search coverage/limits; distinguish no candidates found from incomplete/failed/disabled search. Sector/suggested-stock results and any daily-selection policy belong to M10, not M9 exit.
+- **AI1032 — Candidate evidence:** A claimed criterion match needs captured compatible evidence. Show missing/unverified criteria and search coverage/limits. Use the AI1015 status list: no candidates found is `completed_empty`, which stays distinct from `partial`, `failed`, and `disabled`. The stock suggestion of the day is one per day, picked deterministically from the user's watchlist using existing factual criteria the application already computes. The agent writes only the explanation. No new ranking metric. This resolves D7 for that feature only. Sector discovery ranking remains unresolved. Criteria-driven market search under AI1031 is a separate contract. Suggested-stock results belong to M10, not M9 exit.
 
 ### 23.10.3 M10 pipeline and review groups (illustrative)
 
@@ -1423,11 +1463,17 @@ API/UI integration; independent rights/cost/injection/cutoff/regression audit.
 
 With Taurus explicitly enabled and permitted evidence, the user can search for
 candidate stocks using their M9 criteria, inspect source-linked matches/gaps and
-coverage, and distinguish empty/incomplete/failed outcomes. Optional read-only
-analysis exposes claims/disagreement/costs/limits; users can cancel or inspect
-failure and retain normal tracker/criteria use with AI disabled.
-No application trade instruction or execution; unresolved feasibility, rights,
-privacy, cost enforcement or §4 gates block release.
+coverage, and distinguish `pending`, `running`, `completed`, `completed_empty`,
+`partial`, `failed`, `cancelled`, and `disabled`. `completed_empty` is no
+candidates found. Optional read-only analysis exposes claims, disagreement,
+costs, and limits. Users can cancel or inspect failure and retain normal
+tracker and criteria use when AI is `disabled`. The stock suggestion of the
+day, when that path is active, is the single deterministic watchlist pick in
+AI1032. The agent writes only the explanation, labeled under AI1019.
+No application trade instruction or execution. Billable providers stay
+disabled until the owner-configured per-run and per-day dollar caps exist.
+The zero-cost synthetic mode is the first mode. Paths outside the 2026-10-19
+decisions stay blocked until their own gates are accepted.
 
 ### 23.11 Owner acceptance and release gates (proposed)
 
@@ -1435,7 +1481,9 @@ Acceptance remains **PENDING only for the portions not accepted in the approval
 record and controlling ADRs**. M7, M8 and the bounded M9 criteria/EPS contracts
 are already accepted; their implementation status is tracked separately.
 The [decision report](docs/milestones/m7-m10-srs-review.md) tracks D1–D11 and
-additional contract gaps, verified baseline and external-source limits. Obtain
+additional contract gaps, verified baseline and external-source limits. It
+remains that earlier snapshot. ADR-0020 resolves D9, D11 for the labeled
+opinion, and D7 for the stock suggestion of the day only. Obtain
 explicit acceptance of the specification and relevant ADRs/precise exit
 contracts before creating implementation issues. Do not implement milestones,
 merge this proposal, close future milestones or reinterpret recommendations as
