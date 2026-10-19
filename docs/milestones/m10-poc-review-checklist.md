@@ -15,6 +15,12 @@ Reviewed baseline: `main` at
 request, and no remote `#192` branch, was present when this file was written.
 Every row below is therefore **unexecuted**. Nothing here proves a control.
 
+Phase 2 is recorded in [m10-poc-review-202.md](m10-poc-review-202.md).
+That review scores PR #202 at `fcfa1648a610533664a0a18b646ce0e0f8349235`
+against these rows. It does not change the row definitions, accept ADR-0019,
+or approve policy. A PASS there is a reading of the proposed contract, not a
+passed test.
+
 ## How to use a row
 
 Each `SA`/`EN`/`FQ`/`IS`/`HP`/`RC`/`ZB`/`PS`/`FB`/`TF`/`AB` heading is one
@@ -30,10 +36,10 @@ ADR-0018 editor limits are cited only as the criteria envelope. They are not
 PoC time, byte, token, or money caps. #197's charter figures are not restated
 and are not approved.
 
-Phase 2, after Codex links the #192 pull request, reviews that draft against
-these IDs and reports file and line findings, or a bounded pass with
-limitations. Phase 2 still does not accept the ADR or close the open gates
-below. This revision does not perform phase 2.
+Phase 2 reviews the linked #192 draft against these IDs and reports file and
+line findings, or a bounded pass with limitations. Phase 2 does not accept the
+ADR or close the open gates below. Those scores are in the companion review,
+not in these rows.
 
 ## Sources read
 
@@ -47,6 +53,7 @@ below. This revision does not perform phase 2.
 | [m10-finrobot-safety.md](m10-finrobot-safety.md) | Merged #198/#199 safety map and the owner-policy record from #199. |
 | [m10-plan.md](m10-plan.md) §What remains of M10 and §FinRobot preliminary review | Same #199 merge, planning record of the no-import decision. Not edited here. |
 | [m7-m10-srs-review.md](m7-m10-srs-review.md) D7, D9, D10, D11 | Decision-register wording. Recommendations there are not owner approval. |
+| [ADR-0020](https://github.com/daniilnahl/Stock-Tracking-App/blob/2a93c7027181ba33e1011480a33732b3d2dd3bfd/docs/adr/0020-m10-owner-decisions.md) in draft [PR #204](https://github.com/daniilnahl/Stock-Tracking-App/pull/204), head `2a93c7027181ba33e1011480a33732b3d2dd3bfd` | Owner decisions of 2026-10-19 that resolve M-01 through M-07. Pending merge. Not edited from this branch. |
 | [FINANCIAL_CALCULATIONS.md](../FINANCIAL_CALCULATIONS.md), [TESTING.md](../TESTING.md) | Financial definitions and the deterministic-test contract. |
 
 `docs/adr/0019-m10-feasibility-isolation.md` is **absent** on the reviewed
@@ -56,11 +63,42 @@ A later draft is not that acceptance.
 
 ## Authority mismatches
 
-These conflicts are recorded and left open. A #192 draft fails the related
-row if it picks one source and omits the other, or if it presents a resolution
-as already accepted. This file does not amend SRS, ADRs, or the merged reports.
+M-01 through M-07 were open on 2026-10-18. Each is resolved by
+[ADR-0020](https://github.com/daniilnahl/Stock-Tracking-App/blob/2a93c7027181ba33e1011480a33732b3d2dd3bfd/docs/adr/0020-m10-owner-decisions.md)
+in draft [PR #204](https://github.com/daniilnahl/Stock-Tracking-App/pull/204),
+head `2a93c7027181ba33e1011480a33732b3d2dd3bfd` (pending merge). This file does
+not edit ADR-0020, the SRS amendments in that pull request, or ADR-0019. Until
+#204 merges, the SRS text on this branch is the unamended specification. The
+paragraphs under each mismatch are the conflict as recorded on 2026-10-18.
+The resolution line is the rule used to judge PR #202.
+
+Where a later row says to leave one of these mismatches open, that instruction
+is superseded by the resolution. A #192 contract that still treats the item as
+undecided, or that contradicts ADR-0020, fails the related row.
+
+## Owner decisions of 2026-10-19
+
+Pending merge of PR #204. Amounts, calendars, and formulas that ADR-0020
+leaves unset stay unset here.
+
+| ADR-0020 decision | Rule used to judge #202 | Mismatch |
+| --- | --- | --- |
+| 1. Costs (D9) | Hard per-run and per-day dollar caps. The owner sets the amounts. No numeric default. Reserve the full estimated maximum before a billable call. On in-flight cancel, keep the whole reservation and release it only after provider usage confirms the real charge. Zero-cost synthetic mode first. | M-05, with decision 7 |
+| 2. Holdings | Local read only. Never sent to an LLM provider. Agent-visible fields are tickers and portfolio weights only, with no quantities, cost basis, or account data. Weight is the figure the application already computes. | M-01 |
+| 3. Opinion text | Allowed only when labeled "Research opinion, not financial advice", and only in research output and the stock suggestion of the day. Buy, Hold, or Avoid plus a reason. No numeric price targets and no forecasts. | M-02 and M-03 |
+| 4. Stock suggestion of the day | One per day, deterministic, from the user's watchlist, using existing factual criteria the application already computes. The agent writes only the explanation. No new ranking metric. D7 is resolved for this feature only. | M-04 |
+| 5. Run status | `pending`, `running`, `completed`, `completed_empty`, `partial`, `failed`, `cancelled`, `disabled`. No candidates found is `completed_empty`. | M-06 |
+| 6. Licensing | Evidence from the user's own FMP and Finnhub data only, under those providers' existing terms. Reports retained locally only. | None of M-01–M-07. See AB-08. |
+| 7. Settlement | Settled only when the provider usage report matches or is within the reservation. A finished local task or a missing usage payload is not settled. | M-05, with decision 1 |
+| 8. #197 Phase B | Formally retired. Its numeric charter figures are not defaults. | M-07 |
 
 ### M-01 — Local holdings grant versus transmission ban
+
+**Resolved by ADR-0020 decision 2 in PR #204 (pending merge).** Agents may
+read holdings locally. Holdings are never sent to an LLM provider. The
+agent-visible projection is tickers and portfolio weights only. X716 is
+unchanged because nothing is transmitted. The 2026-10-18 quantities-and-costs
+grant is superseded for those fields.
 
 The #199 owner record in
 [m10-finrobot-safety.md §Authority](m10-finrobot-safety.md#authority)
@@ -94,7 +132,13 @@ is not deleted by this checklist. See HP-01 and AB-05.
 
 ### M-02 — Scoped opinion text versus SRS D11 and §4
 
-[SRS AI1019](../../SRS.md#23102-m10-requirements-proposed) still marks D11 as
+**Resolved by ADR-0020 decision 3 in PR #204 (pending merge).** Opinion text
+is allowed only when labeled "Research opinion, not financial advice", and
+only in research output and the stock suggestion of the day. Verdicts are
+Buy, Hold, or Avoid plus a reason. D11 is resolved for that labeled text
+only. §4 non-goals stay in force.
+
+[SRS AI1019](../../SRS.md#23102-m10-requirements-proposed) on this branch still marks D11 as
 decision-required and says whether BUY/HOLD/SELL text may be shown remains
 blocked. The same sentence says that if display is explicitly approved, the
 text is a model research opinion and is never an application instruction, a
@@ -117,7 +161,11 @@ AI1019. SRS was not edited. See FQ-03.
 
 ### M-03 — Price-target opinion versus AI1004
 
-AI1004 says specialist risk and technical views cannot introduce undefined
+**Resolved by ADR-0020 decision 3 in PR #204 (pending merge).** No numeric
+price targets and no forecasts. AI1004 stays in force. A verdict is only the
+Buy, Hold, or Avoid text from M-02.
+
+AI1004 on this branch says specialist risk and technical views cannot introduce undefined
 application metrics or price forecasts. The #199 record allows a verdict or
 price target only as labeled model opinion in the two M-02 scopes, and #198
 says that display does not adopt upstream valuation operators or a new
@@ -127,6 +175,12 @@ input, or a [FINANCIAL_CALCULATIONS.md](../FINANCIAL_CALCULATIONS.md) value
 resolves this by invention. See FQ-04.
 
 ### M-04 — "Stock suggestion of the day" versus cadence and ranking
+
+**Resolved by ADR-0020 decision 4 in PR #204 (pending merge), for this
+feature only.** One suggestion per day, picked deterministically from the
+user's watchlist using existing factual criteria the application already
+computes. The agent writes only the explanation. No new ranking metric. A
+market calendar and other D7 items outside this feature stay unresolved.
 
 The #199 opinion scope uses the words "stock suggestion of the day."
 [ADR-0017](../adr/0017-user-criteria-taurus-discovery.md#revised-responsibility)
@@ -138,7 +192,14 @@ not the same decision. See FQ-05.
 
 ### M-05 — D9 pricing and in-flight cancellation charges
 
-[SRS AI1016](../../SRS.md#23102-m10-requirements-proposed) still marks D9 as
+**Resolved by ADR-0020 decisions 1 and 7 in PR #204 (pending merge).** Hard
+per-run and per-day dollar caps, with the amounts set by the owner and no
+numeric default. The full estimated maximum is reserved before a billable
+call and kept on in-flight cancel until provider usage confirms the real
+charge. Settlement occurs only when that usage report matches or is within
+the reservation. Zero-cost synthetic mode comes first.
+
+[SRS AI1016](../../SRS.md#23102-m10-requirements-proposed) on this branch still marks D9 as
 decision-required. It requires a worst-case reservation before each call,
 blocks a vendor path when pricing or usage is unknown or a cap cannot be
 enforced, and says cancellation cannot undo an already authorized billable
@@ -157,7 +218,12 @@ RC-04, and AB-02.
 
 ### M-06 — Run-status words inside SRS
 
-AI1015 names `pending`, `running`, `completed`, `partial`, `failed`, and
+**Resolved by ADR-0020 decision 5 in PR #204 (pending merge).** One list:
+`pending`, `running`, `completed`, `completed_empty`, `partial`, `failed`,
+`cancelled`, `disabled`. No candidates found is `completed_empty`. `disabled`
+means the path is not active.
+
+AI1015 on this branch names `pending`, `running`, `completed`, `partial`, `failed`, and
 `cancelled`, and says partial text is never a completed report. AI1032 and
 §23.10.4 also require `no candidates found` to stay distinct from an
 incomplete, failed, or disabled search. SRS does not define one enum that
@@ -166,6 +232,10 @@ AI1015's `partial` for the unfinished run while keeping `disabled` separate.
 Both say that proposal is not an accepted enum. See FQ-06 and PS-07.
 
 ### M-07 — #197 import recommendation versus the later no-import rule
+
+**Resolved by ADR-0020 decision 8 in PR #204 (pending merge).** #197 Phase B
+is formally retired. Its numeric charter figures are not defaults. Reopening
+an import still requires a new owner decision.
 
 #197 recommends an isolated worker that loads selected V2 runner and step
 seams, and a Phase B that executes that pinned component
@@ -1401,14 +1471,17 @@ not open them. Eight rows.
 | Activation blockers | AB-01–AB-08 | 8 | Do pricing, rights, settlement, and transmission stay blocked? |
 | **Total** | | **81** | |
 
-Mismatches M-01 through M-07 are open. No row is a passed test.
+M-01 through M-07 are resolved by ADR-0020 in PR #204 (pending merge). No row
+is a passed test.
 
 ## Phase 2
 
-When a #192 pull request exists, review `docs/adr/0019-m10-feasibility-isolation.md`
-against these IDs. Report exact file and line findings, or a bounded pass
-that lists limitations. Do not edit that ADR, `SRS.md`, `m10-plan.md`,
-`CURRENT_STATUS.md`, or `m10-finrobot-safety.md` from the review. Do not
-claim a proposed control is proven because this repository's tests passed.
-Do not accept D9, rights, remote settlement, cadence, ranking, or provider
-transmission on the owner's behalf.
+Phase 2 is [m10-poc-review-202.md](m10-poc-review-202.md). It reviews
+`docs/adr/0019-m10-feasibility-isolation.md` in PR #202 at
+`fcfa1648a610533664a0a18b646ce0e0f8349235` against these IDs and against
+ADR-0020 in draft PR #204 at `2a93c7027181ba33e1011480a33732b3d2dd3bfd`
+(pending merge). This branch does not edit ADR-0019, ADR-0020, `SRS.md`,
+`m10-plan.md`, `CURRENT_STATUS.md`, or `m10-finrobot-safety.md`. Repository
+tests do not prove a proposed control. The companion does not accept ADR-0019
+and does not re-approve ADR-0020. Owner acceptance of ADR-0019 remains a
+separate gate.
