@@ -31,6 +31,7 @@ holdings/opinion/open-D9 statements are superseded where ADR-0020 differs.
 
 ## Proposed decision and core independence
 
+Taurus remains the product label under [ADR-0017](0017-user-criteria-taurus-discovery.md).
 Build owned Python agents/internal adapters with approved dependencies/stdlib.
 FinRobot commit
 [`2717499b8e30f242640af08c4ad9afd1113c2d45`](https://github.com/AI4Finance-Foundation/FinRobot/commit/2717499b8e30f242640af08c4ad9afd1113c2d45)
@@ -88,7 +89,8 @@ Grammar is `-?(0|[1-9][0-9]*)([.][0-9]+)?` with full-string matching; no plus,
 exponent, separators, leading zero padding, whitespace, Infinity/NaN or floats.
 Null means an absent endpoint, at least one endpoint is present, and inclusive
 minimum <= maximum. Preserve exact strings, signed zero, trailing zeros, Unicode,
-duplicates, order and context; compare without display rounding. These existing
+duplicates, order and context. Compare min/max using exact decimal-string
+comparison only, per ADR-0018; no float conversion or rounded comparison. These existing
 editor/schema limits are not #197 resource defaults. Reject unpaired surrogates
 as internal transport admission, without normalizing other valid Unicode.
 Do not pass this prepared envelope to draft-only `prepareCriteria`.
