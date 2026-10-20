@@ -2,14 +2,19 @@
 
 ## Status and authorization
 
-**Later recorded policy — 2026-10-18:** merged #199 records FinRobot as a design
-reference for app-owned agents, with no import/loading/vendoring. Its scoped
-opinion and stored-holdings decisions retain credential, external-transmission,
-financial and D9 activation gates. The exact M9 criteria envelope and M10
-ownership remain unchanged. [Proposed ADR-0019](0019-m10-feasibility-isolation.md)
-reconciles this later record; its PoC and interfaces are not accepted here. The
-earlier selected-framework wording below is historical and does not authorize
-the superseded upstream runtime experiment.
+**Suggestion-of-the-day addendum — the owner's decision of 2026-10-19:**
+[ADR-0020](0020-m10-owner-decisions.md) resolves daily selection for the stock
+suggestion of the day only. One suggestion per day is picked deterministically
+from the user's watchlist using existing factual criteria the application
+already computes. The agent writes only the explanation. No new ranking metric
+is created. The responsibility table below remains the 2026-10-17 record. Its
+statement that exact daily cadence, ranking, and selection remain unresolved
+is superseded only for that feature. A general market calendar and other D7
+items stay open. This addendum does not authorize implementation.
+
+The [proposed ADR-0019 contract](0019-m10-feasibility-isolation.md), #192/#202,
+is revised against accepted ADR-0020 and the #203 review. It does not change
+this ownership decision, accept an execution contract or reopen resolved policy.
 
 **Framework direction addendum — the owner's decision of 2026-10-18:** the owner
 excluded TauricResearch/TradingAgents and selected FinRobot for M10's agent workflow.

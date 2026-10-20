@@ -1,25 +1,61 @@
 # M10 — FinRobot integration: revised scope and parallel plan
 
-## Contract proposal and current coordination — 2026-10-18
+## Contract revision and parallel review — 2026-10-19
 
-Assessment PRs #193/#194/#200/#199 are owner-merged; main
-`02815554e204d36809da62775b22a552fec8a257` passed all five Foundation checks.
-Their reports are reviewed inputs, not implemented controls. The later #199
-policy record uses FinRobot only as design reference; it supersedes #197's
-proposed actual-component Phase B. No FinRobot import, loading or vendoring is
-selected for execution.
+#204's ADR-0020 decisions and #203's independent checklist/review are owner-merged.
+The review in [m10-poc-review-202.md](m10-poc-review-202.md) assesses the earlier
+`fcfa164` head; its verdicts stay historical until a new independent review.
 
-| Issue | Owner and exclusive work | Current gate |
+| Issue | Exclusive work | Current gate |
 | --- | --- | --- |
-| #192 | Codex: [proposed ADR-0019](../adr/0019-m10-feasibility-isolation.md), minimal authoritative/status links and two narrow #198 source-fact errata | Assessment merge/CI inputs delivered; contract remains proposed and needs owner acceptance before PoC work. |
-| [#201](https://github.com/daniilnahl/Stock-Tracking-App/issues/201) | Grok: optional `docs/milestones/m10-poc-review-checklist.md` in its own branch/PR, then read-only review of #192's draft | Checklist preparation can start against merged inputs now; final review waits for the draft, not its merge. Do not co-author ADR-0019 or edit shared sources. |
+| #192 / PR #202 | Codex: [proposed ADR-0019](../adr/0019-m10-feasibility-isolation.md), minimal status/authority links and the existing two source-fact errata | Revise against all eight ADR-0020 decisions and #203 findings. Still proposed; acceptance, owner-set profile and reviewed isolation precede execution. |
+| Closed #201 / merged PR #203; follow-up [#205](https://github.com/daniilnahl/Stock-Tracking-App/issues/205) | Grok: re-review the revised #202 head, optionally own only `docs/milestones/m10-poc-review-202-revision.md`, without co-authoring its ADR/shared files | The merged checklist/review is available input; re-review must identify its exact new head and cannot infer runtime enforcement from docs/CI. |
 
-The zero-billable, synthetic-only charter leaves real model/provider activation,
-external holdings transmission, price/charge settlement and production discovery
-gated. Scoped opinion and local holdings policies do not grant new calculations,
-cadence/ranking rules, secrets access or a broker/trading port. Policy provenance
-and acceptance limits are explicit in the proposed ADR and SRS approval record.
-The older phase tables below retain their dated planning context.
+Zero-cost synthetic mode remains first. D9 policy is resolved; numeric live caps,
+pricing and an audited ledger are implementation/activation gates. Holdings never
+reach an LLM, evidence is limited to the user's FMP/Finnhub data under existing
+terms, reports stay local, and #197 Phase B/numeric defaults remain retired.
+No new runtime task is authorized by this contract revision.
+
+## Current owner decision — 2026-10-19
+
+The owner accepted [ADR-0020](../adr/0020-m10-owner-decisions.md) on 2026-10-19.
+Where the 2026-10-18 paragraphs below differ, that ADR and the amended SRS
+control. The 2026-10-18 text stays as history, including the holdings, opinion,
+and open-D9 sentences in [m10-finrobot-safety.md](m10-finrobot-safety.md).
+The #197 charter in [m10-finrobot-feasibility.md](m10-finrobot-feasibility.md)
+also stays historical. Phase B of that charter is retired.
+
+- Costs: hard per-run and per-day caps in dollars. The owner sets the amounts
+  in configuration. No numeric default is stated here. A run reserves its full
+  estimated maximum cost before any billable call. On an in-flight cancel, the
+  whole reservation is kept and released only after the provider's reported
+  usage confirms the real charge. The zero-cost synthetic mode ships first.
+  Billable providers stay disabled until the caps are configured.
+- Holdings: agents may read holdings locally. Holdings are never sent to any
+  LLM provider. The agent-visible projection is tickers and portfolio weights
+  only, with no quantities, cost basis, or account data. X716 is unchanged.
+- Opinion text: allowed only when labeled "Research opinion, not financial
+  advice", and only in research output and the stock suggestion of the day.
+  Verdicts are Buy, Hold, or Avoid plus a reason. No numeric price targets and
+  no forecasts.
+- Stock suggestion of the day: one per day, picked deterministically from the
+  user's watchlist using existing factual criteria the application already
+  computes. The agent only writes the explanation. No new ranking metric. This
+  resolves D7 for this feature only.
+- Run status: `pending`, `running`, `completed`, `completed_empty`, `partial`,
+  `failed`, `cancelled`, `disabled`. No candidates found is `completed_empty`.
+- Licensing: evidence comes only from the user's own FMP and Finnhub data under
+  those providers' existing terms. Reports are retained locally only.
+- Settlement: a run is settled only when the provider's usage report matches or
+  is within the reservation. A finished local task or a missing usage payload
+  is not settled.
+- #197 Phase B, which loads FinRobot V2 code, is retired in favor of the #199
+  no-import rule. Its numeric charter figures are not defaults.
+
+Mismatches M-01 through M-07 from the #201 review are resolved by these
+decisions. The checklist file on #203 is not edited from the branch that
+records this plan update.
 
 ## Current owner decision — 2026-10-18
 
@@ -45,11 +81,11 @@ PR heads and test results; it is not the current execution graph.
 | Area | Already available / reusable | Remaining bounded work |
 | --- | --- | --- |
 | Criteria | ADR-0018 tab-memory editor and exact immutable prepared envelope | Revalidate backend handoff; bind snapshot to a run; resolve supported meanings without altering user input. #190/#193 is a reviewed proposal, not an implemented receiver. |
-| FinRobot execution | Framework direction selected; preliminary static source review only. Owner policy of 2026-10-18: do not import FinRobot code; the pin is a reference design. | Build agents in this application without loading that package, then prove a bounded synthetic PoC. Reopening an import needs a new owner decision. No M10 runtime exists yet. |
+| FinRobot execution | Framework direction selected; preliminary static source review only. Owner policy of 2026-10-18: do not import FinRobot code; the pin is a reference design. ADR-0020 retires #197 Phase B. | Build agents in this application without loading that package. The zero-cost synthetic mode ships first. Reopening an import needs a new owner decision. Phase B's numeric charter figures are not defaults. No M10 runtime exists yet. |
 | Data and discovery | Existing FMP current/history and explicit Finnhub EPS capabilities | Define permitted universe and discovery tools; map identities, dates/units and evidence. Ticker research does not establish criteria-driven discovery. Existing EPS unknowns still prevent unsupported comparisons. |
-| Evidence/results | #190/#193 proposed qualification and source-support rules | Implement captured provenance, exact criterion association, candidate prerequisites, missing/conflicting evidence, no-candidate versus incomplete/failed/disabled outcomes and validated reports. |
-| Safety/budgets | Existing API access/admission, #191/#194 general proposal, and the recorded [FinRobot surface map](m10-finrobot-safety.md) | Apply the map without importing FinRobot. Isolate credentials, files, and network; enforce spend and resource bounds; sanitize diagnostics; retain uncertain call reservations. The owner grants agents a view of stored holdings and allows scoped opinion text. D9 stays open and gates activation. The map is not an implemented sandbox. |
-| Lifecycle/storage | Core SQLite holdings and history cache | Separately reviewed research run/report storage, start/status/cancel/partial/failure behavior, dedup/recovery/retention and user-owned-report rules. Core storage is not an existing research store. |
+| Evidence/results | #190/#193 proposed qualification and source-support rules | Implement captured provenance, exact criterion association, candidate prerequisites, missing/conflicting evidence, and validated reports. No candidates found is `completed_empty`, distinct from `partial`, `failed`, and `disabled`. |
+| Safety/budgets | Existing API access/admission, #191/#194 general proposal, and the recorded [FinRobot surface map](m10-finrobot-safety.md) | Apply the map without importing FinRobot. Isolate credentials, files, and network; sanitize diagnostics. Dollar caps, the full pre-call reservation, settlement, the local ticker-and-weight projection, and the labeled opinion are the 2026-10-19 rules in ADR-0020. Billable providers stay disabled until the owner sets the caps. The map is not an implemented sandbox. |
+| Lifecycle/storage | Core SQLite holdings and history cache | Separately reviewed research run/report storage using the AI1015 status list, plus dedup, recovery, retention, and user-owned-report rules. Reports are retained locally only. Core storage is not an existing research store. |
 | API/dashboard | Authenticated local API and packaged dashboard | Add accepted versioned research routes and opt-in composition, then run/candidate/progress/source/cost views in the existing dashboard. Preserve core workflows and disabled-mode independence. |
 | Verification/release | Existing deterministic core tests and source/wheel profiles | No-import agent, evidence, injection, budget/cancellation, absent-AI and actual composition checks; independent audit, owner merges and main CI against accepted revised exit criteria. |
 
@@ -64,17 +100,21 @@ four dependency conflicts are not FinRobot findings. Trading, autonomous holding
 changes, upstream valuation/backtest formulas, paid sources, hosted release and
 unrelated browser holdings mutations stay under their existing separate gates.
 Selecting FinRobot does not add them. Opinion text for research output and a
-stock suggestion of the day is an owner decision recorded in the safety map.
-That allowance does not set a ranking formula, a cadence, or a financial
-calculation, and it does not authorize a trade.
+stock suggestion of the day is the 2026-10-18 owner decision recorded in the
+safety map. That allowance did not set a ranking formula, a cadence, or a
+financial calculation, and it does not authorize a trade. ADR-0020 now sets
+the suggestion-of-the-day rule for that feature only and narrows the opinion
+text.
 
 Owner decisions of 2026-10-18, recorded from the owner's answers on
 [#199](https://github.com/daniilnahl/Stock-Tracking-App/pull/199) in
 [m10-finrobot-safety.md](m10-finrobot-safety.md). These are policy, not
-enforcement. M10 agents are built without importing FinRobot code. Agents may
-see this application's stored holdings; credentials and secrets stay excluded.
-D9 pricing and uncertain in-flight charges on cancellation stay open and gate
-activation.
+enforcement. M10 agents are built without importing FinRobot code. This
+paragraph's grant let agents see stored holdings, with credentials and secrets
+excluded. ADR-0020 replaces that field list with tickers and portfolio weights
+only, and it supersedes the open D9 status in the next sentence. D9 pricing
+and uncertain in-flight charges on cancellation stay open in this 2026-10-18
+paragraph.
 
 ## FinRobot preliminary review and unresolved fit
 
@@ -126,10 +166,10 @@ No upstream package, runtime, code, model or provider was executed in this revie
 | Issue | Exclusive ownership | State / dependencies |
 | --- | --- | --- |
 | #188 / [#196](https://github.com/daniilnahl/Stock-Tracking-App/pull/196) | Master: plan, SRS, ownership/status pointers and issue metadata | Scope revised in this existing planning PR; owner merge remains separate. Earlier verification below is dated, not this revision's check result. |
-| [#197](https://github.com/daniilnahl/Stock-Tracking-App/issues/197) | `docs/milestones/m10-finrobot-feasibility.md` | Ready for bounded static component/adapter review; no unmerged-interface blocker. |
+| [#197](https://github.com/daniilnahl/Stock-Tracking-App/issues/197) | `docs/milestones/m10-finrobot-feasibility.md` | Historical static review. ADR-0020 retires Phase B. Its numeric charter figures are not defaults. |
 | [#198](https://github.com/daniilnahl/Stock-Tracking-App/issues/198) | `docs/milestones/m10-finrobot-safety.md` | Recorded as a proposal in [m10-finrobot-safety.md](m10-finrobot-safety.md). Parallel with #197. Not an accepted runtime contract. |
 | #190/#193 and #191/#194 | Existing criteria/evidence and general-safety proposal owners | Reuse reviewed findings; owner merges/acceptance remain gates. No duplicate criteria redesign. |
-| [#192](https://github.com/daniilnahl/Stock-Tracking-App/issues/192) | `docs/adr/0019-m10-feasibility-isolation.md` and approved minimal links | Define the no-import PoC contract after #190/#191/#197/#198 required delivery. Importing FinRobot code needs a new owner decision. #189 is removed as a mandatory blocker. |
+| [#192](https://github.com/daniilnahl/Stock-Tracking-App/issues/192) | `docs/adr/0019-m10-feasibility-isolation.md` and approved minimal links | Define the no-import PoC contract after #190/#191/#197/#198 required delivery. ADR-0020 is a separate owner-decision record and does not occupy 0019. Importing FinRobot code needs a new owner decision. #189 is removed as a mandatory blocker. |
 | #189/#195 | Historical TradingAgents assessment | Excluded framework; optional decision evidence, not required FinRobot delivery. |
 
 Each new issue receives its own branch/worktree/PR when implementation starts.
@@ -159,8 +199,11 @@ flowchart TD
 The remaining M10 goal is an explicitly initiated, bounded FinRobot-backed
 criteria search with honest candidate evidence/status, optional approved research
 and preserved tracker use when AI is disabled. Exact generation/workflow, supported
-universe/metrics, model/pricing/rights, retention and execution limits still need
-concrete accepted contracts. No new billable/live run is authorized here.
+universe/metrics and execution limits still need concrete accepted contracts
+outside the 2026-10-19 decisions. Dollar caps are owner-configured and unset.
+Billable providers stay disabled. Evidence is limited to the user's own FMP
+and Finnhub data, with reports retained locally only. No new billable/live run
+is authorized here.
 
 ## Historical initial assessment phase
 

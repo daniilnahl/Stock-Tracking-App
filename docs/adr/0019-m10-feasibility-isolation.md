@@ -1,347 +1,417 @@
 # ADR-0019: Proposed no-import, zero-billable M10 synthetic PoC
 
-## Status and authority ledger
+## Status and controlling decisions
 
-**PROPOSED — specification change for owner review, 2026-10-18.** This record
-addresses [#192](https://github.com/daniilnahl/Stock-Tracking-App/issues/192).
-Its MUST/SHALL language defines the proposed experiment only after explicit owner
-acceptance. Publication, merge, tests and prior assessments do not accept this
-ADR, authorize execution or enable production M10. No runtime/schema is added.
+**PROPOSED implementation contract, revised 2026-10-19.** Addresses
+[#192](https://github.com/daniilnahl/Stock-Tracking-App/issues/192) and the
+[#202 review](../milestones/m10-poc-review-202.md) merged in #203.
+[Accepted ADR-0020](0020-m10-owner-decisions.md), merged in #204, and the amended
+[SRS](../../SRS.md) control. This proposal does not reopen those decisions or
+accept their implementation. Its MUST/SHALL language applies to a future accepted
+experiment; publication, merge or green tests do not authorize execution.
 
-| Authority / evidence | What is settled or recorded | What remains proposed |
+| Authority | Accepted or recorded input | Remaining gate |
 | --- | --- | --- |
-| [ADR-0017](0017-user-criteria-taurus-discovery.md), [ADR-0018](0018-custom-criteria-editor.md) | M10 discovery ownership and exact nonexecuting descriptive criteria | Backend execution, predicates, discovery universe and qualification |
-| [Merged plan](../milestones/m10-plan.md), [#198/#199 policy record](../milestones/m10-finrobot-safety.md#authority) | Owner recorded no FinRobot import/loading; Linux-only sandbox, Windows via WSL/Docker; local stored-holdings visibility; scoped research/suggestion opinions | Enforcing those policies; exact projection and opinion output boundary below |
-| [#197 assessment](../milestones/m10-finrobot-feasibility.md) | Pinned static inventory; no installed/executed upstream | Its earlier actual-V2 Phase B is superseded by recorded no-import policy |
-| [#190 criteria proposal](../milestones/m10-criteria-evidence.md), [#191 safety proposal](../milestones/m10-safety-assessment.md) | Reviewed input findings, not accepted executable contracts | This ADR's narrower synthetic mechanics, not their production activation |
-| D9 pricing/cancellation | Pricing and uncertain in-flight charge decisions OPEN | All live/billable execution BLOCKED; future reservation discussion is not resolution |
+| ADR-0017/0018 | M10 discovery ownership; exact nonexecuting prepared criteria | Backend implementation and supported predicate/universe contracts |
+| ADR-0020 decisions 1/7 | D9 resolved: owner-configured run/day dollar caps, full run reservation before billing, provider-reported settlement | Numeric configuration, pricing/model review and implemented/audited ledger |
+| ADR-0020 decision 2 | Local ticker/portfolio-weight projection only; no holdings to any LLM | Explicit projection/negative-control implementation |
+| ADR-0020 decisions 3/4 | Labeled Buy/Hold/Avoid opinion; deterministic daily watchlist pick, explanation only | Selector/day-boundary details and implementation; no new ranking metric |
+| ADR-0020 decision 5 | Eight canonical run statuses, including completed_empty and disabled | Proposed internal record/lifecycle below |
+| ADR-0020 decision 6 | User's own FMP/Finnhub evidence under existing terms; local-only reports | Any model transmission, other source or publication rights remain blocked/unknown |
+| ADR-0020 decision 8 | #197 actual-V2 Phase B retired; its numbers are not defaults | Owner-set resource profile and no-import implementation |
+| #190/#191/#197/#198 | Owner-merged static findings, not runtime enforcement | This narrower synthetic contract and independent verification |
 
-Baseline `02815554e204d36809da62775b22a552fec8a257` contains required owner-merged
-#190/#191/#197/#198 findings. Their verified merge/CI evidence is recorded by the
-coordinator; an administratively open assessment issue is not a missing merge.
-The owner's later policy recorded in merged #199 takes precedence over earlier
-V2 execution recommendations and blanket exclusion of local holding fields.
-Original owner-comment quotations were not independently verified here; this ADR
-uses the merged policy record, not new quotations or inferred consent.
-[AGENTS.md](../../AGENTS.md), [SRS](../../SRS.md), [financial definitions](../FINANCIAL_CALCULATIONS.md)
-and [TESTING.md](../TESTING.md) remain controlling outside the proposed changes.
+#203's checklist and review are dated assessments of head
+`fcfa1648a610533664a0a18b646ce0e0f8349235`, not an acceptance of this revision.
+This ADR addresses B-1 through B-9 and their partial rows below; it does not
+rewrite those historical review verdicts as new test results. The earlier #199
+holdings/opinion/open-D9 statements are superseded where ADR-0020 differs.
+[AGENTS.md](../../AGENTS.md), [TESTING.md](../TESTING.md) and
+[financial definitions](../FINANCIAL_CALCULATIONS.md) remain controlling.
 
-## Decision proposed and alternatives
+## Proposed decision and core independence
 
-Implement owned Python agents and an internal adapter using only this app's
-approved dependencies/stdlib. FinRobot commit
+Build owned Python agents/internal adapters with approved dependencies/stdlib.
+FinRobot commit
 [`2717499b8e30f242640af08c4ad9afd1113c2d45`](https://github.com/AI4Finance-Foundation/FinRobot/commit/2717499b8e30f242640af08c4ad9afd1113c2d45)
-is reference design only. Do not install, import, load, execute, vendor or copy
-FinRobot V0/V1/V2 code, instructions, skills, assets or dependencies. TradingAgents
-is excluded. No proof that no-import implementation is impossible exists; only
-such proof plus a new owner decision could reopen upstream loading. There is
-no Phase B importing FinRobot under this ADR.
+is reference design only. Do not install, import, dynamically load, execute,
+vendor or copy FinRobot V0/V1/V2 code, instructions, skills, assets or dependencies.
+TradingAgents is excluded. #197 Phase B is retired, including execution with
+fake data. Reopening upstream loading requires a new owner decision.
 
-| Alternative | Proposed disposition |
+Select a synthetic-only owned worker and supervisor-owned fake ports. Reject a
+same-process worker sharing the core environment, upstream desktop/server/default
+graphs, live search/model/paid brokers and a live fallback when synthetic work
+fails. The real-tool/source/model allowlist is empty in this PoC.
+
+AI stays disabled by default. Core startup/help, CLI, authenticated local API,
+dashboard, M9 editor and saved holdings MUST operate with the agent package absent,
+disabled, offline, limited, incompatible, invalid or failing. They must not import
+agent/upstream packages, acquire agent credentials, reserve cost or dispatch work.
+Core native Windows operation stays supported; native Windows agent sandboxing
+is not required. The future sandbox runs on Linux, including WSL/Docker on Windows.
+
+No public API/CLI flag, core dependency/pin, auth, UI asset, schema/migration,
+financial formula or holdings write changes here. Editing/preparing/outdating/
+clearing criteria, navigating or reloading stays inert and tab-memory-only under
+ADR-0018, with no hidden store or request. Failure/disable cannot erase local user
+reports, modify holdings/watchlists or reset budget state.
+
+The PoC proves owned boundary mechanics only: no market discovery, investment
+performance, live billing/rights or M10 completion. Owner acceptance of this ADR,
+an explicit finite resource profile and the reviewed local image/bootstrap are
+prerequisites, not consequences of a successful documentation PR.
+
+## Proposed internal version-1 envelope and binding
+
+These are internal worker/test records, not API/OpenAPI or durable public schemas.
+Reject unknown versions/kinds, duplicate JSON keys, unexpected fields, invalid
+types/Unicode and oversize transport bytes before launch. No repair, truncation or
+dropping input. Strings/IDs are data, never code, policy, URLs or paths.
+
+Input has exactly `schema_version: 1`, `kind: "m10_synthetic_run"`, `run_id`,
+`case_id`, `criteria_snapshot`, `criteria_sha256`, `fixture_manifest_sha256`,
+`limits_sha256`, `holdings_projection`, `civil_cutoff`, `binding_sha256`.
+IDs are nonblank manifest-owned ASCII association tokens, never path components
+or dispatch destinations; their lengths obey the owner-set transport profile.
+Cases come from a finite declared manifest, not an inherited count of ten.
+Each deliberately authorized session binds one immutable profile/manifest; no
+automatic retry, resume, manifest expansion or new session on failure.
+
+`criteria_snapshot` is the exact ADR-0018 prepared envelope:
+`schema_version: 1`, `kind: "user_stock_criteria"`, `match: "all" | "any"`,
+and ordered `criteria`. Range rows have exactly `parameter`, `kind: "range"`,
+`unit`, `minimum`, `maximum`; text rows exactly `parameter`, `kind: "text"`,
+`value`. Revalidate accepted 1–20 rows, nonblank/control rules, parameter/unit
+80 and text 256 UTF-16-unit limits, and 128-character plain decimal endpoints.
+Grammar is `-?(0|[1-9][0-9]*)([.][0-9]+)?` with full-string matching; no plus,
+exponent, separators, leading zero padding, whitespace, Infinity/NaN or floats.
+Null means an absent endpoint, at least one endpoint is present, and inclusive
+minimum <= maximum. Preserve exact strings, signed zero, trailing zeros, Unicode,
+duplicates, order and context; compare without display rounding. These existing
+editor/schema limits are not #197 resource defaults. Reject unpaired surrogates
+as internal transport admission, without normalizing other valid Unicode.
+Do not pass this prepared envelope to draft-only `prepareCriteria`.
+See [editor/callers](../../frontend/src/features/criteria.ts) and
+[accepted handoff](0018-custom-criteria-editor.md).
+
+Canonical JSON uses sorted ASCII field names, separators `,`/`:`, ASCII escaping
+(`ensure_ascii=True`), no whitespace/newline, `allow_nan=False`, UTF-8 bytes.
+Arrays keep order; string contents are never normalized or decimal-parsed for
+serialization. Only declared integer fields use JSON numbers; bool is not int.
+Hashes are lowercase hexadecimal SHA-256 of those bytes. Compute criteria hash
+over the snapshot, limits hash over the complete owner-set profile, and manifest
+hash over the ordered fixture IDs, byte digests, expected predicates, fake
+transcripts, clocks and case specifications. Compute binding over the entire
+input except `binding_sha256`; recompute before launch and publication.
+A mismatch fails, never silently replaces an input. Hashing proves binding,
+not truth, authenticity, rights or freshness. Later editing marks the prepared
+snapshot outdated; no run silently uses the edited draft or mutates the snapshot.
+
+Civil cutoff is fixed synthetic `2026-01-15T12:00:00Z`; every effective/publication/
+receipt time is manifest-owned. Receipt is not publication. No current-date
+lookup or random model output. Real Linux monotonic time enforces deadlines;
+scripted monotonic clocks test exact boundaries/races, not replace the watchdog.
+
+## Local holdings projection: tickers and accepted weights only
+
+The worker-visible `holdings_projection` is null or an ordered bounded list of
+objects with exactly `ticker` and `portfolio_weight`. Ticker is the explicit
+stored symbol as a data string. Repeated tickers remain separate ordered rows.
+Supervisor-only namespace/ordinal/exchange/identity bindings preserve association
+and detect ambiguous candidates; they are not fields in the worker projection.
+Ticker alone never resolves exchange or deduplicates positions.
+
+Weight is null or the exact `str(Decimal)` value already computed as
+`PositionAllocation.weight` under FC-051/ADR-0011, a finite nonnegative
+dimensionless ratio; validate it against the supervisor's computed value.
+Preserve exponent representation, significant zeros and signed zero; no float,
+percentage conversion, new formula, rounding, renormalization or residual
+adjustment. Reuse [analytics](../../src/stock_tracker/domain/analytics.py) and
+[known-value/null/precision tests](../../tests/test_snapshot_analytics.py).
+Incomplete/nonpositive total valuation leaves weights null; zero is not unknown.
+Unknown/mismatched currency remains the existing domain error, not invented USD
+or a guessed weight. If no accepted weight is available, do not calculate one
+from saved display prices or quantities inside the adapter.
+
+No quantity, average cost, cost basis, account/portfolio identifier, free metadata,
+Stock.name, price, secret, provider object, core path or generic object crosses
+this projection. The trusted fixture builder may use synthetic inputs to the
+existing pure analytics calculation; only its ticker/weight projection reaches
+the worker. This PoC never reads actual holdings or the user's real database.
+
+Holdings, including ticker/weight projection and derived/disclosing descriptions,
+MUST NEVER be sent to any LLM provider. There is no opt-in exception in this
+contract. Check prompts, requests, evidence, opinion, errors, telemetry and logs,
+not only top-level fields. Provider-bound data is a separately reviewed public
+evidence projection, never the local holding object. No provider exists in this
+PoC. Synthetic secrets are denied at admission without rewriting the exact stored
+criteria snapshot or echoing its content. Content detection alone is not a
+data-loss control.
+
+## Evidence rights, qualification, opinion and daily suggestion
+
+| Path | Accepted boundary / current availability |
 | --- | --- |
-| No-import owned synthetic agents with fixture/fake ports | SELECT for this bounded PoC; demonstrates owned boundary mechanics only |
-| FinRobot package, vendored subset or extracted upstream runner | REJECT under recorded owner policy, including execution with fake data |
-| Same-process worker sharing tracker environment/data | REJECT; cannot demonstrate independent filesystem/egress/process denial |
-| Upstream desktop/server, live search/model or paid broker | OUT OF SCOPE and blocked, not a fallback if synthetic work fails |
+| Evidence acquisition | Only the user's own FMP/Finnhub data under existing terms in future real operation; no other source implied. PoC uses fictional provider-shaped fixtures only, never actual account data or a live call. |
+| Evidence to a model | Unverified/disabled: model-specific purpose, transmission, retention, training, deletion, subprocessors and enforceable pricing need review; no chosen model/provider or assumed training opt-out. |
+| Holdings to any LLM | Prohibited, including indirect/nested disclosure; local permission is not transmission permission. |
+| Report storage | Local only; owner-set diagnostic/report retention lifetime required. No cloud log, publication, redistribution or FinRobot home-directory store. |
+| Other sources/publication | Unknown rights block that path. Source-code license/NOTICE is not data/model permission. |
 
-The experiment is finite synthetic selection plus separately labeled fake
-opinion. It proves neither market discovery nor investment performance, vendor
-rights, production cost enforcement or a complete M10 product. No public API,
-CLI flag, browser fetch, persistence migration, core dependency/pin change or
-financial formula is authorized. Current criteria preparation remains inert.
-
-## Proposed internal version-1 data contract
-
-These are internal test/worker records, not public API/OpenAPI models or a
-production serialization promise. Reject unknown versions/kinds, duplicate JSON
-keys, unexpected fields, malformed Unicode/types and oversize bytes before any
-worker starts; never repair, truncate or drop input. A rejected record is admission
-failure, not an empty search. All strings are data, never code, URLs or policy.
-
-The input object has exactly `schema_version: 1`, `kind: "m10_synthetic_run"`,
-`run_id`, `case_id`, `criteria_snapshot`, `criteria_sha256`,
-`fixture_manifest_sha256`, `holdings_projection`, `civil_cutoff`, `binding_sha256`.
-`run_id` is `poc-01` through `poc-10`; each case has one immutable manifest ID.
-IDs associate records only, not paths/commands; one invocation is one session.
-A second invocation is a new deliberately authorized experiment, not auto-resume.
-
-`criteria_snapshot` is the exact ADR-0018 prepared envelope: version/kind,
-all/any and ordered range/text rows. Independently revalidate its exact keys,
-1–20 rows, lengths, control restrictions, decimal grammar/inclusive ordered
-bounds and null rules. Preserve all strings, signed zero, trailing zeros,
-duplicates and units/context. Count text lengths as UTF-16 code units to match
-the current editor, not Python code points. Reject unpaired surrogates explicitly
-as new internal transport admission; do not normalize otherwise valid Unicode.
-Do not pass a prepared snapshot to the existing draft-only `prepareCriteria`.
-
-Canonicalization for this internal version is JSON with sorted ASCII field
-names, separators `,` and `:`, ASCII escaping (`ensure_ascii=True`), no whitespace
-or trailing newline, and `allow_nan=False`; UTF-8 encode those bytes. Arrays retain
-order; strings retain contents and are never decimal-parsed for serialization.
-Only declared integer fields use JSON numbers; booleans are not integers.
-Hash means lowercase hexadecimal SHA-256 over those exact bytes. Compute
-`criteria_sha256` over the snapshot. The manifest is a canonical ordered list of
-fixture relative IDs, SHA-256 byte digests and fixed expected case specifications;
-its digest binds every fixture, fake transcript, predicate, clock and coverage.
-Compute `binding_sha256` over the entire input with only `binding_sha256` omitted.
-Recompute all digests before launch and before publication; a mismatch fails.
-Hashing binds bytes, not evidence truth, authenticity, consent or freshness.
-
-The fixed civil cutoff is `2026-01-15T12:00:00Z` for all ten synthetic cases.
-Evidence effective/publication/receipt times are fixed manifest values; receipt
-never substitutes for publication. No current-date access or random model output.
-The supervisor samples a real Linux monotonic clock for enforcement; test state
-machines additionally inject a scripted monotonic clock to exercise exact deadline
-and race boundaries. Fake time cannot replace the real worker watchdog.
-
-## Synthetic holdings projection only
-
-Read [WatchlistEntry/Record](../../src/stock_tracker/persistence/models.py),
-[service records](../../src/stock_tracker/services/models.py),
-[serialization callers](../../src/stock_tracker/api/serialization.py) and
-[exact/duplicate tests](../../tests/test_api_serialization.py).
-The actual holding contract is finite nonnegative Decimal quantity/cost;
-`average_cost` may be null only at zero quantity. Criteria's signed grammar does
-not authorize negative nonzero holdings, shorting or a new cost convention.
-
-`holdings_projection` is null or an ordered list of at most six synthetic rows,
-with exactly `namespace`, `ordinal`, `stock`, `quantity`, `average_cost`.
-`stock` has exactly `symbol`, `exchange`; exchange may be null. Namespace is one
-of the two existing namespaces, ordinal a nonnegative integer preserving source
-position. Each `(namespace, ordinal)` occurs once; repeated symbols/identities
-remain separate rows. Preserve row order. Do not invent resolved exchange or use
-Stock equality to merge rows. Synthetic identifiers are manifest-owned strings.
-
-Quantity and present cost are strings equal to `str()` of the manifest's finite
-nonnegative Decimal, preserving exponent form, significant zeros and signed zero;
-null is not zero. No float conversion, rounding, derived cost basis or valuation.
-PoC numeric strings are bounded to 128 ASCII characters and must roundtrip exactly
-through that declared representation. This projection is independent of criteria's
-plain-decimal grammar. Nonzero quantity with null cost is rejected.
-Omit Stock.name, current price, free metadata, portfolio/account identifiers,
-annotations, settings, credentials, key objects, provider objects and core paths.
-
-The local owner grant permits a future explicit stored-holding projection, not a
-home mount, actual-database read in this PoC or arbitrary private text in criteria.
-PoC fixtures are fictional and no actual holding is acquired. This ADR does not
-authorize outward transmission; real provider-specific purpose/opt-in and data/
-model rights remain gates. Private/secret-looking test text is refused by admission
-and excluded from diagnostics. No claim that content detection solves data loss.
-
-## Identity, evidence and candidate qualification
-
-A case manifest stipulates a finite universe of at most three fictional security
-IDs and explicit synthetic predicates. These define no financial metric or market
-universe. Each captured evidence record binds `evidence_id`, `security_id`, row
-ordinal, predicate ID, exact scalar/text value, units/context, effective time,
-publication time, receipt time and fixture digest. No fetched URL or external ID
-is required; display references are validated `fixture:` IDs, never auto-navigation.
-Evidence may support only its bound identity, row, period and synthetic meaning.
+Each fixture has a declared synthetic FMP/Finnhub source label and fake identity.
+No fabricated observation is presented as actual provider evidence. Manifest
+defines a finite fictional universe, explicit synthetic predicates and mandatory
+evidence. These define no market universe, new financial metric or financial
+comparison. Each captured record binds identity, criterion ordinal, predicate,
+exact value/unit/context, effective/publication/receipt times and fixture digest.
+Display references are validated `fixture:` IDs, not navigable fetched URLs.
 
 Before row combination, require unique manifest identity, compatible/current core
-fixture inputs and every manifest-mandatory evidence item. Unknown identity,
-contradictory/stale core inputs or absent mandatory evidence blocks qualification
-regardless of `any`. No production mandatory-input/freshness policy is inferred.
-A fixture predicate may compare exact decimal strings numerically without changing
-the original strings. Unknown financial labels/units or unresolved predicate means
-unverified; do not invent semantics, currency, EPS basis, ratios or FX.
+inputs and every mandatory evidence item. Unknown identity, contradictory/stale
+inputs or absent mandatory evidence prevents qualification even with `any`.
+Unsupported units/periods/financial labels/predicates remain unverified; never
+invent EPS basis, currency, ratio, valuation, forecast or FX. A relevant-looking
+citation does not establish support; withhold unsupported facts.
 
-Row outcomes are `match`, `nonmatch`, `unverified`, with sanitized reason/evidence
-IDs. `all`: all match qualifies; any nonmatch gives nonmatch; otherwise unverified.
-`any`: at least one match qualifies only after prerequisites; all nonmatch gives
-nonmatch; otherwise unverified. Report every row and gap. A real reference that
-does not support the asserted claim is insufficient. Withhold unsupported facts.
+Row states: `match`, `nonmatch`, `unverified`.
+For `all`, all match qualifies, any nonmatch gives nonmatch, otherwise unverified.
+For `any`, a match qualifies only after prerequisites, all nonmatch gives nonmatch,
+otherwise unverified. Report every row and gap. Candidate `qualified`/`nonmatch`/
+`unverified` is distinct from run status/coverage; partial validated candidates
+never imply a complete search.
 
-Candidate state `qualified`/`nonmatch`/`unverified` is separate from run state and
-coverage. A partial run can retain validated candidates without claiming a complete
-search. Publish an opinion only as a separate optional `synthetic_model_opinion`
-section with `synthetic: true`, `is_qualification: false`, fixed fake text and its
-bound run/snapshot. Scoped research/suggestion opinion is recorded policy; no
-ranking, daily scheduler, real target calculation, suitability claim or trade is
-introduced. Fake opinion cannot assert an unsupported factual criterion match.
+Optional opinion has exactly `kind: "synthetic_model_opinion"`, `synthetic: true`,
+`is_qualification: false`, `label: "Research opinion, not financial advice"`,
+`verdict: "Buy" | "Hold" | "Avoid"`, and `reason`. Reason is fixed reviewed
+manifest text within owner-set output limits. Opinion appears only in research
+output or stock suggestion of the day. No numeric price target, forecast,
+unsupported factual match, suitability claim, guarantee, trade, instruction or
+threshold mutation may appear in any field or nested reason. Reject violating
+fake output; do not rely only on a prompt asking the worker to behave.
 
-## Lifecycle and output boundary
+The stock suggestion of the day is accepted policy: one deterministic pick per
+day from the user's watchlist using existing factual criteria the app computes.
+Only its explanation is agent-written and follows the label/verdict rules above.
+It is separate from AI1031 criteria-driven market search and sector ranking.
+No new ranking metric or model-selected winner. Empty/unverified input does not
+manufacture a suggestion. Selector/tie-break and day-boundary implementation
+details have not been supplied here; they remain explicit implementation gates,
+not a reason to describe the accepted cadence as undecided or invent a formula.
+PoC uses a manifest-preselected fictional watchlist item/fixed day to test
+explanation-only binding; it does not implement scheduling or claim a real pick.
 
-Internal output has exactly version/kind (`1`, `m10_synthetic_result`), run/case IDs,
-input `binding_sha256`, snapshot/manifest hashes, `status`, `coverage`,
-`candidates`, `evidence`, `opinion`, `counters`, `reason`. Candidate/evidence entries use the
-allowlists above; no arbitrary model fields/prompts/traces enter output. Output
-is canonical JSON with no raw exception, private text or chain-of-thought.
-Validate schema, byte limits, IDs/hashes, support and counters before publication.
+## Internal records and canonical lifecycle
+
+Output has exactly `schema_version: 1`, `kind: "m10_synthetic_result"`, `run_id`,
+`case_id`, `binding_sha256`, `criteria_sha256`, `fixture_manifest_sha256`,
+`limits_sha256`, `status`, `coverage`, `candidates`, `evidence`, `opinion`,
+`counters`, `reason`. Status uses ONLY the accepted list:
+`pending`, `running`, `completed`, `completed_empty`, `partial`, `failed`,
+`cancelled`, `disabled`. No alternate status for empty success or admission.
+
+Disabled is the same typed record with `status: "disabled"`, zero operation counters,
+empty coverage/candidate/evidence lists and null opinion, and launches no worker.
+Unset configuration/absent AI leaves the path disabled. A malformed enabled
+request is failed with a fixed admission reason and no worker. Before validated
+admission, untrusted IDs/bindings/hashes are null rather than echoed. Otherwise
+records bind the admitted context; never manufacture a hash from invalid input.
+Byte counters still count actual bounded observed/emitted bytes, including a
+disabled or failed admission record; they are not falsely reported as zero.
+Pending/running are bounded progress records, never a completed report.
+
 Each candidate has exactly `security_id`, `qualification`, `prerequisite_gaps`,
-`row_results`; each row has `ordinal`, `state`, `evidence_ids`, `reason`.
-`opinion` is null or exactly `kind: "synthetic_model_opinion"`, `synthetic: true`,
-`is_qualification: false`, and `text` (fixed manifest text, <=512 UTF-16 units);
-its binding is inherited from the enclosing run, not a model-selected identity.
-`counters` has exactly nonnegative integer `fake_model_attempts`, `fixture_attempts`,
-`input_bytes`, `output_bytes`; the supervisor owns those values. Coverage has
-exactly `universe_ids`, `attempted_ids`, `evaluated_ids`, `unresolved_rows`,
-`stop_reason`. Reasons/gaps are finite manifest codes, not raw worker prose.
-`evidence` is an ordered list of <=60 records with exactly `evidence_id`,
-`security_id`, `ordinal`, `predicate_id`, `value`, `unit`, `context`, `effective_at`,
-`published_at`, `received_at`, `fixture_sha256`. IDs are manifest ASCII strings
-<=64 characters; ordinal is an integer 0–19; value is text <=256 UTF-16 units
-(numeric value additionally uses the criteria decimal grammar/128-character cap).
-Unit/context are <=80 UTF-16 units; timestamps are manifest UTC second strings;
-digest is lowercase 64-character SHA-256. Candidate/row reference IDs must resolve
-to these captured records and be unique within each reference list. No extra
-evidence, candidate or row beyond its manifest scope is admitted.
-Evidence content is copied only from supervisor-owned immutable manifest records;
-the worker may return IDs, never create or replace captured observations. Supervisor
-checks every referenced identity/ordinal/predicate/cutoff and fills the output list.
-Coverage ID fields are unique ordered lists of <=3 manifest security IDs with
-evaluated subset of attempted subset of universe; universe equals the case manifest
-order/set. `unresolved_rows` is a <=60 list of exact objects `security_id`, `ordinal`,
-`reason`, unique by security/ordinal and bound to a declared row. Candidate IDs are
-unique universe members; every emitted candidate has exactly one row result per
-snapshot ordinal, in original order. `prerequisite_gaps` is a unique list of case
-manifest codes; nonempty gaps force unverified qualification. Coverage, prerequisites
-and row states are recomputed by the supervisor from its fixture records/counters,
-not accepted from model assertions. Completed implies evaluated equals universe,
-no unresolved rows/gaps and all contracted predicates evaluated.
-`output_bytes` counts the full emitted record/pipes including this counter;
-supervisor serialization resolves its decimal digit width before enforcing cap.
+`row_results`; each row exactly `ordinal`, `state`, `evidence_ids`, `reason`.
+Evidence has exactly `evidence_id`, `security_id`, `ordinal`, `predicate_id`,
+`source`, `value`, `unit`, `context`, `effective_at`, `published_at`,
+`received_at`, `fixture_sha256`. Source is `synthetic_fmp` or `synthetic_finnhub`; value is
+text or a declared exact decimal string, never float/arbitrary object. Ordinals
+bind ADR-0018 rows; times are manifest UTC second strings. Every ID, timestamp,
+digest, field type/length and collection cardinality is validated against the
+manifest, accepted criteria grammar and configured byte/field limits.
+Opinion is null or the exact object above. Reasons/gaps are finite safe manifest
+codes except the separately bounded reviewed opinion reason.
 
-Admission rejection/disabled means no run or worker; return bounded safe status
-outside the result record. For admitted cases: `pending` → `running` → exactly
-one terminal `completed`, `partial`, `failed`, `cancelled`. Cancellation of pending
-work goes directly to cancelled without dispatch. No retry/resume or terminal
-rewrite; immutable diagnostics may note a later infrastructure failure.
-`completed` requires all case universe/predicates evaluated and successful cleanup.
-Only completed with zero qualified candidates and zero unverified evaluations may
-say bounded no candidates found. Unresolved evaluation/coverage or normal budget
-exhaustion is partial; invalid output/invariant breach is failed; cancellation is
-cancelled. If both occur, record the first supervisor-observed terminal trigger;
-failed cleanup overrides any provisional success with failed infrastructure status.
+Evidence is copied only from immutable supervisor-owned records. Worker returns
+IDs, never observation replacements. Verify identity/ordinal/predicate/cutoff and
+source on each reference; IDs are unique in each list. Candidate IDs are unique
+universe members and each emitted candidate retains every snapshot row in order.
+Coverage has exactly `universe_ids`, `attempted_ids`, `evaluated_ids`,
+`unresolved_rows`, `stop_reason`; unique ordered ID sets satisfy evaluated ⊆
+attempted ⊆ universe, and universe exactly matches the manifest. Unresolved rows
+have exactly `security_id`, `ordinal`, `reason`, unique per security/ordinal.
+Supervisor recomputes states/prerequisites/coverage from captured evidence and
+counters, not worker claims. Nonempty prerequisites force unverified qualification.
 
-Coverage carries manifest universe IDs, attempted/evaluated IDs, unresolved rows
-and stop reason. A completed case may have candidates; no ranking is applied.
-Supervisor validates provisional output in memory, terminates/reaps/cleans the
-worker, then finalizes terminal status. Partial/cancelled validated evidence may
-be retained as such; they never become a completed report. Runtime/publication
-errors never write core storage or trigger discovery fallback.
+Counters have exactly nonnegative integer `fake_model_attempts`,
+`fixture_attempts`, `input_bytes`, `output_bytes`, owned by the supervisor.
+Canonical JSON contains no raw prompt, chain-of-thought, traceback, secret or
+private text. Count every frame/newline, stderr/diagnostic and final-record byte;
+resolve `output_bytes`' decimal digit width before enforcing the aggregate limit.
+Invalid output/unsupported fact/byte overflow fails; never silently truncate.
 
-## Limits, dispatch and cancellation contract
+Pending may become running, cancelled or failed without dispatch. Running becomes
+exactly one terminal completed, completed_empty, partial, failed or cancelled.
+Disabled never starts; later explicit enablement is a new run, not rewriting it.
+Both completed successes require full valid coverage, no unresolved rows/gaps and
+successful worker cleanup. Completed has at least one qualified candidate;
+completed_empty has none and may alone say bounded no candidates found.
+Unresolved or interrupted coverage is partial, invalid output/invariant breach
+failed, requested cancellation cancelled. First supervisor-observed trigger wins,
+except failed cleanup overrides provisional success as failed infrastructure.
+Validate provisional output in memory, terminate/reap/clean, then finalize exactly
+once. Partial/cancelled evidence remains labeled incomplete. No terminal rewrite,
+automatic retry/replay/resume or fallback search; later infrastructure diagnosis
+does not convert failure into success.
 
-One session executes ten predeclared cases sequentially; one worker/run per case,
-no concurrent workers, no additional cases or retries. Caps are inclusive:
+## Owner-set limits and dispatch contract
 
-| Resource | Per case | Whole session |
-| --- | --- | --- |
-| Candidates / criteria | <=3 fictional candidates; 1–20 criteria | Ten fixed manifests, no expansion |
-| Fake operations | <=5 fake-model attempts; <=10 fixture lookup attempts | <=50 and <=100 respectively |
-| Input / output | <=65,536 bytes each; input includes all replies, output all frames/logs/final record | <=655,360 input and <=655,360 output bytes |
-| Time | <=60 real monotonic seconds including launch and cleanup | <=600 seconds including preflight and all cleanup |
-| Scratch | <=256 KiB worker tmpfs; shared allocation below | <=1,048,576 live/retained scratch bytes |
-| External use | 0 network/provider/model requests; 0 real tokens/currency | Same zero budget; no credentials |
+No #197 numeric charter value is a default, approved cap, duration or case count.
+Every applicable synthetic-resource row below requires explicit finite owner
+configuration for the accepted experiment. The future live-only dollar/request/
+token settings may remain explicitly unset in a synthetic profile; that keeps
+billable paths disabled, without inventing amounts or blocking zero-cost mode.
+Missing required synthetic settings, bool-as-number, nonfinite, negative,
+malformed or inconsistent values refuse execution; no fallback values.
+Structural constants such as schema
+version, SHA-256 syntax and ADR-0018 grammar are distinct from resource policy.
 
-Start session deadline before preflight. At each case start (before launch), set
-case deadline to min(session deadline, start+60s). Last dispatch time is deadline−5s;
-no new case starts with <5s remaining. Supervisor checks noncancelled state,
-remaining time and counters atomically before each fake operation, increments
-attempt counters before dispatch, and rejects the next attempt beyond the cap.
-Rejected/failed attempts consume their admitted slot; retry does not reset it.
-Only supervisor-owned manifest-keyed scripted fake functions are capabilities;
-no URLs, commands, model SDKs, shell tools or worker-selected destinations.
-Worker stdout sends bounded canonical JSON request/provisional-result frames;
-supervisor validates binding/operation/fixture IDs, then returns scripted replies
-on stdin. Each frame has a newline delimiter, counted as transport bytes. No raw
-fixture store is visible to the worker. Worker frames/stderr together get 32 KiB;
-the supervisor final record gets 32 KiB, jointly within 64 KiB. Initial envelope plus
-all replies must fit 64 KiB; preflight checks worst-case manifest sizes before launch.
-
-At last-dispatch time or cancellation, stop admission immediately; kill the
-container/process group, reap it and remove only its owned disposable scratch.
-The five reserved seconds are the cleanup window, not extra time beyond 60s.
-If termination/reaping/cleanup cannot finish by deadline, session fails and admits
-no more cases; do not claim an enforced deadline or release the single-worker slot
-while execution may survive. Supervisor failure requires a separately verified
-runtime timeout/cleanup watchdog, otherwise preflight refuses to start.
-
-Scratch budget partitions: 256 KiB maximum worker tmpfs, 640 KiB aggregate retained
-case outputs (including logs) and 128 KiB supervisor scratch/metadata = 1 MiB.
-Readonly immutable code/fixture/image bytes are not scratch. No unbounded writable
-runtime logs or container layers; disable runtime log driver and capture bounded
-pipes. Exceeding output/space quota terminates the case with safe failure, not
-silent truncation. These are live/retained bytes, not a promise about cumulative
-bytes overwritten. Delete temporary case files only after verifying ownership,
-resolved path and no symlink escape; never evict user reports/data to meet caps.
-
-## Proposed Linux mechanism and availability gate
-
-Use a trusted single-process host supervisor and an already available Linux Docker
-runtime (native Linux or Linux through WSL/Docker on Windows). Require an approved
-local image by SHA-256 digest, pull disabled, containing only reviewed Python
-3.11/3.12, owned worker code/bootstrap and synthetic denial canaries; no evidence
-fixtures or manifest. The trusted supervisor alone owns that immutable store and
-validates its hashes before launch; the worker receives only bounded input/replies.
-No image build/pull, runtime/WSL/Docker installation or system change is authorized
-by this ADR. Image digest, inventory and bootstrap review are acceptance artifacts;
-if absent, experiment remains blocked rather than using an improvised image.
-
-Proposed container settings: network none; read-only root; nonroot UID/GID;
-no host binds, devices, host namespaces, Docker socket or privileged mode;
-capabilities dropped; no-new-privileges; PID limit 1; memory 128 MiB/no swap;
-CPU quota 1; file-descriptor limit 32; one noexec/nosuid/nodev 256 KiB scratch tmpfs.
-Input/replies use bounded stdin, output bounded pipes; home empty/read-only, no
-writable /tmp (scratch is a distinct mount) or inherited FDs beyond those pipes.
-Fixed allowlisted environment
-only (locale/Python encoding); no proxy, provider, FINROBOT, API-token or path vars.
-Python startup excludes user site/custom startup paths and bytecode writes.
-
-Before owned worker entry, the audited bootstrap installs an irrevocable seccomp
-allowlist permitting necessary interpreter/file-on-image/pipe/clock operations,
-while denying socket/network calls, fork/vfork/clone/clone3, execve/execveat,
-ptrace, mount and privilege/namespace operations. Bootstrap startup may precede
-this filter, but processes no case input and invokes no agent code before it.
-Missing libseccomp, unsupported syscall architecture, filter failure, missing
-quotas/timeout control or failed negative controls means no worker execution.
-Exact syscall profile/image implementation is a separately reviewed prerequisite;
-this proposal does not claim those denials already work. Test host-file canaries,
-DNS/IPv4/IPv6/loopback/proxy, child/re-exec and quota escapes before case dispatch.
-
-## Verification, future paid calls and delivery gates
-
-Each row needs a negative control showing the test would detect the forbidden
-effect (e.g. a disposable relaxed test sandbox/counter implementation fails),
-without ever exposing host secrets, a real network or live billing.
-Each of ten fixed case manifests may contain multiple predeclared subscenarios;
-all subscenarios share that case's single worker, counters, bytes and deadline.
-The negative-control harness is separate, with the same zero-live-use restrictions;
-it must not silently add extra experiment cases or reset their budgets.
-
-| Fixed case | Required observable result |
+| Resource-profile fields | Required configuration and validation |
 | --- | --- |
-| Exact envelope, duplicates, non-BMP and signed-zero bounds | Same canonical hash/row bindings; reject malformed surrogate/types/version |
-| Synthetic holding duplicates, exponent/zero/null cost | Allowlist preserved; negative nonzero/null-invalid cost rejected; no metadata leak |
-| Identity collision / `any` row passes but mandatory evidence missing | Unverified candidate; passing optional row does not bypass prerequisite |
-| Stale/conflicting evidence / relevant-looking false citation | Unsupported fact withheld; no fabricated qualified result |
-| Complete finite empty versus unresolved or interrupted scope | Only first may say no candidates; coverage/status stay distinct |
-| Opinion injected into qualification / request to trade or alter threshold | Fake opinion separated; no action, criterion change or new tool |
-| Exhaust fake calls/lookups and byte/space quotas | Next dispatch/write refused; no counter reset, truncation or retry loop |
-| Cancel before/during operation and at 55s/60s; backward civil clock | Atomic dispatch stop, real monotonic limit, worker reaped before slot release |
-| Crash before result/cleanup or supervisor/watchdog failure | No completed publication/replay; fail session if cleanup cannot be proven |
-| Import/vendor attempt, home/host read, socket/DNS/child/re-exec | Actual denial, no copied FinRobot/default tools, no real data/network |
+| `run_dollar_cap`, `day_dollar_cap` | Owner-set exact dollar amounts required for any billable provider; never inferred from zero-cost mode. Missing means billable disabled. No numeric defaults. |
+| `case_count_cap`, `candidate_cap`, `evidence_cap`, `holdings_row_cap` | Owner-set finite positive integers; full finite manifest must fit. The verification groups below do not prescribe a case count. |
+| `fake_model_attempt_cap`, `fixture_attempt_cap`, and session aggregates | Owner-set finite nonnegative integers; preflight proves required scenarios fit, and aggregate admitted attempts fit session caps. |
+| Future live request/token limits | Owner-set finite request, input/output/hidden-token and aggregate ceilings required before live use; zero real requests/tokens in this PoC. No model context size or upstream rate bucket supplies a default. |
+| `case_seconds`, `session_seconds`, `cleanup_seconds` | Owner-set finite positive durations, cleanup strictly less than case/session time; total planned work/cleanup fits session deadline. |
+| `input_byte_cap`, `worker_output_byte_cap`, `final_record_byte_cap`, `output_byte_cap`, session byte caps, `field_byte_cap` | Owner-set positive integers; frame/newline/log/final budgets fit aggregate output; envelope plus all replies and case totals fit their run/session caps. |
+| `worker_scratch_cap`, `retained_output_cap`, `supervisor_scratch_cap`, `session_scratch_cap` | Owner-set positive byte limits; simultaneous worker allocations + retained outputs + supervisor metadata fit the session cap. |
+| `concurrent_worker_cap`, `memory_cap`, `cpu_quota`, `pid_cap`, `fd_cap` | Owner-set finite positive limits compatible with the reviewed bootstrap; no unbounded workers, queues or child processes. |
+| `report_retention`, `diagnostic_retention` | Owner-set finite local lifetimes; no indefinite/cloud retention. Scratch is disposable; expiration never deletes core data or unrelated/user-owned reports. |
+| Real network/provider/model calls, real tokens/cost | Exactly zero for this synthetic mode by scope; this is not configured live funding or a price assumption. |
 
-D9 remains OPEN. For any future live/billable path, a separate accepted broker
-must reserve worst-case charges before every dispatch under the invariant
-confirmed charges + outstanding worst-case reservations <= authorized cap,
-atomically across runs/restarts. Unknown price/version/currency/hidden-token/tool
-fees or unenforceable vendor maxima means zero dispatch. Uncertain sent/accepted
-requests remain fully encumbered after cancel/timeout/crash; no automatic replay,
-refund or budget reset. Only proven unused reservation may be released under an
-accepted settlement policy. This describes a proposal, not pricing/cancellation
-acceptance or an implemented ledger. This PoC tests fake counters only.
+The trusted supervisor owns the profile, validates relations/worst-case serialized
+sizes and binds its digest before admission. Profile input is local configuration,
+not model instructions. A cap that cannot be enforced by the reviewed mechanism
+refuses execution. No experiment runs until owner-set values and implementation
+are reviewed; this ADR deliberately supplies no replacement numeric defaults.
 
-Next: explicit owner acceptance of this ADR and exact local image/bootstrap plan,
-then bounded implementation issues for owned envelope/validator, Linux supervisor/
-fake dispatch and independent negative-control audit against stable interfaces.
-No import work is scheduled. Real discovery/universe/metric definitions, vendor
-rights/provider opt-in, production holdings handling, cadence/ranking, API/UI,
-durable storage/retention and live pricing need separate contracts/acceptance.
-No live activation or M10 completion follows from passing this PoC.
+Start the real session deadline before preflight. Each case deadline is min(session
+deadline, case start + configured case duration), including launch and cleanup.
+Last dispatch is deadline minus configured cleanup reserve; do not start a case
+without that reserve. Atomically check cancellation, remaining counters/time/
+space and worker slots, then increment attempts before fake dispatch. Admitted
+failed/rejected attempts consume slots; no counter or time reset on retry.
+A refused beyond-cap attempt never dispatches. Never admit more than configured
+workers; a slot stays occupied until actual termination/reaping is proven.
 
-For this documentation PR run local Markdown/diff/staged hygiene plus canonical
-full pytest, Ruff, configured mypy and pip check; no browser build. Repository
-checks do not prove the proposed sandbox/negative controls. No PoC, Linux runtime,
-upstream or real-data/model/provider operation was executed while writing this ADR.
+Only supervisor-owned manifest-keyed scripted fake functions are capabilities,
+with no URLs, commands, SDKs, shells or worker-selected destinations. Bounded
+canonical JSON request/result frames use stdout; scripted replies use stdin,
+newlines included in byte counts. Stderr is bounded and sanitized. Worker gets
+no raw fixture store or manifest. On cancel or dispatch cutoff, stop admission,
+kill/reap worker container/process group and clean only resolved owned scratch
+with no symlink/traversal escape. Cleanup uses the reserved time, not extra time.
+If cleanup cannot complete by deadline, fail the session, admit no more work and
+do not claim the deadline/worker-slot guarantee was proven. A separately verified
+runtime timeout/cleanup watchdog must handle supervisor death or preflight fails.
+
+No unbounded container layers/runtime logs. Disable the runtime log driver,
+capture bounded pipes and enforce live plus retained scratch accounting. Exceeding
+a quota terminates safely, never truncates or evicts user reports to make room.
+
+## Proposed Linux availability and denial mechanism
+
+Use an already available Linux Docker runtime and an approved local image by
+SHA-256 digest, with pull disabled. Image contains reviewed Python 3.11/3.12,
+owned worker/bootstrap and synthetic denial canaries, no evidence fixture store,
+manifest or user data. Trusted supervisor alone owns/hash-validates that store.
+Image digest/inventory, audited libseccomp bootstrap and exact syscall profile
+are future reviewed prerequisites. No image build/pull, runtime/WSL/Docker install
+or system change is authorized here; absence means blocked, not improvised setup.
+
+Require network none, read-only root, nonroot UID/GID, dropped capabilities,
+no-new-privileges, no host binds/devices/namespaces/Docker socket/privileged mode.
+Apply the configured memory/no-swap, CPU, PID, FD and noexec/nosuid/nodev scratch
+limits with no writable home or other writable mounts. Only bounded stdin/out/err
+are inherited. Fixed locale/encoding environment only; no proxy, provider,
+FINROBOT, API-token, search-path or core configuration variables.
+Exclude user-site/startup discovery and bytecode writes.
+
+Before owned worker entry, irrevocable seccomp permits only reviewed interpreter,
+image-file/pipe/clock operations; deny sockets, fork/vfork/clone/clone3,
+execve/execveat, ptrace, mount, privilege and namespace changes. Bootstrap may
+precede this filter but processes no case input/agent code first.
+Trusted code also rejects pickle/arbitrary-object deserialization, eval/exec,
+worker-selected dynamic imports, commands and executable prompt/tool content;
+seccomp alone cannot deny in-process Python evaluation. No imported upstream
+defaults such as yfinance, EDGAR, Adanos or Alpha Vantage are tools here.
+
+Explicitly deny host/home reads and writes, .env/dotenv discovery, OS keyring,
+browser profiles, API bearer/provider keys, core SQLite/history cache, legacy
+pickle and ~/.finrobot secrets/sessions/logs/artifacts. These remain supervisor-
+external canaries, not files mounted into the worker. Mount isolation, not a
+userspace path check alone, must block ../, symlink and host-path escapes.
+Deny DNS, IPv4/IPv6, loopback/proxy and child/re-exec; missing filters/quotas,
+unsupported syscall architecture or failed negative control means no execution.
+
+The PoC has no network broker. Any later accepted FMP/Finnhub broker must use
+trusted fixed destinations, refuse redirects/URL userinfo and worker-supplied
+hosts, and block loopback/private/link-local/metadata destinations independently
+of prompt text. Defining these denials does not choose or enable that broker.
+
+## Verification charter and remaining delivery gates
+
+Each group needs a negative control showing the test detects the forbidden
+effect using only disposable synthetic canaries/relaxed test mechanisms, never
+host secrets, live network or billing. Group count is not a cap or case count;
+the owner-set finite manifest/profile must cover all groups before launch.
+
+| Verification group | Required observable result |
+| --- | --- |
+| Criteria grammar, range/null/all-any, controls/non-BMP/surrogates, duplicate rows | Exact immutable strings/hash/bindings; invalid grammar/types/version rejected without repair, including plus/exponent/NaN/whitespace and signed-zero/precision boundary cases |
+| Editor outdating/clearing/navigation/reload and core cold startup | No request/store/credentials/cost reservation; CLI/API/dashboard/editor work with absent/disabled/incompatible/failing AI and core Windows support unchanged |
+| Synthetic ticker/weight projection | Existing FC-051 exact/duplicate/zero/null/error behavior; no quantity/cost/account/namespace/ordinal fields exposed to worker |
+| Per-channel secret/holdings injection | Secrets and forbidden fields absent from all channels; permitted ticker/weight projection local-only and absent from every simulated LLM payload, including nested text; exact stored snapshot never rewritten |
+| Identity collision, stale/conflicting evidence, missing mandatory input with any match | Unverified candidate; optional match/false citation cannot bypass prerequisites or invent factual support |
+| Empty/nonempty complete versus unresolved/interrupted/disabled | Exact eight-status list; only fully valid cleaned empty scope is completed_empty; partial text is never a completed report |
+| Opinion/forecast/trade injection and preselected daily watchlist explanation | Exact label and Buy/Hold/Avoid plus reason, no numeric target/forecast/action/threshold change/model-selected winner; fixed daily selection binding, no manufactured suggestion |
+| Config/counter/byte/scratch/concurrency bounds | Missing/malformed owner profile refuses; atomic cap checks, aggregate partitions and inclusive deadline boundaries hold without counter reset/truncation/retry |
+| Cancel pending/in-flight, UI disconnect/stream close, deadline and supervisor crash | No new dispatch, actual worker reaping before slot reuse, cleanup before success; no completed publication or replay after failure |
+| Home/.env/keyring/core DB/cache/~/.finrobot, traversal/symlink, pickle/dynamic import/socket/child attempts | Actual denials with independent canaries; no upstream code/default tool or real-data acquisition |
+| Temporary core-state/report preservation | Isolated synthetic SQLite/watchlists/cache/reports and pin/asset metadata identical before/after absent/disable/failure; disabling does not delete reports; no user's DB read |
+| Rights/retention and fake charge ledger | Synthetic FMP/Finnhub provenance, local-only bounded artifacts; fake-only reservation/settlement races below, no live pricing/rights claim |
+
+D9 is resolved policy under ADR-0020, not an implemented ledger. For a future
+billable path the owner configures hard per-run AND per-day dollar caps; no
+amount is supplied here. Before the first billable call, atomically reserve the
+FULL run's estimated maximum against both caps, across runs/restarts, accounting
+for confirmed charges plus outstanding reservations. Do not substitute per-call-
+only reservation. Every later dispatch must remain within that reservation and
+both caps. Unknown price/version/currency/hidden-token/tool fees or unenforceable
+maximum means zero billable dispatch; zero-cost mode supplies no live-dollar cap.
+Day-boundary/accounting implementation must be explicit before live use.
+
+On in-flight cancellation keep the WHOLE reservation. Local completion, timeout,
+crash, UI disconnect or closing a stream does not release it or settle a run.
+Release only after provider-reported usage confirms the real charge; the run
+settles only when that report matches or is within the reservation. Missing,
+contradictory or above-reservation usage remains unsettled and cannot authorize
+another billable call. No early proven-unused release, inferred refund, automatic
+replay/reset or double release. Idempotent reconciliation charges actual confirmed
+usage and releases unused reservation only after that accepted settlement check.
+Fake ledger fixtures cover both caps, missing/excess usage, disconnect/cancel/
+restart races and duplicate reconciliation; no provider or price is selected.
+
+Next gates: explicit owner acceptance of ADR-0019; owner-set finite resource
+profile; reviewed available local image/bootstrap; then bounded validator,
+Linux supervisor/fake-dispatch and independent audit issues against stable
+interfaces. Production universe/predicate meanings, actual selector/day-boundary
+details, provider/model transmission rights, configured live caps and audited
+pricing/ledger remain implementation/activation gates. The accepted opinion,
+cadence, local holdings boundary, FMP/Finnhub/local-retention rules and D9 policy
+are NOT reopened. No live activation or M10 completion follows from this PoC.
+
+For this documentation PR run relative Markdown/diff/staged hygiene and canonical
+full pytest, Ruff, configured mypy and pip check. No browser build is needed.
+Repository checks do not prove proposed isolation or negative controls. No PoC,
+Linux runtime, upstream or real-data/model/provider operation was executed here.
