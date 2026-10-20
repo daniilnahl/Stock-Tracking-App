@@ -260,3 +260,41 @@ Rights:
 
 Zero-cost synthetic mode stays first. Billable paths stay disabled until the
 dollar caps are configured. No live activation follows from this review.
+
+## Recheck of `3196111` — 2026-10-20
+
+Codex pushed
+[`31961118859620e0425294e66e179e02466149c2`](https://github.com/daniilnahl/Stock-Tracking-App/commit/31961118859620e0425294e66e179e02466149c2)
+on `codex/192-no-import-poc-contract` after the review above. That commit is
+the current head of
+[PR #202](https://github.com/daniilnahl/Stock-Tracking-App/pull/202). Git
+records the author as daniilnahl. This review did not edit that branch.
+The contract at that head is
+[`docs/adr/0019-m10-feasibility-isolation.md`](https://github.com/daniilnahl/Stock-Tracking-App/blob/31961118859620e0425294e66e179e02466149c2/docs/adr/0019-m10-feasibility-isolation.md).
+
+The diff from `9e29e54` to `3196111` is one file, three insertions and one
+deletion. No other checklist sentence changed. Former lines 1–33 keep the
+same numbers. Former lines 34–90 move down by one. Former line 91 is now
+lines 92–93. Former lines 92–417 move down by two. The earlier sections of
+this file remain the record for `9e29e54`.
+
+| Row | Result at `3196111` | Who | Evidence |
+| --- | --- | --- | --- |
+| SA-03 | ADDRESSED | Codex | `:34-41`. Taurus remains the product label under ADR-0017. FinRobot stays reference-only at `:36-39`. TradingAgents stays excluded at `:40`. The three facts are in the draft scope section. The label is not equated with importing FinRobot. |
+| EN-02 | ADDRESSED | Codex | `:88-93`. Endpoints stay exact strings, signed zero and trailing zeros are preserved, and minimum <= maximum uses exact decimal-string comparison only, per ADR-0018, with no float conversion or rounded comparison. `:373` still requires plus, exponent, NaN, whitespace, and signed-zero/precision cases to fail. |
+
+No regression against the other 79 checklist rows, ADR-0020, or ADR-0018.
+The diff does not reopen an accepted decision and does not introduce a
+numeric cap. Per-run and per-day caps remain owner-set with no numeric
+default (`:283`, `:298`). Proven-unused release stays forbidden (`:401`).
+
+**Final verdict: PASS with limitations.**
+
+SA-03 and EN-02 are no longer actionable. Every former FAIL and PARTIAL row
+is addressed at `3196111`. The thirty-nine former PASS rows still hold, at
+the line offset above. The limitations that remain are the ones already
+recorded: this is a documentation reading, not owner acceptance of ADR-0019,
+and the sandbox, budget ledger, and negative controls have not run. Current
+locations of that limit are `:330-332` and `:416-419`. The implementation,
+configuration, and rights gates in the previous section still apply, with
+the same two-line offset for any `9e29e54` citation from line 92 onward.
