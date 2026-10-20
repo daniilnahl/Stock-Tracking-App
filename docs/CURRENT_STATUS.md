@@ -4,6 +4,17 @@ Verified 2026-10-18 for [#186](https://github.com/daniilnahl/Stock-Tracking-App/
 from merged main `6c5a3f9b975ebd2b0230c7a8ccb773de982ecf69`.
 This is a delivery assessment, not new approval of proposed requirements.
 
+**M10 offline implementation — 2026-10-19:** the owner accepted ADR-0019 and
+authorized pure offline models/validation with sandbox preparation separate.
+Codex owns [#207](https://github.com/daniilnahl/Stock-Tracking-App/issues/207),
+the exact prepared-criteria parser/hash. Grok's disjoint implementation lane is
+[#208](https://github.com/daniilnahl/Stock-Tracking-App/issues/208), resource-profile
+validation; [#209](https://github.com/daniilnahl/Stock-Tracking-App/issues/209)
+is static Linux readiness preparation. This supersedes the acceptance-pending
+wording in the dated paragraphs below. No worker, sandbox/PoC or live/provider/
+model/billable activation follows; owner-set execution configuration and reviewed
+isolation remain gates.
+
 **M10 contract revision — 2026-10-19:** #204's accepted ADR-0020 decisions and
 #203's checklist/review are owner-merged. #192/#202 revises
 [proposed ADR-0019](adr/0019-m10-feasibility-isolation.md) against both, including

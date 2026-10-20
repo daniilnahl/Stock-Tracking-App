@@ -76,6 +76,7 @@ def test_wheel_contains_only_runtime_modules_and_safe_imports(tmp_path):
         "stock_tracker/services/protocols.py", "stock_tracker/services/watchlists.py",
         "stock_tracker/services/history.py", "stock_tracker/services/history_policy.py",
         "stock_tracker/services/eps.py",
+        "stock_tracker/services/research_criteria.py",
         "stock_tracker/cli/__init__.py", "stock_tracker/cli/storage.py",
         "stock_tracker/services/current_data.py", "stock_tracker/services/numeric.py",
         "stock_tracker/cli/current_data.py",
