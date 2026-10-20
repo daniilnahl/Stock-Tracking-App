@@ -258,9 +258,12 @@ provider.
 
 V2 pipeline steps use `max_retries: int = 3`
 ([`runner.py`](https://github.com/AI4Finance-Foundation/FinRobot/blob/2717499b8e30f242640af08c4ad9afd1113c2d45/finrobot_desktop/finrobot/engine/pipelines/runner.py)).
-Recoverable exceptions are those whose text contains `429`, `rate limit`,
-`too many requests`, or `timeout`, with delays of 2, 5, and 10 seconds.
-Auth, billing, and context-length failures are treated as fatal. A non-critical
+The pinned `_is_recoverable_exception` first rejects fatal message substrings,
+then accepts `AgentRunError`, `ProviderError`, `httpx.TimeoutException` and
+`httpx.ConnectError` by type, even without matching recoverable text. Otherwise
+it checks `429`, `rate limit`, `too many requests`, or `timeout` substrings.
+Retry delays are 2, 5, and 10 seconds. Auth, billing, and context-length message
+matches take precedence over the typed recoverable cases. A non-critical
 step that still fails is degraded and the pipeline continues. Prompt size is
 reduced with character caps (`_PROMPT_MAX_STEP_DATA_CHARS = 12_000`, a 16_000
 structured cap, a 200_000 character warning). The warning is not a refusal.
@@ -469,9 +472,12 @@ These block activation. Closing them is later accepted work, not this issue.
 3. **Cancellation is local.** Task cancel and SSE disconnect do not retain an
    uncertain charge or prove the provider stopped. That charge question is
    part of the open D9 decision.
-4. **Secrets and home writes.** Linux, WSL, and Docker are exactly the
-   environments where the pinned store falls back to plaintext
-   `~/.finrobot/.secrets`. The sandbox decision does not remove that fallback.
+4. **Secrets and home writes.** The pinned `create_secret_store` tries the OS
+   credential store on Linux and Windows, including WSL/Docker where a backend
+   exists. A backend `RuntimeError` falls back to plaintext
+   `~/.finrobot/.secrets`; dev mode always selects that file, and unsigned macOS
+   also defaults to it unless keychain use is explicitly enabled. Platform alone
+   does not prove fallback. The sandbox decision does not remove that possibility.
    Artifacts, runs, caches, sessions, and logs share the user home directory.
 5. **Egress is not brokered.** yfinance, EDGAR, DuckDuckGo, custom `base_url`,
    and process proxy variables can leave the host without this application's

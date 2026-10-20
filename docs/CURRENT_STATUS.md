@@ -4,6 +4,17 @@ Verified 2026-10-18 for [#186](https://github.com/daniilnahl/Stock-Tracking-App/
 from merged main `6c5a3f9b975ebd2b0230c7a8ccb773de982ecf69`.
 This is a delivery assessment, not new approval of proposed requirements.
 
+**M10 contract revision — 2026-10-19:** #204's accepted ADR-0020 decisions and
+#203's checklist/review are owner-merged. #192/#202 revises
+[proposed ADR-0019](adr/0019-m10-feasibility-isolation.md) against both, including
+the restricted holdings projection, accepted D9 policy, canonical statuses and
+owner-set limits without inherited numeric defaults. #203's findings describe
+the earlier `fcfa164` proposal; they are not verification of this revision.
+Closed #201's new-head review continues in Grok's separate
+[#205](https://github.com/daniilnahl/Stock-Tracking-App/issues/205). No runtime, PoC,
+billable provider or sandbox enforcement is implemented/activated here. Contract
+acceptance, explicit configuration and reviewed isolation remain separate gates.
+
 **M10 owner decisions — 2026-10-19:** [ADR-0020](adr/0020-m10-owner-decisions.md)
 records the owner's resolutions of mismatches M-01 through M-07. Hard per-run
 and per-day dollar caps are configured by the owner and are not given numeric

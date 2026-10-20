@@ -12,6 +12,10 @@ statement that exact daily cadence, ranking, and selection remain unresolved
 is superseded only for that feature. A general market calendar and other D7
 items stay open. This addendum does not authorize implementation.
 
+The [proposed ADR-0019 contract](0019-m10-feasibility-isolation.md), #192/#202,
+is revised against accepted ADR-0020 and the #203 review. It does not change
+this ownership decision, accept an execution contract or reopen resolved policy.
+
 **Framework direction addendum — the owner's decision of 2026-10-18:** the owner
 excluded TauricResearch/TradingAgents and selected FinRobot for M10's agent workflow.
 This supersedes the earlier unresolved framework selection only. The accepted

@@ -1,5 +1,22 @@
 # M10 — FinRobot integration: revised scope and parallel plan
 
+## Contract revision and parallel review — 2026-10-19
+
+#204's ADR-0020 decisions and #203's independent checklist/review are owner-merged.
+The review in [m10-poc-review-202.md](m10-poc-review-202.md) assesses the earlier
+`fcfa164` head; its verdicts stay historical until a new independent review.
+
+| Issue | Exclusive work | Current gate |
+| --- | --- | --- |
+| #192 / PR #202 | Codex: [proposed ADR-0019](../adr/0019-m10-feasibility-isolation.md), minimal status/authority links and the existing two source-fact errata | Revise against all eight ADR-0020 decisions and #203 findings. Still proposed; acceptance, owner-set profile and reviewed isolation precede execution. |
+| Closed #201 / merged PR #203; follow-up [#205](https://github.com/daniilnahl/Stock-Tracking-App/issues/205) | Grok: re-review the revised #202 head, optionally own only `docs/milestones/m10-poc-review-202-revision.md`, without co-authoring its ADR/shared files | The merged checklist/review is available input; re-review must identify its exact new head and cannot infer runtime enforcement from docs/CI. |
+
+Zero-cost synthetic mode remains first. D9 policy is resolved; numeric live caps,
+pricing and an audited ledger are implementation/activation gates. Holdings never
+reach an LLM, evidence is limited to the user's FMP/Finnhub data under existing
+terms, reports stay local, and #197 Phase B/numeric defaults remain retired.
+No new runtime task is authorized by this contract revision.
+
 ## Current owner decision — 2026-10-19
 
 The owner accepted [ADR-0020](../adr/0020-m10-owner-decisions.md) on 2026-10-19.

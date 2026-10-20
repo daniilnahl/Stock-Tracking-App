@@ -37,6 +37,12 @@ For the named features, this supersedes the 2026-10-17 statement that daily
 ranking remains unapproved, and the 2026-10-18 holdings, opinion, and open-D9
 sentences where they differ. It does not authorize implementation.
 
+**M10 contract revision — 2026-10-19:** [proposed ADR-0019](docs/adr/0019-m10-feasibility-isolation.md)
+in #192/#202 implements a proposed synthetic contract against the accepted
+ADR-0020 decisions and #203's dated review. It supplies no resource/cost defaults,
+does not reopen the accepted policies, and still requires owner acceptance,
+explicit configuration and reviewed isolation before any PoC execution.
+
 **M10 framework selection — the owner's decision of 2026-10-18:** the owner excluded
 TauricResearch/TradingAgents, then explicitly selected
 [AI4Finance-Foundation/FinRobot](https://github.com/AI4Finance-Foundation/FinRobot)
