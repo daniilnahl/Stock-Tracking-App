@@ -70,7 +70,12 @@ def _decimal_parts(value: str) -> tuple[bool, str, str]:
 
 
 def _compare(first: str, second: str) -> int:
-    """Compare validated decimal strings exactly, without numeric conversion."""
+    """Order validated decimal strings by exact numeric value.
+
+    Compare the sign, then integer-digit length, integer digits, and the
+    zero-padded fraction. Raw string order is not numeric order. This uses no
+    float and no Decimal context.
+    """
     negative_a, integer_a, fraction_a = _decimal_parts(first)
     negative_b, integer_b, fraction_b = _decimal_parts(second)
     if negative_a != negative_b:

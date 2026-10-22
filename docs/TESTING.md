@@ -9,8 +9,9 @@ capabilities. Default tests remain offline and require no real provider keys.
 
 Run `python -m pytest tests/test_research_criteria.py -v` for the accepted
 ADR-0019 offline phase. Check exact ADR-0018 prepared data, immutable duplicates/
-order/strings, UTF-16 lengths, control/surrogate/nonblank rules, lexical decimal
-ordering, fixed canonical bytes/hash, caller-bound raw UTF-8 JSON parsing and
+order/strings, UTF-16 lengths, control/surrogate/nonblank rules, exact
+decimal-string numeric ordering, fixed canonical bytes/hash, caller-bound raw
+UTF-8 JSON parsing and
 safe rejection of duplicate keys, unexpected types/fields and malformed inputs.
 There is no default byte ceiling, predicate evaluation, credential acquisition or
 worker/API/UI integration. Cold source and installed-wheel probes must prove

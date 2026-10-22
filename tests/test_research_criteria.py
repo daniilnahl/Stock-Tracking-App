@@ -100,6 +100,33 @@ def test_exact_numeric_ordering_without_float_rounding(minimum, maximum):
             assert_bad(envelope(range_row(minimum=maximum, maximum=minimum)))
 
 
+@pytest.mark.parametrize("minimum,maximum", [
+    # Raw Python string order says each minimum is greater than its maximum.
+    # Numeric order is the other way: "9" < "10", "-2" < "-1", "-0.3" < "-0.20".
+    ("9", "10"), ("9.9", "10"), ("2", "10"),
+    ("-2", "-1"), ("-30", "-2"),
+    ("-0.3", "-0.20"), ("-1", "-0.999"),
+])
+def test_bounds_use_numeric_order_where_raw_string_order_is_wrong(minimum, maximum):
+    assert minimum > maximum
+    snapshot = validate_prepared_criteria(envelope(range_row(minimum=minimum, maximum=maximum)))
+    assert (snapshot.criteria[0].minimum, snapshot.criteria[0].maximum) == (minimum, maximum)
+    assert_bad(envelope(range_row(minimum=maximum, maximum=minimum)))
+
+
+@pytest.mark.parametrize("minimum,maximum", [
+    ("1.50", "1.5"), ("1.5", "1.50"), ("1.0", "1.000"), ("1.000", "1.0"),
+    ("-1.50", "-1.5"), ("-1.5", "-1.50"), ("-0.10", "-0.1"), ("-0.1", "-0.10"),
+    ("0.10", "0.1"), ("0.1", "0.10"), ("10.0", "10"), ("10", "10.0"),
+    ("-10.00", "-10.0"), ("-10.0", "-10.00"),
+    ("-0", "0"), ("0", "-0"), ("-0.00", "0.0"), ("0.00", "-0.00"),
+])
+def test_signed_zero_and_trailing_zeros_compare_equal_and_stay_verbatim(minimum, maximum):
+    assert minimum != maximum
+    snapshot = validate_prepared_criteria(envelope(range_row(minimum=minimum, maximum=maximum)))
+    assert (snapshot.criteria[0].minimum, snapshot.criteria[0].maximum) == (minimum, maximum)
+
+
 @pytest.mark.parametrize("value", [
     "", "+1", "01", "-01", ".1", "1.", "1e3", "NaN", "Infinity", "1,000",
     " 1", "1 ", "1\n", "1\u2028", "1\u2029", "--1", "١", "１", "9" * 129,
