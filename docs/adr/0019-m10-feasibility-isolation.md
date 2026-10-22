@@ -1,14 +1,20 @@
-# ADR-0019: Proposed no-import, zero-billable M10 synthetic PoC
+# ADR-0019: No-import, zero-billable M10 synthetic PoC contract
 
 ## Status and controlling decisions
 
-**PROPOSED implementation contract, revised 2026-10-19.** Addresses
+**ACCEPTED contract; pure offline models/validation authorized, 2026-10-19.**
+The owner explicitly answered "Accept ADR-0019; start offline models/validation"
+in the current task, authorizing that phase while sandbox prerequisites are
+prepared separately. This does not authorize a PoC, worker/container/WSL launch,
+FinRobot import, model/provider/paid call or deployment resource values. Addresses
 [#192](https://github.com/daniilnahl/Stock-Tracking-App/issues/192) and the
 [#202 review](../milestones/m10-poc-review-202.md) merged in #203.
 [Accepted ADR-0020](0020-m10-owner-decisions.md), merged in #204, and the amended
-[SRS](../../SRS.md) control. This proposal does not reopen those decisions or
-accept their implementation. Its MUST/SHALL language applies to a future accepted
-experiment; publication, merge or green tests do not authorize execution.
+[SRS](../../SRS.md) control. This record does not reopen those decisions or
+authorize other implementation. Its MUST/SHALL language defines the accepted
+contract; the actual experiment still needs its explicit configuration and
+reviewed isolation prerequisites. Publication, merge or green tests do not by
+themselves authorize execution.
 
 | Authority | Accepted or recorded input | Remaining gate |
 | --- | --- | --- |
@@ -29,7 +35,7 @@ holdings/opinion/open-D9 statements are superseded where ADR-0020 differs.
 [AGENTS.md](../../AGENTS.md), [TESTING.md](../TESTING.md) and
 [financial definitions](../FINANCIAL_CALCULATIONS.md) remain controlling.
 
-## Proposed decision and core independence
+## Decision and core independence
 
 Taurus remains the product label under [ADR-0017](0017-user-criteria-taurus-discovery.md).
 Build owned Python agents/internal adapters with approved dependencies/stdlib.
@@ -404,16 +410,18 @@ usage and releases unused reservation only after that accepted settlement check.
 Fake ledger fixtures cover both caps, missing/excess usage, disconnect/cancel/
 restart races and duplicate reconciliation; no provider or price is selected.
 
-Next gates: explicit owner acceptance of ADR-0019; owner-set finite resource
-profile; reviewed available local image/bootstrap; then bounded validator,
-Linux supervisor/fake-dispatch and independent audit issues against stable
-interfaces. Production universe/predicate meanings, actual selector/day-boundary
+Owner acceptance and pure offline implementation authorization are recorded above.
+The first separate issues are #207 (criteria parser/hash) and #208 (resource-profile
+validation); #209 prepares isolation readiness without execution. Remaining PoC
+gates: owner-set finite resource profile and reviewed available local image/
+bootstrap, then Linux supervisor/fake-dispatch and independent audit issues against
+stable interfaces. Production universe/predicate meanings, actual selector/day-boundary
 details, provider/model transmission rights, configured live caps and audited
 pricing/ledger remain implementation/activation gates. The accepted opinion,
 cadence, local holdings boundary, FMP/Finnhub/local-retention rules and D9 policy
 are NOT reopened. No live activation or M10 completion follows from this PoC.
 
-For this documentation PR run relative Markdown/diff/staged hygiene and canonical
+For changes here run relative Markdown/diff/staged hygiene and canonical
 full pytest, Ruff, configured mypy and pip check. No browser build is needed.
 Repository checks do not prove proposed isolation or negative controls. No PoC,
 Linux runtime, upstream or real-data/model/provider operation was executed here.

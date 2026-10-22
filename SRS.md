@@ -10,6 +10,15 @@
 
 ## Approval record
 
+**M10 offline implementation — 2026-10-19:** the owner explicitly accepted
+[ADR-0019](docs/adr/0019-m10-feasibility-isolation.md) and authorized pure offline
+models/validation while sandbox prerequisites are prepared separately. #207's
+criteria parser/hash and #208's resource-profile validation can proceed in
+independent files. This does not authorize a worker, PoC, container/WSL launch,
+FinRobot import, live model/provider/paid call, numeric deployment defaults or
+the broader M10 runtime. Actual execution still needs the reviewed profile/image/
+bootstrap and other activation gates in ADR-0019/0020.
+
 **M10 owner decisions — 2026-10-19:** the owner accepted the resolutions in
 [ADR-0020](docs/adr/0020-m10-owner-decisions.md). Hard per-run and per-day
 dollar caps are configured by the owner, with no numeric default in the

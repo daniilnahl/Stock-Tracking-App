@@ -1,5 +1,23 @@
 # M10 — FinRobot integration: revised scope and parallel plan
 
+## Accepted offline phase — 2026-10-19
+
+The owner explicitly accepted ADR-0019 and authorized pure offline models/
+validation while sandbox prerequisites are prepared separately. This supersedes
+the older acceptance-pending records below, not the execution/rights gates.
+
+| Issue | Owner / exclusive files | Dependency and permitted work |
+| --- | --- | --- |
+| [#207](https://github.com/daniilnahl/Stock-Tracking-App/issues/207) | Codex: `services/research_criteria.py`, dedicated tests/probe and the necessary one-file wheel inventory update; authority/testing links | Ready: exact prepared envelope, immutable validation, canonical bytes/hash. No run wrapper, predicate evaluation or dispatch. |
+| [#208](https://github.com/daniilnahl/Stock-Tracking-App/issues/208) | Grok: `services/research_limits.py` and dedicated tests/probe | Ready independently: explicit profile validation, no numeric defaults, no criteria-module dependency or shared exports. |
+| [#209](https://github.com/daniilnahl/Stock-Tracking-App/issues/209) | Separate readiness report only | Static Linux/image/bootstrap review; no runtime/WSL/container start, install, build/pull or PoC. |
+
+Module paths above are inside `src/stock_tracker/`; agents must not co-author each
+other's files or shared package exports. Tests use explicit fictional input bounds,
+never deployment defaults. Worker/run-envelope integration follows reviewed
+contracts and separately decomposed dependencies. Live/billable execution stays
+disabled; actual PoC needs owner-set profile and reviewed image/bootstrap.
+
 ## Contract revision and parallel review — 2026-10-19
 
 #204's ADR-0020 decisions and #203's independent checklist/review are owner-merged.
