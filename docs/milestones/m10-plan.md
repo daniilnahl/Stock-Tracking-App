@@ -20,6 +20,13 @@ disabled; actual PoC needs owner-set profile and reviewed image/bootstrap.
 
 ## Contract revision and parallel review — 2026-10-19
 
+**2026-10-22 continuation:** #207 is owner-merged in #210 with passing main CI.
+Codex's independent next issue is [#211](https://github.com/daniilnahl/Stock-Tracking-App/issues/211):
+`services/research_holdings.py`, dedicated tests/probe and its single wheel-
+inventory entry, reusing accepted FC-051 analytics for local ticker/weight JSON.
+Grok retains #208/#209; no resource-profile or readiness-report files are shared.
+The projection does not enable a database read, transmission or worker/PoC.
+
 #204's ADR-0020 decisions and #203's independent checklist/review are owner-merged.
 The review in [m10-poc-review-202.md](m10-poc-review-202.md) assesses the earlier
 `fcfa164` head; its verdicts stay historical until a new independent review.

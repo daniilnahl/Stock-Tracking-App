@@ -15,6 +15,14 @@ wording in the dated paragraphs below. No worker, sandbox/PoC or live/provider/
 model/billable activation follows; owner-set execution configuration and reviewed
 isolation remain gates.
 
+**M10 next offline model — 2026-10-22:** #207's criteria parser/hash is owner-
+merged in #210; post-merge main `f83a6bc` passed all five Foundation checks.
+Codex now owns [#211](https://github.com/daniilnahl/Stock-Tracking-App/issues/211),
+a pure local ticker/accepted-weight projection from explicit synthetic valuation
+inputs. Grok's #208 resource validator and #209 static isolation-readiness lanes
+remain separate. No stored holdings acquisition, worker, model/provider call or
+PoC execution follows from this data-only work.
+
 **M10 contract revision — 2026-10-19:** #204's accepted ADR-0020 decisions and
 #203's checklist/review are owner-merged. #192/#202 revises
 [proposed ADR-0019](adr/0019-m10-feasibility-isolation.md) against both, including
