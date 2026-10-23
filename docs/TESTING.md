@@ -20,6 +20,19 @@ negative controls. Fictional test bounds are inputs, not owner deployment settin
 Run canonical full pytest, Ruff, configured mypy, pip check and staged hygiene;
 no frontend rebuild, container or live provider/model call is required.
 
+## M10 local holdings projection — issue #211
+
+Run `python -m pytest tests/test_research_holdings.py -v`. Explicit synthetic
+valuation rows and caller bounds must yield only ordered ticker/portfolio-weight
+JSON, using existing FC-051 analytics under the unchanged Decimal context.
+Cover known values, null versus zero, duplicates, missing prices/currency errors,
+arithmetic traps, exact output limits, malformed/tampered graphs and exclusion of
+all quantity/cost/name/account metadata. Source/installed-wheel probes deny
+environment/data IO, network, process work and concrete infrastructure with
+negative controls. These are offline data-boundary checks, not LLM-egress or OS
+sandbox proof; no real holdings are acquired or transmitted. Run the canonical
+repository checks and staged hygiene; no browser/container/live call is needed.
+
 ## Purpose
 
 This document defines the testing contract for the Stock Tracking App.
